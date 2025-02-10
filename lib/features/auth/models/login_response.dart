@@ -1,28 +1,22 @@
-import 'package:ttld/features/auth/models/user_data.dart';
-
 class LoginResponse {
-  final bool success;
-  final String message;
-  final String? token;
-  final String? refreshToken;
-  final UserData? userData;
+  final String id;
+  final String name;
+  final bool isAdmin;
+  final String token;
 
   LoginResponse({
-    required this.success,
-    required this.message,
-    this.token,
-    this.refreshToken,
-    this.userData,
+    required this.id,
+    required this.name,
+    required this.isAdmin,
+    required this.token,
   });
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) {
     return LoginResponse(
-      success: json['success'] ?? false,
-      message: json['message'] ?? '',
-      token: json['token'],
-      refreshToken: json['refreshToken'],
-      userData:
-          json['userData'] != null ? UserData.fromJson(json['userData']) : null,
+      id: json['id']?.toString() ?? '',
+      name: json['name'] ?? '',
+      isAdmin: json['isAdmin'] ?? false,
+      token: json['token'] ?? '',
     );
   }
 }

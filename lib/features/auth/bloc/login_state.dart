@@ -14,15 +14,19 @@ class LoginLoading extends LoginState {}
 
 class LoginSuccess extends LoginState {
   final String token;
-  final UserData? userData;
+  final String userName;
+  final String isAdmin;
+  final String userId;
 
   const LoginSuccess({
     required this.token,
-    this.userData,
+    required this.userName,
+    required this.isAdmin,
+    required this.userId,
   });
 
   @override
-  List<Object?> get props => [token, userData];
+  List<Object?> get props => [token, userName, isAdmin, userId];
 }
 
 class LoginFailure extends LoginState {

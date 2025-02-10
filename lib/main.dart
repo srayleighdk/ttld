@@ -10,6 +10,7 @@ import 'package:ttld/features/auth/bloc/auth_event.dart';
 import 'package:ttld/features/auth/bloc/login_bloc.dart';
 import 'package:ttld/features/auth/repositories/auth_repository.dart';
 import 'package:ttld/helppers/help.dart';
+import 'package:ttld/pages/signup/bloc/signup_bloc.dart';
 import 'package:ttld/themes/text/app_theme.dart';
 
 Future<void> main() async {
@@ -38,6 +39,11 @@ class MyApp extends StatelessWidget {
               providers: [
                 BlocProvider(
                   create: (context) => AuthBloc()..add(AuthCheckRequested()),
+                ),
+                BlocProvider(
+                  create: (context) => SignupBloc(
+                    authRepository: context.read<AuthRepository>(),
+                  ),
                 ),
                 BlocProvider(
                   create: (context) =>

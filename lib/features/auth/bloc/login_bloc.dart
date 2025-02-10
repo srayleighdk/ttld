@@ -22,18 +22,16 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         LoginRequest(
           userName: event.userName,
           password: event.password,
-          userType: 'user', // or get from event if needed
+          userType: event.userType, // or get from event if needed
         ),
       );
 
-      if (response.success && response.token != null) {
-        emit(LoginSuccess(
-          token: response.token!,
-          userData: response.userData,
-        ));
-      } else {
-        emit(LoginFailure(response.message));
-      }
+      emit(LoginSuccess(
+        token: response.token,
+        userName: response.name,
+        isAdmin: response.isAdmin,
+        userId: response.id,
+      ));
     } catch (e) {
       emit(LoginFailure(e.toString()));
     }

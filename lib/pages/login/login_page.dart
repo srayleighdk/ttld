@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ttld/core/utils/toast_utils.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_event.dart';
@@ -8,6 +9,7 @@ import 'package:ttld/features/auth/bloc/login_bloc.dart';
 import 'package:ttld/features/auth/bloc/login_event.dart';
 import 'package:ttld/features/auth/bloc/login_state.dart';
 import 'package:ttld/features/auth/enums/user_type.dart';
+import 'package:ttld/pages/signup/signup.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -59,6 +61,7 @@ class _LoginPageState extends State<LoginPage> {
 
           // Navigation will be handled automatically by router
         } else if (state is LoginFailure) {
+          print('test');
           ToastUtils.showErrorToast(
             context,
             message: state.error,
@@ -129,7 +132,7 @@ class _LoginPageState extends State<LoginPage> {
                         controller: _userNameController,
                         decoration: InputDecoration(
                           labelText: 'Username',
-                          prefixIcon: const Icon(Icons.person_outline),
+                          prefixIcon: Icon(FontAwesomeIcons.user),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -147,7 +150,7 @@ class _LoginPageState extends State<LoginPage> {
                         obscureText: !_isPasswordVisible,
                         decoration: InputDecoration(
                           labelText: 'Password',
-                          prefixIcon: const Icon(Icons.lock_outline),
+                          prefixIcon: Icon(FontAwesomeIcons.lock),
                           suffixIcon: IconButton(
                             icon: Icon(
                               _isPasswordVisible
@@ -220,8 +223,16 @@ class _LoginPageState extends State<LoginPage> {
                             style: theme.textTheme.bodyMedium,
                           ),
                           TextButton(
-                            onPressed: () {
-                              // Add signup navigation
+                            onPressed: () async {
+                              try {
+                                await Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => const SignupPage(),
+                                  ),
+                                );
+                              } catch (e) {
+                                print('Navigation error: $e');
+                              }
                             },
                             child: const Text('Sign Up'),
                           ),

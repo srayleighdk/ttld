@@ -15,7 +15,7 @@ class LoginSubmitted extends LoginEvent {
   const LoginSubmitted({
     required this.userName,
     required this.password,
-    this.userType = 'user',
+    required this.userType,
   });
 
   @override

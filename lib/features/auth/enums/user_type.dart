@@ -13,4 +13,15 @@ enum UserType {
         return 'NTV';
     }
   }
+
+  String get tooltip {
+    switch (this) {
+      case UserType.admin:
+        return 'Administrator';
+      case UserType.ntd:
+        return 'Nhà Tuyển Dụng';
+      case UserType.ntv:
+        return 'Người Tìm Việc';
+    }
+  }
 }

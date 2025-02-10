@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:ttld/features/auth/models/signup_request.dart';
 import '../models/login_request.dart';
 import '../models/login_response.dart';
 
@@ -13,6 +14,7 @@ class AuthRepository {
         '/auth/login',
         data: request.toJson(),
       );
+      print(response.statusCode);
       if (response.statusCode == 201) {
         return LoginResponse.fromJson(response.data);
       } else {
@@ -23,6 +25,40 @@ class AuthRepository {
       throw _handleDioError(e);
     } catch (e) {
       throw Exception('Failed to login: $e');
+    }
+  }
+
+  Future<void> signup(BaseSignupRequest request) async {
+    try {
+      String endpoint;
+
+      // Choose endpoint based on user type
+      switch (request.userType) {
+        case 'ADMIN':
+          endpoint = '/auth/regester-TVL';
+          break;
+        case 'NTD':
+          endpoint = '/auth/register-NTD';
+          break;
+        case 'NTV':
+          endpoint = '/auth/register-admin';
+          break;
+        default:
+          throw Exception('Invalid user type');
+      }
+
+      final response = await _dio.post(
+        endpoint,
+        data: request.toJson(),
+      );
+
+      if (response.statusCode != 201) {
+        throw Exception('Signup failed');
+      }
+    } on DioException catch (e) {
+      throw _handleDioError(e);
+    } catch (e) {
+      throw Exception('Failed to signup: $e');
     }
   }
 
@@ -47,6 +83,8 @@ class AuthRepository {
             return Exception('Access forbidden');
           case 404:
             return Exception('Service not found');
+          case 409:
+            return Exception('User already exists');
           case 500:
             return Exception('Internal server error');
           default:

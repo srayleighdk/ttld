@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
-import 'package:ttld/themes/pages/home/home_page.dart';
-import 'package:ttld/themes/pages/login/login_page.dart';
-import 'package:ttld/themes/pages/splash/spash_page.dart';
+import 'package:ttld/pages/home/home_page.dart';
+import 'package:ttld/pages/login/login_page.dart';
+import 'package:ttld/pages/signup/signup.dart';
+import 'package:ttld/pages/splash/spash_page.dart';
 
 class AppRouter {
   final AuthBloc authBloc;
@@ -42,10 +43,17 @@ class AppRouter {
       ),
       GoRoute(
         path: '/login',
+        name: 'login',
         builder: (context, state) => const LoginPage(),
       ),
       GoRoute(
+        path: '/signup',
+        name: 'signup',
+        builder: (context, state) => const SignupPage(),
+      ),
+      GoRoute(
         path: '/splash',
+        name: 'splash',
         builder: (context, state) => const SplashPage(),
       ),
       // Add more routes as needed
