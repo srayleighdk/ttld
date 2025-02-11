@@ -14,15 +14,12 @@ class AuthRepository {
         '/auth/login',
         data: request.toJson(),
       );
-      print(response.statusCode);
-      if (response.statusCode == 201) {
-        return LoginResponse.fromJson(response.data);
-      } else {
-        throw Exception(
-            'Login failed: Unexpected status code ${response.statusCode}');
-      }
+      return LoginResponse.fromJson(response.data);
     } on DioException catch (e) {
-      throw _handleDioError(e);
+      if (e.response != null) {
+        throw Exception(e.response?.data['message'] ?? 'Login failed');
+      }
+      throw Exception('Network error occurred');
     } catch (e) {
       throw Exception('Failed to login: $e');
     }

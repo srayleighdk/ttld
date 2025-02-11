@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ttld/core/services/auth_service.dart';
 import 'package:ttld/core/utils/toast_utils.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_event.dart';
+import 'package:ttld/features/auth/bloc/auth_state.dart';
 import 'package:ttld/features/auth/bloc/login_bloc.dart';
 import 'package:ttld/features/auth/bloc/login_event.dart';
 import 'package:ttld/features/auth/bloc/login_state.dart';
@@ -34,6 +36,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void _handleLogin() {
     if (_formKey.currentState!.validate()) {
+      debugPrint('📝 Login form submitted');
       context.read<LoginBloc>().add(
             LoginSubmitted(
               userName: _userNameController.text,
@@ -49,25 +52,42 @@ class _LoginPageState extends State<LoginPage> {
     final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
 
-    return BlocListener<LoginBloc, LoginState>(
-      listener: (context, state) {
-        if (state is LoginSuccess) {
-          // Notify AuthBloc about successful login
-          context.read<AuthBloc>().add(AuthLoggedIn(state.token));
-          ToastUtils.showSuccessToast(
-            context,
-            message: 'Login successful!',
-          );
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<LoginBloc, LoginState>(
+          listener: (context, state) {
+            debugPrint('👂 Login state changed: ${state.runtimeType}');
 
-          // Navigation will be handled automatically by router
-        } else if (state is LoginFailure) {
-          print('test');
-          ToastUtils.showErrorToast(
-            context,
-            message: state.error,
-          );
-        }
-      },
+            if (state is LoginSuccess) {
+              debugPrint('🎉 Login successful in page');
+              ToastUtils.showSuccessToast(
+                context,
+                message: 'Welcome back, ${state.userName}!',
+              );
+            } else if (state is LoginFailure) {
+              debugPrint('❌ Login failed in page: ${state.error}');
+              ToastUtils.showErrorToast(
+                context,
+                message: state.error,
+              );
+            }
+          },
+        ),
+        BlocListener<AuthBloc, AuthState>(
+          listener: (context, state) {
+            debugPrint('👂 Auth state changed: ${state.runtimeType}');
+
+            if (state is AuthAuthenticated) {
+              debugPrint('🔐 Auth state is authenticated, navigating...');
+              if (state.isAdmin) {
+                context.go('/admin/dashboard');
+              } else {
+                context.go('/dashboard');
+              }
+            }
+          },
+        ),
+      ],
       child: Scaffold(
         body: SingleChildScrollView(
           child: Container(

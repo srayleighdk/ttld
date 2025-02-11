@@ -1,21 +1,25 @@
 import 'package:equatable/equatable.dart';
 
 abstract class AuthEvent extends Equatable {
-  const AuthEvent();
-
   @override
   List<Object?> get props => [];
 }
 
-class AuthCheckRequested extends AuthEvent {}
-
-class AuthLoggedIn extends AuthEvent {
+class AuthLoginSuccess extends AuthEvent {
   final String token;
+  final String userId;
+  final String userName;
+  final bool isAdmin;
 
-  const AuthLoggedIn(this.token);
+  AuthLoginSuccess({
+    required this.token,
+    required this.userId,
+    required this.userName,
+    required this.isAdmin,
+  });
 
   @override
-  List<Object?> get props => [token];
+  List<Object?> get props => [token, userId, userName, isAdmin];
 }
 
-class AuthLoggedOut extends AuthEvent {}
+class AuthLogout extends AuthEvent {}

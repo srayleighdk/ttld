@@ -1,55 +1,37 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_event.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc() : super(AuthInitial()) {
-    on<AuthCheckRequested>(_onAuthCheckRequested);
-    on<AuthLoggedIn>(_onAuthLoggedIn);
-    on<AuthLoggedOut>(_onAuthLoggedOut);
+  AuthBloc() : super(AuthUnauthenticated()) {
+    on<AuthLoginSuccess>(_onAuthLoginSuccess);
+    on<AuthLogout>(_onAuthLogout);
   }
 
-  Future<void> _onAuthCheckRequested(
-    AuthCheckRequested event,
+  void _onAuthLoginSuccess(
+    AuthLoginSuccess event,
     Emitter<AuthState> emit,
-  ) async {
-    // Check if user is logged in (e.g., check for stored token)
-    final token = await _getStoredToken();
-    if (token != null) {
-      emit(AuthAuthenticated(token));
-    } else {
-      emit(AuthUnauthenticated());
-    }
+  ) {
+    debugPrint('🔐 AuthBloc: Handling login success');
+    debugPrint('📦 Auth data: ${event.toString()}');
+
+    emit(AuthAuthenticated(
+      token: event.token,
+      userId: event.userId,
+      userName: event.userName,
+      isAdmin: event.isAdmin,
+    ));
+
+    debugPrint('✅ AuthBloc: State updated to authenticated');
   }
 
-  Future<void> _onAuthLoggedIn(
-    AuthLoggedIn event,
+  void _onAuthLogout(
+    AuthLogout event,
     Emitter<AuthState> emit,
-  ) async {
-    // Store token and emit authenticated state
-    await _storeToken(event.token);
-    emit(AuthAuthenticated(event.token));
-  }
-
-  Future<void> _onAuthLoggedOut(
-    AuthLoggedOut event,
-    Emitter<AuthState> emit,
-  ) async {
-    // Clear stored token and emit unauthenticated state
-    await _clearToken();
+  ) {
+    debugPrint('🔓 AuthBloc: Handling logout');
     emit(AuthUnauthenticated());
-  }
-
-  Future<String?> _getStoredToken() async {
-    // Implement token storage retrieval
-    return null;
-  }
-
-  Future<void> _storeToken(String token) async {
-    // Implement token storage
-  }
-
-  Future<void> _clearToken() async {
-    // Implement token removal
+    debugPrint('✅ AuthBloc: State updated to unauthenticated');
   }
 }

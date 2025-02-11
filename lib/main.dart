@@ -6,7 +6,6 @@ import 'package:theme_provider/theme_provider.dart';
 import 'package:ttld/core/api_client.dart';
 import 'package:ttld/core/router/app_router.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
-import 'package:ttld/features/auth/bloc/auth_event.dart';
 import 'package:ttld/features/auth/bloc/login_bloc.dart';
 import 'package:ttld/features/auth/repositories/auth_repository.dart';
 import 'package:ttld/helppers/help.dart';
@@ -38,7 +37,7 @@ class MyApp extends StatelessWidget {
             child: MultiBlocProvider(
               providers: [
                 BlocProvider(
-                  create: (context) => AuthBloc()..add(AuthCheckRequested()),
+                  create: (context) => AuthBloc(),
                 ),
                 BlocProvider(
                   create: (context) => SignupBloc(
@@ -46,8 +45,9 @@ class MyApp extends StatelessWidget {
                   ),
                 ),
                 BlocProvider(
-                  create: (context) =>
-                      LoginBloc(authRepository: context.read<AuthRepository>()),
+                  create: (context) => LoginBloc(
+                      authRepository: context.read<AuthRepository>(),
+                      authBloc: context.read<AuthBloc>()),
                 )
               ],
               child: Builder(builder: (context) {
@@ -73,52 +73,6 @@ class MyApp extends StatelessWidget {
           );
         }),
       ),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

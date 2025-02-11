@@ -15,7 +15,7 @@ class LoginLoading extends LoginState {}
 class LoginSuccess extends LoginState {
   final String token;
   final String userName;
-  final String isAdmin;
+  final bool isAdmin;
   final String userId;
 
   const LoginSuccess({
