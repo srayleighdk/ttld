@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:theme_provider/theme_provider.dart';
 import 'package:ttld/themes/base_theme_config.dart';
@@ -33,4 +34,12 @@ extension NyAppTheme on List<AppTheme> {
     return firstWhere((theme) => theme.id == getEnv('DARK_THEME_ID'),
         orElse: () => first).data;
   }
+}
+
+Color nyHexColor(String hexColor) {
+  hexColor = hexColor.toUpperCase().replaceAll("#", "");
+  if (hexColor.length == 6) {
+    hexColor = "FF$hexColor";
+  }
+  return Color(int.parse(hexColor, radix: 16));
 }
