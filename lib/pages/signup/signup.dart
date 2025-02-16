@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ttld/features/auth/enums/user_type.dart';
 import 'package:ttld/pages/signup/bloc/signup_bloc.dart';
 import 'package:ttld/pages/signup/bloc/signup_event.dart';
@@ -19,14 +20,10 @@ class _SignupPageState extends State<SignupPage> {
   final _formKey = GlobalKey<FormState>();
   final _userNameController = TextEditingController();
   final _emailController = TextEditingController();
+  final _nameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  final _phoneController = TextEditingController();
-  final _companyNameController = TextEditingController();
-  final _adminCodeController = TextEditingController();
-  final _fullNameController = TextEditingController();
-  final _businessLicenseController = TextEditingController();
-  final _companyAddressController = TextEditingController();
+  final _maSoThueController = TextEditingController();
 
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
@@ -38,9 +35,10 @@ class _SignupPageState extends State<SignupPage> {
   void dispose() {
     _userNameController.dispose();
     _emailController.dispose();
+    _nameController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
-    _phoneController.dispose();
+    _maSoThueController.dispose();
     super.dispose();
   }
 
@@ -59,10 +57,11 @@ class _SignupPageState extends State<SignupPage> {
             SignupSubmitted(
               userName: _userNameController.text,
               email: _emailController.text,
+              name: _nameController.text,
               password: _passwordController.text,
               confirmPassword: _confirmPasswordController.text,
               userType: _selectedUserType.name,
-              phoneNumber: _phoneController.text,
+              maSoThue: _maSoThueController.text,
             ),
           );
     }
@@ -74,14 +73,15 @@ class _SignupPageState extends State<SignupPage> {
     final size = MediaQuery.of(context).size;
 
     return BlocListener<SignupBloc, SignupState>(
-      listener: (context, state) {
+      listener: (BuildContext context, state) {
         if (state is SignupSuccess) {
           ToastUtils.showToastSuccess(
             context,
-            message: 'Sign up successful! Please verify your email.',
+            message: 'Sign up successful! Please login.',
             description: '',
           );
           // Navigate to login or verification page
+          context.go('/login');
         } else if (state is SignupFailure) {
           ToastUtils.showToastOops(
             context,
@@ -132,7 +132,7 @@ class _SignupPageState extends State<SignupPage> {
                             });
                           },
                         ),
-                        const SizedBox(height: 24),
+                        const SizedBox(height: 16),
 
                         // Username Field
                         TextFormField(
@@ -197,23 +197,28 @@ class _SignupPageState extends State<SignupPage> {
                             return null;
                           },
                         ),
+
                         const SizedBox(height: 16),
 
-                        // Phone Field
                         TextFormField(
-                          controller: _phoneController,
-                          keyboardType: TextInputType.phone,
+                          controller: _nameController,
                           decoration: InputDecoration(
-                            labelText: 'Phone Number (Optional)',
-                            hintText: 'Enter your phone number',
+                            labelText: 'Full Name',
+                            hintText: 'Enter your full name',
                             prefixIcon: Icon(
-                              FontAwesomeIcons.phone,
+                              FontAwesomeIcons.user,
                               size: 20,
                             ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your full name';
+                            }
+                            return null;
+                          },
                         ),
                         const SizedBox(height: 16),
                         _buildUserTypeSpecificFields(),
@@ -405,145 +410,34 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   Widget _buildUserTypeSpecificFields() {
-    switch (_selectedUserType) {
-      case UserType.admin:
-        return Column(
-          children: [
-            TextFormField(
-              controller: _adminCodeController,
-              decoration: InputDecoration(
-                labelText: 'Admin Code',
-                hintText: 'Enter admin registration code',
-                prefixIcon: Icon(
-                  FontAwesomeIcons.key,
-                  size: 20,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+    if (_selectedUserType == UserType.ntd) {
+      return Column(
+        children: [
+          TextFormField(
+            controller: _maSoThueController,
+            decoration: InputDecoration(
+              labelText: 'Bussiness Registration Number',
+              hintText: 'Enter your Business Registration Number',
+              prefixIcon: Icon(
+                FontAwesomeIcons.building,
+                size: 20,
               ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter admin code';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 16),
-          ],
-        );
-
-      case UserType.ntd:
-        return Column(
-          children: [
-            TextFormField(
-              controller: _companyNameController,
-              decoration: InputDecoration(
-                labelText: 'Company Name',
-                hintText: 'Enter company name',
-                prefixIcon: Icon(
-                  FontAwesomeIcons.building,
-                  size: 20,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter company name';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _companyAddressController,
-              decoration: InputDecoration(
-                labelText: 'Company Address',
-                hintText: 'Enter company address',
-                prefixIcon: Icon(
-                  FontAwesomeIcons.locationDot,
-                  size: 20,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter company address';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _businessLicenseController,
-              decoration: InputDecoration(
-                labelText: 'Business License',
-                hintText: 'Enter business license number',
-                prefixIcon: Icon(
-                  FontAwesomeIcons.fileContract,
-                  size: 20,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter business license';
-                }
-                return null;
-              },
-            ),
-          ],
-        );
-
-      case UserType.ntv:
-        return Column(
-          children: [
-            TextFormField(
-              controller: _fullNameController,
-              decoration: InputDecoration(
-                labelText: 'Full Name',
-                hintText: 'Enter your full name',
-                prefixIcon: Icon(
-                  FontAwesomeIcons.user,
-                  size: 20,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter your full name';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _phoneController,
-              keyboardType: TextInputType.phone,
-              decoration: InputDecoration(
-                labelText: 'Phone Number',
-                hintText: 'Enter your phone number',
-                prefixIcon: Icon(
-                  FontAwesomeIcons.phone,
-                  size: 20,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
             ),
-            const SizedBox(height: 16),
-            // Add date picker for date of birth
-          ],
-        );
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter your Business Registration Number';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 16),
+        ],
+      );
+    } else {
+      return Container();
     }
   }
 }

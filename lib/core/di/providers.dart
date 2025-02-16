@@ -6,6 +6,8 @@ import 'package:ttld/features/auth/repositories/auth_repository.dart';
 import 'package:ttld/features/ds-ld/bloc/ld_bloc.dart';
 import 'package:ttld/features/ds-ld/repositories/ld_repository.dart';
 import 'package:ttld/features/ds-ld/repositories/ld_repository_impl.dart';
+import 'package:ttld/features/user_group/bloc/group_bloc.dart';
+import 'package:ttld/features/user_group/repository/group_repository.dart';
 import 'package:ttld/pages/signup/bloc/signup_bloc.dart';
 
 List<RepositoryProvider> getRepositoryProviders() {
@@ -15,6 +17,9 @@ List<RepositoryProvider> getRepositoryProviders() {
     ),
     RepositoryProvider<LdRepository>(
       create: (context) => LdRepositoryImpl(ApiClient().dio),
+    ),
+    RepositoryProvider<GroupRepository>(
+      create: (context) => GroupRepository(),
     ),
   ];
 }
@@ -40,5 +45,10 @@ List<BlocProvider> getBlocProviders() {
         context.read<LdRepository>(),
       ),
     ),
+    BlocProvider<GroupBloc>(
+      create: (context) => GroupBloc(
+        groupRepository: context.read<GroupRepository>(),
+      ),
+    )
   ];
 }

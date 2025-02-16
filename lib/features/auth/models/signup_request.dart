@@ -1,12 +1,14 @@
 abstract class BaseSignupRequest {
   final String userName;
   final String email;
+  final String name;
   final String password;
-  final String userType;
+  late String userType;
 
   BaseSignupRequest({
     required this.userName,
     required this.email,
+    required this.name,
     required this.password,
     required this.userType,
   });
@@ -15,37 +17,32 @@ abstract class BaseSignupRequest {
 }
 
 class AdminSignupRequest extends BaseSignupRequest {
-  final String adminCode; // Special code for admin registration
-
   AdminSignupRequest({
     required super.userName,
     required super.email,
+    required super.name,
     required super.password,
-    required this.adminCode,
   }) : super(userType: 'ADMIN');
 
   @override
   Map<String, dynamic> toJson() => {
         'userName': userName,
         'email': email,
+        'name': name,
         'password': password,
         'userType': userType,
-        'adminCode': adminCode,
       };
 }
 
 class NTDSignupRequest extends BaseSignupRequest {
-  final String companyName;
-  final String companyAddress;
-  final String businessLicense;
+  final String maSoThue;
 
   NTDSignupRequest({
     required super.userName,
     required super.email,
+    required super.name,
     required super.password,
-    required this.companyName,
-    required this.companyAddress,
-    required this.businessLicense,
+    required this.maSoThue,
   }) : super(userType: 'NTD');
 
   @override
@@ -54,35 +51,24 @@ class NTDSignupRequest extends BaseSignupRequest {
         'email': email,
         'password': password,
         'userType': userType,
-        'companyName': companyName,
-        'companyAddress': companyAddress,
-        'businessLicense': businessLicense,
+        'maSoThue': maSoThue,
       };
 }
 
 class NTVSignupRequest extends BaseSignupRequest {
-  final String fullName;
-  final String? phoneNumber;
-  final DateTime? dateOfBirth;
-
   NTVSignupRequest({
     required super.userName,
     required super.email,
+    required super.name,
     required super.password,
-    required this.fullName,
-    this.phoneNumber,
-    this.dateOfBirth,
   }) : super(userType: 'NTV');
 
   @override
   Map<String, dynamic> toJson() => {
         'userName': userName,
         'email': email,
+        'name': name,
         'password': password,
         'userType': userType,
-        'fullName': fullName,
-        if (phoneNumber != null) 'phoneNumber': phoneNumber,
-        if (dateOfBirth != null)
-          'dateOfBirth': dateOfBirth!.toIso8601String(),
       };
 }

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:ttld/core/api_client.dart';
 
 abstract class BaseRepository {
@@ -14,8 +15,10 @@ abstract class BaseRepository {
       // ... rest of error handling
       case DioExceptionType.badResponse:
         final statusCode = e.response?.statusCode;
-        final errorMessage =
-            e.response?.data['message'] ?? 'Unknown error occurred';
+        final responseData = e.response?.data;
+        final errorMessage = responseData is Map<String, dynamic>
+            ? responseData['message'] ?? 'Unknown error occurred'
+            : responseData?.toString() ?? 'Unknown error occurred';
 
         switch (statusCode) {
           case 400:
@@ -55,8 +58,11 @@ abstract class BaseRepository {
     try {
       return await apiCall();
     } on DioException catch (e) {
+      debugPrint("DioException: ${e.toString()}");
       throw handleDioError(e);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      debugPrint("Unhandled Error: $e");
+      debugPrint(stackTrace.toString());
       throw Exception(e.toString());
     }
   }

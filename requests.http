@@ -1,9 +1,3 @@
-# Example POST request
-POST https://ttld.vietsid.com/api/auth/login
+### Example POST request
+POST http://localhost:3003/api/user/group
 Content-Type: application/json
-
-{
-  "userName": "admin",
-  "password": "771777",
-  "userType": "ADMIN"
-}

@@ -5,16 +5,20 @@ import '../models/group.dart';
 class GroupRepository extends BaseRepository {
   Future<List<Group>> getGroups() async {
     return await safeApiCall(() async {
-      final response = await dio.get('${ApiEndpoints.groups}/group');
-      return (response.data as List)
-          .map((json) => Group.fromJson(json))
-          .toList();
+      final response = await dio.get(ApiEndpoints.groups);
+      if (response.data is Map<String, dynamic> &&
+          response.data['data'] is List) {
+        final List<dynamic> groupsJson = response.data['data'];
+        return groupsJson.map((json) => Group.fromJson(json)).toList();
+      } else {
+        throw Exception("Unexpected API response format");
+      }
     });
   }
 
   Future<Group> createGroup(String name, String? parentId) async {
     return await safeApiCall(() async {
-      final response = await dio.post('${ApiEndpoints.groups}/group', data: {
+      final response = await dio.post(ApiEndpoints.groups, data: {
         "name": name,
         "parentId": parentId,
       });

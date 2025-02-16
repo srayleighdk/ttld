@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:ttld/features/user_group/models/group.dart';
 import 'package:ttld/features/user_group/repository/group_repository.dart';

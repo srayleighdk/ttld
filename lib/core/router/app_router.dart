@@ -6,6 +6,7 @@ import 'package:ttld/features/auth/bloc/auth_state.dart';
 import 'package:ttld/features/auth/enums/user_type.dart';
 import 'package:ttld/features/ds-ld/repositories/ld_repository.dart';
 import 'package:ttld/pages/home/admin/admin_home.dart';
+import 'package:ttld/pages/home/admin/system/manager_groups.dart';
 import 'package:ttld/pages/home/home_page.dart';
 import 'package:ttld/pages/home/screens/edit_profile.dart';
 import 'package:ttld/pages/login/login_page.dart';
@@ -93,6 +94,10 @@ class AppRouter {
       //   builder: (BuildContext context, GoRouterState state) =>
       //       const NtdHomePage(), // Create NtdHomePage widget
       // ),
+      GoRoute(
+        path: '/manager-group',
+        builder: (context, state) => const ManagerUserPage(),
+      ),
       GoRoute(
         path: '/home', // Default home route
         builder: (BuildContext context, GoRouterState state) =>

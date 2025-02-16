@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
 
@@ -24,7 +25,7 @@ class AdminHomePage extends StatelessWidget {
             const SizedBox(height: 24.0),
 
             // Section 2: Quick Access Buttons
-            _buildQuickAccessSection(),
+            _buildQuickAccessSection(context),
             const SizedBox(height: 24.0),
 
             // Section 3: Báo cáo thống kê
@@ -95,7 +96,7 @@ class AdminHomePage extends StatelessWidget {
   }
 
   // Section 2: Quick Access Buttons
-  Widget _buildQuickAccessSection() {
+  Widget _buildQuickAccessSection(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -118,6 +119,7 @@ class AdminHomePage extends StatelessWidget {
               icon: Icons.people,
               label: 'Manage Users',
               onPressed: () {
+                context.go('/manager-group');
                 // Navigate to manage users page
               },
             ),

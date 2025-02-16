@@ -3,7 +3,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ttld/features/user_group/bloc/group_bloc.dart';
 import 'package:ttld/features/user_group/models/group.dart';
 
-class ManagerUserPage extends StatelessWidget {
+class ManagerUserPage extends StatefulWidget {
+  const ManagerUserPage({super.key});
+
+  @override
+  State<ManagerUserPage> createState() => _ManagerUserPageState();
+}
+
+class _ManagerUserPageState extends State<ManagerUserPage> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<GroupBloc>().add(LoadGroups()); // Trigger loading groups
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

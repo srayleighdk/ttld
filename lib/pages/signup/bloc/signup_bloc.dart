@@ -19,6 +19,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
 
     try {
       BaseSignupRequest request;
+      print(event.userType);
 
       // Create appropriate request based on user type
       switch (event.userType) {
@@ -26,30 +27,27 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
           request = AdminSignupRequest(
             userName: event.userName,
             email: event.email,
+            name: event.name,
             password: event.password,
-            adminCode: event.adminCode ?? '',
           );
           break;
 
-        case 'NTD':
+        case 'ntd':
           request = NTDSignupRequest(
             userName: event.userName,
+            maSoThue: event.maSoThue ?? '',
             email: event.email,
+            name: event.name,
             password: event.password,
-            companyName: event.companyName ?? '',
-            companyAddress: event.companyAddress ?? '',
-            businessLicense: event.businessLicense ?? '',
           );
           break;
 
-        case 'NTV':
+        case 'ntv':
           request = NTVSignupRequest(
             userName: event.userName,
             email: event.email,
+            name: event.name,
             password: event.password,
-            fullName: event.fullName ?? '',
-            phoneNumber: event.phoneNumber,
-            dateOfBirth: event.dateOfBirth,
           );
           break;
 
@@ -58,7 +56,8 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
           return;
       }
 
-      await authRepository.signup(request);
+      final response = await authRepository.signup(request, event.userType);
+
       emit(SignupSuccess());
     } catch (e) {
       emit(SignupFailure(e.toString()));

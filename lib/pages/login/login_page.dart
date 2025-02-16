@@ -86,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
             if (state is AuthAuthenticated) {
               debugPrint('🔐 Auth state is authenticated, navigating...');
               if (state.isAdmin) {
-                context.go('/admin/dashboard');
+                context.go('/admin/home');
               } else {
                 context.go('/dashboard');
               }

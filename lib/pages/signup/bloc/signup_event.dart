@@ -11,51 +11,29 @@ abstract class SignupEvent extends Equatable {
 class SignupSubmitted extends SignupEvent {
   final String userName;
   final String email;
+  final String name;
   final String password;
   final String userType;
   final String confirmPassword;
 
   // Admin specific fields
-  final String? adminCode;
 
   // NTD specific fields
-  final String? companyName;
-  final String? companyAddress;
-  final String? businessLicense;
+  final String? maSoThue;
 
   // NTV specific fields
-  final String? fullName;
-  final String? phoneNumber;
-  final DateTime? dateOfBirth;
 
   const SignupSubmitted({
     required this.userName,
     required this.email,
+    required this.name,
     required this.password,
     required this.userType,
     required this.confirmPassword,
-    this.adminCode,
-    this.companyName,
-    this.companyAddress,
-    this.businessLicense,
-    this.fullName,
-    this.phoneNumber,
-    this.dateOfBirth,
+    this.maSoThue,
   });
 
   @override
-  List<Object?> get props => [
-        userName,
-        email,
-        password,
-        confirmPassword,
-        userType,
-        adminCode,
-        companyName,
-        companyAddress,
-        businessLicense,
-        fullName,
-        phoneNumber,
-        dateOfBirth,
-      ];
+  List<Object?> get props =>
+      [userName, email, name, password, confirmPassword, userType, maSoThue];
 }

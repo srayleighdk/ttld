@@ -1,4 +1,9 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ttld/core/api_client.dart';
 import 'package:ttld/features/auth/models/signup_request.dart';
 import '../models/login_request.dart';
@@ -6,6 +11,7 @@ import '../models/login_response.dart';
 
 class AuthRepository {
   final Dio _dio;
+  final FlutterSecureStorage storage = const FlutterSecureStorage();
 
   AuthRepository(this._dio);
 
@@ -17,6 +23,14 @@ class AuthRepository {
         '/auth/login',
         data: request.toJson(),
       );
+      if (kIsWeb || Platform.isLinux) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('auth_token', response.data['token']);
+      } else {
+        final token = response.data['token'].toString();
+        await storage.write(key: 'auth_token', value: response.data['token']);
+        _dio.options.headers['Authorization'] = 'Bearer $token';
+      }
       return LoginResponse.fromJson(response.data);
     } on DioException catch (e) {
       if (e.response != null) {
@@ -28,20 +42,20 @@ class AuthRepository {
     }
   }
 
-  Future<void> signup(BaseSignupRequest request) async {
+  Future<void> signup(BaseSignupRequest request, userType) async {
     try {
       String endpoint;
 
       // Choose endpoint based on user type
-      switch (request.userType) {
-        case 'ADMIN':
-          endpoint = '/auth/regester-TVL';
+      switch (userType) {
+        case 'admin':
+          endpoint = '/auth/regester-test';
           break;
-        case 'NTD':
+        case 'ntd':
           endpoint = '/auth/register-NTD';
           break;
-        case 'NTV':
-          endpoint = '/auth/register-admin';
+        case 'ntv':
+          endpoint = '/auth/register-TVL';
           break;
         default:
           throw Exception('Invalid user type');
@@ -49,7 +63,7 @@ class AuthRepository {
 
       final response = await _dio.post(
         endpoint,
-        data: request.toJson(),
+        data: request,
       );
 
       if (response.statusCode != 201) {
