@@ -1,0 +1,40 @@
+import 'package:ttld/core/constants/api_endpoints.dart';
+import 'package:ttld/core/repositories/base_repository.dart';
+import '../models/group.dart';
+
+class GroupRepository extends BaseRepository {
+  Future<List<Group>> getGroups() async {
+    return await safeApiCall(() async {
+      final response = await dio.get('${ApiEndpoints.groups}/group');
+      return (response.data as List)
+          .map((json) => Group.fromJson(json))
+          .toList();
+    });
+  }
+
+  Future<Group> createGroup(String name, String? parentId) async {
+    return await safeApiCall(() async {
+      final response = await dio.post('${ApiEndpoints.groups}/group', data: {
+        "name": name,
+        "parentId": parentId,
+      });
+      return Group.fromJson(response.data);
+    });
+  }
+
+  Future<Group> updateGroup(String id, String name, String? description) async {
+    return await safeApiCall(() async {
+      final response = await dio.put('${ApiEndpoints.groups}/group/$id', data: {
+        "name": name,
+        "description": description,
+      });
+      return Group.fromJson(response.data);
+    });
+  }
+
+  Future<void> deleteGroup(String id) async {
+    await safeApiCall(() async {
+      await dio.delete('https://your-api.com/groups/$id');
+    });
+  }
+}

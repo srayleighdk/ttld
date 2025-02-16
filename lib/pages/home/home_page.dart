@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:ttld/core/router/app_router.dart';
 import 'package:ttld/pages/home/custom_bottom_nav_bar.dart';
 import 'package:ttld/pages/home/notification_page.dart';
 import 'package:ttld/pages/home/profile_page.dart';
 import 'package:ttld/pages/home/search_page.dart';
+import 'package:ttld/widgets/logout_button.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,19 +23,13 @@ class _HomePageState extends State<HomePage> {
     const NotificationsPage(),
     const ProfilePage(),
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
-        actions: [
-          IconButton(
-            icon: const Icon(FontAwesomeIcons.rightFromBracket),
-            onPressed: () {
-              // Handle logout
-            },
-          ),
-        ],
+        actions: const [LogoutButton()],
       ),
       body: IndexedStack(
         index: _currentIndex,
@@ -233,7 +229,15 @@ class ActionButtonsSection extends StatelessWidget {
           label: 'Edit Profile',
           color: Colors.blue,
           onTap: () {
+            // final currentProfileId = context.read<YourBloc>().state.profileId; // Get ID from your state
+            // if (currentProfileId != null) {
+            //   NavigationService.goToEditProfile(context, currentProfileId);
+            // } else {
+            //   NavigationService.goToNewProfile(context);
+            // }
             // Handle edit profile
+            // NavigationService.goToEditProfile(context, 'current_profile_id');
+            NavigationService.goToNewProfile(context);
           },
         ),
         _ActionButton(

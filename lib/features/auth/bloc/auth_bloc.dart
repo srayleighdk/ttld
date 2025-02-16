@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ttld/core/services/auth_service.dart';
 import 'package:ttld/features/auth/bloc/auth_event.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
 
@@ -26,12 +27,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     debugPrint('✅ AuthBloc: State updated to authenticated');
   }
 
-  void _onAuthLogout(
+  Future<void> _onAuthLogout(
     AuthLogout event,
     Emitter<AuthState> emit,
-  ) {
-    debugPrint('🔓 AuthBloc: Handling logout');
-    emit(AuthUnauthenticated());
-    debugPrint('✅ AuthBloc: State updated to unauthenticated');
+  ) async {
+    try {
+      debugPrint('🔓 AuthBloc: Handling logout');
+
+      await AuthService.clearAuth();
+      emit(AuthUnauthenticated());
+    } catch (e) {
+      // Handle error if needed
+      debugPrint('❌ AuthBloc: Error during logout: $e');
+    }
   }
 }

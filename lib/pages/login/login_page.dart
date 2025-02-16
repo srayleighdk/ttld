@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ttld/core/router/app_router.dart';
 import 'package:ttld/core/services/auth_service.dart';
 import 'package:ttld/core/utils/toast_utils.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
@@ -47,6 +48,10 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  void _onLoginSuccess(BuildContext context, UserType userType) {
+    AppRouter.navigateBasedOnUserType(context, userType);
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -60,15 +65,16 @@ class _LoginPageState extends State<LoginPage> {
 
             if (state is LoginSuccess) {
               debugPrint('🎉 Login successful in page');
-              ToastUtils.showSuccessToast(
+              ToastUtils.showToastSuccess(
                 context,
-                message: 'Welcome back, ${state.userName}!',
+                description: 'Welcome back!',
+                message: '',
               );
             } else if (state is LoginFailure) {
               debugPrint('❌ Login failed in page: ${state.error}');
-              ToastUtils.showErrorToast(
+              ToastUtils.showToastOops(
                 context,
-                message: state.error,
+                description: state.error,
               );
             }
           },

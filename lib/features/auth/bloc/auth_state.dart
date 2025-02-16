@@ -14,16 +14,19 @@ class AuthAuthenticated extends AuthState {
   final String userId;
   final String userName;
   final bool isAdmin;
+  final int? idPhieu;
+  final String? avatarUrl;
 
-  const AuthAuthenticated({
-    required this.token,
-    required this.userId,
-    required this.userName,
-    required this.isAdmin,
-  });
+  const AuthAuthenticated(
+      {required this.token,
+      required this.userId,
+      required this.userName,
+      required this.isAdmin,
+      this.idPhieu,
+      this.avatarUrl});
 
   @override
-  List<Object?> get props => [token, userId, userName, isAdmin];
+  List<Object?> get props => [token, userId, userName, isAdmin, idPhieu];
 }
 
 class AuthUnauthenticated extends AuthState {}

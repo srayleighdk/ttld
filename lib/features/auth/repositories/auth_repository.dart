@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:ttld/core/api_client.dart';
 import 'package:ttld/features/auth/models/signup_request.dart';
 import '../models/login_request.dart';
 import '../models/login_response.dart';
@@ -7,6 +8,8 @@ class AuthRepository {
   final Dio _dio;
 
   AuthRepository(this._dio);
+
+  AuthRepository.withDefaultDio() : _dio = ApiClient().dio;
 
   Future<LoginResponse> login(LoginRequest request) async {
     try {

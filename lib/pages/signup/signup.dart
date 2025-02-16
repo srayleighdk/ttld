@@ -46,9 +46,9 @@ class _SignupPageState extends State<SignupPage> {
 
   void _handleSignup() {
     if (!_acceptTerms) {
-      ToastUtils.showWarningToast(
+      ToastUtils.showToastWarning(
         context,
-        message: 'Please accept the terms and conditions',
+        description: 'Please accept the terms and conditions',
       );
       return;
     }
@@ -76,15 +76,16 @@ class _SignupPageState extends State<SignupPage> {
     return BlocListener<SignupBloc, SignupState>(
       listener: (context, state) {
         if (state is SignupSuccess) {
-          ToastUtils.showSuccessToast(
+          ToastUtils.showToastSuccess(
             context,
             message: 'Sign up successful! Please verify your email.',
+            description: '',
           );
           // Navigate to login or verification page
         } else if (state is SignupFailure) {
-          ToastUtils.showErrorToast(
+          ToastUtils.showToastOops(
             context,
-            message: state.error,
+            description: state.error,
           );
         }
       },

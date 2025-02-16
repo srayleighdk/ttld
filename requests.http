@@ -1,0 +1,9 @@
+# Example POST request
+POST https://ttld.vietsid.com/api/auth/login
+Content-Type: application/json
+
+{
+  "userName": "admin",
+  "password": "771777",
+  "userType": "ADMIN"
+}

@@ -3,15 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
+import 'package:ttld/features/auth/enums/user_type.dart';
+import 'package:ttld/features/ds-ld/repositories/ld_repository.dart';
+import 'package:ttld/pages/home/admin/admin_home.dart';
 import 'package:ttld/pages/home/home_page.dart';
+import 'package:ttld/pages/home/screens/edit_profile.dart';
 import 'package:ttld/pages/login/login_page.dart';
 import 'package:ttld/pages/signup/signup.dart';
 import 'package:ttld/pages/splash/spash_page.dart';
 
 class AppRouter {
   final AuthBloc authBloc;
+  final LdRepository ldRepository;
 
-  AppRouter({required this.authBloc});
+  AppRouter({required this.authBloc, required this.ldRepository});
 
   late final GoRouter router = GoRouter(
     debugLogDiagnostics: true,
@@ -38,7 +43,7 @@ class AppRouter {
       if (authState is AuthAuthenticated &&
           (isGoingToLogin || isGoingToSignup)) {
         debugPrint('🔄 Redirecting to dashboard - Already authenticated');
-        return authState.isAdmin ? '/admin/dashboard' : '/dashboard';
+        return authState.isAdmin ? AdminHomePage.routePath : '/dashboard';
       }
 
       debugPrint('✅ No redirect needed');
@@ -51,7 +56,7 @@ class AppRouter {
         redirect: (context, state) {
           final authState = authBloc.state;
           if (authState is AuthAuthenticated) {
-            return authState.isAdmin ? '/admin/dashboard' : '/dashboard';
+            return authState.isAdmin ? AdminHomePage.routePath : '/home';
           }
           return '/login';
         },
@@ -74,19 +79,39 @@ class AppRouter {
         builder: (context, state) => const SplashPage(),
       ),
 
-      // Dashboard routes
       GoRoute(
-        path: '/dashboard',
-        name: 'dashboard',
-        builder: (context, state) => const HomePage(),
+        path: AdminHomePage.routePath,
+        builder: (context, state) => const AdminHomePage(),
       ),
+      // GoRoute(
+      //   path: '/ntv_home',
+      //   builder: (BuildContext context, GoRouterState state) =>
+      //       const NtvHomePage(), // Create NtvHomePage widget
+      // ),
+      // GoRoute(
+      //   path: '/ntd_home',
+      //   builder: (BuildContext context, GoRouterState state) =>
+      //       const NtdHomePage(), // Create NtdHomePage widget
+      // ),
       GoRoute(
-        path: '/admin/dashboard',
-        name: 'adminDashboard',
-        builder: (context, state) => const HomePage(),
+        path: '/home', // Default home route
+        builder: (BuildContext context, GoRouterState state) =>
+            const HomePage(),
       ),
     ],
   );
+
+  static void navigateBasedOnUserType(BuildContext context, UserType userType) {
+    switch (userType) {
+      case UserType.admin:
+        context.go(AdminHomePage.routePath);
+        break;
+      case UserType.ntv:
+      case UserType.ntd:
+        context.go('/home');
+        break;
+    }
+  }
 }
 
 class GoRouterRefreshStream extends ChangeNotifier {
@@ -132,6 +157,31 @@ class NavigationService {
       debugPrint('✅ Navigation to login successful');
     } catch (e) {
       debugPrint('❌ Navigation to login failed: $e');
+    }
+  }
+
+  static void goToNewProfile(BuildContext context) {
+    debugPrint('🔄 Attempting to navigate to new profile');
+    try {
+      context.goNamed('newProfile');
+      debugPrint('✅ Navigation to new profile successful');
+    } catch (e) {
+      debugPrint('❌ Navigation to new profile failed: $e');
+    }
+  }
+
+  static void goToEditProfile(BuildContext context, String? profileId) {
+    debugPrint('🔄 Attempting to navigate to edit profile');
+    try {
+      if (profileId != null) {
+        context
+            .goNamed('editExistingProfile', pathParameters: {'id': profileId});
+      } else {
+        context.goNamed('editProfile');
+      }
+      debugPrint('✅ Navigation to edit profile successful');
+    } catch (e) {
+      debugPrint('❌ Navigation to edit profile failed: $e');
     }
   }
 }
