@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ttld/pages/home/home_page.dart';
+import 'package:ttld/widgets/custom_user_profile.dart';
 
 class NTVHomePage extends StatelessWidget {
   const NTVHomePage({super.key});
