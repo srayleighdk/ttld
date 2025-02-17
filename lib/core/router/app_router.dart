@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
-import 'package:ttld/features/auth/enums/user_type.dart';
 import 'package:ttld/features/ds-ld/repositories/ld_repository.dart';
+import 'package:ttld/pages/error/error.dart';
+import 'package:ttld/pages/forgot_password/forgot_password.dart';
 import 'package:ttld/pages/home/admin/admin_home.dart';
 import 'package:ttld/pages/home/admin/system/manager_groups.dart';
 import 'package:ttld/pages/home/home_page.dart';
-import 'package:ttld/pages/home/screens/edit_profile.dart';
+import 'package:ttld/pages/home/ntd/ntd_home.dart';
+import 'package:ttld/pages/home/ntv/ntv_home.dart';
 import 'package:ttld/pages/login/login_page.dart';
 import 'package:ttld/pages/signup/signup.dart';
 import 'package:ttld/pages/splash/spash_page.dart';
@@ -30,12 +32,15 @@ class AppRouter {
       final isGoingToLogin = state.matchedLocation == '/login';
       final isGoingToSignup = state.matchedLocation == '/signup';
       final isGoingToSplash = state.matchedLocation == '/splash';
+      final isGoingToForgotPassword =
+          state.matchedLocation == '/forgot_password';
 
       // If not authenticated and not going to auth pages, redirect to login
       if (authState is! AuthAuthenticated &&
           !isGoingToLogin &&
           !isGoingToSignup &&
-          !isGoingToSplash) {
+          !isGoingToSplash &&
+          !isGoingToForgotPassword) {
         debugPrint('🔄 Redirecting to login - Not authenticated');
         return '/login';
       }
@@ -44,7 +49,15 @@ class AppRouter {
       if (authState is AuthAuthenticated &&
           (isGoingToLogin || isGoingToSignup)) {
         debugPrint('🔄 Redirecting to dashboard - Already authenticated');
-        return authState.isAdmin ? AdminHomePage.routePath : '/dashboard';
+        print(authState.userType);
+        if (authState.isAdmin) {
+          return AdminHomePage.routePath;
+        } else if (!authState.isAdmin && authState.userType == 'ntv') {
+          return NTVHomePage.routePath;
+        } else if (!authState.isAdmin && authState.userType == 'ntd') {
+          return NTDHomePage.routePath;
+        }
+        return ErrorPage.routePath;
       }
 
       debugPrint('✅ No redirect needed');
@@ -57,7 +70,7 @@ class AppRouter {
         redirect: (context, state) {
           final authState = authBloc.state;
           if (authState is AuthAuthenticated) {
-            return authState.isAdmin ? AdminHomePage.routePath : '/home';
+            AdminHomePage.routePath;
           }
           return '/login';
         },
@@ -68,6 +81,11 @@ class AppRouter {
         path: '/login',
         name: 'login',
         builder: (context, state) => const LoginPage(),
+      ),
+      GoRoute(
+        path: '/forgot_password',
+        name: 'forgot_password',
+        builder: (context, state) => const ForgetPasswordScreen(),
       ),
       GoRoute(
         path: '/signup',
@@ -84,16 +102,16 @@ class AppRouter {
         path: AdminHomePage.routePath,
         builder: (context, state) => const AdminHomePage(),
       ),
-      // GoRoute(
-      //   path: '/ntv_home',
-      //   builder: (BuildContext context, GoRouterState state) =>
-      //       const NtvHomePage(), // Create NtvHomePage widget
-      // ),
-      // GoRoute(
-      //   path: '/ntd_home',
-      //   builder: (BuildContext context, GoRouterState state) =>
-      //       const NtdHomePage(), // Create NtdHomePage widget
-      // ),
+      GoRoute(
+        path: '/ntv_home',
+        builder: (BuildContext context, GoRouterState state) =>
+            const NTVHomePage(), // Create NtvHomePage widget
+      ),
+      GoRoute(
+        path: '/ntd_home',
+        builder: (BuildContext context, GoRouterState state) =>
+            const NTDHomePage(), // Create NtdHomePage widget
+      ),
       GoRoute(
         path: '/manager-group',
         builder: (context, state) => const ManagerUserPage(),
@@ -103,20 +121,25 @@ class AppRouter {
         builder: (BuildContext context, GoRouterState state) =>
             const HomePage(),
       ),
+      GoRoute(
+        path: '/error', // Default home route
+        builder: (BuildContext context, GoRouterState state) =>
+            const ErrorPage(),
+      ),
     ],
   );
 
-  static void navigateBasedOnUserType(BuildContext context, UserType userType) {
-    switch (userType) {
-      case UserType.admin:
-        context.go(AdminHomePage.routePath);
-        break;
-      case UserType.ntv:
-      case UserType.ntd:
-        context.go('/home');
-        break;
-    }
-  }
+  // static void navigateBasedOnUserType(BuildContext context, UserType userType) {
+  //   switch (userType) {
+  //     case UserType.admin:
+  //       context.go(AdminHomePage.routePath);
+  //       break;
+  //     case UserType.ntv:
+  //     case UserType.ntd:
+  //       context.go('/home');
+  //       break;
+  //   }
+  // }
 }
 
 class GoRouterRefreshStream extends ChangeNotifier {

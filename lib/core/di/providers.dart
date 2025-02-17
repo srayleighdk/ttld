@@ -8,6 +8,7 @@ import 'package:ttld/features/ds-ld/repositories/ld_repository.dart';
 import 'package:ttld/features/ds-ld/repositories/ld_repository_impl.dart';
 import 'package:ttld/features/user_group/bloc/group_bloc.dart';
 import 'package:ttld/features/user_group/repository/group_repository.dart';
+import 'package:ttld/pages/forgot_password/bloc/forgot_password_bloc.dart';
 import 'package:ttld/pages/signup/bloc/signup_bloc.dart';
 
 List<RepositoryProvider> getRepositoryProviders() {
@@ -49,6 +50,9 @@ List<BlocProvider> getBlocProviders() {
       create: (context) => GroupBloc(
         groupRepository: context.read<GroupRepository>(),
       ),
+    ),
+    BlocProvider<ForgotPasswordBloc>(
+      create: (context) => ForgotPasswordBloc(ApiClient().dio),
     )
   ];
 }

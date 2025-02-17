@@ -12,6 +12,7 @@ import 'package:ttld/features/auth/bloc/login_bloc.dart';
 import 'package:ttld/features/auth/bloc/login_event.dart';
 import 'package:ttld/features/auth/bloc/login_state.dart';
 import 'package:ttld/features/auth/enums/user_type.dart';
+import 'package:ttld/pages/home/ntv/ntv_home.dart';
 import 'package:ttld/pages/signup/signup.dart';
 
 class LoginPage extends StatefulWidget {
@@ -48,10 +49,6 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  void _onLoginSuccess(BuildContext context, UserType userType) {
-    AppRouter.navigateBasedOnUserType(context, userType);
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -83,14 +80,20 @@ class _LoginPageState extends State<LoginPage> {
           listener: (context, state) {
             debugPrint('👂 Auth state changed: ${state.runtimeType}');
 
-            if (state is AuthAuthenticated) {
-              debugPrint('🔐 Auth state is authenticated, navigating...');
-              if (state.isAdmin) {
-                context.go('/admin/home');
-              } else {
-                context.go('/dashboard');
-              }
-            }
+            // if (state is AuthAuthenticated) {
+            //   debugPrint('🔐 Auth state is authenticated, navigating...');
+            //   if (state.isAdmin) {
+            //     context.go('/admin/home');
+            //   } else if (state.isAdmin == false &&
+            //       state.userType == UserType.ntv.name) {
+            //     context.go('/ntv_home');
+            //   } else if (state.isAdmin == false &&
+            //       state.userType == UserType.ntd.name) {
+            //     context.go('/ntd_home');
+            //   } else {
+            //     context.go('/error');
+            //   }
+            // }
           },
         ),
       ],
@@ -208,6 +211,7 @@ class _LoginPageState extends State<LoginPage> {
                         alignment: Alignment.centerRight,
                         child: TextButton(
                           onPressed: () {
+                            context.push('/forgot_password');
                             // Add forgot password navigation
                           },
                           child: const Text('Forgot Password?'),

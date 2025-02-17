@@ -27,7 +27,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         LoginRequest(
           userName: event.userName,
           password: event.password,
-          userType: event.userType,
+          userType: event.userType.toUpperCase(),
         ),
       );
 

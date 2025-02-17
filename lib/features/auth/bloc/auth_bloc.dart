@@ -22,6 +22,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       userId: event.userId,
       userName: event.userName,
       isAdmin: event.isAdmin,
+      userType: event.userType,
     ));
 
     debugPrint('✅ AuthBloc: State updated to authenticated');
