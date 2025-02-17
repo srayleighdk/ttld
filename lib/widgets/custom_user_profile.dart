@@ -53,11 +53,11 @@ class ProfileSection extends StatelessWidget {
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: theme.colorScheme.primary.withValues(),
+                      color: theme.colorScheme.inversePrimary,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      'NTD',
+                      'NTV',
                       style: TextStyle(
                         color: theme.colorScheme.primary,
                         fontWeight: FontWeight.bold,
