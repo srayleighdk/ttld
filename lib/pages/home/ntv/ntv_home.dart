@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ttld/pages/home/custom_bottom_nav_bar.dart';
 import 'package:ttld/pages/home/notification_page.dart';
 import 'package:ttld/pages/home/ntv/profile_page.dart';
@@ -69,10 +71,11 @@ class HomeContent extends StatelessWidget {
       CustomQuickLink(
         items: [
           QuickLinkItem(
-            icon: Icons.home,
+            icon: FontAwesomeIcons.userPen,
             label: 'Home',
             onPressed: () {
               // Handle home button press
+              context.go('/ntv_home/manager-group');
               print("Home Pressed");
             },
           ),

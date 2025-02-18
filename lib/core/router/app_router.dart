@@ -10,6 +10,7 @@ import 'package:ttld/pages/home/admin/admin_home.dart';
 import 'package:ttld/pages/home/admin/system/manager_groups.dart';
 import 'package:ttld/pages/home/home_page.dart';
 import 'package:ttld/pages/home/ntd/ntd_home.dart';
+import 'package:ttld/pages/home/ntv/ntv_form_screen.dart';
 import 'package:ttld/pages/home/ntv/ntv_home.dart';
 import 'package:ttld/pages/login/login_page.dart';
 import 'package:ttld/pages/signup/signup.dart';
@@ -19,9 +20,13 @@ class AppRouter {
   final AuthBloc authBloc;
   final LdRepository ldRepository;
 
+  final GlobalKey<NavigatorState> rootNavigatorKey =
+      GlobalKey<NavigatorState>();
+
   AppRouter({required this.authBloc, required this.ldRepository});
 
   late final GoRouter router = GoRouter(
+    navigatorKey: rootNavigatorKey,
     debugLogDiagnostics: true,
     refreshListenable: GoRouterRefreshStream(authBloc.stream),
     redirect: (BuildContext context, GoRouterState state) {
@@ -103,19 +108,25 @@ class AppRouter {
         builder: (context, state) => const AdminHomePage(),
       ),
       GoRoute(
-        path: '/ntv_home',
-        builder: (BuildContext context, GoRouterState state) =>
-            const NTVHomePage(), // Create NtvHomePage widget
-      ),
+          path: '/ntv_home',
+          builder: (BuildContext context, GoRouterState state) =>
+              const NTVHomePage(), // Create NtvHomePage widget
+          routes: [
+            GoRoute(
+              path: '/manager-group',
+              builder: (context, state) => const NTVFormScreen(),
+            ),
+          ]),
+
       GoRoute(
         path: '/ntd_home',
         builder: (BuildContext context, GoRouterState state) =>
             const NTDHomePage(), // Create NtdHomePage widget
       ),
-      GoRoute(
-        path: '/manager-group',
-        builder: (context, state) => const ManagerUserPage(),
-      ),
+      // GoRoute(
+      //   path: '/manager-group',
+      //   builder: (context, state) => const ManagerUserPage(),
+      // ),
       GoRoute(
         path: '/home', // Default home route
         builder: (BuildContext context, GoRouterState state) =>

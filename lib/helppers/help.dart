@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:theme_provider/theme_provider.dart';
+import 'package:ttld/helppers/ny_logger.dart';
 import 'package:ttld/themes/base_theme_config.dart';
 
 dynamic getEnv(String key, {dynamic defaultValue}) {
@@ -42,4 +43,32 @@ Color nyHexColor(String hexColor) {
     hexColor = "FF$hexColor";
   }
   return Color(int.parse(hexColor, radix: 16));
+}
+
+dump(dynamic value, {String? tag, bool alwaysPrint = false}) =>
+    NyLogger.dump(value, tag, alwaysPrint: alwaysPrint);
+
+T match<T>(dynamic value, Map<dynamic, T> Function() values,
+    {dynamic defaultValue}) {
+  if (value == null) {
+    return defaultValue;
+  }
+
+  Map<dynamic, T> valuesMeta = values();
+
+  for (var val in valuesMeta.entries) {
+    if (val.key == value) {
+      return val.value;
+    }
+  }
+
+  if (!valuesMeta.containsKey(value)) {
+    NyLogger.error('The value "$value" does not match any values provided');
+    if (defaultValue != null) {
+      return defaultValue;
+    } else {
+      throw Exception('The value "$value" does not match any values provided');
+    }
+  }
+  return valuesMeta[value] as T;
 }

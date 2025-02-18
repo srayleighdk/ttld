@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart'; // For navigation (if using go_router)
+import 'package:go_router/go_router.dart';
+import 'package:ttld/widgets/field/field.dart'; // For navigation (if using go_router)
 
 // Placeholder for user data. Replace with your actual user model.
 class User {
@@ -41,6 +42,7 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(height: 20),
 
             // User Information
+            Field.text('Name'),
             _buildUserInfoRow('Name', _user.name),
             _buildUserInfoRow('Email', _user.email),
             // Add more user info rows as needed
