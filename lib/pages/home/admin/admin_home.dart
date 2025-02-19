@@ -101,119 +101,122 @@ class AdminHomePage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
         _buildSectionHeader('Hệ Thống'),
-        _buildQuickAccessGrid(context, [
+        _buildQuickAccessRow(context, [
           _buildQuickAccessButton(
             context: context,
             icon: FontAwesomeIcons.cog,
             label: 'Log Hệ Thống',
-            route: '/log-he-thong', // Placeholder route
+            route: '/log-he-thong',
           ),
           _buildQuickAccessButton(
             context: context,
             icon: FontAwesomeIcons.lock,
             label: 'Phân Quyền',
-            route: '/phan-quyen', // Placeholder route
+            route: '/phan-quyen',
           ),
           _buildQuickAccessButton(
             context: context,
             icon: FontAwesomeIcons.database,
             label: 'Quản Trị Dữ Liệu',
-            route: '/quan-tri-du-lieu', // Placeholder route
+            route: '/quan-tri-du-lieu',
           ),
           _buildQuickAccessButton(
             context: context,
             icon: FontAwesomeIcons.usersGear,
             label: 'Quản Trị Người Dùng',
-            route: '/quan-tri-nguoi-dung', // Placeholder route
+            route: '/quan-tri-nguoi-dung',
           ),
         ]),
         _buildSectionHeader('Danh Mục'),
-        _buildQuickAccessGrid(context, [
+        _buildQuickAccessRow(context, [
           // Add your "Danh Mục" quick links here
           _buildQuickAccessButton(
             context: context,
             icon: Icons.category,
             label: 'Danh Mục 1',
-            route: '/danh-muc-1', // Placeholder route
+            route: '/danh-muc-1',
           ),
           _buildQuickAccessButton(
             context: context,
             icon: Icons.category,
             label: 'Danh Mục 2',
-            route: '/danh-muc-2', // Placeholder route
+            route: '/danh-muc-2',
           ),
         ]),
         _buildSectionHeader('Thu Thập Thông Tin'),
-        _buildQuickAccessGrid(context, [
+        _buildQuickAccessRow(context, [
           _buildQuickAccessButton(
             context: context,
             icon: FontAwesomeIcons.building,
             label: 'Hồ Sơ Cơ Quan Quản Lý',
-            route: '/ho-so-co-quan', // Placeholder route
+            route: '/ho-so-co-quan',
           ),
           _buildQuickAccessButton(
             context: context,
             icon: FontAwesomeIcons.user,
             label: 'Hồ Sơ Người Lao Động',
-            route: '/ho-so-nguoi-lao-dong', // Placeholder route
+            route: '/ho-so-nguoi-lao-dong',
           ),
           _buildQuickAccessButton(
             context: context,
             icon: FontAwesomeIcons.building,
             label: 'Hồ Sơ Nhà Tuyển Dụng',
-            route: '/ho-so-nha-tuyen-dung', // Placeholder route
+            route: '/ho-so-nha-tuyen-dung',
           ),
           _buildQuickAccessButton(
             context: context,
             icon: FontAwesomeIcons.briefcase,
             label: 'Theo Dõi Việc Làm',
-            route: '/theo-doi-viec-lam', // Placeholder route
+            route: '/theo-doi-viec-lam',
           ),
           _buildQuickAccessButton(
             context: context,
             icon: FontAwesomeIcons.wheelchair,
             label: 'Lao Động Khuyết Tật',
-            route: '/lao-dong-khuyet-tat', // Placeholder route
+            route: '/lao-dong-khuyet-tat',
           ),
           _buildQuickAccessButton(
             context: context,
             icon: FontAwesomeIcons.fileContract,
             label: 'Đối Soát Mẫu',
-            route: '/doi-soat-mau', // Placeholder route
+            route: '/doi-soat-mau',
           ),
           _buildQuickAccessButton(
             context: context,
             icon: FontAwesomeIcons.chartBar,
             label: 'Báo Cáo Hoạt Động',
-            route: '/bao-cao-hoat-dong', // Placeholder route
+            route: '/bao-cao-hoat-dong',
           ),
         ]),
         _buildSectionHeader('Nghiệp Vụ'),
-        _buildQuickAccessGrid(context, [
+        _buildQuickAccessRow(context, [
           _buildQuickAccessButton(
             context: context,
             icon: FontAwesomeIcons.idCard,
             label: 'Hồ Sơ Ứng Viên',
-            route: '/ho-so-ung-vien', // Placeholder route
+            route: '/ho-so-ung-vien',
           ),
           _buildQuickAccessButton(
             context: context,
             icon: FontAwesomeIcons.city,
             label: 'Hồ Sơ Doanh Nghiệp',
-            route: '/ho-so-doanh-nghiep', // Placeholder route
+            route: '/ho-so-doanh-nghiep',
           ),
           _buildQuickAccessButton(
             context: context,
             icon: FontAwesomeIcons.handshake,
             label: 'Hồ Sơ Chắp Nối',
-            route: '/ho-so-chap-noi', // Placeholder route
+            route: '/ho-so-chap-noi',
           ),
           _buildQuickAccessButton(
             context: context,
             icon: FontAwesomeIcons.checkDouble,
             label: 'Giải Quyết Việc Làm',
-            route: '/giai-quyet-viec-lam', // Placeholder route
+            route: '/giai-quyet-viec-lam',
           ),
         ]),
       ],
@@ -233,14 +236,21 @@ class AdminHomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildQuickAccessGrid(BuildContext context, List<Widget> children) {
-    return GridView.count(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisCount: 2,
-      crossAxisSpacing: 16.0,
-      mainAxisSpacing: 16.0,
-      children: children,
+  Widget _buildQuickAccessRow(BuildContext context, List<Widget> children) {
+    List<Widget> rows = [];
+    for (int i = 0; i < children.length; i += 4) {
+      rows.add(
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: children.sublist(
+            i,
+            i + 4 > children.length ? children.length : i + 4,
+          ),
+        ),
+      );
+    }
+    return Column(
+      children: rows,
     );
   }
 
@@ -250,26 +260,30 @@ class AdminHomePage extends StatelessWidget {
     required String label,
     required String route,
   }) {
-    return Card(
-      elevation: 4.0,
-      child: InkWell(
-        onTap: () => context.go(route),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, size: 40),
-              const SizedBox(height: 8.0),
-              Text(
-                label,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+    return SizedBox(
+      width: 150,
+      height: 100,
+      child: Card(
+        elevation: 4.0,
+        child: InkWell(
+          onTap: () => context.go(route),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(icon, size: 24),
+                const SizedBox(height: 4.0),
+                Text(
+                  label,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
