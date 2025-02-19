@@ -80,7 +80,74 @@ class AppRouter {
           return '/login';
         },
       ),
-
+      GoRoute(
+        path: '/log-he-thong',
+        builder: (context, state) => const LogHeThongPage(), // Replace with your page
+      ),
+      GoRoute(
+        path: '/phan-quyen',
+        builder: (context, state) => const PhanQuyenPage(), // Replace with your page
+      ),
+      GoRoute(
+        path: '/quan-tri-du-lieu',
+        builder: (context, state) => const QuanTriDuLieuPage(), // Replace with your page
+      ),
+      GoRoute(
+        path: '/quan-tri-nguoi-dung',
+        builder: (context, state) => const QuanTriNguoiDungPage(), // Replace with your page
+      ),
+      GoRoute(
+        path: '/danh-muc-1',
+        builder: (context, state) => const DanhMuc1Page(), // Replace with your page
+      ),
+      GoRoute(
+        path: '/danh-muc-2',
+        builder: (context, state) => const DanhMuc2Page(), // Replace with your page
+      ),
+      GoRoute(
+        path: '/ho-so-co-quan',
+        builder: (context, state) => const HoSoCoQuanPage(), // Replace with your page
+      ),
+      GoRoute(
+        path: '/ho-so-nguoi-lao-dong',
+        builder: (context, state) => const HoSoNguoiLaoDongPage(), // Replace with your page
+      ),
+      GoRoute(
+        path: '/ho-so-nha-tuyen-dung',
+        builder: (context, state) => const HoSoNhaTuyenDungPage(), // Replace with your page
+      ),
+      GoRoute(
+        path: '/theo-doi-viec-lam',
+        builder: (context, state) => const TheoDoiViecLamPage(), // Replace with your page
+      ),
+      GoRoute(
+        path: '/lao-dong-khuyet-tat',
+        builder: (context, state) => const LaoDongKhuyetTatPage(), // Replace with your page
+      ),
+      GoRoute(
+        path: '/doi-soat-mau',
+        builder: (context, state) => const DoiSoatMauPage(), // Replace with your page
+      ),
+      GoRoute(
+        path: '/bao-cao-hoat-dong',
+        builder: (context, state) => const BaoCaoHoatDongPage(), // Replace with your page
+      ),
+      GoRoute(
+        path: '/ho-so-ung-vien',
+        builder: (context, state) => const HoSoUngVienPage(), // Replace with your page
+      ),
+      GoRoute(
+        path: '/ho-so-doanh-nghiep',
+        builder: (context, state) => const HoSoDoanhNghiepPage(), // Replace with your page
+      ),
+      GoRoute(
+        path: '/ho-so-chap-noi',
+        builder: (context, state) => const HoSoChapNoiPage(), // Replace with your page
+      ),
+      GoRoute(
+        path: '/giai-quyet-viec-lam',
+        builder: (context, state) => const GiaiQuyetViecLamPage(), // Replace with your page
+      ),
       // Auth routes
       GoRoute(
         path: '/login',

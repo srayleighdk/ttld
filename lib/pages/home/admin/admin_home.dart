@@ -101,66 +101,159 @@ class AdminHomePage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Quick Access',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+        _buildSectionHeader('Hệ Thống'),
+        _buildQuickAccessGrid(context, [
+          _buildQuickAccessButton(
+            context: context,
+            icon: FontAwesomeIcons.cog,
+            label: 'Log Hệ Thống',
+            route: '/log-he-thong', // Placeholder route
           ),
-        ),
-        const SizedBox(height: 16.0),
-        GridView.count(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          crossAxisCount: 2,
-          crossAxisSpacing: 16.0,
-          mainAxisSpacing: 16.0,
-          children: [
-            _buildQuickAccessButton(
-              icon: FontAwesomeIcons.userGroup,
-              label: 'Manage Group',
-              onPressed: () {
-                context.go('/manager-group');
-                // Navigate to manage users page
-              },
-            ),
-            _buildQuickAccessButton(
-              icon: FontAwesomeIcons.userPen,
-              label: 'Manger Users',
-              onPressed: () {
-                // Navigate to settings page
-              },
-            ),
-            _buildQuickAccessButton(
-              icon: Icons.notifications,
-              label: 'Notifications',
-              onPressed: () {
-                // Navigate to notifications page
-              },
-            ),
-            _buildQuickAccessButton(
-              icon: Icons.report,
-              label: 'Reports',
-              onPressed: () {
-                // Navigate to reports page
-              },
-            ),
-          ],
-        ),
+          _buildQuickAccessButton(
+            context: context,
+            icon: FontAwesomeIcons.lock,
+            label: 'Phân Quyền',
+            route: '/phan-quyen', // Placeholder route
+          ),
+          _buildQuickAccessButton(
+            context: context,
+            icon: FontAwesomeIcons.database,
+            label: 'Quản Trị Dữ Liệu',
+            route: '/quan-tri-du-lieu', // Placeholder route
+          ),
+          _buildQuickAccessButton(
+            context: context,
+            icon: FontAwesomeIcons.usersGear,
+            label: 'Quản Trị Người Dùng',
+            route: '/quan-tri-nguoi-dung', // Placeholder route
+          ),
+        ]),
+        _buildSectionHeader('Danh Mục'),
+        _buildQuickAccessGrid(context, [
+          // Add your "Danh Mục" quick links here
+          _buildQuickAccessButton(
+            context: context,
+            icon: Icons.category,
+            label: 'Danh Mục 1',
+            route: '/danh-muc-1', // Placeholder route
+          ),
+          _buildQuickAccessButton(
+            context: context,
+            icon: Icons.category,
+            label: 'Danh Mục 2',
+            route: '/danh-muc-2', // Placeholder route
+          ),
+        ]),
+        _buildSectionHeader('Thu Thập Thông Tin'),
+        _buildQuickAccessGrid(context, [
+          _buildQuickAccessButton(
+            context: context,
+            icon: FontAwesomeIcons.building,
+            label: 'Hồ Sơ Cơ Quan Quản Lý',
+            route: '/ho-so-co-quan', // Placeholder route
+          ),
+          _buildQuickAccessButton(
+            context: context,
+            icon: FontAwesomeIcons.user,
+            label: 'Hồ Sơ Người Lao Động',
+            route: '/ho-so-nguoi-lao-dong', // Placeholder route
+          ),
+          _buildQuickAccessButton(
+            context: context,
+            icon: FontAwesomeIcons.building,
+            label: 'Hồ Sơ Nhà Tuyển Dụng',
+            route: '/ho-so-nha-tuyen-dung', // Placeholder route
+          ),
+          _buildQuickAccessButton(
+            context: context,
+            icon: FontAwesomeIcons.briefcase,
+            label: 'Theo Dõi Việc Làm',
+            route: '/theo-doi-viec-lam', // Placeholder route
+          ),
+          _buildQuickAccessButton(
+            context: context,
+            icon: FontAwesomeIcons.wheelchair,
+            label: 'Lao Động Khuyết Tật',
+            route: '/lao-dong-khuyet-tat', // Placeholder route
+          ),
+          _buildQuickAccessButton(
+            context: context,
+            icon: FontAwesomeIcons.fileContract,
+            label: 'Đối Soát Mẫu',
+            route: '/doi-soat-mau', // Placeholder route
+          ),
+          _buildQuickAccessButton(
+            context: context,
+            icon: FontAwesomeIcons.chartBar,
+            label: 'Báo Cáo Hoạt Động',
+            route: '/bao-cao-hoat-dong', // Placeholder route
+          ),
+        ]),
+        _buildSectionHeader('Nghiệp Vụ'),
+        _buildQuickAccessGrid(context, [
+          _buildQuickAccessButton(
+            context: context,
+            icon: FontAwesomeIcons.idCard,
+            label: 'Hồ Sơ Ứng Viên',
+            route: '/ho-so-ung-vien', // Placeholder route
+          ),
+          _buildQuickAccessButton(
+            context: context,
+            icon: FontAwesomeIcons.city,
+            label: 'Hồ Sơ Doanh Nghiệp',
+            route: '/ho-so-doanh-nghiep', // Placeholder route
+          ),
+          _buildQuickAccessButton(
+            context: context,
+            icon: FontAwesomeIcons.handshake,
+            label: 'Hồ Sơ Chắp Nối',
+            route: '/ho-so-chap-noi', // Placeholder route
+          ),
+          _buildQuickAccessButton(
+            context: context,
+            icon: FontAwesomeIcons.checkDouble,
+            label: 'Giải Quyết Việc Làm',
+            route: '/giai-quyet-viec-lam', // Placeholder route
+          ),
+        ]),
       ],
     );
   }
 
-  // Quick Access Button Widget
+  Widget _buildSectionHeader(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
+      child: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildQuickAccessGrid(BuildContext context, List<Widget> children) {
+    return GridView.count(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      crossAxisCount: 2,
+      crossAxisSpacing: 16.0,
+      mainAxisSpacing: 16.0,
+      children: children,
+    );
+  }
+
   Widget _buildQuickAccessButton({
+    required BuildContext context,
     required IconData icon,
     required String label,
-    required VoidCallback onPressed,
+    required String route,
   }) {
     return Card(
       elevation: 4.0,
       child: InkWell(
-        onTap: onPressed,
+        onTap: () => context.go(route),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -170,6 +263,7 @@ class AdminHomePage extends StatelessWidget {
               const SizedBox(height: 8.0),
               Text(
                 label,
+                textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
