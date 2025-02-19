@@ -50,6 +50,9 @@ void setupLocator() {
   locator.registerLazySingleton<TinhTrangTanTatRepository>(() =>
       TinhTrangTanTatRepositoryImpl(locator<TinhTrangTanTatApiService>()));
 
+  locator.registerLazySingleton<HoSoUngVienApiService>(
+      () => HoSoUngVienApiService(locator<ApiClient>().dio));
+
   // OPTIONAL: Register ForgotPasswordBloc here if you want GetIt to manage it too
   // locator.registerFactory(() => ForgotPasswordBloc(locator<ApiClient>().dio));
 }
