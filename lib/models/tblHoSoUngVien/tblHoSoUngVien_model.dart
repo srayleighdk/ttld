@@ -6,7 +6,7 @@ part 'tblHoSoUngVien_model.g.dart';
 @freezed
 class TblHoSoUngVienModel with _$TblHoSoUngVienModel {
   const factory TblHoSoUngVienModel({
-    required int id,
+    required String id, // Changed to String
     String? uvUsername,
     String? uvPassword,
     String? uvHoten,
@@ -24,20 +24,13 @@ class TblHoSoUngVienModel with _$TblHoSoUngVienModel {
     int? uvGioitinh,
     String? uvChieucao,
     String? uvCannang,
-    int? uvDoituongchinhsach,
-    int? uvTinhtrangtantat,
-    @Default(false) bool? uvHonnhan,
     DateTime? uvNgaysinh,
     String? uvcmCongviechientai,
-    int? uvnvNganhnghe,
-    int? uvnvVitrimongmuon,
-    int? uvnvThoigian,
+    String? uvnvNganhnghe,
     String? uvnvNoilamviec,
     int? idMucluong,
     double? uvnvTienluong,
-    int? uvnvHinhthuccongty,
     String? uvGhichu,
-    int? uvcmTrinhdo,
     String? uvcmBangcap,
     String? uvcmKynang,
     String? uvcmTrinhdongoaingu,
@@ -64,7 +57,7 @@ class TblHoSoUngVienModel with _$TblHoSoUngVienModel {
     String? idTinh,
     String? idHuyen,
     String? idXa,
-    int? idTv,
+    String? idTv, // Changed to String?
     String? mahoGD,
     String? fileCV,
     int? displayOrder,
@@ -73,6 +66,15 @@ class TblHoSoUngVienModel with _$TblHoSoUngVienModel {
     String? avatarUrl,
     String? idBacHoc,
     String? diachilienhe,
+    int? uvnvNganhngheId,
+    int? uvcmTrinhdoId,
+    int? uvDoituongchinhsachId,
+    int? uvnvThoigianId,
+    int? uvnvVitrimongmuonid,
+    @Default(false) bool? uvHonnhanId,
+    String? tenDanToc,
+    int? uvTinhtrangtantatId,
+    int? uvnvHinhthuccongtyId,
   }) = _TblHoSoUngVienModel;
 
   factory TblHoSoUngVienModel.fromJson(Map<String, dynamic> json) =>
