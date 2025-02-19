@@ -13,6 +13,8 @@ import 'package:ttld/pages/forgot_password/bloc/forgot_password_bloc.dart';
 import 'package:ttld/pages/hosoungvien/bloc/hosoungvien_bloc.dart';
 import 'package:ttld/pages/signup/bloc/signup_bloc.dart';
 
+import '../../bloc/tblViecLamUngVien/vieclam_ungvien_bloc.dart';
+
 // List<RepositoryProvider> getRepositoryProviders() {
 //   return [
 //     RepositoryProvider<AuthRepository>(
@@ -59,6 +61,10 @@ List<BlocProvider> getBlocProviders() {
     BlocProvider<HoSoUngVienBloc>(
       create: (context) => HoSoUngVienBloc(
           hoSoUngVienApiService: HoSoUngVienApiService(ApiClient().dio)),
-    )
+    ),
+    BlocProvider<ViecLamUngVienBloc>(
+      create: (context) => ViecLamUngVienBloc(
+          viecLamUngVienRepository: locator<ViecLamUngVienRepository>()),
+    ),
   ];
 }

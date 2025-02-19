@@ -16,6 +16,8 @@ import 'package:ttld/repositories/tblDmDoiTuongChinhSach/doituong_repository.dar
 import 'package:ttld/repositories/tblDmDoiTuongChinhSach/doituong_repository_impl.dart';
 import 'package:ttld/repositories/tblDmTTtantat/tantat_repository.dart';
 import 'package:ttld/repositories/tblDmTTtantat/tantat_repository_impl.dart';
+import 'package:ttld/repositories/tblViecLamUngVien/vieclam_ungvien_repository.dart';
+import 'package:ttld/repositories/tblViecLamUngVien/vieclam_ungvien_repository_impl.dart';
 
 final locator = GetIt.instance;
 
@@ -52,6 +54,12 @@ void setupLocator() {
 
   locator.registerLazySingleton<HoSoUngVienApiService>(
       () => HoSoUngVienApiService(locator<ApiClient>().dio));
+
+  locator.registerLazySingleton<ViecLamUngVienApiService>(
+      () => ViecLamUngVienApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<ViecLamUngVienRepository>(() =>
+      ViecLamUngVienRepositoryImpl(
+          viecLamUngVienApiService: locator<ViecLamUngVienApiService>()));
 
   // OPTIONAL: Register ForgotPasswordBloc here if you want GetIt to manage it too
   // locator.registerFactory(() => ForgotPasswordBloc(locator<ApiClient>().dio));
