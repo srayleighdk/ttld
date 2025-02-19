@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:ttld/core/api_client.dart';
 import 'package:ttld/core/services/chuyenmon_api_service.dart';
 import 'package:ttld/core/services/doituongchinhsach_api_service.dart';
+import 'package:ttld/core/services/hosoungvien_api_service.dart';
 import 'package:ttld/core/services/tttantat_api_service.dart';
 import 'package:ttld/features/auth/repositories/auth_repository.dart';
 import 'package:ttld/features/ds-ld/repositories/ld_repository.dart';
