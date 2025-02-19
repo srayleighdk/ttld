@@ -96,7 +96,50 @@ class HoSoUngVienPage extends StatelessWidget {
             }
           },
         ),
-      ),
-    );
+        bottomNavigationBar:
+            BlocBuilder<HoSoUngVienBloc, HoSoUngVienState>(
+          builder: (context, state) {
+            if (state is HoSoUngVienLoading) {
+              return const SizedBox.shrink();
+            }
+            int currentPage = 1;
+            if (state is HoSoUngVienLoaded) {
+              currentPage = state.page;
+            }
+            return BottomNavigationBar(
+              items: <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: currentPage > 1
+                        ? () {
+                            context.read<HoSoUngVienBloc>().add(
+                                HoSoUngVienFetchData(page: currentPage - 1));
+                          }
+                        : null,
+                  ),
+                  label: 'Previous',
+                ),
+                BottomNavigationBarItem(
+                  icon: Text('Page $currentPage'),
+                  label: '',
+                ),
+                BottomNavigationBarItem(
+                  icon: IconButton(
+                    icon: const Icon(Icons.arrow_forward),
+                    onPressed: state is HoSoUngVienLoaded &&
+                            state.hoSoUngVienList.length == 10
+                        ? () {
+                            context.read<HoSoUngVienBloc>().add(
+                                HoSoUngVienFetchData(page: currentPage + 1));
+                          }
+                        : null,
+                  ),
+                  label: 'Next',
+                ),
+              ],
+            );
+          },
+        ));
   }
 }
