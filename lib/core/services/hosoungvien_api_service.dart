@@ -11,7 +11,7 @@ class HoSoUngVienApiService {
     final response = await _dio.get(apiUrl);
 
     if (response.statusCode == 200) {
-      final List<dynamic> data = response.data;
+      final List<dynamic> data = response.data as List<dynamic>;
       return data.map((json) => TblHoSoUngVienModel.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load HoSoUngVien: ${response.statusCode}');
