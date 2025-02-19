@@ -15,7 +15,7 @@ class HoSoUngVienPage extends StatelessWidget {
       create: (context) => HoSoUngVienBloc(
           hoSoUngVienApiService:
               HoSoUngVienApiService(locator<ApiClient>().dio))
-        ..add(HoSoUngVienFetchData()),
+        ..add(HoSoUngVienFetchData(page: 1)),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Hồ Sơ Ứng Viên'),
