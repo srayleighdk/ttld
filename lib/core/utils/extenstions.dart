@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import 'package:theme_provider/theme_provider.dart';
 import 'package:ttld/helppers/help.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:ttld/helppers/ny_logger.dart';
+import 'package:ttld/themes/base_theme_config.dart';
 import 'dart:io';
+
+import 'package:ttld/themes/colors/color_style.dart';
+import 'package:ttld/themes/text/app_theme.dart';
 
 extension DarkMode on BuildContext {
   /// Example
   /// if (context.isDeviceInDarkMode) {
   ///   do something here...
   /// }
+  // The field in widget need to change when need to dark Brightness.light
   bool get isDeviceInDarkMode =>
-      MediaQuery.of(this).platformBrightness == Brightness.dark;
+      MediaQuery.of(this).platformBrightness == Brightness.light;
 }
 
 /// Extensions for [String]
@@ -553,4 +560,64 @@ extension NyListWidget on List<Widget> {
 
     return newChildren;
   }
+}
+
+extension NyWidget on Widget {
+  /// Make a widget a skeleton using the [Skeletonizer] package.
+  Skeletonizer toSkeleton({
+    Key? key,
+    bool? ignoreContainers,
+    bool? justifyMultiLineText,
+    Color? containersColor,
+    bool ignorePointers = true,
+    bool enabled = true,
+    PaintingEffect? effect,
+    TextBoneBorderRadius? textBoneBorderRadius,
+  }) {
+    return Skeletonizer(
+      ignoreContainers: ignoreContainers,
+      enabled: enabled,
+      effect: effect,
+      textBoneBorderRadius: textBoneBorderRadius,
+      justifyMultiLineText: justifyMultiLineText,
+      containersColor: containersColor,
+      ignorePointers: ignorePointers,
+      child: this,
+    );
+  }
+}
+
+class ThemeColor {
+  static ColorStyles get(BuildContext context, {String? themeId}) =>
+      nyColorStyle<ColorStyles>(context, themeId: themeId);
+
+  static Color fromHex(String hexColor) => nyHexColor(hexColor);
+}
+
+/// [BuildContext] Extensions
+extension NyApp on BuildContext {
+  /// Get the current theme color
+  ColorStyles get color => ThemeColor.get(this);
+}
+
+T nyColorStyle<T>(BuildContext context, {String? themeId}) {
+  List<AppTheme> appThemes = getAppThemes();
+
+  if (themeId == null) {
+    AppTheme themeFound = appThemes.firstWhere((theme) {
+      if (context.isDeviceInDarkMode) {
+        return theme.id == getEnv('DARK_THEME_ID');
+      }
+      return theme.id == ThemeProvider.controllerOf(context).currentThemeId;
+    }, orElse: () => appThemes.first);
+    return (themeFound.options as NyThemeOptions).colors;
+  }
+
+  AppTheme themeFound = appThemes.firstWhere((theme) => theme.id == themeId,
+      orElse: () => appThemes.first);
+  return (themeFound.options as NyThemeOptions).colors;
+}
+
+List<AppTheme> getAppThemes() {
+  return appThemes.map((appTheme) => appTheme.toAppTheme()).toList();
 }

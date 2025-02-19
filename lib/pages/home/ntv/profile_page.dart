@@ -42,7 +42,6 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(height: 20),
 
             // User Information
-            Field.text('Name'),
             _buildUserInfoRow('Name', _user.name),
             _buildUserInfoRow('Email', _user.email),
             // Add more user info rows as needed

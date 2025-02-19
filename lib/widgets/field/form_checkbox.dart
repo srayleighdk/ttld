@@ -121,6 +121,7 @@ class _NyFormCheckboxState extends FieldBaseState<NyFormCheckbox> {
       widget.field.name.titleCase,
       // widget.field.name.titleCase.tr(),
       style: TextStyle(
+        // color: color(light: Colors.black, dark: Colors.white),
         color: color(light: Colors.black, dark: Colors.white),
       ),
     );

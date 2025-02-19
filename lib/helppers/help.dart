@@ -72,3 +72,7 @@ T match<T>(dynamic value, Map<dynamic, T> Function() values,
   }
   return valuesMeta[value] as T;
 }
+
+printInfo(dynamic message, {bool alwaysPrint = false}) {
+  NyLogger.info(message, alwaysPrint: alwaysPrint);
+}

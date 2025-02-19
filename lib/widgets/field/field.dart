@@ -745,7 +745,7 @@ class Field {
     intl.DateFormat? dateFormat,
     DateTime? firstDate,
     DateTime? lastDate,
-    DateTimeFieldPickerMode mode = DateTimeFieldPickerMode.dateAndTime,
+    DateTimeFieldPickerMode mode = DateTimeFieldPickerMode.date,
     DateTimeFieldPickerPlatform pickerPlatform =
         DateTimeFieldPickerPlatform.adaptive,
   }) : cast = FormCast.date(

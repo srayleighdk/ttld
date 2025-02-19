@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
@@ -116,16 +117,16 @@ class AdminHomePage extends StatelessWidget {
           mainAxisSpacing: 16.0,
           children: [
             _buildQuickAccessButton(
-              icon: Icons.people,
-              label: 'Manage Users',
+              icon: FontAwesomeIcons.userGroup,
+              label: 'Manage Group',
               onPressed: () {
                 context.go('/manager-group');
                 // Navigate to manage users page
               },
             ),
             _buildQuickAccessButton(
-              icon: Icons.settings,
-              label: 'Settings',
+              icon: FontAwesomeIcons.userPen,
+              label: 'Manger Users',
               onPressed: () {
                 // Navigate to settings page
               },

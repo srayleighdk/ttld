@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
+import 'package:ttld/helppers/help.dart';
 import 'package:ttld/pages/home/ntv/bloc/ntv_form_bloc.dart';
 import 'package:ttld/pages/home/ntv/model/ntv_model.dart';
+import 'package:ttld/pages/home/ntv/ntv_form.dart';
+import 'package:ttld/widgets/button/button.dart';
+import 'package:ttld/widgets/form/ny_form.dart';
 
 class NTVFormScreen extends StatefulWidget {
   final Ntv? existingNtv; // Null for create mode
@@ -19,6 +23,8 @@ class _NTVFormScreenState extends State<NTVFormScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _uvUsernameController = TextEditingController();
+
+  final form = NtvForm();
 
   @override
   void initState() {
@@ -61,23 +67,14 @@ class _NTVFormScreenState extends State<NTVFormScreen> {
           key: _formKey,
           child: Column(
             children: [
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(labelText: "Name"),
-                validator: (value) =>
-                    value!.isEmpty ? "Name cannot be empty" : null,
-              ),
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(labelText: "Email"),
-                validator: (value) =>
-                    value!.isEmpty ? "Email cannot be empty" : null,
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _handleSubmit,
-                child: Text(widget.existingNtv == null ? "Create" : "Update"),
-              ),
+              NyForm(
+                  form: form,
+                  footer: Button.primary(text: "Submit", submitForm: (
+                    form,
+                    (data) {
+                      printInfo(data);
+                    }
+                  ))),
             ],
           ),
         ),

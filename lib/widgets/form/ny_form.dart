@@ -106,37 +106,37 @@ class NyForm extends StatefulWidget {
   }
 
   // Refresh the state of the form
-  static stateRefresh(String stateName) {
-    updateState(state(stateName), data: {
-      "action": "refresh",
-    });
-  }
-
-  /// Set field in the form
-  static stateSetValue(String stateName, String key, dynamic value) {
-    updateState(state(stateName),
-        data: {"action": "setValue", "key": key, "value": value});
-  }
-
-  /// Set field in the form
-  static stateSetOptions(String stateName, String key, dynamic value) {
-    updateState(state(stateName),
-        data: {"action": "setOptions", "key": key, "value": value});
-  }
-
-  /// Refresh the state of the form
-  static stateClearData(String stateName) {
-    updateState(state(stateName), data: {
-      "action": "clear",
-    });
-  }
-
-  /// Refresh the state of the form
-  static stateRefreshForm(String stateName) {
-    updateState(state(stateName), data: {
-      "action": "refresh-form",
-    });
-  }
+  // static stateRefresh(String stateName) {
+  //   updateState(state(stateName), data: {
+  //     "action": "refresh",
+  //   });
+  // }
+  //
+  // /// Set field in the form
+  // static stateSetValue(String stateName, String key, dynamic value) {
+  //   updateState(state(stateName),
+  //       data: {"action": "setValue", "key": key, "value": value});
+  // }
+  //
+  // /// Set field in the form
+  // static stateSetOptions(String stateName, String key, dynamic value) {
+  //   updateState(state(stateName),
+  //       data: {"action": "setOptions", "key": key, "value": value});
+  // }
+  //
+  // /// Refresh the state of the form
+  // static stateClearData(String stateName) {
+  //   updateState(state(stateName), data: {
+  //     "action": "clear",
+  //   });
+  // }
+  //
+  // /// Refresh the state of the form
+  // static stateRefreshForm(String stateName) {
+  //   updateState(state(stateName), data: {
+  //     "action": "refresh-form",
+  //   });
+  // }
 
   /// Submit the form
   static submit(String name,

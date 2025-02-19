@@ -99,7 +99,10 @@ class _NyFormDateTimePickerState extends FieldBaseState<NyFormDateTimePicker> {
           InputDecoration(
             fillColor:
                 color(light: Colors.grey.shade100, dark: surfaceColorDark),
-            border: InputBorder.none,
+            // border: InputBorder.none,
+            border: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12)),
+                borderSide: BorderSide(color: Colors.transparent)),
             filled: true,
             suffixIconColor: color(light: Colors.black, dark: Colors.white),
             labelText: widget.field.name.titleCase,

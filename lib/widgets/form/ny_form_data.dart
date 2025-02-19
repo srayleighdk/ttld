@@ -153,9 +153,9 @@ class NyFormData {
       _keys.add(formField.key);
     }
 
-    if (init != null) {
-      initialData(init!);
-    }
+    // if (init != null) {
+    //   initialData(init!);
+    // }
 
     setData(allData, refreshState: false);
     if (getEnv('APP_ENV') != 'developing') {
@@ -277,20 +277,20 @@ class NyFormData {
   Stream<bool> get isReady => _ready.stream;
 
   /// Load data for the form
-  initialData(Function() loadData, {bool refreshState = false}) {
-    _loadData = loadData;
-
-    if (!refreshState) return;
-    NyForm.stateRefresh(stateName);
-  }
+  // initialData(Function() loadData, {bool refreshState = false}) {
+  //   _loadData = loadData;
+  //
+  //   if (!refreshState) return;
+  //   NyForm.stateRefresh(stateName);
+  // }
 
   /// On change function for the form
   onChange(String field, Map<String, dynamic> data) {}
 
   /// Refresh the form
-  refreshForm() {
-    NyForm.stateRefreshForm(stateName);
-  }
+  // refreshForm() {
+  //   NyForm.stateRefreshForm(stateName);
+  // }
 
   /// Create a new form
   /// [initialData] The initial data for the form
@@ -316,34 +316,34 @@ class NyFormData {
         locked: locked ?? false);
   }
 
-  /// Clear the form
-  // clear({bool refreshState = true}) {
-  //   _data.forEach((key, value) {
-  //     _data[key] = null;
-  //   });
-  //   _dummyData.forEach((key, value) {
-  //     _dummyData[key] = null;
-  //   });
+  // Clear the form
+  clear({bool refreshState = true}) {
+    _data.forEach((key, value) {
+      _data[key] = null;
+    });
+    _dummyData.forEach((key, value) {
+      _dummyData[key] = null;
+    });
+    if (refreshState) {
+      // update the state
+      // NyForm.stateClearData(stateName);
+    }
+  }
+
+  // void clearForm(BuildContext context, {bool refreshState = true}) {
   //   if (refreshState) {
-  //     // update the state
-  //     NyForm.stateClearData(stateName);
+  //     BlocProvider.of<FormBloc>(context).add(ClearForm(stateName));
   //   }
   // }
 
-  void clearForm(BuildContext context, {bool refreshState = true}) {
-    if (refreshState) {
-      BlocProvider.of<FormBloc>(context).add(ClearForm(stateName));
-    }
-  }
-
   // Clear a field in the form
-  clearField(String key) {
-    if (!_data.containsKey(key)) {
-      throw Exception("Field $key does not exist in the form");
-    }
-    _data[key] = null;
-    NyForm.stateRefresh(stateName);
-  }
+  // clearField(String key) {
+  //   if (!_data.containsKey(key)) {
+  //     throw Exception("Field $key does not exist in the form");
+  //   }
+  //   _data[key] = null;
+  //   NyForm.stateRefresh(stateName);
+  // }
 
   /// Set the value for a field in the form
   /// If the field does not exist, it will throw an exception
@@ -353,19 +353,19 @@ class NyFormData {
     }
     _data[key] = value;
     if (!refreshState) return;
-    NyForm.stateSetValue(stateName, key, value);
+    // NyForm.stateSetValue(stateName, key, value);
   }
 
   /// Set the options for a field in the form
   /// If the field does not exist, it will throw an exception
-  setFieldOptions(String key, dynamic value, {bool refreshState = true}) {
-    if (!_data.containsKey(key)) {
-      throw Exception("Field $key does not exist in the form");
-    }
-    _cast[key]?.metaData!["options"] = value;
-    if (!refreshState) return;
-    NyForm.stateSetOptions(stateName, key, value);
-  }
+  // setFieldOptions(String key, dynamic value, {bool refreshState = true}) {
+  //   if (!_data.containsKey(key)) {
+  //     throw Exception("Field $key does not exist in the form");
+  //   }
+  //   _cast[key]?.metaData!["options"] = value;
+  //   if (!refreshState) return;
+  //   NyForm.stateSetOptions(stateName, key, value);
+  // }
 
   /// Set the data for the form
   setData(Map<String, dynamic> data, {bool refreshState = true}) {
@@ -383,7 +383,7 @@ class NyFormData {
       }
     });
     if (!refreshState) return;
-    NyForm.stateRefresh(stateName);
+    // NyForm.stateRefresh(stateName);
   }
 
   // void clearField(BuildContext context, String key) {
