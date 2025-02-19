@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ttld/core/api_client.dart';
 import 'package:ttld/core/di/injection.dart';
+import 'package:ttld/core/services/hosoungvien_api_service.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/login_bloc.dart';
 import 'package:ttld/features/auth/repositories/auth_repository.dart';
@@ -9,6 +10,7 @@ import 'package:ttld/features/ds-ld/repositories/ld_repository.dart';
 import 'package:ttld/features/user_group/bloc/group_bloc.dart';
 import 'package:ttld/features/user_group/repository/group_repository.dart';
 import 'package:ttld/pages/forgot_password/bloc/forgot_password_bloc.dart';
+import 'package:ttld/pages/hosoungvien/bloc/hosoungvien_bloc.dart';
 import 'package:ttld/pages/signup/bloc/signup_bloc.dart';
 
 // List<RepositoryProvider> getRepositoryProviders() {
@@ -53,6 +55,10 @@ List<BlocProvider> getBlocProviders() {
     ),
     BlocProvider<ForgotPasswordBloc>(
       create: (context) => ForgotPasswordBloc(ApiClient().dio),
+    ),
+    BlocProvider<HoSoUngVienBloc>(
+      create: (context) => HoSoUngVienBloc(
+          hoSoUngVienApiService: HoSoUngVienApiService(ApiClient().dio)),
     )
   ];
 }
