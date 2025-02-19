@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ttld/core/api_client.dart';
 import 'package:ttld/models/tblHoSoUngVien/tblHoSoUngVien_model.dart';
 import 'package:ttld/pages/hosoungvien/bloc/hosoungvien_bloc.dart';
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/core/services/hosoungvien_api_service.dart';
 
 class HoSoUngVienPage extends StatelessWidget {
-  const HoSoUngVienPage({Key? key}) : super(key: key);
+  const HoSoUngVienPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => HoSoUngVienBloc(hoSoUngVienApiService: HoSoUngVienApiService())
+      create: (context) => HoSoUngVienBloc(
+          hoSoUngVienApiService:
+              HoSoUngVienApiService(locator<ApiClient>().dio))
         ..add(HoSoUngVienFetchData()),
       child: Scaffold(
         appBar: AppBar(

@@ -4,17 +4,33 @@ import 'package:go_router/go_router.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
 import 'package:ttld/features/ds-ld/repositories/ld_repository.dart';
+import 'package:ttld/pages/baocaohoatdong/baocaohoatdong_page.dart';
+import 'package:ttld/pages/danhmuc/danhmuc_page.dart';
+import 'package:ttld/pages/doisoatmau/doisoatmau_page.dart';
 import 'package:ttld/pages/error/error.dart';
 import 'package:ttld/pages/forgot_password/forgot_password.dart';
+import 'package:ttld/pages/giaiquyetvieclam/giaiquyetvieclam_page.dart';
 import 'package:ttld/pages/home/admin/admin_home.dart';
 import 'package:ttld/pages/home/admin/system/manager_groups.dart';
 import 'package:ttld/pages/home/home_page.dart';
 import 'package:ttld/pages/home/ntd/ntd_home.dart';
 import 'package:ttld/pages/home/ntv/ntv_form_screen.dart';
 import 'package:ttld/pages/home/ntv/ntv_home.dart';
+import 'package:ttld/pages/hosochapnoi/hosochapnoi_page.dart';
+import 'package:ttld/pages/hosocoquan/hosocoquan_page.dart';
+import 'package:ttld/pages/hosodoangnghiep/hosodoangnghiep_page.dart';
+import 'package:ttld/pages/hosonguoilaodong/hosonguoilaodong_page.dart';
+import 'package:ttld/pages/hosonhatuyendung/hosontd_page.dart';
+import 'package:ttld/pages/hosoungvien/hosoungvien_page.dart';
+import 'package:ttld/pages/laodongkhuyettat/laodongkhuyettat_page.dart';
+import 'package:ttld/pages/loghethong/loghethong_page.dart';
 import 'package:ttld/pages/login/login_page.dart';
+import 'package:ttld/pages/phanquyen/phanquyen_page.dart';
+import 'package:ttld/pages/quantridulieu/quantridulieu_page.dart';
+import 'package:ttld/pages/quantringuoidung/quantringuoidung_page.dart';
 import 'package:ttld/pages/signup/signup.dart';
 import 'package:ttld/pages/splash/spash_page.dart';
+import 'package:ttld/pages/theodoivieclam/theodoivieclam_page.dart';
 
 class AppRouter {
   final AuthBloc authBloc;
@@ -82,71 +98,88 @@ class AppRouter {
       ),
       GoRoute(
         path: '/log-he-thong',
-        builder: (context, state) => const LogHeThongPage(), // Replace with your page
+        builder: (context, state) =>
+            const LogHeThongPage(), // Replace with your page
       ),
       GoRoute(
         path: '/phan-quyen',
-        builder: (context, state) => const PhanQuyenPage(), // Replace with your page
+        builder: (context, state) =>
+            const PhanQuyenPage(), // Replace with your page
       ),
       GoRoute(
         path: '/quan-tri-du-lieu',
-        builder: (context, state) => const QuanTriDuLieuPage(), // Replace with your page
+        builder: (context, state) =>
+            const QuanTriDuLieuPage(), // Replace with your page
       ),
       GoRoute(
         path: '/quan-tri-nguoi-dung',
-        builder: (context, state) => const QuanTriNguoiDungPage(), // Replace with your page
+        builder: (context, state) =>
+            const QuanTriNguoiDungPage(), // Replace with your page
       ),
       GoRoute(
         path: '/danh-muc-1',
-        builder: (context, state) => const DanhMuc1Page(), // Replace with your page
+        builder: (context, state) =>
+            const DanhMuc1Page(), // Replace with your page
       ),
       GoRoute(
         path: '/danh-muc-2',
-        builder: (context, state) => const DanhMuc2Page(), // Replace with your page
+        builder: (context, state) =>
+            const DanhMuc2Page(), // Replace with your page
       ),
       GoRoute(
         path: '/ho-so-co-quan',
-        builder: (context, state) => const HoSoCoQuanPage(), // Replace with your page
+        builder: (context, state) =>
+            const HoSoCoQuanPage(), // Replace with your page
       ),
       GoRoute(
         path: '/ho-so-nguoi-lao-dong',
-        builder: (context, state) => const HoSoNguoiLaoDongPage(), // Replace with your page
+        builder: (context, state) =>
+            const HoSoNguoiLaoDongPage(), // Replace with your page
       ),
       GoRoute(
         path: '/ho-so-nha-tuyen-dung',
-        builder: (context, state) => const HoSoNhaTuyenDungPage(), // Replace with your page
+        builder: (context, state) =>
+            const HoSoNTDPage(), // Replace with your page
       ),
       GoRoute(
         path: '/theo-doi-viec-lam',
-        builder: (context, state) => const TheoDoiViecLamPage(), // Replace with your page
+        builder: (context, state) =>
+            const TheoDoiViecLamPage(), // Replace with your page
       ),
       GoRoute(
         path: '/lao-dong-khuyet-tat',
-        builder: (context, state) => const LaoDongKhuyetTatPage(), // Replace with your page
+        builder: (context, state) =>
+            const LaoDongKhuyetTatPage(), // Replace with your page
       ),
       GoRoute(
         path: '/doi-soat-mau',
-        builder: (context, state) => const DoiSoatMauPage(), // Replace with your page
+        builder: (context, state) =>
+            const DoiSoatMauPage(), // Replace with your page
       ),
       GoRoute(
         path: '/bao-cao-hoat-dong',
-        builder: (context, state) => const BaoCaoHoatDongPage(), // Replace with your page
+        builder: (context, state) =>
+            const BaoCaoHoatDongPage(), // Replace with your page
       ),
       GoRoute(
         path: '/ho-so-ung-vien',
-        builder: (context, state) => const HoSoUngVienPage(), // Replace with your page
+        builder: (context, state) =>
+            const HoSoUngVienPage(), // Replace with your page
       ),
       GoRoute(
         path: '/ho-so-doanh-nghiep',
-        builder: (context, state) => const HoSoDoanhNghiepPage(), // Replace with your page
+        builder: (context, state) =>
+            const HoSoDoanhNghiepPage(), // Replace with your page
       ),
       GoRoute(
         path: '/ho-so-chap-noi',
-        builder: (context, state) => const HoSoChapNoiPage(), // Replace with your page
+        builder: (context, state) =>
+            const HoSoChapNoiPage(), // Replace with your page
       ),
       GoRoute(
         path: '/giai-quyet-viec-lam',
-        builder: (context, state) => const GiaiQuyetViecLamPage(), // Replace with your page
+        builder: (context, state) =>
+            const GiaiQuyetViecLamPage(), // Replace with your page
       ),
       // Auth routes
       GoRoute(
@@ -220,6 +253,10 @@ class AppRouter {
   // }
 }
 
+// class HoSoNguoiLaoDongPage {
+//   const HoSoNguoiLaoDongPage();
+// }
+//
 class GoRouterRefreshStream extends ChangeNotifier {
   late final StreamSubscription<dynamic> _subscription;
   final Stream<dynamic> stream;

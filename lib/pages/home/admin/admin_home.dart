@@ -101,9 +101,6 @@ class AdminHomePage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
         _buildSectionHeader('Hệ Thống'),
         _buildQuickAccessRow(context, [
           _buildQuickAccessButton(
