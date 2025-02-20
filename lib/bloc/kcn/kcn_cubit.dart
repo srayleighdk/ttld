@@ -1,11 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
-import 'package:injectable/injectable.dart';
 import 'package:ttld/core/services/danhmuc_api_service.dart';
 
 part 'kcn_state.dart';
 
-@injectable
 class KcnCubit extends Cubit<KcnState> {
   final DanhMucApiService _danhmucApiService;
 
