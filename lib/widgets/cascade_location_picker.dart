@@ -34,18 +34,6 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
   }
 
   @override
-  void didUpdateWidget(CascadeLocationPicker oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    // Load Huyens when selectedTinh changes
-    if (oldWidget.selectedTinh != selectedTinh) {
-      if (selectedTinh != null) {
-        context.read<HuyenBloc>().add(LoadHuyensByTinh(matinh: selectedTinh!.matinh));
-      }
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
@@ -54,6 +42,12 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
             if (state is TinhLoading) {
               return const CircularProgressIndicator();
             } else if (state is TinhLoaded) {
+              // Load Huyens when Tinhs are loaded
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (selectedTinh != null) {
+                  context.read<HuyenBloc>().add(LoadHuyensByTinh(matinh: selectedTinh!.matinh));
+                }
+              });
               return CustomPicker<Tinh>(
                 items: state.tinhs,
                 selectedItem: selectedTinh,
