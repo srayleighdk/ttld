@@ -139,4 +139,6 @@ void setupLocator() {
   //NguonThuThap
 
   //DanToc
+
+  //TonGiao
 }
