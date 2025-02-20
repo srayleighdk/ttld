@@ -20,7 +20,7 @@ class NTDApiService {
 
   Future<NtdModel> getNtdById(String id) async {
     try {
-      final response = await _dio.get('${ApiEndpoints.ntdById.replaceAll(":id", id)}');
+      final response = await _dio.get(ApiEndpoints.ntdById, queryParameters: {'id': id});
       final NtdModel ntd = NtdModel.fromJson(response.data);
       return ntd;
     } catch (e) {
