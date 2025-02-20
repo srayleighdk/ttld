@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
+import 'package:ttld/pages/nha_tuyen_dung/nha_tuyen_dung_page.dart';
 
 class NTDHomePage extends StatelessWidget {
   static const routePath = '/ntd_home';
@@ -106,7 +107,7 @@ class NTDHomePage extends StatelessWidget {
             context: context,
             icon: FontAwesomeIcons.solidPenToSquare,
             label: 'Cập nhật NTD',
-            route: '/cap-nhat-ntd',
+            route: '/nha-tuyen-dung',
           ),
           _buildQuickAccessButton(
             context: context,
