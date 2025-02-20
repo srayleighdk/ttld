@@ -157,4 +157,6 @@ void setupLocator() {
   //HinhThucDiaDiem
 
   //TinhTrangViecLam
+
+  //LoaiViecLam
 }
