@@ -9,30 +9,30 @@ abstract class XaRepository {
 }
 
 class XaRepositoryImpl implements XaRepository {
-  final ApiClient apiClient;
+  final XaApiService xaApiService;
 
-  XaRepositoryImpl({required this.apiClient});
+  XaRepositoryImpl({required this.xaApiService});
 
   @override
   Future<List<Xa>> getXas() async {
-    final response = await apiClient.getXa();
+    final response = await xaApiService.getXa();
     return (response as List).map((json) => Xa.fromJson(json)).toList();
   }
 
   @override
   Future<Xa> addXa(Xa xa) async {
-    final response = await apiClient.postXa(xa.toJson());
+    final response = await xaApiService.postXa(xa.toJson());
     return Xa.fromJson(response);
   }
 
   @override
   Future<Xa> updateXa(Xa xa) async {
-    final response = await apiClient.putXa(xa.toJson());
+    final response = await xaApiService.putXa(xa.toJson());
     return Xa.fromJson(response);
   }
 
   @override
   Future<void> deleteXa(String id) async {
-    await apiClient.deleteXa(id);
+    await xaApiService.deleteXa(id);
   }
 }
