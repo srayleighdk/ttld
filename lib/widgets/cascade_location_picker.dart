@@ -49,7 +49,7 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
   void initState() {
     super.initState();
     context.read<TinhBloc>().add(LoadTinhs());
-    _kcnCubit = getIt<KcnCubit>();
+    _kcnCubit = locator<KcnCubit>();
     _updateAddressDetail();
   }
 
