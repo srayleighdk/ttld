@@ -23,6 +23,23 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
   final _ntdTentatController = TextEditingController();
   final _ntdTenController = TextEditingController();
   final _ntdEmailController = TextEditingController();
+  final _ntdSolaodongController = TextEditingController();
+  final _ntdGioithieuController = TextEditingController();
+  final _ntdDiachithanhphoController = TextEditingController();
+  final _ntdDiachihuyenController = TextEditingController();
+  final _ntdDiachixaphuongController = TextEditingController();
+  final _ntdDiachichitietController = TextEditingController();
+  final _ntdNguoilienheController = TextEditingController();
+  final _ntdDienthoaiController = TextEditingController();
+  final _ntdFaxController = TextEditingController();
+  final _ntdWebsiteController = TextEditingController();
+  final _ntdQuocgiaController = TextEditingController();
+  final _ntdNamthanhlapController = TextEditingController();
+  final _ntdLinhvuchoatdongController = TextEditingController();
+  final _nongThonThanhThiController = TextEditingController();
+  final _ntdTenTinhController = TextEditingController();
+  final _ntdTenHuyenController = TextEditingController();
+  final _ntdTenXaController = TextEditingController();
 
   @override
   void didChangeDependencies() {
@@ -38,9 +55,27 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
         _ntdTentatController.text = ntd.ntdTentat ?? '';
         _ntdTenController.text = ntd.ntdTen ?? '';
         _ntdEmailController.text = ntd.ntdEmail ?? '';
+        _ntdSolaodongController.text = ntd.ntdSolaodong?.toString() ?? '';
+        _ntdGioithieuController.text = ntd.ntdGioithieu ?? '';
+        _ntdDiachithanhphoController.text = ntd.ntdDiachithanhpho ?? '';
+        _ntdDiachihuyenController.text = ntd.ntdDiachihuyen ?? '';
+        _ntdDiachixaphuongController.text = ntd.ntdDiachixaphuong ?? '';
+        _ntdDiachichitietController.text = ntd.ntdDiachichitiet ?? '';
+        _ntdNguoilienheController.text = ntd.ntdNguoilienhe ?? '';
+        _ntdDienthoaiController.text = ntd.ntdDienthoai ?? '';
+        _ntdFaxController.text = ntd.ntdFax ?? '';
+        _ntdWebsiteController.text = ntd.ntdWebsite ?? '';
+        _ntdQuocgiaController.text = ntd.ntdQuocgia ?? '';
+        _ntdNamthanhlapController.text = ntd.ntdNamthanhlap?.toString() ?? '';
+        _ntdLinhvuchoatdongController.text = ntd.ntdLinhvuchoatdong ?? '';
+        _nongThonThanhThiController.text = ntd.nongThonThanhThi ?? '';
+        _ntdTenTinhController.text = ntd.ntdTenTinh ?? '';
+        _ntdTenHuyenController.text = ntd.ntdTenHuyen ?? '';
+        _ntdTenXaController.text = ntd.ntdTenXa ?? '';
       }
     }
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -101,8 +136,8 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   decoration: const InputDecoration(labelText: 'NTD Ten'),
                 ),
                 TextFormField(
-                  controller: _ntdEmailController,
-                  decoration: const InputDecoration(labelText: 'NTD Email'),
+                  controller: _ntdTenXaController,
+                  decoration: const InputDecoration(labelText: 'NTD Ten Xa'),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 24.0),
@@ -148,6 +183,23 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
     _ntdTentatController.dispose();
     _ntdTenController.dispose();
     _ntdEmailController.dispose();
+    _ntdSolaodongController.dispose();
+    _ntdGioithieuController.dispose();
+    _ntdDiachithanhphoController.dispose();
+    _ntdDiachihuyenController.dispose();
+    _ntdDiachixaphuongController.dispose();
+    _ntdDiachichitietController.dispose();
+    _ntdNguoilienheController.dispose();
+    _ntdDienthoaiController.dispose();
+    _ntdFaxController.dispose();
+    _ntdWebsiteController.dispose();
+    _ntdQuocgiaController.dispose();
+    _ntdNamthanhlapController.dispose();
+    _ntdLinhvuchoatdongController.dispose();
+    _nongThonThanhThiController.dispose();
+    _ntdTenTinhController.dispose();
+    _ntdTenHuyenController.dispose();
+    _ntdTenXaController.dispose();
     super.dispose();
   }
 }
