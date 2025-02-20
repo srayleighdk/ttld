@@ -224,6 +224,10 @@ class AppRouter {
             const NTDHomePage(),
       ),
       GoRoute(
+        path: UpdateNTDPage.routePath,
+        builder: (context, state) => const UpdateNTDPage(),
+      ),
+      GoRoute(
         path: '/home',
         builder: (BuildContext context, GoRouterState state) =>
             const HomePage(),
