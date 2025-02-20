@@ -12,19 +12,25 @@ import 'package:ttld/bloc/xa/xa_state.dart';
 import 'package:ttld/models/huyen/huyen.dart';
 import 'package:ttld/models/tinh/tinh.dart';
 import 'package:ttld/models/xa/xa.dart';
+import 'package:ttld/bloc/kcn/kcn_cubit.dart';
+import 'package:ttld/models/kcn/kcn_model.dart';
+import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/widgets/field/custom_picker.dart';
 import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
+import 'package:flutter/services.dart';
 
 class CascadeLocationPicker extends StatefulWidget {
   final Function(Tinh?)? onTinhChanged;
   final Function(Huyen?)? onHuyenChanged;
   final Function(Xa?)? onXaChanged;
+  final Function(KCN?)? onKCNChanged;
 
   const CascadeLocationPicker({
     super.key,
     this.onTinhChanged,
     this.onHuyenChanged,
     this.onXaChanged,
+    this.onKCNChanged,
   });
 
   @override
@@ -35,14 +41,21 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
   Tinh? selectedTinh;
   Huyen? selectedHuyen;
   Xa? selectedXa;
-  final TextEditingController _addressDetailController =
-      TextEditingController();
+  KCN? selectedKCN;
+  final TextEditingController _addressDetailController = TextEditingController();
+  late final KcnCubit _kcnCubit;
 
   @override
   void initState() {
     super.initState();
     context.read<TinhBloc>().add(LoadTinhs());
+    _kcnCubit = getIt<KcnCubit>();
     _updateAddressDetail();
+  }
+
+  @override
+  void didUpdateWidget(covariant CascadeLocationPicker oldWidget) {
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -57,9 +70,8 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
               // Load Huyens when Tinhs are loaded
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (selectedTinh != null) {
-                  context
-                      .read<HuyenBloc>()
-                      .add(LoadHuyensByTinh(matinh: selectedTinh!.matinh));
+                  context.read<HuyenBloc>().add(LoadHuyensByTinh(matinh: selectedTinh!.matinh));
+                  _kcnCubit.getKCN(selectedTinh!.matinh);
                 }
               });
               return CustomPicker<Tinh>(
@@ -72,12 +84,12 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
                     selectedTinh = newValue;
                     selectedHuyen = null;
                     selectedXa = null;
+                    selectedKCN = null;
                     _updateAddressDetail();
                   });
                   if (newValue != null) {
-                    context
-                        .read<HuyenBloc>()
-                        .add(LoadHuyensByTinh(matinh: newValue.matinh));
+                    context.read<HuyenBloc>().add(LoadHuyensByTinh(matinh: newValue.matinh));
+                    _kcnCubit.getKCN(newValue.matinh);
                   }
                   widget.onTinhChanged?.call(newValue);
                 },
@@ -104,12 +116,11 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
                   setState(() {
                     selectedHuyen = newValue;
                     selectedXa = null;
+                    selectedKCN = null;
                     _updateAddressDetail();
                   });
                   if (newValue != null) {
-                    context
-                        .read<XaBloc>()
-                        .add(LoadXasByHuyen(mahuyen: newValue.mahuyen));
+                    context.read<XaBloc>().add(LoadXasByHuyen(mahuyen: newValue.mahuyen));
                   }
                   widget.onHuyenChanged?.call(newValue);
                 },
@@ -135,12 +146,40 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
                 onChanged: (Xa? newValue) {
                   setState(() {
                     selectedXa = newValue;
+                    selectedKCN = null;
                     _updateAddressDetail();
                   });
                   widget.onXaChanged?.call(newValue);
                 },
               );
             } else if (state is XaError) {
+              return Text('Error: ${state.message}');
+            } else {
+              return const SizedBox.shrink();
+            }
+          },
+        ),
+        const SizedBox(height: 14),
+        BlocBuilder<KcnCubit, KcnState>(
+          bloc: _kcnCubit,
+          builder: (context, state) {
+            if (state is KcnLoading) {
+              return const CircularProgressIndicator();
+            } else if (state is KcnLoaded) {
+              return CustomPicker<KCN>(
+                items: state.kcnList,
+                selectedItem: selectedKCN,
+                displayItemBuilder: (KCN? kcn) => kcn?.kcnTen ?? '',
+                hint: 'Chọn KCN',
+                onChanged: (KCN? newValue) {
+                  setState(() {
+                    selectedKCN = newValue;
+                    _updateAddressDetail();
+                  });
+                  widget.onKCNChanged?.call(newValue);
+                },
+              );
+            } else if (state is KcnError) {
               return Text('Error: ${state.message}');
             } else {
               return const SizedBox.shrink();
@@ -161,15 +200,15 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
   @override
   void dispose() {
     _addressDetailController.dispose();
+    _kcnCubit.close();
     super.dispose();
   }
 
   void _updateAddressDetail() {
-    _addressDetailController.text = _buildAddressString(
-        selectedXa?.tenxa, selectedHuyen?.tenhuyen, selectedTinh?.tentinh);
+    _addressDetailController.text = _buildAddressString(selectedXa?.tenxa, selectedHuyen?.tenhuyen, selectedTinh?.tentinh, selectedKCN?.kcnTen);
   }
 
-  String _buildAddressString(String? xa, String? huyen, String? tinh) {
+  String _buildAddressString(String? xa, String? huyen, String? tinh, String? kcn) {
     String address = "";
     if (xa != null && xa.isNotEmpty) {
       address += xa;
@@ -181,6 +220,10 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
     if (tinh != null && tinh.isNotEmpty) {
       if (address.isNotEmpty) address += ", ";
       address += " $tinh";
+    }
+    if (kcn != null && kcn.isNotEmpty) {
+      if (address.isNotEmpty) address += ", ";
+      address += " $kcn";
     }
     return address;
   }
