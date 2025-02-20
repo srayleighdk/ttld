@@ -12,13 +12,20 @@ import 'package:ttld/features/user_group/repository/group_repository.dart';
 import 'package:ttld/pages/forgot_password/bloc/forgot_password_bloc.dart';
 import 'package:ttld/pages/hosoungvien/bloc/hosoungvien_bloc.dart';
 import 'package:ttld/pages/signup/bloc/signup_bloc.dart';
+import 'package:ttld/bloc/tblNhaTuyenDung/ntd_bloc.dart';
+import 'package:ttld/core/services/ntd_api_service.dart';
+import 'package:ttld/repositories/tblNhaTuyenDung/ntd_repository.dart';
+import 'package:ttld/repositories/tblNhaTuyenDung/ntd_repository_impl.dart';
 import 'package:ttld/repositories/tblViecLamUngVien/vieclam_ungvien_repository.dart';
 
 import '../../bloc/tblViecLamUngVien/vieclam_ungvien_bloc.dart';
 
-// List<RepositoryProvider> getRepositoryProviders() {
-//   return [
-//     RepositoryProvider<AuthRepository>(
+List<RepositoryProvider> getRepositoryProviders() {
+  return [
+    RepositoryProvider<NTDRepository>(
+      create: (context) => NTDRepositoryImpl(NTDApiService()),
+    ),
+    // RepositoryProvider<AuthRepository>(
 //       create: (context) => AuthRepository(ApiClient().dio),
 //     ),
 //     RepositoryProvider<LdRepository>(
@@ -66,6 +73,11 @@ List<BlocProvider> getBlocProviders() {
     BlocProvider<ViecLamUngVienBloc>(
       create: (context) => ViecLamUngVienBloc(
           viecLamUngVienRepository: locator<ViecLamUngVienRepository>()),
+    ),
+    BlocProvider<NTDBloc>(
+      create: (context) => NTDBloc(
+        locator<NTDRepository>(),
+      ),
     ),
   ];
 }
