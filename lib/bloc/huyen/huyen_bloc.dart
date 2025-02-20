@@ -12,6 +12,7 @@ class HuyenBloc extends Bloc<HuyenEvent, HuyenState> {
     on<AddHuyen>(_onAddHuyen);
     on<UpdateHuyen>(_onUpdateHuyen);
     on<DeleteHuyen>(_onDeleteHuyen);
+    on<LoadHuyensByTinh>(_onLoadHuyenByTinh);
   }
 
   Future<void> _onLoadHuyens(LoadHuyens event, Emitter<HuyenState> emit) async {
@@ -24,11 +25,23 @@ class HuyenBloc extends Bloc<HuyenEvent, HuyenState> {
     }
   }
 
+  Future<void> _onLoadHuyenByTinh(
+      LoadHuyensByTinh event, Emitter<HuyenState> emit) async {
+    emit(HuyenLoading());
+    try {
+      final huyens = await huyenRepository.getHuyensByTinh(event.matinh);
+      emit(HuyenLoadedByTinh(huyens: huyens));
+    } catch (e) {
+      emit(HuyenError(message: e.toString()));
+    }
+  }
+
   Future<void> _onAddHuyen(AddHuyen event, Emitter<HuyenState> emit) async {
     try {
       final huyen = await huyenRepository.addHuyen(event.huyen);
       if (state is HuyenLoaded) {
-        final List<Huyen> updatedHuyens = List.from((state as HuyenLoaded).huyens)..add(huyen);
+        final List<Huyen> updatedHuyens =
+            List.from((state as HuyenLoaded).huyens)..add(huyen);
         emit(HuyenLoaded(huyens: updatedHuyens));
       }
     } catch (e) {
@@ -36,11 +49,13 @@ class HuyenBloc extends Bloc<HuyenEvent, HuyenState> {
     }
   }
 
-  Future<void> _onUpdateHuyen(UpdateHuyen event, Emitter<HuyenState> emit) async {
+  Future<void> _onUpdateHuyen(
+      UpdateHuyen event, Emitter<HuyenState> emit) async {
     try {
       final huyen = await huyenRepository.updateHuyen(event.huyen);
       if (state is HuyenLoaded) {
-        final List<Huyen> updatedHuyens = (state as HuyenLoaded).huyens.map((existingHuyen) {
+        final List<Huyen> updatedHuyens =
+            (state as HuyenLoaded).huyens.map((existingHuyen) {
           return existingHuyen.mahuyen == huyen.mahuyen ? huyen : existingHuyen;
         }).toList();
         emit(HuyenLoaded(huyens: updatedHuyens));
@@ -50,11 +65,15 @@ class HuyenBloc extends Bloc<HuyenEvent, HuyenState> {
     }
   }
 
-  Future<void> _onDeleteHuyen(DeleteHuyen event, Emitter<HuyenState> emit) async {
+  Future<void> _onDeleteHuyen(
+      DeleteHuyen event, Emitter<HuyenState> emit) async {
     try {
       await huyenRepository.deleteHuyen(event.id);
       if (state is HuyenLoaded) {
-        final List<Huyen> updatedHuyens = (state as HuyenLoaded).huyens.where((huyen) => huyen.mahuyen != event.id).toList();
+        final List<Huyen> updatedHuyens = (state as HuyenLoaded)
+            .huyens
+            .where((huyen) => huyen.mahuyen != event.id)
+            .toList();
         emit(HuyenLoaded(huyens: updatedHuyens));
       }
     } catch (e) {

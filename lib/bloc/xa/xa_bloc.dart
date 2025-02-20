@@ -12,6 +12,7 @@ class XaBloc extends Bloc<XaEvent, XaState> {
     on<AddXa>(_onAddXa);
     on<UpdateXa>(_onUpdateXa);
     on<DeleteXa>(_onDeleteXa);
+    on<LoadXasByHuyen>(_onLoadXasByHuyen);
   }
 
   Future<void> _onLoadXas(LoadXas event, Emitter<XaState> emit) async {
@@ -19,6 +20,17 @@ class XaBloc extends Bloc<XaEvent, XaState> {
     try {
       final xas = await xaRepository.getXas();
       emit(XaLoaded(xas: xas));
+    } catch (e) {
+      emit(XaError(message: e.toString()));
+    }
+  }
+
+  Future<void> _onLoadXasByHuyen(
+      LoadXasByHuyen event, Emitter<XaState> emit) async {
+    emit(XaLoading());
+    try {
+      final xas = await xaRepository.getXasByHuyen(event.mahuyen);
+      emit(XaLoadedByHuyen(xas: xas));
     } catch (e) {
       emit(XaError(message: e.toString()));
     }
@@ -54,7 +66,8 @@ class XaBloc extends Bloc<XaEvent, XaState> {
     try {
       await xaRepository.deleteXa(event.id);
       if (state is XaLoaded) {
-        final List<Xa> updatedXas = (state as XaLoaded).xas.where((xa) => xa.maxa != event.id).toList();
+        final List<Xa> updatedXas =
+            (state as XaLoaded).xas.where((xa) => xa.maxa != event.id).toList();
         emit(XaLoaded(xas: updatedXas));
       }
     } catch (e) {

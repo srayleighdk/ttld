@@ -4,6 +4,12 @@ abstract class HuyenEvent {}
 
 class LoadHuyens extends HuyenEvent {}
 
+class LoadHuyensByTinh extends HuyenEvent {
+  final String matinh;
+
+  LoadHuyensByTinh({required this.matinh});
+}
+
 class AddHuyen extends HuyenEvent {
   final Huyen huyen;
 

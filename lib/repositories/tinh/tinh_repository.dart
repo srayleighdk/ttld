@@ -16,7 +16,9 @@ class TinhRepositoryImpl implements TinhRepository {
   @override
   Future<List<Tinh>> getTinhs() async {
     final response = await tinhApiService.getTinh();
-    return (response['data'] as List).map((json) => Tinh.fromJson(json)).toList();
+    return (response['data'] as List)
+        .map((json) => Tinh.fromJson(json))
+        .toList();
   }
 
   @override

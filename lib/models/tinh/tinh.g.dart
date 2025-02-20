@@ -7,11 +7,11 @@ part of 'tinh.dart';
 // **************************************************************************
 
 _$TinhImpl _$$TinhImplFromJson(Map<String, dynamic> json) => _$TinhImpl(
-      displayOrder: (json['displayOrder'] as num).toInt(),
-      matinh: json['matinh'] as String,
-      tentinh: json['tentinh'] as String,
-      mabhyt: json['mabhyt'] as String,
-      show: json['show'] as bool,
+      displayOrder: (json['displayOrder'] as num?)?.toInt() ?? 0,
+      matinh: json['matinh'] as String? ?? '',
+      tentinh: json['tentinh'] as String? ?? '',
+      mabhyt: json['mabhyt'] as String? ?? '',
+      show: json['show'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$TinhImplToJson(_$TinhImpl instance) =>

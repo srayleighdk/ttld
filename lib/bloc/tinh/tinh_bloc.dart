@@ -28,7 +28,8 @@ class TinhBloc extends Bloc<TinhEvent, TinhState> {
     try {
       final tinh = await tinhRepository.addTinh(event.tinh);
       if (state is TinhLoaded) {
-        final List<Tinh> updatedTinhs = List.from((state as TinhLoaded).tinhs)..add(tinh);
+        final List<Tinh> updatedTinhs = List.from((state as TinhLoaded).tinhs)
+          ..add(tinh);
         emit(TinhLoaded(tinhs: updatedTinhs));
       }
     } catch (e) {
@@ -40,8 +41,9 @@ class TinhBloc extends Bloc<TinhEvent, TinhState> {
     try {
       final tinh = await tinhRepository.updateTinh(event.tinh);
       if (state is TinhLoaded) {
-        final List<Tinh> updatedTinhs = (state as TinhLoaded).tinhs.map((existingTinh) {
-          return existingTinh.mahuyen == tinh.mahuyen ? tinh : existingTinh;
+        final List<Tinh> updatedTinhs =
+            (state as TinhLoaded).tinhs.map((existingTinh) {
+          return existingTinh.matinh == tinh.matinh ? tinh : existingTinh;
         }).toList();
         emit(TinhLoaded(tinhs: updatedTinhs));
       }
@@ -54,7 +56,10 @@ class TinhBloc extends Bloc<TinhEvent, TinhState> {
     try {
       await tinhRepository.deleteTinh(event.id);
       if (state is TinhLoaded) {
-        final List<Tinh> updatedTinhs = (state as TinhLoaded).tinhs.where((tinh) => tinh.mahuyen != event.id).toList();
+        final List<Tinh> updatedTinhs = (state as TinhLoaded)
+            .tinhs
+            .where((tinh) => tinh.matinh != event.id)
+            .toList();
         emit(TinhLoaded(tinhs: updatedTinhs));
       }
     } catch (e) {

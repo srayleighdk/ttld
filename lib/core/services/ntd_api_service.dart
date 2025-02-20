@@ -22,8 +22,6 @@ class NTDApiService {
       final response =
           await _dio.get(ApiEndpoints.ntdById, queryParameters: {'id': id});
       final Ntd ntd = Ntd.fromJson(response.data["data"]);
-      print('response.data: ${response.data}');
-      print('ntd: $ntd');
       return ntd;
     } catch (e) {
       throw Exception('Failed to fetch NTD by ID: $e');

@@ -156,24 +156,29 @@ class __$$TinhImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$TinhImpl implements _Tinh {
   _$TinhImpl(
-      {required this.displayOrder,
-      required this.matinh,
-      required this.tentinh,
-      required this.mabhyt,
-      required this.show});
+      {this.displayOrder = 0,
+      this.matinh = '',
+      this.tentinh = '',
+      this.mabhyt = '',
+      this.show = false});
 
   factory _$TinhImpl.fromJson(Map<String, dynamic> json) =>
       _$$TinhImplFromJson(json);
 
   @override
+  @JsonKey()
   final int displayOrder;
   @override
+  @JsonKey()
   final String matinh;
   @override
+  @JsonKey()
   final String tentinh;
   @override
+  @JsonKey()
   final String mabhyt;
   @override
+  @JsonKey()
   final bool show;
 
   @override
@@ -217,11 +222,11 @@ class _$TinhImpl implements _Tinh {
 
 abstract class _Tinh implements Tinh {
   factory _Tinh(
-      {required final int displayOrder,
-      required final String matinh,
-      required final String tentinh,
-      required final String mabhyt,
-      required final bool show}) = _$TinhImpl;
+      {final int displayOrder,
+      final String matinh,
+      final String tentinh,
+      final String mabhyt,
+      final bool show}) = _$TinhImpl;
 
   factory _Tinh.fromJson(Map<String, dynamic> json) = _$TinhImpl.fromJson;
 

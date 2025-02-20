@@ -45,7 +45,9 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
               // Load Huyens when Tinhs are loaded
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (selectedTinh != null) {
-                  context.read<HuyenBloc>().add(LoadHuyensByTinh(matinh: selectedTinh!.matinh));
+                  context
+                      .read<HuyenBloc>()
+                      .add(LoadHuyensByTinh(matinh: selectedTinh!.matinh));
                 }
               });
               return CustomPicker<Tinh>(
@@ -78,11 +80,12 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
           builder: (context, state) {
             if (state is HuyenLoading) {
               return const CircularProgressIndicator();
-            } else if (state is HuyenLoaded) {
+            } else if (state is HuyenLoadedByTinh) {
               return CustomPicker<Huyen>(
                 items: state.huyens,
                 selectedItem: selectedHuyen,
                 hint: 'Chọn Huyện',
+                displayItemBuilder: (Huyen? huyen) => huyen?.tenhuyen ?? '',
                 onChanged: (Huyen? newValue) {
                   setState(() {
                     selectedHuyen = newValue;

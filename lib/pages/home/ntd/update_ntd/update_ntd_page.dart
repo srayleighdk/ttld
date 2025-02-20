@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ttld/bloc/tblNhaTuyenDung/ntd_bloc.dart';
+import 'package:ttld/widgets/cascade_location_picker.dart';
+import 'package:ttld/widgets/field/custom_picker.dart';
 import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
 
 class UpdateNTDPage extends StatefulWidget {
@@ -133,30 +135,26 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   controller: _ntdTentatController,
                   hintText: 'Tên viết tắt',
                 ),
-                const SizedBox(height: 16.0),
-                CustomTextField(
-                  labelText: "Tên nhà tuyển dụng",
-                  controller: _ntdTenController,
-                  hintText: 'Tên nhà tuyển dụng',
-                ),
-                const SizedBox(height: 16.0),
-                CustomTextField(
-                  labelText: "Tỉnh/Thành phố",
-                  controller: _ntdTenTinhController,
-                  hintText: 'Tỉnh/Thành phố',
-                ),
-                const SizedBox(height: 16.0),
-                CustomTextField(
-                  labelText: "Quận/Huyện",
-                  controller: _ntdTenHuyenController,
-                  hintText: 'Quận/Huyện',
-                ),
-                const SizedBox(height: 16.0),
-                CustomTextField(
-                  labelText: "Xã phường",
-                  controller: _ntdTenXaController,
-                  hintText: 'Xã phường',
-                ),
+                // const SizedBox(height: 16.0),
+                // CustomTextField(
+                //   labelText: "Tên nhà tuyển dụng",
+                //   controller: _ntdTenController,
+                //   hintText: 'Tên nhà tuyển dụng',
+                // ),
+                // const SizedBox(height: 16.0),
+                // CustomPicker(
+                //    items: [], selectedItem: null, onChanged: (value) {  },
+                // ),
+                // const SizedBox(height: 16.0),
+                // CustomPicker(
+                // items: [],
+                // selectedItem: ,
+                // onChanged: ,
+                // ),
+                // const SizedBox(height: 16.0),
+                // CustomPicker(items: [], selectedItem: null, onChanged: (T? value) {  },
+                // ),
+                CascadeLocationPicker(),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 24.0),
                   child: ElevatedButton(

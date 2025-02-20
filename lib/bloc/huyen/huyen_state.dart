@@ -6,6 +6,12 @@ class HuyenInitial extends HuyenState {}
 
 class HuyenLoading extends HuyenState {}
 
+class HuyenLoadedByTinh extends HuyenState {
+  final List<Huyen> huyens;
+
+  HuyenLoadedByTinh({required this.huyens});
+}
+
 class HuyenLoaded extends HuyenState {
   final List<Huyen> huyens;
 

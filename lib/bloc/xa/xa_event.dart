@@ -4,6 +4,12 @@ abstract class XaEvent {}
 
 class LoadXas extends XaEvent {}
 
+class LoadXasByHuyen extends XaEvent {
+  final String mahuyen;
+
+  LoadXasByHuyen({required this.mahuyen});
+}
+
 class AddXa extends XaEvent {
   final Xa xa;
 

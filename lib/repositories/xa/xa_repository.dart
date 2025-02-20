@@ -1,4 +1,4 @@
-import 'package:ttld/core/api_client.dart';
+import 'package:ttld/core/services/xa_api_service.dart';
 import 'package:ttld/models/xa/xa.dart';
 
 abstract class XaRepository {
@@ -6,6 +6,7 @@ abstract class XaRepository {
   Future<Xa> addXa(Xa xa);
   Future<Xa> updateXa(Xa xa);
   Future<void> deleteXa(String id);
+  Future<List<Xa>> getXasByHuyen(String mahuyen);
 }
 
 class XaRepositoryImpl implements XaRepository {
@@ -34,5 +35,11 @@ class XaRepositoryImpl implements XaRepository {
   @override
   Future<void> deleteXa(String id) async {
     await xaApiService.deleteXa(id);
+  }
+
+  @override
+  Future<List<Xa>> getXasByHuyen(String mahuyen) async {
+    final response = await xaApiService.getXaByHuyen(mahuyen);
+    return (response as List).map((json) => Xa.fromJson(json)).toList();
   }
 }

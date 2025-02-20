@@ -6,6 +6,12 @@ class XaInitial extends XaState {}
 
 class XaLoading extends XaState {}
 
+class XaLoadedByHuyen extends XaState {
+  final List<Xa> xas;
+
+  XaLoadedByHuyen({required this.xas});
+}
+
 class XaLoaded extends XaState {
   final List<Xa> xas;
 
