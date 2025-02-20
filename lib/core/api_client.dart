@@ -122,4 +122,41 @@ class ApiClient {
       rethrow;
     }
   }
+
+  // Huyen
+  Future<dynamic> getHuyen() async {
+    try {
+      final response = await dio.get(ApiEndpoints.huyen);
+      return response.data;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<dynamic> postHuyen(dynamic data) async {
+    try {
+      final response = await dio.post(ApiEndpoints.huyen, data);
+      return response.data;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<dynamic> putHuyen(dynamic data) async {
+    try {
+      final response = await dio.put(ApiEndpoints.huyen, data);
+      return response.data;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<dynamic> deleteHuyen(String id) async {
+    try {
+      final response = await dio.delete('${ApiEndpoints.huyen}/$id');
+      return response.data;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

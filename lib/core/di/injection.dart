@@ -72,6 +72,9 @@ void setupLocator() {
   // Register TinhRepository here
   // locator.registerLazySingleton<TinhRepository>(() => TinhRepositoryImpl(locator<ApiClient>()));
 
+  // Register HuyenRepository here
+  // locator.registerLazySingleton<HuyenRepository>(() => HuyenRepositoryImpl(locator<ApiClient>()));
+
   // OPTIONAL: Register ForgotPasswordBloc here if you want GetIt to manage it too
   // locator.registerFactory(() => ForgotPasswordBloc(locator<ApiClient>().dio));
 }
