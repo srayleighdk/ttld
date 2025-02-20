@@ -10,11 +10,11 @@ final class HoSoUngVienLoading extends HoSoUngVienState {}
 final class HoSoUngVienLoaded extends HoSoUngVienState {
   final List<TblHoSoUngVienModel> hoSoUngVienList;
 
-  const HoSoUngVienLoaded(this.hoSoUngVienList);
+  HoSoUngVienLoaded(this.hoSoUngVienList);
 }
 
 final class HoSoUngVienError extends HoSoUngVienState {
   final String message;
 
-  const HoSoUngVienError(this.message);
+  HoSoUngVienError(this.message);
 }

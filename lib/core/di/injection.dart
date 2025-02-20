@@ -3,6 +3,7 @@ import 'package:ttld/core/api_client.dart';
 import 'package:ttld/core/services/chuyenmon_api_service.dart';
 import 'package:ttld/core/services/doituongchinhsach_api_service.dart';
 import 'package:ttld/core/services/hosoungvien_api_service.dart';
+import 'package:ttld/core/services/ntd_api_service.dart';
 import 'package:ttld/core/services/tttantat_api_service.dart';
 import 'package:ttld/core/services/vieclam_ungvien_api_service.dart';
 import 'package:ttld/features/auth/repositories/auth_repository.dart';
@@ -64,10 +65,9 @@ void setupLocator() {
       ViecLamUngVienRepositoryImpl(
           viecLamUngVienApiService: locator<ViecLamUngVienApiService>()));
 
-  locator.registerLazySingleton<NTDApiService>(
-      () => NTDApiService());
-  locator.registerLazySingleton<NTDRepository>(() =>
-      NTDRepositoryImpl(locator<NTDApiService>()));
+  locator.registerLazySingleton<NTDApiService>(() => NTDApiService());
+  locator.registerLazySingleton<NTDRepository>(
+      () => NTDRepositoryImpl(locator<NTDApiService>()));
 
   // OPTIONAL: Register ForgotPasswordBloc here if you want GetIt to manage it too
   // locator.registerFactory(() => ForgotPasswordBloc(locator<ApiClient>().dio));

@@ -2,17 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ttld/core/router/app_router.dart';
-import 'package:ttld/core/services/auth_service.dart';
 import 'package:ttld/core/utils/toast_utils.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
-import 'package:ttld/features/auth/bloc/auth_event.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
 import 'package:ttld/features/auth/bloc/login_bloc.dart';
 import 'package:ttld/features/auth/bloc/login_event.dart';
 import 'package:ttld/features/auth/bloc/login_state.dart';
 import 'package:ttld/features/auth/enums/user_type.dart';
-import 'package:ttld/pages/home/ntv/ntv_home.dart';
 import 'package:ttld/pages/signup/signup.dart';
 
 class LoginPage extends StatefulWidget {

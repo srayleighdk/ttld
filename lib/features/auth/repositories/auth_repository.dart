@@ -60,6 +60,7 @@ class AuthRepository {
         default:
           throw Exception('Invalid user type');
       }
+      print(request);
 
       final response = await _dio.post(
         endpoint,

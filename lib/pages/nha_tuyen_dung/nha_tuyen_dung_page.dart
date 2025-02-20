@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ttld/bloc/tblNhaTuyenDung/ntd_bloc.dart';
-import 'package:ttld/bloc/tblNhaTuyenDung/ntd_event.dart';
-import 'package:ttld/bloc/tblNhaTuyenDung/ntd_state.dart';
 import 'package:ttld/models/tblNhaTuyenDung/tblNhaTuyenDung_model.dart';
 
 class NhaTuyenDungPage extends StatelessWidget {

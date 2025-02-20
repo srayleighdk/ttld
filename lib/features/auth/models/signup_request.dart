@@ -49,6 +49,7 @@ class NTDSignupRequest extends BaseSignupRequest {
   Map<String, dynamic> toJson() => {
         'userName': userName,
         'email': email,
+        'name': name,
         'password': password,
         'userType': userType,
         'maSoThue': maSoThue,

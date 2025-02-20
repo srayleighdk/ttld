@@ -11,4 +11,7 @@ class ApiEndpoints {
 
   // groups
   static String groups = '$baseUrl/user/group';
+
+  static String ntd = '$baseUrl/tttt/nha-td';
+  static String ntdById = '$baseUrl/tttt/nha-td';
 }
