@@ -224,7 +224,7 @@ class AppRouter {
             const NTDHomePage(),
       ),
       GoRoute(
-        path: '/home', // Default home route
+        path: '/home',
         builder: (BuildContext context, GoRouterState state) =>
             const HomePage(),
       ),
