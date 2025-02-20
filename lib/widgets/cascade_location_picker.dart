@@ -13,6 +13,7 @@ import 'package:ttld/models/huyen/huyen.dart';
 import 'package:ttld/models/tinh/tinh.dart';
 import 'package:ttld/models/xa/xa.dart';
 import 'package:ttld/widgets/field/custom_picker.dart';
+import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
 
 class CascadeLocationPicker extends StatefulWidget {
   final Function(Tinh?)? onTinhChanged;
@@ -34,7 +35,8 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
   Tinh? selectedTinh;
   Huyen? selectedHuyen;
   Xa? selectedXa;
-  final TextEditingController _addressDetailController = TextEditingController();
+  final TextEditingController _addressDetailController =
+      TextEditingController();
 
   @override
   void initState() {
@@ -73,7 +75,9 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
                     _updateAddressDetail();
                   });
                   if (newValue != null) {
-                    context.read<HuyenBloc>().add(LoadHuyensByTinh(matinh: newValue.matinh));
+                    context
+                        .read<HuyenBloc>()
+                        .add(LoadHuyensByTinh(matinh: newValue.matinh));
                   }
                   widget.onTinhChanged?.call(newValue);
                 },
@@ -103,7 +107,9 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
                     _updateAddressDetail();
                   });
                   if (newValue != null) {
-                    context.read<XaBloc>().add(LoadXasByHuyen(mahuyen: newValue.mahuyen));
+                    context
+                        .read<XaBloc>()
+                        .add(LoadXasByHuyen(mahuyen: newValue.mahuyen));
                   }
                   widget.onHuyenChanged?.call(newValue);
                 },
@@ -136,8 +142,7 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
               );
             } else if (state is XaError) {
               return Text('Error: ${state.message}');
-            }
-            else {
+            } else {
               return const SizedBox.shrink();
             }
           },
@@ -160,21 +165,22 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
   }
 
   void _updateAddressDetail() {
-    _addressDetailController.text = _buildAddressString(selectedXa?.tenxa, selectedHuyen?.tenhuyen, selectedTinh?.tentinh);
+    _addressDetailController.text = _buildAddressString(
+        selectedXa?.tenxa, selectedHuyen?.tenhuyen, selectedTinh?.tentinh);
   }
 
   String _buildAddressString(String? xa, String? huyen, String? tinh) {
     String address = "";
     if (xa != null && xa.isNotEmpty) {
-      address += "Xã $xa";
+      address += xa;
     }
     if (huyen != null && huyen.isNotEmpty) {
       if (address.isNotEmpty) address += ", ";
-      address += "Huyện $huyen";
+      address += " $huyen";
     }
     if (tinh != null && tinh.isNotEmpty) {
       if (address.isNotEmpty) address += ", ";
-      address += "Tỉnh $tinh";
+      address += " $tinh";
     }
     return address;
   }
