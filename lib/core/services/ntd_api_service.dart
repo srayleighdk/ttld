@@ -18,9 +18,9 @@ class NTDApiService {
     }
   }
 
-  Future<NtdModel> getNtdById(int id) async {
+  Future<NtdModel> getNtdById(String id) async {
     try {
-      final response = await _dio.get('${ApiEndpoints.ntdById}/$id');
+      final response = await _dio.get('${ApiEndpoints.ntdById.replaceAll(":id", id)}');
       final NtdModel ntd = NtdModel.fromJson(response.data);
       return ntd;
     } catch (e) {
