@@ -75,6 +75,45 @@ class CustomTextField extends StatelessWidget {
       onChanged: onChanged,
     );
   }
+
+  factory CustomTextField.addressDetail({
+    Key? key,
+    required TextEditingController controller,
+    String? tinh,
+    String? huyen,
+    String? xa,
+    String labelText = "Địa chỉ chi tiết",
+    String? Function(String?)? validator,
+    TextInputType? keyboardType,
+    bool obscureText = false,
+  }) {
+    String hintText = _buildAddressHint(xa, huyen, tinh);
+    return CustomTextField(
+      key: key,
+      controller: controller,
+      labelText: labelText,
+      hintText: hintText,
+      validator: validator,
+      keyboardType: keyboardType,
+      obscureText: obscureText,
+    );
+  }
+
+  static String _buildAddressHint(String? xa, String? huyen, String? tinh) {
+    String address = "";
+    if (xa != null && xa.isNotEmpty) {
+      address += "Xã $xa";
+    }
+    if (huyen != null && huyen.isNotEmpty) {
+      if (address.isNotEmpty) address += ", ";
+      address += "Huyện $huyen";
+    }
+    if (tinh != null && tinh.isNotEmpty) {
+      if (address.isNotEmpty) address += ", ";
+      address += "Tỉnh $tinh";
+    }
+    return address.isNotEmpty ? address : "Địa chỉ chi tiết";
+  }
 }
 
 class DecoratorTextField {
