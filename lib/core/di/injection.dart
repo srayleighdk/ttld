@@ -141,4 +141,6 @@ void setupLocator() {
   //DanToc
 
   //TonGiao
+
+  //TrinhDoVanHoa
 }
