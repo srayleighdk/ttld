@@ -69,11 +69,17 @@ void setupLocator() {
   locator.registerLazySingleton<NTDRepository>(
       () => NTDRepositoryImpl(locator<NTDApiService>()));
 
-  // Register TinhRepository here
-  // locator.registerLazySingleton<TinhRepository>(() => TinhRepositoryImpl(locator<ApiClient>()));
+  //Register Tinh, Huyen, Xa dependencies:
+  locator.registerLazySingleton<TinhApiService>(() => TinhApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<TinhRepository>(() => TinhRepositoryImpl(tinhApiService: locator<TinhApiService>()));
+  locator.registerLazySingleton<HuyenApiService>(() => HuyenApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<HuyenRepository>(() => HuyenRepositoryImpl(huyenApiService: locator<HuyenApiService>()));
+  locator.registerLazySingleton<XaApiService>(() => XaApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<XaRepository>(() => XaRepositoryImpl(xaApiService: locator<XaApiService>()));
 
-  // Register HuyenRepository here
-  // locator.registerLazySingleton<HuyenRepository>(() => HuyenRepositoryImpl(locator<ApiClient>()));
+  locator.registerFactory(() => TinhBloc(tinhRepository: locator<TinhRepository>()));
+  locator.registerFactory(() => HuyenBloc(huyenRepository: locator<HuyenRepository>()));
+  locator.registerFactory(() => XaBloc(xaRepository: locator<XaRepository>()));
 
   // OPTIONAL: Register ForgotPasswordBloc here if you want GetIt to manage it too
   // locator.registerFactory(() => ForgotPasswordBloc(locator<ApiClient>().dio));
