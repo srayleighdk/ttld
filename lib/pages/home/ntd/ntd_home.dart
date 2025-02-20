@@ -6,9 +6,21 @@ import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
 import 'package:ttld/pages/nha_tuyen_dung/nha_tuyen_dung_page.dart';
 
-class NTDHomePage extends StatelessWidget {
+class NTDHomePage extends StatefulWidget {
   static const routePath = '/ntd_home';
-  const NTDHomePage({super.key});
+  final int ntdId;
+  const NTDHomePage({Key? key, required this.ntdId}) : super(key: key);
+
+  @override
+  State<NTDHomePage> createState() => _NTDHomePageState();
+}
+
+class _NTDHomePageState extends State<NTDHomePage> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<NTDBloc>().add(NTDFetchById(widget.ntdId));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +42,11 @@ class NTDHomePage extends StatelessWidget {
             _buildQuickAccessSection(context),
             const SizedBox(height: 24.0),
 
-            // Section 3: Báo cáo thống kê
+            // Section 3: NTD Information
+            _buildNTDInfoSection(context),
+            const SizedBox(height: 24.0),
+
+            // Section 4: Báo cáo thống kê
             _buildStatisticsSection(),
           ],
         ),
@@ -186,7 +202,45 @@ class NTDHomePage extends StatelessWidget {
     );
   }
 
-  // Section 3: Báo cáo thống kê
+  // Section 3: NTD Information
+  Widget _buildNTDInfoSection(BuildContext context) {
+    return BlocBuilder<NTDBloc, NTDState>(
+      builder: (context, state) {
+        if (state is NTDLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is NTDLoadedById) {
+          return Card(
+            elevation: 4.0,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Thông tin NTD',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8.0),
+                  Text('Tên: ${state.ntd.ntdTen ?? 'N/A'}'),
+                  Text('Mã DN: ${state.ntd.ntdMadn ?? 'N/A'}'),
+                  Text('Email: ${state.ntd.ntdEmail ?? 'N/A'}'),
+                ],
+              ),
+            ),
+          );
+        } else if (state is NTDError) {
+          return Center(child: Text('Error: ${state.message}'));
+        } else {
+          return const Center(child: Text('No NTD data'));
+        }
+      },
+    );
+  }
+
+  // Section 4: Báo cáo thống kê
   Widget _buildStatisticsSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
