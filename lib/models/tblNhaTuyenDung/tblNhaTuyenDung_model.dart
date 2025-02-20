@@ -56,6 +56,7 @@ class NtdModel with _$NtdModel {
     required int displayOrder,
   }) = _NtdModel;
 
-  factory NtdModel.fromJson(Map<String, dynamic> json) =>
-      _$NtdModelFromJson(json);
+  factory NtdModel.fromJson(Map<String, dynamic> json) => _$NtdModelFromJson(
+        Map<String, dynamic>.from(json),
+      );
 }
