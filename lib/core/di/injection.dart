@@ -151,4 +151,6 @@ void setupLocator() {
   //TrinhDoNgoaiNgu
 
   //HinhThucDaoTao
+
+  //HinhThucLoaiHinh
 }
