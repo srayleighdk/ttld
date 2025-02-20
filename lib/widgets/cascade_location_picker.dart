@@ -34,11 +34,13 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
   Tinh? selectedTinh;
   Huyen? selectedHuyen;
   Xa? selectedXa;
+  final TextEditingController _addressDetailController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     context.read<TinhBloc>().add(LoadTinhs());
+    _updateAddressDetail();
   }
 
   @override
@@ -68,12 +70,12 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
                     selectedTinh = newValue;
                     selectedHuyen = null;
                     selectedXa = null;
+                    _updateAddressDetail();
                   });
                   if (newValue != null) {
-                    context
-                        .read<HuyenBloc>()
-                        .add(LoadHuyensByTinh(matinh: newValue.matinh));
+                    context.read<HuyenBloc>().add(LoadHuyensByTinh(matinh: newValue.matinh));
                   }
+                  widget.onTinhChanged?.call(newValue);
                 },
               );
             } else if (state is TinhError) {
@@ -98,12 +100,12 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
                   setState(() {
                     selectedHuyen = newValue;
                     selectedXa = null;
+                    _updateAddressDetail();
                   });
                   if (newValue != null) {
-                    context
-                        .read<XaBloc>()
-                        .add(LoadXasByHuyen(mahuyen: newValue.mahuyen));
+                    context.read<XaBloc>().add(LoadXasByHuyen(mahuyen: newValue.mahuyen));
                   }
+                  widget.onHuyenChanged?.call(newValue);
                 },
               );
             } else if (state is HuyenError) {
@@ -127,17 +129,53 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
                 onChanged: (Xa? newValue) {
                   setState(() {
                     selectedXa = newValue;
+                    _updateAddressDetail();
                   });
+                  widget.onXaChanged?.call(newValue);
                 },
               );
             } else if (state is XaError) {
               return Text('Error: ${state.message}');
-            } else {
+            }
+            else {
               return const SizedBox.shrink();
             }
           },
         ),
+        const SizedBox(height: 14),
+        CustomTextField.addressDetail(
+          controller: _addressDetailController,
+          tinh: selectedTinh?.tentinh,
+          huyen: selectedHuyen?.tenhuyen,
+          xa: selectedXa?.tenxa,
+        ),
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    _addressDetailController.dispose();
+    super.dispose();
+  }
+
+  void _updateAddressDetail() {
+    _addressDetailController.text = _buildAddressString(selectedXa?.tenxa, selectedHuyen?.tenhuyen, selectedTinh?.tentinh);
+  }
+
+  String _buildAddressString(String? xa, String? huyen, String? tinh) {
+    String address = "";
+    if (xa != null && xa.isNotEmpty) {
+      address += "Xã $xa";
+    }
+    if (huyen != null && huyen.isNotEmpty) {
+      if (address.isNotEmpty) address += ", ";
+      address += "Huyện $huyen";
+    }
+    if (tinh != null && tinh.isNotEmpty) {
+      if (address.isNotEmpty) address += ", ";
+      address += "Tỉnh $tinh";
+    }
+    return address;
   }
 }
