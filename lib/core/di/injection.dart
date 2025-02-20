@@ -147,4 +147,6 @@ void setupLocator() {
   //TrinhDoHocVan
 
   //TrinhDoTinHoc
+
+  //TrinhDoNgoaiNgu
 }
