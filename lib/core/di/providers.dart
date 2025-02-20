@@ -1,5 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ttld/bloc/huyen/huyen_bloc.dart';
+import 'package:ttld/bloc/tinh/tinh_bloc.dart';
 import 'package:ttld/bloc/tblNhaTuyenDung/ntd_bloc.dart';
+import 'package:ttld/bloc/xa/xa_bloc.dart';
 import 'package:ttld/core/api_client.dart';
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/core/services/hosoungvien_api_service.dart';
@@ -59,6 +62,15 @@ List<BlocProvider> getBlocProviders() {
       create: (context) => NTDBloc(
         locator<NTDRepository>(),
       ),
+    ),
+    BlocProvider<TinhBloc>(
+      create: (context) => locator<TinhBloc>(),
+    ),
+    BlocProvider<HuyenBloc>(
+      create: (context) => locator<HuyenBloc>(),
+    ),
+    BlocProvider<XaBloc>(
+      create: (context) => locator<XaBloc>(),
     ),
   ];
 }
