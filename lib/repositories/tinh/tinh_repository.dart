@@ -1,4 +1,4 @@
-import 'package:ttld/core/api_client.dart';
+import 'package:ttld/core/services/tinh_api_service.dart';
 import 'package:ttld/models/tinh/tinh.dart';
 
 abstract class TinhRepository {
