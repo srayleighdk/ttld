@@ -111,4 +111,6 @@ void setupLocator() {
   locator.registerFactory(() => QuocGiaBloc(quocGiaRepository: locator<QuocGiaRepository>()));
 
   //HinhThucDoanhNghiep
+
+  //LoaiHinh
 }
