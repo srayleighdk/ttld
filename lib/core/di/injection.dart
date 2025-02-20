@@ -106,4 +106,7 @@ void setupLocator() {
 
   // OPTIONAL: Register ForgotPasswordBloc here if you want GetIt to manage it too
   // locator.registerFactory(() => ForgotPasswordBloc(locator<ApiClient>().dio));
+  locator.registerLazySingleton<QuocGiaApiService>(() => QuocGiaApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<QuocGiaRepository>(() => QuocGiaRepositoryImpl(quocGiaApiService: locator<QuocGiaApiService>()));
+  locator.registerFactory(() => QuocGiaBloc(quocGiaRepository: locator<QuocGiaRepository>()));
 }
