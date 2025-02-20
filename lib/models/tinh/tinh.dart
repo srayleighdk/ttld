@@ -1,35 +1,16 @@
-class Tinh {
-  final String mahuyen;
-  final String tenhuyen;
-  final int sott;
-  final bool show;
-  final String tentinh;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  Tinh({
-    required this.mahuyen,
-    required this.tenhuyen,
-    required this.sott,
-    required this.show,
-    required this.tentinh,
-  });
+part 'tinh.freezed.dart';
 
-  factory Tinh.fromJson(Map<String, dynamic> json) {
-    return Tinh(
-      mahuyen: json['mahuyen'] ?? '',
-      tenhuyen: json['tenhuyen'] ?? '',
-      sott: json['sott'] ?? 0,
-      show: json['show'] ?? false,
-      tentinh: json['tentinh'] ?? '',
-    );
-  }
+@freezed
+class Tinh with _$Tinh {
+  factory Tinh({
+    required String mahuyen,
+    required String tenhuyen,
+    required int sott,
+    required bool show,
+    required String tentinh,
+  }) = _Tinh;
 
-  Map<String, dynamic> toJson() {
-    return {
-      'mahuyen': mahuyen,
-      'tenhuyen': tenhuyen,
-      'sott': sott,
-      'show': show,
-      'tentinh': tentinh,
-    };
-  }
+  factory Tinh.fromJson(Map<String, dynamic> json) => _$TinhFromJson(json);
 }
