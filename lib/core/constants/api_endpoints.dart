@@ -18,4 +18,5 @@ class ApiEndpoints {
   // Danh muc hanh chinh
   static String tinh = '$baseUrl/api/danhmuc/hanh-chinh/tinh';
   static String huyen = '$baseUrl/api/danhmuc/hanh-chinh/huyen';
+  static String thon = '$baseUrl/api/danhmuc/hanh-chinh/thon';
 }
