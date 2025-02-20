@@ -53,7 +53,7 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
               return CustomPicker<Tinh>(
                 items: state.tinhs,
                 selectedItem: selectedTinh,
-                hint: 'Chọn Tỉnh',
+                hint: 'Chọn Tỉnh/Thành Phố',
                 displayItemBuilder: (Tinh? tinh) => tinh?.tentinh ?? '',
                 onChanged: (Tinh? newValue) {
                   setState(() {
@@ -75,7 +75,7 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
             }
           },
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 14),
         BlocBuilder<HuyenBloc, HuyenState>(
           builder: (context, state) {
             if (state is HuyenLoading) {
@@ -84,7 +84,7 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
               return CustomPicker<Huyen>(
                 items: state.huyens,
                 selectedItem: selectedHuyen,
-                hint: 'Chọn Huyện',
+                hint: 'Chọn Quận/Huyện',
                 displayItemBuilder: (Huyen? huyen) => huyen?.tenhuyen ?? '',
                 onChanged: (Huyen? newValue) {
                   setState(() {
@@ -105,16 +105,17 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
             }
           },
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 14),
         BlocBuilder<XaBloc, XaState>(
           builder: (context, state) {
             if (state is XaLoading) {
               return const CircularProgressIndicator();
-            } else if (state is XaLoaded) {
+            } else if (state is XaLoadedByHuyen) {
               return CustomPicker<Xa>(
                 items: state.xas,
                 selectedItem: selectedXa,
-                hint: 'Chọn Xã',
+                displayItemBuilder: (Xa? xa) => xa?.tenxa ?? '',
+                hint: 'Chọn Xã/Phường',
                 onChanged: (Xa? newValue) {
                   setState(() {
                     selectedXa = newValue;
