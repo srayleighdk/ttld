@@ -6,7 +6,7 @@ import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
 
 class NTDHomePage extends StatelessWidget {
-  static const routePath = '/ntd/home';
+  static const routePath = '/ntd_home';
   const NTDHomePage({super.key});
 
   @override
