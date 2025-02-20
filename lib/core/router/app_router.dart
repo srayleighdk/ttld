@@ -221,12 +221,8 @@ class AppRouter {
       GoRoute(
         path: '/ntd_home',
         builder: (BuildContext context, GoRouterState state) =>
-            const NTDHomePage(), // Create NtdHomePage widget
+            const NTDHomePage(),
       ),
-      // GoRoute(
-      //   path: '/manager-group',
-      //   builder: (context, state) => const ManagerUserPage(),
-      // ),
       GoRoute(
         path: '/home', // Default home route
         builder: (BuildContext context, GoRouterState state) =>

@@ -8,8 +8,7 @@ import 'package:ttld/features/auth/bloc/auth_state.dart';
 
 class NTDHomePage extends StatefulWidget {
   static const routePath = '/ntd_home';
-  final int ntdId;
-  const NTDHomePage({super.key, required this.ntdId});
+  const NTDHomePage({super.key});
 
   @override
   State<NTDHomePage> createState() => _NTDHomePageState();
@@ -19,7 +18,10 @@ class _NTDHomePageState extends State<NTDHomePage> {
   @override
   void initState() {
     super.initState();
-    context.read<NTDBloc>().add(NTDFetchById(widget.ntdId));
+    final authState = context.read<AuthBloc>().state;
+    if (authState is AuthAuthenticated && authState.userType == 'ntd') {
+      context.read<NTDBloc>().add(NTDFetchById(int.parse(authState.userId)));
+    }
   }
 
   @override
