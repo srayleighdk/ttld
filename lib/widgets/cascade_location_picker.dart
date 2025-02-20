@@ -16,7 +16,16 @@ import 'package:ttld/models/xa/xa.dart';
 import 'package:ttld/widgets/field/custom_picker.dart';
 
 class CascadeLocationPicker extends StatefulWidget {
-  const CascadeLocationPicker({Key? key}) : super(key: key);
+  final Function(Tinh?)? onTinhChanged;
+  final Function(Huyen?)? onHuyenChanged;
+  final Function(Xa?)? onXaChanged;
+
+  const CascadeLocationPicker({
+    Key? key,
+    this.onTinhChanged,
+    this.onHuyenChanged,
+    this.onXaChanged,
+  }) : super(key: key);
 
   @override
   State<CascadeLocationPicker> createState() => _CascadeLocationPickerState();
