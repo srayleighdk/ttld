@@ -9,7 +9,6 @@ import 'package:ttld/bloc/tinh/tinh_state.dart';
 import 'package:ttld/bloc/xa/xa_bloc.dart';
 import 'package:ttld/bloc/xa/xa_event.dart';
 import 'package:ttld/bloc/xa/xa_state.dart';
-import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/models/huyen/huyen.dart';
 import 'package:ttld/models/tinh/tinh.dart';
 import 'package:ttld/models/xa/xa.dart';
@@ -21,11 +20,11 @@ class CascadeLocationPicker extends StatefulWidget {
   final Function(Xa?)? onXaChanged;
 
   const CascadeLocationPicker({
-    Key? key,
+    super.key,
     this.onTinhChanged,
     this.onHuyenChanged,
     this.onXaChanged,
-  }) : super(key: key);
+  });
 
   @override
   State<CascadeLocationPicker> createState() => _CascadeLocationPickerState();
