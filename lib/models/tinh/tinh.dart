@@ -6,11 +6,11 @@ part 'tinh.g.dart';
 @freezed
 class Tinh with _$Tinh {
   factory Tinh({
-    required int displayOrder,
-    required String matinh,
-    required String tentinh,
-    required String mabhyt,
-    required bool show,
+    @Default(0) int displayOrder,
+    @Default('') String matinh,
+    @Default('') String tentinh,
+    @Default('') String mabhyt,
+    @Default(false) bool show,
   }) = _Tinh;
 
   factory Tinh.fromJson(Map<String, dynamic> json) => _$TinhFromJson(json);
