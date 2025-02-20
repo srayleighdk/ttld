@@ -14,7 +14,7 @@ class NTDRepositoryImpl implements NTDRepository {
 
   @override
   Future<NtdModel> getNtdById(int id) async {
-    return await _ntdApiService.getNtdById(id);
+    return await _ntdApiService.getNtdById(id.toString());
   }
 
   @override
