@@ -31,6 +31,8 @@ import 'package:ttld/repositories/tblNhaTuyenDung/ntd_repository.dart';
 import 'package:ttld/repositories/tblNhaTuyenDung/ntd_repository_impl.dart';
 import 'package:ttld/repositories/tinh/tinh_repository.dart';
 import 'package:ttld/repositories/xa/xa_repository.dart';
+import 'package:ttld/core/services/danhmuc_api_service.dart';
+import 'package:ttld/bloc/kcn/kcn_cubit.dart';
 
 final locator = GetIt.instance;
 
@@ -97,6 +99,9 @@ void setupLocator() {
   locator.registerFactory(
       () => HuyenBloc(huyenRepository: locator<HuyenRepository>()));
   locator.registerFactory(() => XaBloc(xaRepository: locator<XaRepository>()));
+  locator.registerLazySingleton<DanhMucApiService>(
+      () => DanhMucApiService(locator<ApiClient>().dio));
+  locator.registerFactory(() => KcnCubit(locator<DanhMucApiService>()));
 
   // OPTIONAL: Register ForgotPasswordBloc here if you want GetIt to manage it too
   // locator.registerFactory(() => ForgotPasswordBloc(locator<ApiClient>().dio));
