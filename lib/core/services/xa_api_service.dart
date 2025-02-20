@@ -41,4 +41,13 @@ class XaApiService {
       rethrow;
     }
   }
+
+  Future<dynamic> getXaByHuyen(String mahuyen) async {
+    try {
+      final response = await dio.get(ApiEndpoints.xa, queryParameters: {'mahuyen': mahuyen});
+      return response.data;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
