@@ -7,9 +7,9 @@ final class KcnInitial extends KcnState {}
 final class KcnLoading extends KcnState {}
 
 final class KcnLoaded extends KcnState {
-  final dynamic data;
+  final List<KCN> kcnList;
 
-  KcnLoaded(this.data);
+  KcnLoaded(this.kcnList);
 }
 
 final class KcnError extends KcnState {

@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ttld/core/services/danhmuc_api_service.dart';
+import 'package:ttld/models/kcn/kcn_model.dart';
 
 part 'kcn_state.dart';
 
@@ -12,7 +13,9 @@ class KcnCubit extends Cubit<KcnState> {
     emit(KcnLoading());
     try {
       final response = await _danhmucApiService.getKCN(matinh);
-      emit(KcnLoaded(response.data));
+      final List<dynamic> data = response.data;
+      final List<KCN> kcnList = data.map((json) => KCN.fromJson(json)).toList();
+      emit(KcnLoaded(kcnList));
     } catch (e) {
       emit(KcnError(e.toString()));
     }

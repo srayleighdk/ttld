@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ttld/bloc/kcn/kcn_cubit.dart';
-import 'package:ttld/core/di/injection.dart';
+import 'package:ttld/models/kcn/kcn_model.dart';
 
 class KcnPage extends StatefulWidget {
   const KcnPage({Key? key}) : super(key: key);
@@ -29,8 +29,15 @@ class _KcnPageState extends State<KcnPage> {
           if (state is KcnLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is KcnLoaded) {
-            return Center(
-              child: Text('Data: ${state.data.toString()}'),
+            return ListView.builder(
+              itemCount: state.kcnList.length,
+              itemBuilder: (context, index) {
+                final kcn = state.kcnList[index];
+                return ListTile(
+                  title: Text(kcn.kcnTen),
+                  subtitle: Text('Mã tỉnh: ${kcn.matinh}, Thứ tự hiển thị: ${kcn.displayOrder}, Trạng thái: ${kcn.status}'),
+                );
+              },
             );
           } else if (state is KcnError) {
             return Center(child: Text('Error: ${state.message}'));
