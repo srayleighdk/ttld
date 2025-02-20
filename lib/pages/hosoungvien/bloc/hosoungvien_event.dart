@@ -4,8 +4,7 @@ part of 'hosoungvien_bloc.dart';
 sealed class HoSoUngVienEvent {}
 
 class HoSoUngVienFetchData extends HoSoUngVienEvent {
-  final int page;
-  HoSoUngVienFetchData({required this.page});
+  HoSoUngVienFetchData();
 }
 
 class HoSoUngVienDelete extends HoSoUngVienEvent {

@@ -14,14 +14,7 @@ class HoSoUngVienBloc extends Bloc<HoSoUngVienEvent, HoSoUngVienState> {
       emit(HoSoUngVienLoading());
       try {
         final hoSoUngVienList = await hoSoUngVienApiService.getHoSoUngVienList();
-        final pageSize = 10;
-        final startIndex = (event.page - 1) * pageSize;
-        final endIndex = startIndex + pageSize;
-
-        List<TblHoSoUngVienModel> pagedList = hoSoUngVienList.sublist(
-            startIndex, endIndex > hoSoUngVienList.length ? hoSoUngVienList.length : endIndex);
-
-        emit(HoSoUngVienLoaded(pagedList, page: event.page));
+        emit(HoSoUngVienLoaded(hoSoUngVienList));
       } catch (e) {
         emit(HoSoUngVienError('Failed to fetch  $e'));
       }
