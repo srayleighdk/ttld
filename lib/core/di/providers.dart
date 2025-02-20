@@ -20,23 +20,6 @@ import 'package:ttld/repositories/tblViecLamUngVien/vieclam_ungvien_repository.d
 
 import '../../bloc/tblViecLamUngVien/vieclam_ungvien_bloc.dart';
 
-List<RepositoryProvider> getRepositoryProviders() {
-  return [
-    RepositoryProvider<NTDRepository>(
-      create: (context) => NTDRepositoryImpl(NTDApiService()),
-    ),
-    // RepositoryProvider<AuthRepository>(
-//       create: (context) => AuthRepository(ApiClient().dio),
-//     ),
-//     RepositoryProvider<LdRepository>(
-//       create: (context) => LdRepositoryImpl(ApiClient().dio),
-//     ),
-//     RepositoryProvider<GroupRepository>(
-//       create: (context) => GroupRepository(),
-//     ),
-//   ];
-// }
-
 List<BlocProvider> getBlocProviders() {
   return [
     BlocProvider<AuthBloc>(
@@ -68,7 +51,7 @@ List<BlocProvider> getBlocProviders() {
     ),
     BlocProvider<HoSoUngVienBloc>(
       create: (context) => HoSoUngVienBloc(
-          hoSoUngVienApiService: HoSoUngVienApiService(ApiClient().dio)),
+          hoSoUngVienApiService: locator<HoSoUngVienApiService>()),
     ),
     BlocProvider<ViecLamUngVienBloc>(
       create: (context) => ViecLamUngVienBloc(
