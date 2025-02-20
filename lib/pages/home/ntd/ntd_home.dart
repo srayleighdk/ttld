@@ -125,7 +125,7 @@ class _NTDHomePageState extends State<NTDHomePage> {
             context: context,
             icon: FontAwesomeIcons.solidPenToSquare,
             label: 'Cập nhật NTD',
-            route: '/nha-tuyen-dung',
+            route: UpdateNTDPage.routePath,
           ),
           _buildQuickAccessButton(
             context: context,
