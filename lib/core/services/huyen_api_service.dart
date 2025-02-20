@@ -43,4 +43,13 @@ class HuyenApiService {
       rethrow;
     }
   }
+
+  Future<dynamic> getHuyenByTinh(String matinh) async {
+    try {
+      final response = await _dio.get(ApiEndpoints.huyen, queryParameters: {'matinh': matinh});
+      return response.data;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
