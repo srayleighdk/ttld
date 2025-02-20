@@ -31,13 +31,18 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
   void initState() {
     super.initState();
     context.read<TinhBloc>().add(LoadTinhs());
+  }
 
-    // Load Huyens for the initially selected Tinh (if any)
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+  @override
+  void didUpdateWidget(CascadeLocationPicker oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // Load Huyens when selectedTinh changes
+    if (oldWidget.selectedTinh != selectedTinh) {
       if (selectedTinh != null) {
         context.read<HuyenBloc>().add(LoadHuyensByTinh(matinh: selectedTinh!.matinh));
       }
-    });
+    }
   }
 
   @override
