@@ -1,13 +1,18 @@
 import 'package:get_it/get_it.dart';
 import 'package:ttld/bloc/huyen/huyen_bloc.dart';
+import 'package:ttld/bloc/nganh_nghe/nganh_nghe_bloc.dart';
+import 'package:ttld/bloc/quocgia/quocgia_bloc.dart';
 import 'package:ttld/bloc/tinh/tinh_bloc.dart';
 import 'package:ttld/bloc/xa/xa_bloc.dart';
 import 'package:ttld/core/api_client.dart';
 import 'package:ttld/core/services/chuyenmon_api_service.dart';
+import 'package:ttld/core/services/danhmuc_kcn_api_service.dart';
 import 'package:ttld/core/services/doituongchinhsach_api_service.dart';
 import 'package:ttld/core/services/hosoungvien_api_service.dart';
 import 'package:ttld/core/services/huyen_api_service.dart';
+import 'package:ttld/core/services/nganh_nghe_api_service.dart';
 import 'package:ttld/core/services/ntd_api_service.dart';
+import 'package:ttld/core/services/quocgia_api_service.dart';
 import 'package:ttld/core/services/tinh_api_service.dart';
 import 'package:ttld/core/services/tttantat_api_service.dart';
 import 'package:ttld/core/services/vieclam_ungvien_api_service.dart';
@@ -17,6 +22,8 @@ import 'package:ttld/features/ds-ld/repositories/ld_repository.dart';
 import 'package:ttld/features/ds-ld/repositories/ld_repository_impl.dart';
 import 'package:ttld/features/user_group/repository/group_repository.dart';
 import 'package:ttld/repositories/huyen/huyen_repository.dart';
+import 'package:ttld/repositories/nganh_nghe/nganh_nghe_repository.dart';
+import 'package:ttld/repositories/quocgia/quocgia_repository.dart';
 import 'package:ttld/repositories/tblDmChucDanh/danhmuc_repository.dart';
 import 'package:ttld/repositories/tblDmChucDanh/danhmuc_repository_impl.dart';
 import 'package:ttld/repositories/tblDmChuyenMon/chuyenmon_repository.dart';
@@ -31,7 +38,6 @@ import 'package:ttld/repositories/tblNhaTuyenDung/ntd_repository.dart';
 import 'package:ttld/repositories/tblNhaTuyenDung/ntd_repository_impl.dart';
 import 'package:ttld/repositories/tinh/tinh_repository.dart';
 import 'package:ttld/repositories/xa/xa_repository.dart';
-import 'package:ttld/core/services/danhmuc_api_service.dart';
 import 'package:ttld/bloc/kcn/kcn_cubit.dart';
 
 final locator = GetIt.instance;
@@ -99,25 +105,32 @@ void setupLocator() {
   locator.registerFactory(
       () => HuyenBloc(huyenRepository: locator<HuyenRepository>()));
   locator.registerFactory(() => XaBloc(xaRepository: locator<XaRepository>()));
-  locator.registerLazySingleton<DanhMucApiService>(
-      () => DanhMucApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<DanhMucKcnApiService>(
+      () => DanhMucKcnApiService(locator<ApiClient>().dio));
   locator.registerFactory(
-      () => KcnCubit(DanhMucApiService(locator<ApiClient>().dio)));
+      () => KcnCubit(DanhMucKcnApiService(locator<ApiClient>().dio)));
 
   // OPTIONAL: Register ForgotPasswordBloc here if you want GetIt to manage it too
   // locator.registerFactory(() => ForgotPasswordBloc(locator<ApiClient>().dio));
-  locator.registerLazySingleton<QuocGiaApiService>(() => QuocGiaApiService(locator<ApiClient>().dio));
-  locator.registerLazySingleton<QuocGiaRepository>(() => QuocGiaRepositoryImpl(quocGiaApiService: locator<QuocGiaApiService>()));
-  locator.registerFactory(() => QuocGiaBloc(quocGiaRepository: locator<QuocGiaRepository>()));
+  locator.registerLazySingleton<QuocGiaApiService>(
+      () => QuocGiaApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<QuocGiaRepository>(() =>
+      QuocGiaRepositoryImpl(quocGiaApiService: locator<QuocGiaApiService>()));
+  locator.registerFactory(
+      () => QuocGiaBloc(quocGiaRepository: locator<QuocGiaRepository>()));
 
   //HinhThucDoanhNghiep
 
   //LoaiHinh
 
   //NganhNghe
-  locator.registerLazySingleton<NganhNgheApiService>(() => NganhNgheApiService(locator<ApiClient>().dio));
-  locator.registerLazySingleton<NganhNgheRepository>(() => NganhNgheRepositoryImpl(nganhNgheApiService: locator<NganhNgheApiService>()));
-  locator.registerFactory(() => NganhNgheBloc(nganhNgheRepository: locator<NganhNgheRepository>()));
+  locator.registerLazySingleton<NganhNgheApiService>(
+      () => NganhNgheApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<NganhNgheRepository>(() =>
+      NganhNgheRepositoryImpl(
+          nganhNgheApiService: locator<NganhNgheApiService>()));
+  locator.registerFactory(
+      () => NganhNgheBloc(nganhNgheRepository: locator<NganhNgheRepository>()));
 
   //ThoiGianLamViec
 }
