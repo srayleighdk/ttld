@@ -17,19 +17,19 @@ class HuyenRepositoryImpl implements HuyenRepository {
   @override
   Future<List<Huyen>> getHuyens() async {
     final response = await huyenApiService.getHuyen();
-    return (response as List).map((json) => Huyen.fromJson(json)).toList();
+    return (response['data'] as List).map((json) => Huyen.fromJson(json)).toList();
   }
 
   @override
   Future<Huyen> addHuyen(Huyen huyen) async {
     final response = await huyenApiService.postHuyen(huyen.toJson());
-    return Huyen.fromJson(response);
+    return Huyen.fromJson(response['data'] as Map<String, dynamic>);
   }
 
   @override
   Future<Huyen> updateHuyen(Huyen huyen) async {
     final response = await huyenApiService.putHuyen(huyen.toJson());
-    return Huyen.fromJson(response);
+    return Huyen.fromJson(response['data'] as Map<String, dynamic>);
   }
 
   @override
@@ -40,6 +40,6 @@ class HuyenRepositoryImpl implements HuyenRepository {
   @override
   Future<List<Huyen>> getHuyensByTinh(String matinh) async {
     final response = await huyenApiService.getHuyenByTinh(matinh);
-    return (response as List).map((json) => Huyen.fromJson(json)).toList();
+    return (response['data'] as List).map((json) => Huyen.fromJson(json)).toList();
   }
 }
