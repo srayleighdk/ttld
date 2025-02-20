@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'tinh.freezed.dart';
+part 'tinh.g.dart';
 
 @freezed
 class Tinh with _$Tinh {
