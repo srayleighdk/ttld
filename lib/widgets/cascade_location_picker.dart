@@ -46,6 +46,7 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
                 items: state.tinhs,
                 selectedItem: selectedTinh,
                 hint: 'Chọn Tỉnh',
+                displayItem: (Tinh? tinh) => tinh?.tentinh ?? '',
                 onChanged: (Tinh? newValue) {
                   setState(() {
                     selectedTinh = newValue;
