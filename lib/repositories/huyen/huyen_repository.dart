@@ -9,30 +9,30 @@ abstract class HuyenRepository {
 }
 
 class HuyenRepositoryImpl implements HuyenRepository {
-  final ApiClient apiClient;
+  final HuyenApiService huyenApiService;
 
-  HuyenRepositoryImpl({required this.apiClient});
+  HuyenRepositoryImpl({required this.huyenApiService});
 
   @override
   Future<List<Huyen>> getHuyens() async {
-    final response = await apiClient.getHuyen();
+    final response = await huyenApiService.getHuyen();
     return (response as List).map((json) => Huyen.fromJson(json)).toList();
   }
 
   @override
   Future<Huyen> addHuyen(Huyen huyen) async {
-    final response = await apiClient.postHuyen(huyen.toJson());
+    final response = await huyenApiService.postHuyen(huyen.toJson());
     return Huyen.fromJson(response);
   }
 
   @override
   Future<Huyen> updateHuyen(Huyen huyen) async {
-    final response = await apiClient.putHuyen(huyen.toJson());
+    final response = await huyenApiService.putHuyen(huyen.toJson());
     return Huyen.fromJson(response);
   }
 
   @override
   Future<void> deleteHuyen(String id) async {
-    await apiClient.deleteHuyen(id);
+    await huyenApiService.deleteHuyen(id);
   }
 }
