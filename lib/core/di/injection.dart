@@ -149,4 +149,6 @@ void setupLocator() {
   //TrinhDoTinHoc
 
   //TrinhDoNgoaiNgu
+
+  //HinhThucDaoTao
 }
