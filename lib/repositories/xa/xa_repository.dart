@@ -17,19 +17,21 @@ class XaRepositoryImpl implements XaRepository {
   @override
   Future<List<Xa>> getXas() async {
     final response = await xaApiService.getXa();
-    return (response as List).map((json) => Xa.fromJson(json)).toList();
+    return (response['data'] as List)
+        .map((json) => Xa.fromJson(json))
+        .toList();
   }
 
   @override
   Future<Xa> addXa(Xa xa) async {
     final response = await xaApiService.postXa(xa.toJson());
-    return Xa.fromJson(response);
+    return Xa.fromJson(response['data'] as Map<String, dynamic>);
   }
 
   @override
   Future<Xa> updateXa(Xa xa) async {
     final response = await xaApiService.putXa(xa.toJson());
-    return Xa.fromJson(response);
+    return Xa.fromJson(response['data'] as Map<String, dynamic>);
   }
 
   @override
@@ -40,6 +42,8 @@ class XaRepositoryImpl implements XaRepository {
   @override
   Future<List<Xa>> getXasByHuyen(String mahuyen) async {
     final response = await xaApiService.getXaByHuyen(mahuyen);
-    return (response as List).map((json) => Xa.fromJson(json)).toList();
+    return (response['data'] as List)
+        .map((json) => Xa.fromJson(json))
+        .toList();
   }
 }
