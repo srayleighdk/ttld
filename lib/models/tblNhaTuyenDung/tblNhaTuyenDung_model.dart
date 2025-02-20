@@ -107,7 +107,8 @@ class NtdModel with _$NtdModel {
         ntdId: json['ntdId'] as String?,
         newsletterSubscription:
             json['newsletterSubscription'] as bool? ?? false,
-        jobsletterSubscription: json['jobsletterSubscription'] as bool? ?? false,
+        jobsletterSubscription:
+            json['jobsletterSubscription'] as bool? ?? false,
         ntdLoai: json['ntdLoai'] as int?,
         nongThonThanhThi: json['nongThonThanhThi'] as String?,
         idLoaiHinhDoanhNghiep: json['idLoaiHinhDoanhNghiep'] as String?,
