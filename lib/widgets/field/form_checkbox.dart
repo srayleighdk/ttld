@@ -115,7 +115,8 @@ class _NyFormCheckboxState extends FieldBaseState<NyFormCheckbox> {
 
   @override
   Widget view(BuildContext context) {
-    Widget? title = getFieldMeta('title', null);
+    return _buildCustomCheckbox();
+    /*Widget? title = getFieldMeta('title', null);
 
     title ??= Text(
       widget.field.name.titleCase,
@@ -197,6 +198,6 @@ class _NyFormCheckboxState extends FieldBaseState<NyFormCheckbox> {
       onFocusChange: getFieldMeta('onFocusChange', null),
       enableFeedback: getFieldMeta('enableFeedback', null),
       checkboxSemanticLabel: getFieldMeta('checkboxSemanticLabel', null),
-    );
+    );*/
   }
 }
