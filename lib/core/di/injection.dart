@@ -101,7 +101,8 @@ void setupLocator() {
   locator.registerFactory(() => XaBloc(xaRepository: locator<XaRepository>()));
   locator.registerLazySingleton<DanhMucApiService>(
       () => DanhMucApiService(locator<ApiClient>().dio));
-  locator.registerFactory(() => KcnCubit(DanhMucApiService(locator<ApiClient>().dio)));
+  locator.registerFactory(
+      () => KcnCubit(DanhMucApiService(locator<ApiClient>().dio)));
 
   // OPTIONAL: Register ForgotPasswordBloc here if you want GetIt to manage it too
   // locator.registerFactory(() => ForgotPasswordBloc(locator<ApiClient>().dio));
