@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ttld/bloc/tblNhaTuyenDung/ntd_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
+import 'package:ttld/pages/home/ntd/update_ntd/update_ntd_page.dart';
 
 class NTDHomePage extends StatefulWidget {
   static const routePath = '/ntd_home';

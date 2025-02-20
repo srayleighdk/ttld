@@ -5,9 +5,6 @@ import 'package:ttld/features/auth/bloc/auth_state.dart';
 import 'package:ttld/helppers/help.dart';
 import 'package:ttld/pages/home/ntv/bloc/ntv_form_bloc.dart';
 import 'package:ttld/pages/home/ntv/model/ntv_model.dart';
-import 'package:ttld/pages/home/ntv/ntv_form.dart';
-import 'package:ttld/widgets/button/button.dart';
-import 'package:ttld/widgets/form/ny_form.dart';
 
 class NTVFormScreen extends StatefulWidget {
   final Ntv? existingNtv; // Null for create mode
@@ -23,8 +20,6 @@ class _NTVFormScreenState extends State<NTVFormScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _uvUsernameController = TextEditingController();
-
-  final form = NtvForm();
 
   @override
   void initState() {
@@ -66,16 +61,7 @@ class _NTVFormScreenState extends State<NTVFormScreen> {
         child: Form(
           key: _formKey,
           child: Column(
-            children: [
-              NyForm(
-                  form: form,
-                  footer: Button.primary(text: "Submit", submitForm: (
-                    form,
-                    (data) {
-                      printInfo(data);
-                    }
-                  ))),
-            ],
+            children: [],
           ),
         ),
       ),

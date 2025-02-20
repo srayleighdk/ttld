@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ttld/bloc/tblNhaTuyenDung/ntd_bloc.dart';
-import 'package:ttld/pages/home/ntd/update_ntd/update_ntd_form.dart';
-import 'package:ttld/widgets/button/button.dart';
-import 'package:ttld/widgets/form/ny_form.dart';
 import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
 
 class UpdateNTDPage extends StatefulWidget {
@@ -75,7 +72,6 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
       }
     }
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -109,35 +105,57 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   controller: _idDoanhNghiepController,
                   hintText: 'ID Doanh Nghiệp',
                 ),
-                TextFormField(
+                const SizedBox(height: 16.0),
+                CustomTextField(
+                  labelText: "Username",
                   controller: _usernameController,
-                  decoration: const InputDecoration(labelText: 'Username'),
+                  hintText: 'Username',
                 ),
-                TextFormField(
+                const SizedBox(height: 16.0),
+                CustomTextField.password(
                   controller: _passwordController,
-                  decoration: const InputDecoration(labelText: 'Password'),
                 ),
-                TextFormField(
+                const SizedBox(height: 16.0),
+                CustomTextField(
+                  labelText: "Mã NTD",
                   controller: _ntdMadnController,
-                  decoration: const InputDecoration(labelText: 'NTD Madn'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter NTD Madn';
                     }
                     return null;
                   },
+                  hintText: 'Mã NTD',
                 ),
-                TextFormField(
+                const SizedBox(height: 16.0),
+                CustomTextField(
+                  labelText: "Tên viết tắt",
                   controller: _ntdTentatController,
-                  decoration: const InputDecoration(labelText: 'NTD Tentat'),
+                  hintText: 'Tên viết tắt',
                 ),
-                TextFormField(
+                const SizedBox(height: 16.0),
+                CustomTextField(
+                  labelText: "Tên nhà tuyển dụng",
                   controller: _ntdTenController,
-                  decoration: const InputDecoration(labelText: 'NTD Ten'),
+                  hintText: 'Tên nhà tuyển dụng',
                 ),
-                TextFormField(
+                const SizedBox(height: 16.0),
+                CustomTextField(
+                  labelText: "Tỉnh/Thành phố",
+                  controller: _ntdTenTinhController,
+                  hintText: 'Tỉnh/Thành phố',
+                ),
+                const SizedBox(height: 16.0),
+                CustomTextField(
+                  labelText: "Quận/Huyện",
+                  controller: _ntdTenHuyenController,
+                  hintText: 'Quận/Huyện',
+                ),
+                const SizedBox(height: 16.0),
+                CustomTextField(
+                  labelText: "Xã phường",
                   controller: _ntdTenXaController,
-                  decoration: const InputDecoration(labelText: 'NTD Ten Xa'),
+                  hintText: 'Xã phường',
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 24.0),

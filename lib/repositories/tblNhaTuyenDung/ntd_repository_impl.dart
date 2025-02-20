@@ -8,22 +8,22 @@ class NTDRepositoryImpl implements NTDRepository {
   NTDRepositoryImpl(this._ntdApiService);
 
   @override
-  Future<List<NtdModel>> getNtdList() async {
+  Future<List<Ntd>> getNtdList() async {
     return await _ntdApiService.getNtdList();
   }
 
   @override
-  Future<NtdModel> getNtdById(int id) async {
+  Future<Ntd> getNtdById(int id) async {
     return await _ntdApiService.getNtdById(id.toString());
   }
 
   @override
-  Future<NtdModel> addNtd(NtdModel ntd) async {
+  Future<Ntd> addNtd(Ntd ntd) async {
     return await _ntdApiService.addNtd(ntd);
   }
 
   @override
-  Future<NtdModel> updateNtd(NtdModel ntd) async {
+  Future<Ntd> updateNtd(Ntd ntd) async {
     return await _ntdApiService.updateNtd(ntd);
   }
 

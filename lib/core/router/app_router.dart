@@ -14,6 +14,7 @@ import 'package:ttld/pages/home/admin/admin_home.dart';
 import 'package:ttld/pages/home/admin/system/manager_groups.dart';
 import 'package:ttld/pages/home/home_page.dart';
 import 'package:ttld/pages/home/ntd/ntd_home.dart';
+import 'package:ttld/pages/home/ntd/update_ntd/update_ntd_page.dart';
 import 'package:ttld/pages/home/ntv/ntv_form_screen.dart';
 import 'package:ttld/pages/home/ntv/ntv_home.dart';
 import 'package:ttld/pages/hosochapnoi/hosochapnoi_page.dart';
@@ -225,7 +226,7 @@ class AppRouter {
       ),
       GoRoute(
         path: UpdateNTDPage.routePath,
-        builder: (context, state) => const UpdateNTDPage(),
+        builder: (context, state) => UpdateNTDPage(),
       ),
       GoRoute(
         path: '/home',

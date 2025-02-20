@@ -17,7 +17,7 @@ class XaApiService {
 
   Future<dynamic> postXa(dynamic data) async {
     try {
-      final response = await dio.post(ApiEndpoints.xa, data);
+      final response = await dio.post(ApiEndpoints.xa, data: data);
       return response.data;
     } catch (e) {
       rethrow;
@@ -26,7 +26,7 @@ class XaApiService {
 
   Future<dynamic> putXa(dynamic data) async {
     try {
-      final response = await dio.put(ApiEndpoints.xa, data);
+      final response = await dio.put(ApiEndpoints.xa, data: data);
       return response.data;
     } catch (e) {
       rethrow;

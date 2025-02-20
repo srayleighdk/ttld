@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'huyen.freezed.dart';
+part 'huyen.g.dart';
 
 @freezed
 class Huyen with _$Huyen {

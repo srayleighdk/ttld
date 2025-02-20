@@ -32,7 +32,7 @@ class NhaTuyenDungPage extends StatelessWidget {
     );
   }
 
-  Widget _buildNTDList(List<NtdModel> ntdList) {
+  Widget _buildNTDList(List<Ntd> ntdList) {
     return ListView.builder(
       itemCount: ntdList.length,
       itemBuilder: (context, index) {

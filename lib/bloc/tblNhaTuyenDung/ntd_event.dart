@@ -19,7 +19,7 @@ class NTDFetchById extends NTDEvent {
 }
 
 class NTDAdd extends NTDEvent {
-  final NtdModel ntd;
+  final Ntd ntd;
 
   const NTDAdd(this.ntd);
 
@@ -28,7 +28,7 @@ class NTDAdd extends NTDEvent {
 }
 
 class NTDUpdate extends NTDEvent {
-  final NtdModel ntd;
+  final Ntd ntd;
 
   const NTDUpdate(this.ntd);
 

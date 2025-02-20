@@ -15,7 +15,7 @@ class ThonApiService {
 
   Future<Response> addThon(dynamic data) async {
     try {
-      final response = await _dio.post(ApiEndpoints.thon,  data);
+      final response = await _dio.post(ApiEndpoints.thon, data: data);
       return response;
     } catch (e) {
       throw Exception('Failed to add thon: $e');
@@ -24,7 +24,7 @@ class ThonApiService {
 
   Future<Response> editThon(dynamic data) async {
     try {
-      final response = await _dio.put(ApiEndpoints.thon,  data);
+      final response = await _dio.put(ApiEndpoints.thon, data: data);
       return response;
     } catch (e) {
       throw Exception('Failed to edit thon: $e');
@@ -33,7 +33,8 @@ class ThonApiService {
 
   Future<Response> deleteThon(dynamic id) async {
     try {
-      final response = await _dio.delete(ApiEndpoints.thon,  {'id': id});
+      final response =
+          await _dio.delete(ApiEndpoints.thon, queryParameters: {'id': id});
       return response;
     } catch (e) {
       throw Exception('Failed to delete thon: $e');

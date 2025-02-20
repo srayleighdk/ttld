@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'xa.freezed.dart';
+part 'xa.g.dart';
 
 @freezed
 class Xa with _$Xa {

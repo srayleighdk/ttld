@@ -12,7 +12,7 @@ class NTDInitial extends NTDState {}
 class NTDLoading extends NTDState {}
 
 class NTDLoaded extends NTDState {
-  final List<NtdModel> ntdList;
+  final List<Ntd> ntdList;
 
   const NTDLoaded(this.ntdList);
 
@@ -21,7 +21,7 @@ class NTDLoaded extends NTDState {
 }
 
 class NTDLoadedById extends NTDState {
-  final NtdModel ntd;
+  final Ntd ntd;
 
   const NTDLoadedById(this.ntd);
 
