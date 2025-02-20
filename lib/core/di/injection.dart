@@ -69,6 +69,9 @@ void setupLocator() {
   locator.registerLazySingleton<NTDRepository>(
       () => NTDRepositoryImpl(locator<NTDApiService>()));
 
+  // Register TinhRepository here
+  // locator.registerLazySingleton<TinhRepository>(() => TinhRepositoryImpl(locator<ApiClient>()));
+
   // OPTIONAL: Register ForgotPasswordBloc here if you want GetIt to manage it too
   // locator.registerFactory(() => ForgotPasswordBloc(locator<ApiClient>().dio));
 }

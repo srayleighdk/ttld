@@ -14,4 +14,7 @@ class ApiEndpoints {
 
   static String ntd = '$baseUrl/tttt/nha-td';
   static String ntdById = '$baseUrl/tttt/nha-tdid';
+
+  // Danh muc hanh chinh - Tinh
+  static String tinh = '$baseUrl/api/danhmuc/hanh-chinh/tinh';
 }
