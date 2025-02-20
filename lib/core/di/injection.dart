@@ -113,4 +113,9 @@ void setupLocator() {
   //HinhThucDoanhNghiep
 
   //LoaiHinh
+
+  //NganhNghe
+  locator.registerLazySingleton<NganhNgheApiService>(() => NganhNgheApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<NganhNgheRepository>(() => NganhNgheRepositoryImpl(nganhNgheApiService: locator<NganhNgheApiService>()));
+  locator.registerFactory(() => NganhNgheBloc(nganhNgheRepository: locator<NganhNgheRepository>()));
 }
