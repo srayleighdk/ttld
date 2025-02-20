@@ -133,4 +133,6 @@ void setupLocator() {
       () => NganhNgheBloc(nganhNgheRepository: locator<NganhNgheRepository>()));
 
   //ThoiGianLamViec
+
+  //NguonViecLam
 }
