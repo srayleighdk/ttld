@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ttld/bloc/tblNhaTuyenDung/ntd_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
-import 'package:ttld/pages/nha_tuyen_dung/nha_tuyen_dung_page.dart';
 
 class NTDHomePage extends StatefulWidget {
   static const routePath = '/ntd_home';
   final int ntdId;
-  const NTDHomePage({Key? key, required this.ntdId}) : super(key: key);
+  const NTDHomePage({super.key, required this.ntdId});
 
   @override
   State<NTDHomePage> createState() => _NTDHomePageState();
