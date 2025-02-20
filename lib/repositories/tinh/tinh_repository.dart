@@ -16,19 +16,19 @@ class TinhRepositoryImpl implements TinhRepository {
   @override
   Future<List<Tinh>> getTinhs() async {
     final response = await tinhApiService.getTinh();
-    return (response as List).map((json) => Tinh.fromJson(json)).toList();
+    return (response['data'] as List).map((json) => Tinh.fromJson(json)).toList();
   }
 
   @override
   Future<Tinh> addTinh(Tinh tinh) async {
     final response = await tinhApiService.postTinh(tinh.toJson());
-    return Tinh.fromJson(response as Map<String, dynamic>);
+    return Tinh.fromJson(response['data'] as Map<String, dynamic>);
   }
 
   @override
   Future<Tinh> updateTinh(Tinh tinh) async {
     final response = await tinhApiService.putTinh(tinh.toJson());
-    return Tinh.fromJson(response as Map<String, dynamic>);
+    return Tinh.fromJson(response['data'] as Map<String, dynamic>);
   }
 
   @override
