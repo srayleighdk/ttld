@@ -9,30 +9,30 @@ abstract class TinhRepository {
 }
 
 class TinhRepositoryImpl implements TinhRepository {
-  final ApiClient apiClient;
+  final TinhApiService tinhApiService;
 
-  TinhRepositoryImpl({required this.apiClient});
+  TinhRepositoryImpl({required this.tinhApiService});
 
   @override
   Future<List<Tinh>> getTinhs() async {
-    final response = await apiClient.getTinh();
+    final response = await tinhApiService.getTinh();
     return (response as List).map((json) => Tinh.fromJson(json)).toList();
   }
 
   @override
   Future<Tinh> addTinh(Tinh tinh) async {
-    final response = await apiClient.postTinh(tinh.toJson());
+    final response = await tinhApiService.postTinh(tinh.toJson());
     return Tinh.fromJson(response);
   }
 
   @override
   Future<Tinh> updateTinh(Tinh tinh) async {
-    final response = await apiClient.putTinh(tinh.toJson());
+    final response = await tinhApiService.putTinh(tinh.toJson());
     return Tinh.fromJson(response);
   }
 
   @override
   Future<void> deleteTinh(String id) async {
-    await apiClient.deleteTinh(id);
+    await tinhApiService.deleteTinh(id);
   }
 }
