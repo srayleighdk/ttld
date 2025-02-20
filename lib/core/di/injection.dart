@@ -145,4 +145,6 @@ void setupLocator() {
   //TrinhDoVanHoa
 
   //TrinhDoHocVan
+
+  //TrinhDoTinHoc
 }
