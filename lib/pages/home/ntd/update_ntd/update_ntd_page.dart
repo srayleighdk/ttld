@@ -155,7 +155,23 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                 // CustomPicker(items: [], selectedItem: null, onChanged: (T? value) {  },
                 // ),
                 const SizedBox(height: 16.0),
-                CascadeLocationPicker(),
+                CascadeLocationPicker(
+                  onTinhChanged: (tinh) {
+                    setState(() {
+                      _selectedTinh = tinh?.tenTinh;
+                    });
+                  },
+                  onHuyenChanged: (huyen) {
+                    setState(() {
+                      _selectedHuyen = huyen?.tenHuyen;
+                    });
+                  },
+                  onXaChanged: (xa) {
+                    setState(() {
+                      _selectedXa = xa?.tenXa;
+                    });
+                  },
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 24.0),
                   child: ElevatedButton(
@@ -174,6 +190,9 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                               ntdTentat: _ntdTentatController.text,
                               ntdTen: _ntdTenController.text,
                               ntdEmail: _ntdEmailController.text,
+                              ntdTenTinh: _selectedTinh,
+                              ntdTenHuyen: _selectedHuyen,
+                              ntdTenXa: _selectedXa,
                             );
                             context.read<NTDBloc>().add(NTDUpdate(updatedNtd));
                           }
