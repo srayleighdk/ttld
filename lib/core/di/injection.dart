@@ -24,8 +24,6 @@ import 'package:ttld/features/user_group/repository/group_repository.dart';
 import 'package:ttld/repositories/huyen/huyen_repository.dart';
 import 'package:ttld/repositories/nganh_nghe/nganh_nghe_repository.dart';
 import 'package:ttld/repositories/quocgia/quocgia_repository.dart';
-import 'package:ttld/repositories/tblDmChucDanh/danhmuc_repository.dart';
-import 'package:ttld/repositories/tblDmChucDanh/danhmuc_repository_impl.dart';
 import 'package:ttld/repositories/tblDmChuyenMon/chuyenmon_repository.dart';
 import 'package:ttld/repositories/tblDmChuyenMon/chuyenmon_repository_impl.dart';
 import 'package:ttld/repositories/tblDmDoiTuongChinhSach/doituong_repository.dart';
@@ -54,8 +52,8 @@ void setupLocator() {
   locator.registerLazySingleton<GroupRepository>(() => GroupRepository());
 
   //Register DanhMucRepository
-  locator.registerLazySingleton<DanhMucRepository>(
-      () => DanhMucRepositoryImpl(locator<ApiClient>().dio));
+  // locator.registerLazySingleton<DanhMucKcnRepository>(
+  //     () => DanhMucRepositoryImpl(locator<ApiClient>().dio));
 
   locator.registerLazySingleton<ChuyenMonApiService>(
       () => ChuyenMonApiService(locator<ApiClient>().dio));
