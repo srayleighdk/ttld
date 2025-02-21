@@ -3,11 +3,13 @@ import 'package:ttld/core/constants/api_endpoints.dart';
 import 'package:ttld/models/chuc_danh_model.dart';
 
 class ChucDanhApiService {
-  final Dio _dio = Dio();
+  ChucDanhApiService(this.dio);
+
+  final Dio dio;
 
   Future<List<ChucDanhModel>> getChucDanhs() async {
     try {
-      final response = await _dio.get(ApiEndpoints.chucDanh);
+      final response = await dio.get(ApiEndpoints.chucDanh);
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data;
         return data.map((json) => ChucDanhModel.fromJson(json)).toList();
