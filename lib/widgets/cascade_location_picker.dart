@@ -45,10 +45,14 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
       TextEditingController();
   late final KcnCubit _kcnCubit;
 
-  @override
+ @override
   void initState() {
     super.initState();
-    locator<TinhBloc>().add(LoadTinhs());
+    final tinhBloc = locator<TinhBloc>();
+    final huyenBloc = locator<HuyenBloc>();
+    final xaBloc = locator<XaBloc>();
+
+    tinhBloc.add(LoadTinhs());
     _kcnCubit = locator<KcnCubit>();
     _updateAddressDetail();
   }
