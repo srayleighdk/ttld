@@ -111,7 +111,7 @@ void setupLocator() {
   locator.registerLazySingleton<QuocGiaApiService>(
       () => QuocGiaApiService(locator<ApiClient>().dio));
 
-  locator.registerLazySingleton<QuocGiaRepositoryImpl>(() =>
+  locator.registerFactory<QuocGiaRepositoryImpl>(() =>
       QuocGiaRepositoryImpl(quocGiaApiService: locator<QuocGiaApiService>()));
 
   locator.registerLazySingleton<QuocGiaRepository>(
