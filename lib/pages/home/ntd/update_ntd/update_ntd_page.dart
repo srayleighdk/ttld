@@ -47,9 +47,10 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
   String? _selectedTinh;
   String? _selectedHuyen;
   String? _selectedXa;
+  String? _selectedQuocgia;
 
   List<QuocGia> _quocGias = [];
-  QuocGia? _selectedQuocGia;
+  QuocGia? quocGia;
 
   bool _ntdhtNlh = false;
   bool _ntdhtTelephone = false;
@@ -61,6 +62,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
   @override
   void initState() {
     super.initState();
+    _loadQuocGias(); // Load data when the widget is initialized
   }
 
   @override
@@ -105,10 +107,9 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
         _ntdhtFax = ntd.ntdhtFax ?? false;
         _ntdhtEmail = ntd.ntdhtEmail ?? false;
         _ntdhtAddress = ntd.ntdhtAddress ?? false;
+        _selectedQuocgia = ntd.ntdQuocgia;
       }
     }
-
-    _loadQuocGias();
   }
 
   Future<void> _loadQuocGias() async {
@@ -192,13 +193,13 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                 CustomPicker<QuocGia>(
                   label: const Text("Quốc gia"),
                   items: _quocGias,
-                  selectedItem: _selectedQuocGia,
-                  onChanged: (QuocGia? value) {
+                  selectedItem: quocGia,
+                  onChanged: (quocgia) {
                     setState(() {
-                      _selectedQuocGia = value;
+                      _selectedQuocgia = quocgia?.name;
                     });
                   },
-                  displayItemBuilder: (QuocGia? item) => item?.tenQuocGia ?? '',
+                  displayItemBuilder: (QuocGia? item) => item?.name ?? '',
                 ),
                 const SizedBox(height: 16.0),
                 CustomTextField(
@@ -227,7 +228,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                 const SizedBox(height: 16.0),
                 const Text("Cho phép hiển thị các thông tin sau"),
                 CustomCheckbox(
-                  label: "ntdhtNlh",
+                  label: "Người liên hệ",
                   value: _ntdhtNlh,
                   onChanged: (bool? value) {
                     setState(() {
@@ -236,7 +237,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   },
                 ),
                 CustomCheckbox(
-                  label: "ntdhtTelephone",
+                  label: "Số điện thoại",
                   value: _ntdhtTelephone,
                   onChanged: (bool? value) {
                     setState(() {
@@ -245,7 +246,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   },
                 ),
                 CustomCheckbox(
-                  label: "ntdhtWeb",
+                  label: "Website",
                   value: _ntdhtWeb,
                   onChanged: (bool? value) {
                     setState(() {
@@ -254,7 +255,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   },
                 ),
                 CustomCheckbox(
-                  label: "ntdhtFax",
+                  label: "Fax",
                   value: _ntdhtFax,
                   onChanged: (bool? value) {
                     setState(() {
@@ -263,7 +264,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   },
                 ),
                 CustomCheckbox(
-                  label: "ntdhtEmail",
+                  label: "Email",
                   value: _ntdhtEmail,
                   onChanged: (bool? value) {
                     setState(() {
@@ -272,7 +273,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   },
                 ),
                 CustomCheckbox(
-                  label: "ntdhtAddress",
+                  label: "Địa chỉ",
                   value: _ntdhtAddress,
                   onChanged: (bool? value) {
                     setState(() {
@@ -303,7 +304,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                               ntdTenXa: _selectedXa,
                               ntdhtNlh: _ntdhtNlh,
                               ntdhtTelephone: _ntdhtTelephone,
-                              ntdQuocgia: _selectedQuocGia?.tenQuocGia,
+                              ntdQuocgia: _selectedQuocgia,
                               ntdhtWeb: _ntdhtWeb,
                               ntdhtFax: _ntdhtFax,
                               ntdhtEmail: _ntdhtEmail,

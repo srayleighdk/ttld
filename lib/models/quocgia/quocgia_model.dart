@@ -1,11 +1,11 @@
 class QuocGia {
-  final String tenQuocGia;
+  final String name; // Changed from tenQuocGia to name
   final String viettat;
   final int displayOrder;
   final bool status;
 
   QuocGia({
-    required this.tenQuocGia,
+    required this.name, // Changed from tenQuocGia to name
     required this.viettat,
     required this.displayOrder,
     required this.status,
@@ -13,7 +13,7 @@ class QuocGia {
 
   factory QuocGia.fromJson(Map<String, dynamic> json) {
     return QuocGia(
-      tenQuocGia: json['tenQuocGia'] ?? '',
+      name: json['name'] ?? '', // Changed from tenQuocGia to name
       viettat: json['viettat'] ?? '',
       displayOrder: json['displayOrder'] ?? 0,
       status: json['status'] ?? false,
@@ -22,7 +22,7 @@ class QuocGia {
 
   Map<String, dynamic> toJson() {
     return {
-      'tenQuocGia': tenQuocGia,
+      'name': name, // Changed from tenQuocGia to name
       'viettat': viettat,
       'displayOrder': displayOrder,
       'status': status,

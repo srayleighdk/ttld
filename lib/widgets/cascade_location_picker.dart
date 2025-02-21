@@ -15,20 +15,6 @@ import 'package:ttld/models/xa/xa.dart';
 import 'package:ttld/bloc/kcn/kcn_cubit.dart';
 import 'package:ttld/models/kcn/kcn_model.dart';
 import 'package:ttld/core/di/injection.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ttld/bloc/huyen/huyen_bloc.dart';
-import 'package:ttld/bloc/huyen/huyen_event.dart';
-import 'package:ttld/bloc/tinh/tinh_bloc.dart';
-import 'package:ttld/bloc/tinh/tinh_event.dart';
-import 'package:ttld/bloc/xa/xa_bloc.dart';
-import 'package:ttld/bloc/xa/xa_event.dart';
-import 'package:ttld/models/huyen/huyen.dart';
-import 'package:ttld/models/tinh/tinh.dart';
-import 'package:ttld/models/xa/xa.dart';
-import 'package:ttld/bloc/kcn/kcn_cubit.dart';
-import 'package:ttld/models/kcn/kcn_model.dart';
-import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/widgets/field/custom_picker.dart';
 import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
 
@@ -153,7 +139,7 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
         const SizedBox(height: 14),
         BlocBuilder<XaBloc, XaState>(
           builder: (context, state) {
-            Widget child ;
+            Widget child;
             if (state is XaLoadedByHuyen) {
               child = CustomPicker<Xa>(
                 label: const Text('Xã/Phường'),
@@ -170,7 +156,7 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
                   widget.onXaChanged?.call(newValue);
                 },
               );
-            } else  {
+            } else {
               child = Text('Error: ${state.message}');
             }
             return child;

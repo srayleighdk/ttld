@@ -9,6 +9,7 @@ import 'package:ttld/core/router/app_router.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/ds-ld/repositories/ld_repository.dart';
 import 'package:ttld/helppers/help.dart';
+import 'package:ttld/repositories/quocgia/quocgia_repository.dart';
 import 'package:ttld/themes/text/app_theme.dart';
 
 Future<void> main() async {

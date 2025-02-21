@@ -6,18 +6,18 @@ class QuocGiaApiService {
   QuocGiaApiService(this._dio);
 
   Future<Response> getQuocGia() async {
-    return await _dio.get('/api/danhmuc/quoc-gia');
+    return await _dio.get('/danhmuc/quoc-gia');
   }
 
   Future<Response> postQuocGia(Map<String, dynamic> data) async {
-    return await _dio.post('/api/danhmuc/quoc-gia',  data);
+    return await _dio.post('/danhmuc/quoc-gia', data: data);
   }
 
   Future<Response> putQuocGia(Map<String, dynamic> data) async {
-    return await _dio.put('/api/danhmuc/quoc-gia',  data);
+    return await _dio.put('/danhmuc/quoc-gia', data: data);
   }
 
   Future<void> deleteQuocGia(String id) async {
-    await _dio.delete('/api/danhmuc/quoc-gia/$id');
+    await _dio.delete('/danhmuc/quoc-gia', queryParameters: {'id': id});
   }
 }

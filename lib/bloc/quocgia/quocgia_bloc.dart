@@ -15,7 +15,8 @@ class QuocGiaBloc extends Bloc<QuocGiaEvent, QuocGiaState> {
     on<DeleteQuocGia>(_onDeleteQuocGia);
   }
 
-  Future<void> _onLoadQuocGias(LoadQuocGias event, Emitter<QuocGiaState> emit) async {
+  Future<void> _onLoadQuocGias(
+      LoadQuocGias event, Emitter<QuocGiaState> emit) async {
     emit(QuocGiaLoading());
     try {
       final quocGias = await quocGiaRepository.getQuocGias();
@@ -25,11 +26,13 @@ class QuocGiaBloc extends Bloc<QuocGiaEvent, QuocGiaState> {
     }
   }
 
-  Future<void> _onAddQuocGia(AddQuocGia event, Emitter<QuocGiaState> emit) async {
+  Future<void> _onAddQuocGia(
+      AddQuocGia event, Emitter<QuocGiaState> emit) async {
     try {
       final quocGia = await quocGiaRepository.addQuocGia(event.quocGia);
       if (state is QuocGiaLoaded) {
-        final updatedQuocGias = List<QuocGia>.from((state as QuocGiaLoaded).quocGias)..add(quocGia);
+        final updatedQuocGias =
+            List<QuocGia>.from((state as QuocGiaLoaded).quocGias)..add(quocGia);
         emit(QuocGiaLoaded(quocGias: updatedQuocGias));
       }
     } catch (e) {
@@ -37,11 +40,15 @@ class QuocGiaBloc extends Bloc<QuocGiaEvent, QuocGiaState> {
     }
   }
 
-  Future<void> _onUpdateQuocGia(UpdateQuocGia event, Emitter<QuocGiaState> emit) async {
+  Future<void> _onUpdateQuocGia(
+      UpdateQuocGia event, Emitter<QuocGiaState> emit) async {
     try {
       final quocGia = await quocGiaRepository.updateQuocGia(event.quocGia);
       if (state is QuocGiaLoaded) {
-        final updatedQuocGias = (state as QuocGiaLoaded).quocGias.map((q) => q.tenQuocGia == quocGia.tenQuocGia ? quocGia : q).toList();
+        final updatedQuocGias = (state as QuocGiaLoaded)
+            .quocGias
+            .map((q) => q.name == quocGia.name ? quocGia : q)
+            .toList();
         emit(QuocGiaLoaded(quocGias: updatedQuocGias));
       }
     } catch (e) {
@@ -49,11 +56,15 @@ class QuocGiaBloc extends Bloc<QuocGiaEvent, QuocGiaState> {
     }
   }
 
-  Future<void> _onDeleteQuocGia(DeleteQuocGia event, Emitter<QuocGiaState> emit) async {
+  Future<void> _onDeleteQuocGia(
+      DeleteQuocGia event, Emitter<QuocGiaState> emit) async {
     try {
       await quocGiaRepository.deleteQuocGia(event.tenQuocGia);
       if (state is QuocGiaLoaded) {
-        final updatedQuocGias = (state as QuocGiaLoaded).quocGias.where((q) => q.tenQuocGia != event.tenQuocGia).toList();
+        final updatedQuocGias = (state as QuocGiaLoaded)
+            .quocGias
+            .where((q) => q.name != event.tenQuocGia)
+            .toList();
         emit(QuocGiaLoaded(quocGias: updatedQuocGias));
       }
     } catch (e) {

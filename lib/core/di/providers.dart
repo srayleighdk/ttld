@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ttld/bloc/huyen/huyen_bloc.dart';
+import 'package:ttld/bloc/quocgia/quocgia_bloc.dart';
 import 'package:ttld/bloc/tinh/tinh_bloc.dart';
 import 'package:ttld/bloc/tblNhaTuyenDung/ntd_bloc.dart';
 import 'package:ttld/bloc/xa/xa_bloc.dart';
@@ -16,27 +17,12 @@ import 'package:ttld/features/user_group/repository/group_repository.dart';
 import 'package:ttld/pages/forgot_password/bloc/forgot_password_bloc.dart';
 import 'package:ttld/pages/hosoungvien/bloc/hosoungvien_bloc.dart';
 import 'package:ttld/pages/signup/bloc/signup_bloc.dart';
-import 'package:ttld/repositories/tblNhaTuyenDung/ntd_repository.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ttld/bloc/huyen/huyen_bloc.dart';
-import 'package:ttld/bloc/tinh/tinh_bloc.dart';
-import 'package:ttld/bloc/tblNhaTuyenDung/ntd_bloc.dart';
-import 'package:ttld/bloc/xa/xa_bloc.dart';
-import 'package:ttld/core/api_client.dart';
-import 'package:ttld/core/di/injection.dart';
-import 'package:ttld/core/services/hosoungvien_api_service.dart';
-import 'package:ttld/features/auth/bloc/auth_bloc.dart';
-import 'package:ttld/features/auth/bloc/login_bloc.dart';
-import 'package:ttld/features/auth/repositories/auth_repository.dart';
-import 'package:ttld/features/ds-ld/bloc/ld_bloc.dart';
-import 'package:ttld/features/ds-ld/repositories/ld_repository.dart';
-import 'package:ttld/features/user_group/bloc/group_bloc.dart';
-import 'package:ttld/features/user_group/repository/group_repository.dart';
-import 'package:ttld/pages/forgot_password/bloc/forgot_password_bloc.dart';
-import 'package:ttld/pages/hosoungvien/bloc/hosoungvien_bloc.dart';
-import 'package:ttld/pages/signup/bloc/signup_bloc.dart';
+import 'package:ttld/repositories/huyen/huyen_repository.dart';
+import 'package:ttld/repositories/quocgia/quocgia_repository.dart';
 import 'package:ttld/repositories/tblNhaTuyenDung/ntd_repository.dart';
 import 'package:ttld/repositories/tblViecLamUngVien/vieclam_ungvien_repository.dart';
+import 'package:ttld/repositories/tinh/tinh_repository.dart';
+import 'package:ttld/repositories/xa/xa_repository.dart';
 
 import '../../bloc/tblViecLamUngVien/vieclam_ungvien_bloc.dart';
 
@@ -95,6 +81,11 @@ List<BlocProvider> getBlocProviders() {
     BlocProvider<XaBloc>(
       create: (context) => XaBloc(
         xaRepository: locator<XaRepository>(),
+      ),
+    ),
+    BlocProvider<QuocGiaBloc>(
+      create: (context) => QuocGiaBloc(
+        quocGiaRepository: locator<QuocGiaRepository>(),
       ),
     ),
   ];

@@ -94,7 +94,7 @@ class CustomTextField extends StatelessWidget {
       labelText: labelText,
       hintText: hintText,
       validator: validator,
-      keyboardType: keyboardType,
+      keyboardType: TextInputType.text,
       obscureText: obscureText,
     );
   }

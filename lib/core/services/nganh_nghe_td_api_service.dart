@@ -6,18 +6,19 @@ class NganhNgheTDApiService {
   NganhNgheTDApiService(this._dio);
 
   Future<Response> getNganhNgheTD() async {
-    return await _dio.get('/api/danhmuc/nganh-nghe/tuyen-dung');
+    return await _dio.get('/danhmuc/nganh-nghe/tuyen-dung');
   }
 
   Future<Response> postNganhNgheTD(Map<String, dynamic> data) async {
-    return await _dio.post('/api/danhmuc/nganh-nghe/tuyen-dung', data);
+    return await _dio.post('/danhmuc/nganh-nghe/tuyen-dung', data: data);
   }
 
   Future<Response> putNganhNgheTD(Map<String, dynamic> data) async {
-    return await _dio.put('/api/danhmuc/nganh-nghe/tuyen-dung', data);
+    return await _dio.put('/danhmuc/nganh-nghe/tuyen-dung', data: data);
   }
 
-  Future<void> deleteNganhNgheTD(String manhom) async {
-    await _dio.delete('/api/danhmuc/nganh-nghe/tuyen-dung/$manhom');
+  Future<void> deleteNganhNgheTD(String id) async {
+    await _dio
+        .delete('/danhmuc/nganh-nghe/tuyen-dung/', queryParameters: {'id': id});
   }
 }

@@ -1,4 +1,4 @@
-import 'package:ttld/core/services/nganh_nghe_api_service.dart';
+import 'package:ttld/core/services/nganh_nghe_td_api_service.dart';
 import 'package:ttld/models/nganh_nghe_td_model.dart';
 
 abstract class NganhNgheTDRepository {
@@ -6,13 +6,13 @@ abstract class NganhNgheTDRepository {
 }
 
 class NganhNgheTDRepositoryImpl implements NganhNgheTDRepository {
-  final NganhNgheApiService nganhNgheApiService;
+  final NganhNgheTDApiService nganhNgheTDApiService;
 
-  NganhNgheTDRepositoryImpl({required this.nganhNgheApiService});
+  NganhNgheTDRepositoryImpl({required this.nganhNgheTDApiService});
 
   @override
   Future<List<NganhNgheTD>> getNganhNgheTDs() async {
-    final response = await nganhNgheApiService.getNganhNgheTD();
+    final response = await nganhNgheTDApiService.getNganhNgheTD();
     return (response.data['data'] as List)
         .map((json) => NganhNgheTD.fromJson(json))
         .toList();
