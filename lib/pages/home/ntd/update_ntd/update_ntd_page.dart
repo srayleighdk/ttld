@@ -113,11 +113,12 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
       setState(() {
         _quocGias = quocGias;
         if (BlocProvider.of<NTDBloc>(context).state is NTDLoadedById) {
-          final ntd = (BlocProvider.of<NTDBloc>(context).state as NTDLoadedById).ntd;
+          final ntd =
+              (BlocProvider.of<NTDBloc>(context).state as NTDLoadedById).ntd;
           if (ntd != null && ntd.ntdQuocgia != null) {
             try {
               _selectedQuocGia = _quocGias.firstWhere(
-                    (q) => q.tenQuocGia == ntd.ntdQuocgia,
+                (q) => q.tenQuocGia == ntd.ntdQuocgia,
               );
             } catch (e) {
               _selectedQuocGia = null;
