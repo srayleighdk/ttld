@@ -22,6 +22,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
   final _idDoanhNghiepController = TextEditingController();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _mstController = TextEditingController();
   final _ntdMadnController = TextEditingController();
   final _ntdTentatController = TextEditingController();
   final _ntdTenController = TextEditingController();
@@ -40,6 +41,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
   final _ntdNamthanhlapController = TextEditingController();
   final _ntdLinhvuchoatdongController = TextEditingController();
   final _nongThonThanhThiController = TextEditingController();
+  final _ntdChucvuController = TextEditingController();
   final _ntdTenTinhController = TextEditingController();
   final _ntdTenHuyenController = TextEditingController();
   final _ntdTenXaController = TextEditingController();
@@ -160,6 +162,12 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   hintText: 'ID Doanh Nghiệp',
                 ),
                 const SizedBox(height: 16.0),
+                 CustomTextField(
+                  labelText: "Mã số thuế",
+                  controller: _mstController,
+                  hintText: 'Mã số thuế',
+                ),
+                const SizedBox(height: 16.0),
                 CustomTextField(
                   labelText: "Username",
                   controller: _usernameController,
@@ -192,6 +200,17 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                 const SizedBox(height: 16.0),
                 CustomPicker<QuocGia>(
                   label: const Text("Quốc gia"),
+                  items: _quocGias,
+                  selectedItem: quocGia,
+                  onChanged: (quocgia) {
+                    setState(() {
+                      _selectedQuocgia = quocgia?.name;
+                    });
+                  },
+                  displayItemBuilder: (QuocGia? item) => item?.name ?? '',
+                ),
+                 CustomPicker<QuocGia>(
+                  label: const Text("Chức vụ"),
                   items: _quocGias,
                   selectedItem: quocGia,
                   onChanged: (quocgia) {
@@ -331,6 +350,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
     _idDoanhNghiepController.dispose();
     _usernameController.dispose();
     _passwordController.dispose();
+    _mstController.dispose();
     _ntdMadnController.dispose();
     _ntdTentatController.dispose();
     _ntdTenController.dispose();
@@ -349,6 +369,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
     _ntdNamthanhlapController.dispose();
     _ntdLinhvuchoatdongController.dispose();
     _nongThonThanhThiController.dispose();
+     _ntdChucvuController.dispose();
     _ntdTenTinhController.dispose();
     _ntdTenHuyenController.dispose();
     _ntdTenXaController.dispose();
