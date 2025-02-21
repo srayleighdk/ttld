@@ -132,37 +132,28 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
                   widget.onHuyenChanged?.call(newValue);
                 },
               );
-            } else if (state is TinhLoaded) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
+            } else if (state is TinhError) {
+              child = Text('Error: ${state.message}');
+            } else if (state is TinhLoading) {
+              child = const CircularProgressIndicator();
+            } else {
+               WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (selectedTinh != null) {
                   context
                       .read<HuyenBloc>()
                       .add(LoadHuyensByTinh(matinh: selectedTinh!.matinh));
-                  BlocProvider.of<KcnCubit>(context)
-                      .getKCN(selectedTinh!.matinh);
+                  _kcnCubit.getKCN(selectedTinh!.matinh);
                 }
               });
-              return const SizedBox.shrink();
-            } else if (state is HuyenError) {
-              child = Text('Error: ${state.message}');
-            } else if (state is HuyenLoading) {
-              child = const CircularProgressIndicator();
-            } else {
-              child = const Text('Loading Huyện...');
-              print('HuyenState: ${state.runtimeType}'); // Add this line
+              child = const Text('Loading Tỉnh...');
+
+              print('TinhState: ${state.runtimeType}'); // Add this line
             }
-            return CustomPicker<Huyen>(
-              label: const Text('Quận/Huyện'),
-              items: const [],
-              selectedItem: selectedHuyen,
-              hint: 'Chọn Quận/Huyện',
-              displayItemBuilder: (Huyen? huyen) => huyen?.tenhuyen ?? '',
-              onChanged: (Huyen? newValue) {},
-            );
+            return child;
           },
         ),
         const SizedBox(height: 14),
-        BlocBuilder<XaBloc, XaState>(
+        BlocBuilder<HuyenBloc, HuyenState>(
           builder: (context, state) {
             Widget child;
             if (state is XaLoadedByHuyen) {
