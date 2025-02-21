@@ -41,10 +41,12 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
   final _ntdNamthanhlapController = TextEditingController();
   final _ntdLinhvuchoatdongController = TextEditingController();
   final _nongThonThanhThiController = TextEditingController();
+  final _ntdSolaodongController = TextEditingController();
   final _ntdChucvuController = TextEditingController();
   final _ntdTenTinhController = TextEditingController();
   final _ntdTenHuyenController = TextEditingController();
   final _ntdTenXaController = TextEditingController();
+  int? idLoaiHinhDoanhNghiep;
 
   String? _selectedTinh;
   String? _selectedHuyen;
@@ -209,6 +211,11 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   },
                   displayItemBuilder: (QuocGia? item) => item?.name ?? '',
                 ),
+                 CustomTextField(
+                  labelText: "Số lao động",
+                  controller: _ntdSolaodongController,
+                  hintText: 'Số lao động',
+                ),
                 const SizedBox(height: 16.0),
                 CustomPicker<QuocGia>(
                   label: const Text("Quốc gia"),
@@ -220,6 +227,11 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                     });
                   },
                   displayItemBuilder: (QuocGia? item) => item?.name ?? '',
+                ),
+                 CustomTextField(
+                  labelText: "Lĩnh vực hoạt động",
+                  controller: _ntdLinhvuchoatdongController,
+                  hintText: 'Lĩnh vực hoạt động',
                 ),
                 const SizedBox(height: 16.0),
                 CustomTextField(
@@ -370,6 +382,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
     _ntdNamthanhlapController.dispose();
     _ntdLinhvuchoatdongController.dispose();
     _nongThonThanhThiController.dispose();
+    _ntdSolaodongController.dispose();
     _ntdChucvuController.dispose();
     _ntdTenTinhController.dispose();
     _ntdTenHuyenController.dispose();
