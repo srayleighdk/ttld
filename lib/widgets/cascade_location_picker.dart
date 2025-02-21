@@ -145,6 +145,7 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
               child = const CircularProgressIndicator();
             } else {
               child = const Text('Loading Huyện...');
+              print('HuyenState: ${state.runtimeType}'); // Add this line
             }
             return child;
           },
