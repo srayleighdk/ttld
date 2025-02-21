@@ -162,7 +162,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   hintText: 'ID Doanh Nghiệp',
                 ),
                 const SizedBox(height: 16.0),
-                 CustomTextField(
+                CustomTextField(
                   labelText: "Mã số thuế",
                   controller: _mstController,
                   hintText: 'Mã số thuế',
@@ -199,7 +199,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                 ),
                 const SizedBox(height: 16.0),
                 CustomPicker<QuocGia>(
-                  label: const Text("Quốc gia"),
+                  label: const Text("Chức vụ"),
                   items: _quocGias,
                   selectedItem: quocGia,
                   onChanged: (quocgia) {
@@ -209,8 +209,9 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   },
                   displayItemBuilder: (QuocGia? item) => item?.name ?? '',
                 ),
-                 CustomPicker<QuocGia>(
-                  label: const Text("Chức vụ"),
+                const SizedBox(height: 16.0),
+                CustomPicker<QuocGia>(
+                  label: const Text("Quốc gia"),
                   items: _quocGias,
                   selectedItem: quocGia,
                   onChanged: (quocgia) {
@@ -369,7 +370,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
     _ntdNamthanhlapController.dispose();
     _ntdLinhvuchoatdongController.dispose();
     _nongThonThanhThiController.dispose();
-     _ntdChucvuController.dispose();
+    _ntdChucvuController.dispose();
     _ntdTenTinhController.dispose();
     _ntdTenHuyenController.dispose();
     _ntdTenXaController.dispose();
