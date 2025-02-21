@@ -204,6 +204,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                     });
                   },
                 ),
+                const Text("Cho phép hiển thị các thông tin sau"),
                 CustomCheckbox(
                   label: "ntdhtTelephone",
                   value: _ntdhtTelephone,
