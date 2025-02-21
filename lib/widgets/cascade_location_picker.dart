@@ -134,12 +134,12 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
                   context
                       .read<HuyenBloc>()
                       .add(LoadHuyensByTinh(matinh: selectedTinh!.matinh));
-                  BlocProvider.of<KcnCubit>(context).getKCN(selectedTinh!.matinh);
+                  BlocProvider.of<KcnCubit>(context)
+                      .getKCN(selectedTinh!.matinh);
                 }
               });
               return const SizedBox.shrink();
-            }
-             else if (state is HuyenError) {
+            } else if (state is HuyenError) {
               child = Text('Error: ${state.message}');
             } else if (state is HuyenLoading) {
               child = const CircularProgressIndicator();
