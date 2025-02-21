@@ -15,15 +15,24 @@ import 'package:ttld/models/xa/xa.dart';
 import 'package:ttld/bloc/kcn/kcn_cubit.dart';
 import 'package:ttld/models/kcn/kcn_model.dart';
 import 'package:ttld/core/di/injection.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ttld/bloc/huyen/huyen_bloc.dart';
+import 'package:ttld/bloc/huyen/huyen_event.dart';
+import 'package:ttld/bloc/tinh/tinh_bloc.dart';
+import 'package:ttld/bloc/tinh/tinh_event.dart';
+import 'package:ttld/bloc/xa/xa_bloc.dart';
+import 'package:ttld/bloc/xa/xa_event.dart';
+import 'package:ttld/models/huyen/huyen.dart';
+import 'package:ttld/models/tinh/tinh.dart';
+import 'package:ttld/models/xa/xa.dart';
+import 'package:ttld/bloc/kcn/kcn_cubit.dart';
+import 'package:ttld/models/kcn/kcn_model.dart';
+import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/widgets/field/custom_picker.dart';
 import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
 
 class CascadeLocationPicker extends StatefulWidget {
-  final Function(Tinh?)? onTinhChanged;
-  final Function(Huyen?)? onHuyenChanged;
-  final Function(Xa?)? onXaChanged;
-  final Function(KCN?)? onKCNChanged;
-
   const CascadeLocationPicker({
     super.key,
     this.onTinhChanged,
@@ -31,6 +40,11 @@ class CascadeLocationPicker extends StatefulWidget {
     this.onXaChanged,
     this.onKCNChanged,
   });
+
+  final Function(Tinh?)? onTinhChanged;
+  final Function(Huyen?)? onHuyenChanged;
+  final Function(Xa?)? onXaChanged;
+  final Function(KCN?)? onKCNChanged;
 
   @override
   State<CascadeLocationPicker> createState() => _CascadeLocationPickerState();
@@ -48,7 +62,7 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
   @override
   void initState() {
     super.initState();
-    context.read<TinhBloc>().add(LoadTinhs());
+    locator<TinhBloc>().add(LoadTinhs());
     _kcnCubit = locator<KcnCubit>();
     _updateAddressDetail();
   }
@@ -64,7 +78,7 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
       children: [
         BlocBuilder<TinhBloc, TinhState>(
           builder: (context, state) {
-            Widget child = const CircularProgressIndicator();
+            Widget child;
             if (state is TinhLoaded) {
               // Load Huyens when Tinhs are loaded
               WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -98,19 +112,16 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
                   widget.onTinhChanged?.call(newValue);
                 },
               );
-            } else if (state is TinhError) {
+            } else {
               child = Text('Error: ${state.message}');
             }
-            return AnimatedSwitcher(
-              duration: const Duration(milliseconds: 300),
-              child: child,
-            );
+            return child;
           },
         ),
         const SizedBox(height: 14),
         BlocBuilder<HuyenBloc, HuyenState>(
           builder: (context, state) {
-            Widget child = const CircularProgressIndicator();
+            Widget child;
             if (state is HuyenLoadedByTinh) {
               child = CustomPicker<Huyen>(
                 label: const Text('Quận/Huyện'),
@@ -133,19 +144,16 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
                   widget.onHuyenChanged?.call(newValue);
                 },
               );
-            } else if (state is HuyenError) {
+            } else {
               child = Text('Error: ${state.message}');
             }
-            return AnimatedSwitcher(
-              duration: const Duration(milliseconds: 300),
-              child: child,
-            );
+            return child;
           },
         ),
         const SizedBox(height: 14),
         BlocBuilder<XaBloc, XaState>(
           builder: (context, state) {
-            Widget child = const CircularProgressIndicator();
+            Widget child ;
             if (state is XaLoadedByHuyen) {
               child = CustomPicker<Xa>(
                 label: const Text('Xã/Phường'),
@@ -162,13 +170,10 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
                   widget.onXaChanged?.call(newValue);
                 },
               );
-            } else if (state is XaError) {
+            } else  {
               child = Text('Error: ${state.message}');
             }
-            return AnimatedSwitcher(
-              duration: const Duration(milliseconds: 300),
-              child: child,
-            );
+            return child;
           },
         ),
         const SizedBox(height: 14),
