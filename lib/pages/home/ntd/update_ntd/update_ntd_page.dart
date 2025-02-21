@@ -153,11 +153,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   hintText: 'Mã NTD',
                 ),
                 const SizedBox(height: 16.0),
-                CustomTextField(
-                  labelText: "Tên viết tắt",
-                  controller: _ntdTentatController,
-                  hintText: 'Tên viết tắt',
-                ),
+                const Text("Thông tin của đơn vị, doanh nghiệp :"),
                 const SizedBox(height: 16.0),
                 CustomTextField(
                   labelText: "Tên nhà tuyển dụng",
@@ -165,20 +161,11 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   hintText: 'Tên nhà tuyển dụng',
                 ),
                 const SizedBox(height: 16.0),
-                // CustomPicker(
-                //    items: [], selectedItem: null, onChanged: (value) {  },
-                // ),
-                // const SizedBox(height: 16.0),
-                // CustomPicker(
-                // items: [],
-                // selectedItem: ,
-                // onChanged: ,
-                // ),
-                // const SizedBox(height: 16.0),
-                // CustomPicker(items: [], selectedItem: null, onChanged: (T? value) {  },
-                // ),
-                const SizedBox(height: 16.0),
-                const Text("Thông tin của đơn vị, doanh nghiệp :"),
+                CustomTextField(
+                  labelText: "Tên viết tắt",
+                  controller: _ntdTentatController,
+                  hintText: 'Tên viết tắt',
+                ),
                 const SizedBox(height: 16.0),
                 CascadeLocationPicker(
                   onTinhChanged: (tinh) {
