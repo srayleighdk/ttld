@@ -1,8 +1,6 @@
 import 'package:ttld/models/huyen/huyen.dart';
 
-abstract class HuyenState {
-  String get message => '';
-}
+abstract class HuyenState {}
 
 class HuyenInitial extends HuyenState {}
 

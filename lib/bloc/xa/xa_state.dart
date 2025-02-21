@@ -1,8 +1,6 @@
 import 'package:ttld/models/xa/xa.dart';
 
-abstract class XaState {
-  String get message => '';
-}
+abstract class XaState {}
 
 class XaInitial extends XaState {}
 

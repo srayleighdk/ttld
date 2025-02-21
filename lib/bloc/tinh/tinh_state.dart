@@ -1,8 +1,6 @@
 import 'package:ttld/models/tinh/tinh.dart';
 
-abstract class TinhState {
-  String get message => '';
-}
+abstract class TinhState {}
 
 class TinhInitial extends TinhState {}
 
