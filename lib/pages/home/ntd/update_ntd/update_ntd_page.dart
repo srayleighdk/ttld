@@ -102,9 +102,8 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
 
         _selectedQuocGia = ntd.ntdQuocgia != null
             ? QuocGia(
-                id: '',
                 tenQuocGia: ntd.ntdQuocgia!,
-                status: 1,
+                status: false,
                 viettat: '',
                 displayOrder: 0)
             : null;
@@ -304,7 +303,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                               ntdTenXa: _selectedXa,
                               ntdhtNlh: _ntdhtNlh,
                               ntdhtTelephone: _ntdhtTelephone,
-                              ntdQuocgia: _selectedQuocGia?.tenquocgia,
+                              ntdQuocgia: _selectedQuocGia?.tenQuocGia,
                               ntdhtWeb: _ntdhtWeb,
                               ntdhtFax: _ntdhtFax,
                               ntdhtEmail: _ntdhtEmail,
