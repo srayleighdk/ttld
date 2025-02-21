@@ -41,7 +41,6 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
   final _ntdNamthanhlapController = TextEditingController();
   final _ntdLinhvuchoatdongController = TextEditingController();
   final _nongThonThanhThiController = TextEditingController();
-  final _ntdSolaodongController = TextEditingController();
   final _ntdChucvuController = TextEditingController();
   final _ntdTenTinhController = TextEditingController();
   final _ntdTenHuyenController = TextEditingController();
@@ -211,10 +210,11 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   },
                   displayItemBuilder: (QuocGia? item) => item?.name ?? '',
                 ),
-                 CustomTextField(
-                  labelText: "Số lao động",
+                const SizedBox(height: 16.0),
+                CustomTextField(
+                  labelText: "Tổng nhân lực",
                   controller: _ntdSolaodongController,
-                  hintText: 'Số lao động',
+                  hintText: 'Tổng nhân lực',
                 ),
                 const SizedBox(height: 16.0),
                 CustomPicker<QuocGia>(
@@ -227,11 +227,6 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                     });
                   },
                   displayItemBuilder: (QuocGia? item) => item?.name ?? '',
-                ),
-                 CustomTextField(
-                  labelText: "Lĩnh vực hoạt động",
-                  controller: _ntdLinhvuchoatdongController,
-                  hintText: 'Lĩnh vực hoạt động',
                 ),
                 const SizedBox(height: 16.0),
                 CustomTextField(
@@ -256,6 +251,12 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                       _selectedXa = xa?.tenxa;
                     });
                   },
+                ),
+                const SizedBox(height: 16.0),
+                CustomTextField(
+                  labelText: "Lĩnh vực hoạt động",
+                  controller: _ntdLinhvuchoatdongController,
+                  hintText: 'Lĩnh vực hoạt động',
                 ),
                 const SizedBox(height: 16.0),
                 const Text("Cho phép hiển thị các thông tin sau"),
