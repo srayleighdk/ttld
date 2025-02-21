@@ -79,7 +79,9 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
                   _kcnCubit.getKCN(selectedTinh!.matinh);
                 }
               });
+
               child = CustomPicker<Tinh>(
+                key: ValueKey(state.tinhs),
                 label: const Text('Tình/Thành Phố'),
                 items: state.tinhs,
                 selectedItem: selectedTinh,
@@ -102,7 +104,8 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
                   widget.onTinhChanged?.call(newValue);
                 },
               );
-            } else if (state is TinhError) {
+            }
+             else if (state is TinhError) {
               child = Text('Error: ${state.message}');
             } else if (state is TinhLoading) {
               child = const CircularProgressIndicator();
