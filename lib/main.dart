@@ -28,10 +28,12 @@ class MyApp extends StatelessWidget {
       themes: themes,
       child: ThemeConsumer(
         child: Builder(builder: (themeContext) {
-          return MultiBlocProvider(
-            providers: getBlocProviders(),
-            child: Builder(builder: (context) {
-              final router = AppRouter(
+          return MultiRepositoryProvider(
+            providers: getRepositoryProviders(),
+            child: MultiBlocProvider(
+              providers: getBlocProviders(),
+              child: Builder(builder: (context) {
+                final router = AppRouter(
                 authBloc: context.read<AuthBloc>(),
                 ldRepository: locator<LdRepository>(), // Add this
               ).router;
@@ -52,6 +54,7 @@ class MyApp extends StatelessWidget {
             }),
           );
         }),
+      ),
       ),
     );
   }
