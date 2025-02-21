@@ -40,6 +40,10 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
   final _ntdTenHuyenController = TextEditingController();
   final _ntdTenXaController = TextEditingController();
 
+  String? _selectedTinh;
+  String? _selectedHuyen;
+  String? _selectedXa;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -71,6 +75,10 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
         _ntdTenTinhController.text = ntd.ntdTenTinh ?? '';
         _ntdTenHuyenController.text = ntd.ntdTenHuyen ?? '';
         _ntdTenXaController.text = ntd.ntdTenXa ?? '';
+
+        _selectedTinh = ntd.ntdTenTinh;
+        _selectedHuyen = ntd.ntdTenHuyen;
+        _selectedXa = ntd.ntdTenXa;
       }
     }
   }
@@ -158,17 +166,17 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                 CascadeLocationPicker(
                   onTinhChanged: (tinh) {
                     setState(() {
-                      _selectedTinh = tinh?.tenTinh;
+                      _selectedTinh = tinh?.tentinh;
                     });
                   },
                   onHuyenChanged: (huyen) {
                     setState(() {
-                      _selectedHuyen = huyen?.tenHuyen;
+                      _selectedHuyen = huyen?.tenhuyen;
                     });
                   },
                   onXaChanged: (xa) {
                     setState(() {
-                      _selectedXa = xa?.tenXa;
+                      _selectedXa = xa?.tenxa;
                     });
                   },
                 ),
