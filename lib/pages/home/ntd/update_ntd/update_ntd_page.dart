@@ -222,6 +222,18 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   },
                   displayItemBuilder: (String? item) => item ?? '',
                 ),
+                 const SizedBox(height: 16.0),
+                CustomPicker<String>(
+                  label: const Text("Thời gian hoạt động"),
+                  items: const ["Sáng", "Chiều", "Tối"],
+                  selectedItem: idThoiGianHoatDong as String?,
+                  onChanged: (idThoiGianHoatDong) {
+                    setState(() {
+                      this.idThoiGianHoatDong = idThoiGianHoatDong as int?;
+                    });
+                  },
+                  displayItemBuilder: (String? item) => item ?? '',
+                ),
                 const SizedBox(height: 16.0),
                 CustomPicker<QuocGia>(
                   label: const Text("Chức vụ"),
@@ -461,7 +473,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
     _ntdTenTinhController.dispose();
     _ntdTenHuyenController.dispose();
     _ntdTenXaController.dispose();
-    _ntdThuockhucongnghiepController.dispose();
+     _ntdThuockhucongnghiepController.dispose();
     _ntdWebsiteController.dispose();
     _ntdFaxController.dispose();
     _ntdEmailController.dispose();
