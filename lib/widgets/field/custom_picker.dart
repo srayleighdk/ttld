@@ -7,6 +7,7 @@ class CustomPicker<T> extends StatelessWidget {
   final String hint;
   final Color? backgroundColor;
   final String Function(T?)? displayItemBuilder;
+  final Widget? label;
 
   const CustomPicker({
     super.key,
@@ -16,18 +17,19 @@ class CustomPicker<T> extends StatelessWidget {
     this.hint = 'Select an option',
     this.backgroundColor,
     this.displayItemBuilder,
+    this.label,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
         color: backgroundColor ?? Colors.grey.shade100,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.shade400),
+        borderRadius: BorderRadius.circular(12),
+        // border: Border.all(color: Colors.grey.shade400),
       ),
       child: DropdownMenu<T>(
+        label: label,
         initialSelection: selectedItem,
         onSelected: onChanged,
         dropdownMenuEntries: items.map((T item) {
