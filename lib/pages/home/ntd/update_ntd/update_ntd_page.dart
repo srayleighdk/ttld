@@ -110,24 +110,26 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
     final quocGiaRepository = locator<QuocGiaRepository>();
     try {
       final quocGias = await quocGiaRepository.getQuocGias();
-      setState(() {
-        _quocGias = quocGias;
-        if (BlocProvider.of<NTDBloc>(context).state is NTDLoadedById) {
-          final ntd =
-              (BlocProvider.of<NTDBloc>(context).state as NTDLoadedById).ntd;
-          if (ntd != null && ntd.ntdQuocgia != null) {
-            try {
-              _selectedQuocGia = _quocGias.firstWhere(
-                (q) => q.tenQuocGia == ntd.ntdQuocgia,
-              );
-            } catch (e) {
+      if (mounted) {
+        setState(() {
+          _quocGias = quocGias;
+          if (BlocProvider.of<NTDBloc>(context).state is NTDLoadedById) {
+            final ntd =
+                (BlocProvider.of<NTDBloc>(context).state as NTDLoadedById).ntd;
+            if (ntd != null && ntd.ntdQuocgia != null) {
+              try {
+                _selectedQuocGia = _quocGias.firstWhere(
+                  (q) => q.tenQuocGia == ntd.ntdQuocgia,
+                );
+              } catch (e) {
+                _selectedQuocGia = null;
+              }
+            } else {
               _selectedQuocGia = null;
             }
-          } else {
-            _selectedQuocGia = null;
           }
-        }
-      });
+        });
+      }
     } catch (e) {
       // Handle error (e.g., show a snackbar)
       print("Error loading countries: $e");
