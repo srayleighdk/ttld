@@ -158,13 +158,13 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   controller: _ntdTentatController,
                   hintText: 'Tên viết tắt',
                 ),
-                // const SizedBox(height: 16.0),
-                // CustomTextField(
-                //   labelText: "Tên nhà tuyển dụng",
-                //   controller: _ntdTenController,
-                //   hintText: 'Tên nhà tuyển dụng',
-                // ),
-                // const SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
+                CustomTextField(
+                  labelText: "Tên nhà tuyển dụng",
+                  controller: _ntdTenController,
+                  hintText: 'Tên nhà tuyển dụng',
+                ),
+                const SizedBox(height: 16.0),
                 // CustomPicker(
                 //    items: [], selectedItem: null, onChanged: (value) {  },
                 // ),
