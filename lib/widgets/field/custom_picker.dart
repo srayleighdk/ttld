@@ -35,9 +35,7 @@ class CustomPicker<T> extends StatelessWidget {
           dropdownMenuEntries: items.map((T item) {
             return DropdownMenuEntry<T>(
               value: item,
-              label: displayItemBuilder != null
-                  ? displayItemBuilder!(item)
-                  : item.toString(),
+              label: displayItemBuilder != null ? displayItemBuilder!(item) : item.toString(),
             );
           }).toList(),
           hintText: hint,
