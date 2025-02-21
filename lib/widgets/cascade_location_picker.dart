@@ -64,9 +64,8 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
       children: [
         BlocBuilder<TinhBloc, TinhState>(
           builder: (context, state) {
-            if (state is TinhLoading) {
-              return const CircularProgressIndicator();
-            } else if (state is TinhLoaded) {
+            Widget child = const CircularProgressIndicator();
+            if (state is TinhLoaded) {
               // Load Huyens when Tinhs are loaded
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (selectedTinh != null) {
@@ -76,8 +75,8 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
                   _kcnCubit.getKCN(selectedTinh!.matinh);
                 }
               });
-              return CustomPicker<Tinh>(
-                label: Text('Tình/Thành Phố'),
+              child = CustomPicker<Tinh>(
+                label: const Text('Tình/Thành Phố'),
                 items: state.tinhs,
                 selectedItem: selectedTinh,
                 hint: 'Chọn Tỉnh/Thành Phố',
@@ -100,20 +99,21 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
                 },
               );
             } else if (state is TinhError) {
-              return Text('Error: ${state.message}');
-            } else {
-              return const SizedBox.shrink();
+              child = Text('Error: ${state.message}');
             }
+            return AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: child,
+            );
           },
         ),
         const SizedBox(height: 14),
         BlocBuilder<HuyenBloc, HuyenState>(
           builder: (context, state) {
-            if (state is HuyenLoading) {
-              return const CircularProgressIndicator();
-            } else if (state is HuyenLoadedByTinh) {
-              return CustomPicker<Huyen>(
-                label: Text('Quận/Huyện'),
+            Widget child = const CircularProgressIndicator();
+            if (state is HuyenLoadedByTinh) {
+              child = CustomPicker<Huyen>(
+                label: const Text('Quận/Huyện'),
                 items: state.huyens,
                 selectedItem: selectedHuyen,
                 hint: 'Chọn Quận/Huyện',
@@ -134,20 +134,21 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
                 },
               );
             } else if (state is HuyenError) {
-              return Text('Error: ${state.message}');
-            } else {
-              return const SizedBox.shrink();
+              child = Text('Error: ${state.message}');
             }
+            return AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: child,
+            );
           },
         ),
         const SizedBox(height: 14),
         BlocBuilder<XaBloc, XaState>(
           builder: (context, state) {
-            if (state is XaLoading) {
-              return const CircularProgressIndicator();
-            } else if (state is XaLoadedByHuyen) {
-              return CustomPicker<Xa>(
-                label: Text('Xã/Phường'),
+            Widget child = const CircularProgressIndicator();
+            if (state is XaLoadedByHuyen) {
+              child = CustomPicker<Xa>(
+                label: const Text('Xã/Phường'),
                 items: state.xas,
                 selectedItem: selectedXa,
                 displayItemBuilder: (Xa? xa) => xa?.tenxa ?? '',
@@ -162,10 +163,12 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
                 },
               );
             } else if (state is XaError) {
-              return Text('Error: ${state.message}');
-            } else {
-              return const SizedBox.shrink();
+              child = Text('Error: ${state.message}');
             }
+            return AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: child,
+            );
           },
         ),
         const SizedBox(height: 14),
