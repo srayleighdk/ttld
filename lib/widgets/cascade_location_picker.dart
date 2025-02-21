@@ -100,11 +100,9 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
               );
             } else if (state is TinhError) {
               child = Text('Error: ${state.message}');
-            }
-             else if (state is TinhLoading) {
+            } else if (state is TinhLoading) {
               child = const CircularProgressIndicator();
-            }
-            else {
+            } else {
               child = const Text('Loading Tỉnh...');
             }
             return child;
@@ -140,8 +138,7 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
               child = Text('Error: ${state.message}');
             } else if (state is HuyenLoading) {
               child = const CircularProgressIndicator();
-            }
-            else {
+            } else {
               child = const Text('Loading Huyện...');
             }
             return child;
@@ -171,8 +168,7 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
               child = Text('Error: ${state.message}');
             } else if (state is XaLoading) {
               child = const CircularProgressIndicator();
-            }
-            else {
+            } else {
               child = const Text('Loading Xã...');
             }
             return child;
