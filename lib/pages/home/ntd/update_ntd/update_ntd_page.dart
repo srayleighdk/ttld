@@ -178,6 +178,8 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                 // CustomPicker(items: [], selectedItem: null, onChanged: (T? value) {  },
                 // ),
                 const SizedBox(height: 16.0),
+                const Text("Thông tin của đơn vị, doanh nghiệp :"),
+                const SizedBox(height: 16.0),
                 CascadeLocationPicker(
                   onTinhChanged: (tinh) {
                     setState(() {
@@ -195,6 +197,8 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                     });
                   },
                 ),
+                const SizedBox(height: 16.0),
+                const Text("Cho phép hiển thị các thông tin sau"),
                 CustomCheckbox(
                   label: "ntdhtNlh",
                   value: _ntdhtNlh,
@@ -204,7 +208,6 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                     });
                   },
                 ),
-                const Text("Cho phép hiển thị các thông tin sau"),
                 CustomCheckbox(
                   label: "ntdhtTelephone",
                   value: _ntdhtTelephone,
