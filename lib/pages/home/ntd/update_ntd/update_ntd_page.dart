@@ -100,18 +100,6 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
         _ntdhtFax = ntd.ntdhtFax ?? false;
         _ntdhtEmail = ntd.ntdhtEmail ?? false;
         _ntdhtAddress = ntd.ntdhtAddress ?? false;
-
-        if (ntd.ntdQuocgia != null) {
-          try {
-            _selectedQuocGia = _quocGias.firstWhere(
-              (q) => q.tenQuocGia == ntd.ntdQuocgia,
-            );
-          } catch (e) {
-            _selectedQuocGia = null;
-          }
-        } else {
-          _selectedQuocGia = null;
-        }
       }
     }
 
@@ -124,6 +112,20 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
       final quocGias = await quocGiaRepository.getQuocGias();
       setState(() {
         _quocGias = quocGias;
+        if (BlocProvider.of<NTDBloc>(context).state is NTDLoadedById) {
+          final ntd = (BlocProvider.of<NTDBloc>(context).state as NTDLoadedById).ntd;
+          if (ntd != null && ntd.ntdQuocgia != null) {
+            try {
+              _selectedQuocGia = _quocGias.firstWhere(
+                    (q) => q.tenQuocGia == ntd.ntdQuocgia,
+              );
+            } catch (e) {
+              _selectedQuocGia = null;
+            }
+          } else {
+            _selectedQuocGia = null;
+          }
+        }
       });
     } catch (e) {
       // Handle error (e.g., show a snackbar)
