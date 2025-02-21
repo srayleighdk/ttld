@@ -137,7 +137,7 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
             } else if (state is TinhLoading) {
               child = const CircularProgressIndicator();
             } else {
-               WidgetsBinding.instance.addPostFrameCallback((_) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (selectedTinh != null) {
                   context
                       .read<HuyenBloc>()
