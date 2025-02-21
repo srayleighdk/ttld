@@ -188,6 +188,18 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   hintText: 'Tên nhà tuyển dụng',
                 ),
                 const SizedBox(height: 16.0),
+                CustomPicker<QuocGia>(
+                  label: const Text("Quốc gia"),
+                  items: _quocGias,
+                  selectedItem: _selectedQuocGia,
+                  onChanged: (QuocGia? value) {
+                    setState(() {
+                      _selectedQuocGia = value;
+                    });
+                  },
+                  displayItemBuilder: (QuocGia? item) => item?.tenquocgia ?? '',
+                ),
+                const SizedBox(height: 16.0),
                 CustomTextField(
                   labelText: "Tên viết tắt",
                   controller: _ntdTentatController,
