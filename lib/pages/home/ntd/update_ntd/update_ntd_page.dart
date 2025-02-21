@@ -113,9 +113,9 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
           _selectedQuocGia = null;
         }
       }
-
-      _loadQuocGias();
     }
+
+    _loadQuocGias();
   }
 
   Future<void> _loadQuocGias() async {
