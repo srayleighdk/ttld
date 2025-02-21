@@ -37,6 +37,12 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
   final _ntdDienthoaiController = TextEditingController();
   final _ntdFaxController = TextEditingController();
   final _ntdWebsiteController = TextEditingController();
+  String? ntdLoai;
+  int? idLoaiHinhDoanhNghiep;
+  int? ntdHinhthucdoanhnghiep;
+  String? idnongThonThanhThi;
+  int? idNganhKinhTe;
+  int? idThoiGianHoatDong;
   final _ntdQuocgiaController = TextEditingController();
   final _ntdNamthanhlapController = TextEditingController();
   final _ntdLinhvuchoatdongController = TextEditingController();
@@ -198,9 +204,33 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   controller: _ntdTenController,
                   hintText: 'Tên nhà tuyển dụng',
                 ),
+                 const SizedBox(height: 16.0),
+                CustomPicker<String>(
+                  label: const Text("Loại hình"),
+                  items: const ["Doanh nghiệp nội tỉnh", "Doanh nghiệp ngoại tỉnh", "Doanh nghiệp XKLD", "Khác"],
+                  selectedItem: ntdLoai,
+                  onChanged: (ntdLoai) {
+                    setState(() {
+                      this.ntdLoai = ntdLoai;
+                    });
+                  },
+                  displayItemBuilder: (String? item) => item ?? '',
+                ),
                 const SizedBox(height: 16.0),
                 CustomPicker<QuocGia>(
                   label: const Text("Chức vụ"),
+                  items: _quocGias,
+                  selectedItem: quocGia,
+                  onChanged: (quocgia) {
+                    setState(() {
+                      _selectedQuocgia = quocgia?.name;
+                    });
+                  },
+                  displayItemBuilder: (QuocGia? item) => item?.name ?? '',
+                ),
+                 const SizedBox(height: 16.0),
+                CustomPicker<QuocGia>(
+                  label: const Text("Hình thức doanh nghiệp"),
                   items: _quocGias,
                   selectedItem: quocGia,
                   onChanged: (quocgia) {
@@ -228,6 +258,18 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   },
                   displayItemBuilder: (QuocGia? item) => item?.name ?? '',
                 ),
+                 const SizedBox(height: 16.0),
+                 CustomPicker<String>(
+                  label: const Text("Nông thôn/Thành thị"),
+                  items: const ["Nông thôn", "Thành thị"],
+                  selectedItem: idnongThonThanhThi,
+                  onChanged: (idnongThonThanhThi) {
+                    setState(() {
+                      this.idnongThonThanhThi = idnongThonThanhThi;
+                    });
+                  },
+                  displayItemBuilder: (String? item) => item ?? '',
+                ),
                 const SizedBox(height: 16.0),
                 CustomTextField(
                   labelText: "Tên viết tắt",
@@ -251,6 +293,22 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                       _selectedXa = xa?.tenxa;
                     });
                   },
+                ),
+                 const SizedBox(height: 16.0),
+                CustomTextField(
+                  labelText: "Website",
+                  controller: _ntdWebsiteController,
+                  hintText: 'Website',
+                ),
+                 const SizedBox(height: 16.0),
+                CustomTextField(
+                  labelText: "Fax",
+                  controller: _ntdFaxController,
+                  hintText: 'Fax',
+                ),
+                 const SizedBox(height: 16.0),
+                CustomTextField.email(
+                  controller: _ntdEmailController,
                 ),
                 const SizedBox(height: 16.0),
                 CustomTextField(
@@ -388,6 +446,9 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
     _ntdTenTinhController.dispose();
     _ntdTenHuyenController.dispose();
     _ntdTenXaController.dispose();
+    _ntdWebsiteController.dispose();
+    _ntdFaxController.dispose();
+    _ntdEmailController.dispose();
     super.dispose();
   }
 }
