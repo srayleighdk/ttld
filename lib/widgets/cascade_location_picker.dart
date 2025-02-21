@@ -25,12 +25,14 @@ class CascadeLocationPicker extends StatefulWidget {
     this.onHuyenChanged,
     this.onXaChanged,
     this.onKCNChanged,
+    required this.addressDetailController,
   });
 
   final Function(Tinh?)? onTinhChanged;
   final Function(Huyen?)? onHuyenChanged;
   final Function(Xa?)? onXaChanged;
   final Function(KCN?)? onKCNChanged;
+  final TextEditingController addressDetailController;
 
   @override
   State<CascadeLocationPicker> createState() => _CascadeLocationPickerState();
@@ -41,8 +43,6 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
   Huyen? selectedHuyen;
   Xa? selectedXa;
   KCN? selectedKCN;
-  final TextEditingController _addressDetailController =
-      TextEditingController();
   late final KcnCubit _kcnCubit;
   bool _showAddressDetail = false;
 
@@ -228,13 +228,12 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
 
   @override
   void dispose() {
-    _addressDetailController.dispose();
     _kcnCubit.close();
     super.dispose();
   }
 
   void _updateAddressDetail() {
-    _addressDetailController.text = _buildAddressString(selectedXa?.tenxa,
+    widget.addressDetailController.text = _buildAddressString(selectedXa?.tenxa,
         selectedHuyen?.tenhuyen, selectedTinh?.tentinh, selectedKCN?.kcnTen);
   }
 

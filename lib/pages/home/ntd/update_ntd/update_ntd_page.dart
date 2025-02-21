@@ -51,10 +51,12 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
   final _ntdTenTinhController = TextEditingController();
   final _ntdTenHuyenController = TextEditingController();
   final _ntdTenXaController = TextEditingController();
+  final _ntdThuockhucongnghiepController = TextEditingController();
 
   String? _selectedTinh;
   String? _selectedHuyen;
   String? _selectedXa;
+  String? _selectedKCN;
   String? _selectedQuocgia;
 
   List<QuocGia> _quocGias = [];
@@ -282,6 +284,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                 ),
                 const SizedBox(height: 16.0),
                 CascadeLocationPicker(
+                  addressDetailController: _ntdDiachichitietController,
                   onTinhChanged: (tinh) {
                     setState(() {
                       _selectedTinh = tinh?.tentinh;
@@ -296,6 +299,11 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                     setState(() {
                       _selectedXa = xa?.tenxa;
                     });
+                  },
+                  onKCNChanged: (kcn) {
+                    setState(() {
+                      _selectedKCN = kcn?.kcnTen;
+                  });
                   },
                 ),
                 const SizedBox(height: 16.0),
