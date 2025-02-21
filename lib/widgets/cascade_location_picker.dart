@@ -48,11 +48,7 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
   @override
   void initState() {
     super.initState();
-    final tinhBloc = locator<TinhBloc>();
-    final huyenBloc = locator<HuyenBloc>();
-    final xaBloc = locator<XaBloc>();
-
-    tinhBloc.add(LoadTinhs());
+    BlocProvider.of<TinhBloc>(context).add(LoadTinhs());
     _kcnCubit = locator<KcnCubit>();
     _updateAddressDetail();
   }
