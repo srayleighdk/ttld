@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ttld/bloc/tblNhaTuyenDung/ntd_bloc.dart';
+import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/models/quocgia/quocgia_model.dart';
 import 'package:ttld/repositories/quocgia/quocgia_repository.dart';
 import 'package:ttld/widgets/cascade_location_picker.dart';
@@ -114,7 +115,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
   }
 
   Future<void> _loadQuocGias() async {
-    final quocGiaRepository = RepositoryProvider.of<QuocGiaRepository>(context);
+    final quocGiaRepository = locator<QuocGiaRepository>();
     try {
       final quocGias = await quocGiaRepository.getQuocGias();
       setState(() {
