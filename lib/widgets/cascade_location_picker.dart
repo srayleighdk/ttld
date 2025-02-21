@@ -130,7 +130,9 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
                         .add(LoadXasByHuyen(mahuyen: newValue.mahuyen));
                   }
                   widget.onHuyenChanged?.call(newValue);
-                   context.read<XaBloc>().add(LoadXasByHuyen(mahuyen: newValue?.mahuyen ?? ''));
+                  context
+                      .read<XaBloc>()
+                      .add(LoadXasByHuyen(mahuyen: newValue?.mahuyen ?? ''));
                 },
               );
             } else if (state is HuyenError) {
