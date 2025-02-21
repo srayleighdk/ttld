@@ -157,7 +157,7 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
               selectedItem: selectedHuyen,
               hint: 'Chọn Quận/Huyện',
               displayItemBuilder: (Huyen? huyen) => huyen?.tenhuyen ?? '',
-              onChanged: null,
+              onChanged: (Huyen? newValue) {},
             );
           },
         ),
@@ -195,7 +195,7 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
               selectedItem: selectedXa,
               displayItemBuilder: (Xa? xa) => xa?.tenxa ?? '',
               hint: 'Chọn Xã/Phường',
-              onChanged: null,
+              onChanged: (Xa? newValue) {},
             );
           },
         ),
