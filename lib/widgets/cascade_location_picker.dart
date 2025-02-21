@@ -44,6 +44,7 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
   final TextEditingController _addressDetailController =
       TextEditingController();
   late final KcnCubit _kcnCubit;
+  bool _showAddressDetail = false;
 
   @override
   void initState() {
@@ -79,6 +80,7 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
                     selectedHuyen = null;
                     selectedXa = null;
                     selectedKCN = null;
+                    _showAddressDetail = true;
                     _updateAddressDetail();
                   });
                   if (newValue != null) {
@@ -118,6 +120,7 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
                     selectedHuyen = newValue;
                     selectedXa = null;
                     selectedKCN = null;
+                    _showAddressDetail = true;
                     _updateAddressDetail();
                   });
                   if (newValue != null) {
@@ -165,6 +168,7 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
                   setState(() {
                     selectedXa = newValue;
                     selectedKCN = null;
+                    _showAddressDetail = true;
                     _updateAddressDetail();
                   });
                   widget.onXaChanged?.call(newValue);
@@ -196,6 +200,7 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
                 onChanged: (KCN? newValue) {
                   setState(() {
                     selectedKCN = newValue;
+                    _showAddressDetail = true;
                     _updateAddressDetail();
                   });
                   widget.onKCNChanged?.call(newValue);
@@ -210,12 +215,13 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
           },
         ),
         const SizedBox(height: 14),
-        CustomTextField.addressDetail(
-          controller: _addressDetailController,
-          tinh: selectedTinh?.tentinh,
-          huyen: selectedHuyen?.tenhuyen,
-          xa: selectedXa?.tenxa,
-        ),
+        if (_showAddressDetail)
+          CustomTextField.addressDetail(
+            controller: _addressDetailController,
+            tinh: selectedTinh?.tentinh,
+            huyen: selectedHuyen?.tenhuyen,
+            xa: selectedXa?.tenxa,
+          ),
       ],
     );
   }
