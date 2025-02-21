@@ -28,6 +28,7 @@ class CustomPicker<T> extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           // border: Border.all(color: Colors.grey.shade400),
         ),
+        width: double.infinity,
         child: DropdownMenu<T>(
           label: label,
           initialSelection: selectedItem,
@@ -39,6 +40,7 @@ class CustomPicker<T> extends StatelessWidget {
             );
           }).toList(),
           hintText: hint,
+          width: double.infinity,
         ));
   }
 }
