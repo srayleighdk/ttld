@@ -17,7 +17,6 @@ import 'package:ttld/models/kcn/kcn_model.dart';
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/widgets/field/custom_picker.dart';
 import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
-import 'package:flutter/services.dart';
 
 class CascadeLocationPicker extends StatefulWidget {
   final Function(Tinh?)? onTinhChanged;
@@ -42,7 +41,8 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
   Huyen? selectedHuyen;
   Xa? selectedXa;
   KCN? selectedKCN;
-  final TextEditingController _addressDetailController = TextEditingController();
+  final TextEditingController _addressDetailController =
+      TextEditingController();
   late final KcnCubit _kcnCubit;
 
   @override
@@ -70,11 +70,14 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
               // Load Huyens when Tinhs are loaded
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (selectedTinh != null) {
-                  context.read<HuyenBloc>().add(LoadHuyensByTinh(matinh: selectedTinh!.matinh));
+                  context
+                      .read<HuyenBloc>()
+                      .add(LoadHuyensByTinh(matinh: selectedTinh!.matinh));
                   _kcnCubit.getKCN(selectedTinh!.matinh);
                 }
               });
               return CustomPicker<Tinh>(
+                label: Text('Tình/Thành Phố'),
                 items: state.tinhs,
                 selectedItem: selectedTinh,
                 hint: 'Chọn Tỉnh/Thành Phố',
@@ -88,7 +91,9 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
                     _updateAddressDetail();
                   });
                   if (newValue != null) {
-                    context.read<HuyenBloc>().add(LoadHuyensByTinh(matinh: newValue.matinh));
+                    context
+                        .read<HuyenBloc>()
+                        .add(LoadHuyensByTinh(matinh: newValue.matinh));
                     _kcnCubit.getKCN(newValue.matinh);
                   }
                   widget.onTinhChanged?.call(newValue);
@@ -108,6 +113,7 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
               return const CircularProgressIndicator();
             } else if (state is HuyenLoadedByTinh) {
               return CustomPicker<Huyen>(
+                label: Text('Quận/Huyện'),
                 items: state.huyens,
                 selectedItem: selectedHuyen,
                 hint: 'Chọn Quận/Huyện',
@@ -120,7 +126,9 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
                     _updateAddressDetail();
                   });
                   if (newValue != null) {
-                    context.read<XaBloc>().add(LoadXasByHuyen(mahuyen: newValue.mahuyen));
+                    context
+                        .read<XaBloc>()
+                        .add(LoadXasByHuyen(mahuyen: newValue.mahuyen));
                   }
                   widget.onHuyenChanged?.call(newValue);
                 },
@@ -139,6 +147,7 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
               return const CircularProgressIndicator();
             } else if (state is XaLoadedByHuyen) {
               return CustomPicker<Xa>(
+                label: Text('Xã/Phường'),
                 items: state.xas,
                 selectedItem: selectedXa,
                 displayItemBuilder: (Xa? xa) => xa?.tenxa ?? '',
@@ -205,10 +214,12 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
   }
 
   void _updateAddressDetail() {
-    _addressDetailController.text = _buildAddressString(selectedXa?.tenxa, selectedHuyen?.tenhuyen, selectedTinh?.tentinh, selectedKCN?.kcnTen);
+    _addressDetailController.text = _buildAddressString(selectedXa?.tenxa,
+        selectedHuyen?.tenhuyen, selectedTinh?.tentinh, selectedKCN?.kcnTen);
   }
 
-  String _buildAddressString(String? xa, String? huyen, String? tinh, String? kcn) {
+  String _buildAddressString(
+      String? xa, String? huyen, String? tinh, String? kcn) {
     String address = "";
     if (xa != null && xa.isNotEmpty) {
       address += xa;
