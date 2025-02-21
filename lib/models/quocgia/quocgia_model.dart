@@ -13,10 +13,10 @@ class QuocGia {
 
   factory QuocGia.fromJson(Map<String, dynamic> json) {
     return QuocGia(
-      tenQuocGia: json['tenQuocGia'],
-      viettat: json['viettat'],
-      displayOrder: json['displayOrder'],
-      status: json['status'],
+      tenQuocGia: json['tenQuocGia'] ?? '',
+      viettat: json['viettat'] ?? '',
+      displayOrder: json['displayOrder'] ?? 0,
+      status: json['status'] ?? false,
     );
   }
 
