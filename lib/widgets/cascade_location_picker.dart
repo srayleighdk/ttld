@@ -151,7 +151,14 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
               child = const Text('Loading Huyện...');
               print('HuyenState: ${state.runtimeType}'); // Add this line
             }
-            return child;
+            return CustomPicker<Huyen>(
+              label: const Text('Quận/Huyện'),
+              items: const [],
+              selectedItem: selectedHuyen,
+              hint: 'Chọn Quận/Huyện',
+              displayItemBuilder: (Huyen? huyen) => huyen?.tenhuyen ?? '',
+              onChanged: null,
+            );
           },
         ),
         const SizedBox(height: 14),
@@ -182,7 +189,14 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
             } else {
               child = const Text('Loading Xã...');
             }
-            return child;
+            return CustomPicker<Xa>(
+              label: const Text('Xã/Phường'),
+              items: const [],
+              selectedItem: selectedXa,
+              displayItemBuilder: (Xa? xa) => xa?.tenxa ?? '',
+              hint: 'Chọn Xã/Phường',
+              onChanged: null,
+            );
           },
         ),
         const SizedBox(height: 14),
