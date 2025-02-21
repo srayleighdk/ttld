@@ -321,6 +321,12 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                 ),
                 const SizedBox(height: 16.0),
                 CustomTextField(
+                  labelText: "Điện thoại",
+                  controller: _ntdDienthoaiController,
+                  hintText: 'Fax',
+                ),
+                const SizedBox(height: 16.0),
+                CustomTextField(
                   labelText: "Lĩnh vực hoạt động",
                   controller: _ntdLinhvuchoatdongController,
                   hintText: 'Lĩnh vực hoạt động',
