@@ -102,7 +102,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
 
         _selectedQuocGia = ntd.ntdQuocgia != null
             ? QuocGia(
-                tenQuocGia: ntd.ntdQuocgia!,
+                tenQuocGia: ntd.ntdQuocgia ?? '',
                 status: false,
                 viettat: '',
                 displayOrder: 0)
