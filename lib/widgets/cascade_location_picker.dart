@@ -130,12 +130,12 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
                         .add(LoadXasByHuyen(mahuyen: newValue.mahuyen));
                   }
                   widget.onHuyenChanged?.call(newValue);
-                   context.read<XaBloc>().add(LoadXasByHuyen(mahuyen: newValue.mahuyen));
+                   context.read<XaBloc>().add(LoadXasByHuyen(mahuyen: newValue?.mahuyen ?? ''));
                 },
               );
             } else if (state is HuyenError) {
               child = Text('Error: ${(state).message}');
-            } else if (state is TinhLoading) {
+            } else if (state is HuyenLoading) {
               child = const CircularProgressIndicator();
             } else {
               WidgetsBinding.instance.addPostFrameCallback((_) {
