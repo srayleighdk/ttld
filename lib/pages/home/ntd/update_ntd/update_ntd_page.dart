@@ -10,7 +10,7 @@ import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
 
 class UpdateNTDPage extends StatefulWidget {
   static const routePath = '/update-ntd';
-  const UpdateNTDPage({Key? key}) : super(key: key);
+  const UpdateNTDPage({super.key});
 
   @override
   _UpdateNTDPageState createState() => _UpdateNTDPageState();
@@ -95,9 +95,13 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
 
         _ntdhtNlh = ntd.ntdhtNlh ?? false;
         _ntdhtTelephone = ntd.ntdhtTelephone ?? false;
+        _ntdhtWeb = ntd.ntdhtWeb ?? false;
+        _ntdhtFax = ntd.ntdhtFax ?? false;
+        _ntdhtEmail = ntd.ntdhtEmail ?? false;
+        _ntdhtAddress = ntd.ntdhtAddress ?? false;
 
         _selectedQuocGia = ntd.ntdQuocgia != null
-            ? QuocGia(id: '', tenquocgia: ntd.ntdQuocgia!)
+            ? QuocGia(id: '', tenquocgia: ntd.ntdQuocgia!, status: 1)
             : null;
       }
 
@@ -106,8 +110,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
   }
 
   Future<void> _loadQuocGias() async {
-    final quocGiaRepository =
-        RepositoryProvider.of<QuocGiaRepository>(context);
+    final quocGiaRepository = RepositoryProvider.of<QuocGiaRepository>(context);
     try {
       final quocGias = await quocGiaRepository.getQuocGias();
       setState(() {
@@ -116,12 +119,6 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
     } catch (e) {
       // Handle error (e.g., show a snackbar)
       print("Error loading countries: $e");
-    }
-        _ntdhtWeb = ntd.ntdhtWeb ?? false;
-        _ntdhtFax = ntd.ntdhtFax ?? false;
-        _ntdhtEmail = ntd.ntdhtEmail ?? false;
-        _ntdhtAddress = ntd.ntdhtAddress ?? false;
-      }
     }
   }
 
@@ -197,7 +194,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                       _selectedQuocGia = value;
                     });
                   },
-                  displayItemBuilder: (QuocGia? item) => item?.tenquocgia ?? '',
+                  displayItemBuilder: (QuocGia? item) => item?.tenQuocGia ?? '',
                 ),
                 const SizedBox(height: 16.0),
                 CustomTextField(
