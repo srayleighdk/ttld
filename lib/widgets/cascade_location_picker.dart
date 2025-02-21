@@ -153,7 +153,7 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
           },
         ),
         const SizedBox(height: 14),
-        BlocBuilder<HuyenBloc, HuyenState>(
+        BlocBuilder<XaBloc, XaState>(
           builder: (context, state) {
             Widget child;
             if (state is XaLoadedByHuyen) {
