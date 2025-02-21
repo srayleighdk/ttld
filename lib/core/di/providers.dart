@@ -25,9 +25,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 List<BlocProvider> getBlocProviders() {
   return [
-    RepositoryProvider<QuocGiaRepository>(
-      create: (context) => locator<QuocGiaRepository>(),
-    ),
     BlocProvider<AuthBloc>(
       create: (context) => AuthBloc(),
     ),
