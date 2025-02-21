@@ -99,15 +99,6 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
 
               print('TinhState: ${state.runtimeType}'); // Add this line
             }
-            // Load Huyens when Tinhs are loaded
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (selectedTinh != null) {
-                context
-                    .read<HuyenBloc>()
-                    .add(LoadHuyensByTinh(matinh: selectedTinh!.matinh));
-                _kcnCubit.getKCN(selectedTinh!.matinh);
-              }
-            });
             return child;
           },
         ),
