@@ -15,5 +15,5 @@ class ChucDanhBloc extends Bloc<ChucDanhEvent, ChucDanhState> {
       }
     });
   }
-  final ChucDanhRepository chucDanhRepository;
+  final ChucDanhRepositoryImpl chucDanhRepository;
 }
