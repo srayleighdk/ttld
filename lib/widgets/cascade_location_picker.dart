@@ -70,16 +70,6 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
           builder: (context, state) {
             Widget child;
             if (state is TinhLoaded) {
-              // Load Huyens when Tinhs are loaded
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (selectedTinh != null) {
-                  context
-                      .read<HuyenBloc>()
-                      .add(LoadHuyensByTinh(matinh: selectedTinh!.matinh));
-                  _kcnCubit.getKCN(selectedTinh!.matinh);
-                }
-              });
-
               child = CustomPicker<Tinh>(
                 key: ValueKey(state.tinhs),
                 label: const Text('Tình/Thành Phố'),
@@ -111,6 +101,15 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
             } else {
               child = const Text('Loading Tỉnh...');
             }
+            // Load Huyens when Tinhs are loaded
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (selectedTinh != null) {
+                context
+                    .read<HuyenBloc>()
+                    .add(LoadHuyensByTinh(matinh: selectedTinh!.matinh));
+                _kcnCubit.getKCN(selectedTinh!.matinh);
+              }
+            });
             return child;
           },
         ),
@@ -184,10 +183,11 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
         BlocBuilder<KcnCubit, KcnState>(
           bloc: _kcnCubit,
           builder: (context, state) {
+            Widget child;
             if (state is KcnLoading) {
-              return const CircularProgressIndicator();
+              child = const CircularProgressIndicator();
             } else if (state is KcnLoaded) {
-              return CustomPicker<KCN>(
+              child = CustomPicker<KCN>(
                 items: state.kcnList,
                 selectedItem: selectedKCN,
                 displayItemBuilder: (KCN? kcn) => kcn?.kcnTen ?? '',
@@ -201,10 +201,11 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
                 },
               );
             } else if (state is KcnError) {
-              return Text('Error: ${state.message}');
+              child = Text('Error: ${state.message}');
             } else {
-              return const SizedBox.shrink();
+              child = const SizedBox.shrink();
             }
+            return child;
           },
         ),
         const SizedBox(height: 14),
