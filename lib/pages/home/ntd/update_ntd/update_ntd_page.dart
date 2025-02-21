@@ -454,6 +454,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
     _ntdTenTinhController.dispose();
     _ntdTenHuyenController.dispose();
     _ntdTenXaController.dispose();
+    _ntdThuockhucongnghiepController.dispose();
     _ntdWebsiteController.dispose();
     _ntdFaxController.dispose();
     _ntdEmailController.dispose();

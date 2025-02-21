@@ -217,7 +217,7 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
         const SizedBox(height: 14),
         if (_showAddressDetail)
           CustomTextField.addressDetail(
-            controller: _addressDetailController,
+            controller: widget.addressDetailController,
             tinh: selectedTinh?.tentinh,
             huyen: selectedHuyen?.tenhuyen,
             xa: selectedXa?.tenxa,
