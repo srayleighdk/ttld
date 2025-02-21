@@ -185,6 +185,7 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
             } else {
               child = const Text('Loading Xã...');
             }
+            print('XaState: ${state.runtimeType}'); // Add this line
             return CustomPicker<Xa>(
               label: const Text('Xã/Phường'),
               items: const [],
