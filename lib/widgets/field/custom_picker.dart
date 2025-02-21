@@ -23,27 +23,27 @@ class CustomPicker<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: backgroundColor ?? Colors.grey.shade100,
-        borderRadius: BorderRadius.circular(12),
-        // border: Border.all(color: Colors.grey.shade400),
-      ),
-      child: SizedBox(
-        width: double.infinity,
-        child: DropdownMenu<T>(
-          label: label,
-          initialSelection: selectedItem,
-          onSelected: onChanged,
-          dropdownMenuEntries: items.map((T item) {
-          return DropdownMenuEntry<T>(
-            value: item,
-            label: displayItemBuilder != null
-                ? displayItemBuilder!(item)
-                : item.toString(),
-          );
-        }).toList(),
-        hintText: hint,
-      ),
-    );
+        decoration: BoxDecoration(
+          color: backgroundColor ?? Colors.grey.shade100,
+          borderRadius: BorderRadius.circular(12),
+          // border: Border.all(color: Colors.grey.shade400),
+        ),
+        child: SizedBox(
+          width: double.infinity,
+          child: DropdownMenu<T>(
+            label: label,
+            initialSelection: selectedItem,
+            onSelected: onChanged,
+            dropdownMenuEntries: items.map((T item) {
+              return DropdownMenuEntry<T>(
+                value: item,
+                label: displayItemBuilder != null
+                    ? displayItemBuilder!(item)
+                    : item.toString(),
+              );
+            }).toList(),
+            hintText: hint,
+          ),
+        ));
   }
 }
