@@ -29,30 +29,27 @@ class MyApp extends StatelessWidget {
       child: ThemeConsumer(
         child: Builder(
           builder: (themeContext) {
-            return MultiRepositoryProvider(
-              providers: getRepositoryProviders(),
-              child: MultiBlocProvider(
-                providers: getBlocProviders(),
-                child: Builder(
-                  builder: (context) {
-                    final router = AppRouter(
-                      authBloc: context.read<AuthBloc>(),
-                      ldRepository: locator<LdRepository>(), // Add this
-                    ).router;
-                    return MaterialApp.router(
-                      debugShowCheckedModeBanner: false,
-                      title: 'Flutter Demo',
-                      theme: ThemeProvider.themeOf(themeContext).data,
-                      routerConfig: router,
-                      builder: (context, child) {
-                        return StyledToast(
-                          locale: const Locale('vi', 'VN'),
-                          child: child!,
-                        );
-                      },
-                    );
-                  },
-                ),
+            return MultiBlocProvider(
+              providers: getBlocProviders(),
+              child: Builder(
+                builder: (context) {
+                  final router = AppRouter(
+                    authBloc: context.read<AuthBloc>(),
+                    ldRepository: locator<LdRepository>(), // Add this
+                  ).router;
+                  return MaterialApp.router(
+                    debugShowCheckedModeBanner: false,
+                    title: 'Flutter Demo',
+                    theme: ThemeProvider.themeOf(themeContext).data,
+                    routerConfig: router,
+                    builder: (context, child) {
+                      return StyledToast(
+                        locale: const Locale('vi', 'VN'),
+                        child: child!,
+                      );
+                    },
+                  );
+                },
               ),
             );
           },

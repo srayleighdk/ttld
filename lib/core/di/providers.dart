@@ -17,8 +17,6 @@ import 'package:ttld/pages/forgot_password/bloc/forgot_password_bloc.dart';
 import 'package:ttld/pages/hosoungvien/bloc/hosoungvien_bloc.dart';
 import 'package:ttld/pages/signup/bloc/signup_bloc.dart';
 import 'package:ttld/repositories/tblNhaTuyenDung/ntd_repository.dart';
-import 'package:ttld/repositories/tblViecLamUngVien/vieclam_ungvien_repository.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ttld/bloc/huyen/huyen_bloc.dart';
 import 'package:ttld/bloc/tinh/tinh_bloc.dart';
@@ -41,14 +39,6 @@ import 'package:ttld/repositories/tblNhaTuyenDung/ntd_repository.dart';
 import 'package:ttld/repositories/tblViecLamUngVien/vieclam_ungvien_repository.dart';
 
 import '../../bloc/tblViecLamUngVien/vieclam_ungvien_bloc.dart';
-
-List<RepositoryProvider> getRepositoryProviders() {
-  return [
-    RepositoryProvider<QuocGiaRepository>(
-      create: (context) => locator<QuocGiaRepository>(),
-    ),
-  ];
-}
 
 List<BlocProvider> getBlocProviders() {
   return [
