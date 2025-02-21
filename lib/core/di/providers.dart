@@ -20,9 +20,14 @@ import 'package:ttld/repositories/tblNhaTuyenDung/ntd_repository.dart';
 import 'package:ttld/repositories/tblViecLamUngVien/vieclam_ungvien_repository.dart';
 
 import '../../bloc/tblViecLamUngVien/vieclam_ungvien_bloc.dart';
+import 'package:ttld/repositories/quocgia/quocgia_repository.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 List<BlocProvider> getBlocProviders() {
   return [
+    RepositoryProvider<QuocGiaRepository>(
+      create: (context) => locator<QuocGiaRepository>(),
+    ),
     BlocProvider<AuthBloc>(
       create: (context) => AuthBloc(),
     ),
