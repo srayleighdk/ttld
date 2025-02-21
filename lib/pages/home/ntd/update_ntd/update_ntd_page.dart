@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ttld/bloc/tblNhaTuyenDung/ntd_bloc.dart';
+import 'package:ttld/models/quocgia/quocgia_model.dart';
+import 'package:ttld/repositories/quocgia/quocgia_repository.dart';
 import 'package:ttld/widgets/cascade_location_picker.dart';
 import 'package:ttld/widgets/field/custom_checkbox.dart';
 import 'package:ttld/widgets/field/custom_picker.dart';
@@ -44,6 +46,9 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
   String? _selectedTinh;
   String? _selectedHuyen;
   String? _selectedXa;
+
+  List<QuocGia> _quocGias = [];
+  QuocGia? _selectedQuocGia;
 
   bool _ntdhtNlh = false;
   bool _ntdhtTelephone = false;
@@ -90,6 +95,28 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
 
         _ntdhtNlh = ntd.ntdhtNlh ?? false;
         _ntdhtTelephone = ntd.ntdhtTelephone ?? false;
+
+        _selectedQuocGia = ntd.ntdQuocgia != null
+            ? QuocGia(id: '', tenquocgia: ntd.ntdQuocgia!)
+            : null;
+      }
+
+      _loadQuocGias();
+    }
+  }
+
+  Future<void> _loadQuocGias() async {
+    final quocGiaRepository =
+        RepositoryProvider.of<QuocGiaRepository>(context);
+    try {
+      final quocGias = await quocGiaRepository.getQuocGias();
+      setState(() {
+        _quocGias = quocGias;
+      });
+    } catch (e) {
+      // Handle error (e.g., show a snackbar)
+      print("Error loading countries: $e");
+    }
         _ntdhtWeb = ntd.ntdhtWeb ?? false;
         _ntdhtFax = ntd.ntdhtFax ?? false;
         _ntdhtEmail = ntd.ntdhtEmail ?? false;
@@ -263,6 +290,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                               ntdTenXa: _selectedXa,
                               ntdhtNlh: _ntdhtNlh,
                               ntdhtTelephone: _ntdhtTelephone,
+                              ntdQuocgia: _selectedQuocGia?.tenquocgia,
                               ntdhtWeb: _ntdhtWeb,
                               ntdhtFax: _ntdhtFax,
                               ntdhtEmail: _ntdhtEmail,
