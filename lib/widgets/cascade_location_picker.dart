@@ -100,6 +100,8 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
               child = const CircularProgressIndicator();
             } else {
               child = const Text('Loading Tỉnh...');
+
+              print('TinhState: ${state.runtimeType}'); // Add this line
             }
             // Load Huyens when Tinhs are loaded
             WidgetsBinding.instance.addPostFrameCallback((_) {

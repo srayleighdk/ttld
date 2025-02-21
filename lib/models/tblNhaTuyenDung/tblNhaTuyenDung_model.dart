@@ -72,6 +72,7 @@ class Ntd with _$Ntd {
     int? ntdLoai,
     String? nongThonThanhThi,
     int? idLoaiHinhDoanhNghiep,
+    int? ntdHinhthucdoanhnghiep,
     int? idNganhKinhTe,
     int? idThoiGianHoatDong,
     // required int idStatus,

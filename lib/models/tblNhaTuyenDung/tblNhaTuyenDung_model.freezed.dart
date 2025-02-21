@@ -86,6 +86,7 @@ mixin _$Ntd {
   int? get ntdLoai => throw _privateConstructorUsedError;
   String? get nongThonThanhThi => throw _privateConstructorUsedError;
   int? get idLoaiHinhDoanhNghiep => throw _privateConstructorUsedError;
+  int? get ntdHinhthucdoanhnghiep => throw _privateConstructorUsedError;
   int? get idNganhKinhTe => throw _privateConstructorUsedError;
   int? get idThoiGianHoatDong =>
       throw _privateConstructorUsedError; // required int idStatus,
@@ -156,6 +157,7 @@ abstract class $NtdCopyWith<$Res> {
       int? ntdLoai,
       String? nongThonThanhThi,
       int? idLoaiHinhDoanhNghiep,
+      int? ntdHinhthucdoanhnghiep,
       int? idNganhKinhTe,
       int? idThoiGianHoatDong,
       int? idStatus,
@@ -223,6 +225,7 @@ class _$NtdCopyWithImpl<$Res, $Val extends Ntd> implements $NtdCopyWith<$Res> {
     Object? ntdLoai = freezed,
     Object? nongThonThanhThi = freezed,
     Object? idLoaiHinhDoanhNghiep = freezed,
+    Object? ntdHinhthucdoanhnghiep = freezed,
     Object? idNganhKinhTe = freezed,
     Object? idThoiGianHoatDong = freezed,
     Object? idStatus = freezed,
@@ -402,6 +405,10 @@ class _$NtdCopyWithImpl<$Res, $Val extends Ntd> implements $NtdCopyWith<$Res> {
           ? _value.idLoaiHinhDoanhNghiep
           : idLoaiHinhDoanhNghiep // ignore: cast_nullable_to_non_nullable
               as int?,
+      ntdHinhthucdoanhnghiep: freezed == ntdHinhthucdoanhnghiep
+          ? _value.ntdHinhthucdoanhnghiep
+          : ntdHinhthucdoanhnghiep // ignore: cast_nullable_to_non_nullable
+              as int?,
       idNganhKinhTe: freezed == idNganhKinhTe
           ? _value.idNganhKinhTe
           : idNganhKinhTe // ignore: cast_nullable_to_non_nullable
@@ -491,6 +498,7 @@ abstract class _$$NtdImplCopyWith<$Res> implements $NtdCopyWith<$Res> {
       int? ntdLoai,
       String? nongThonThanhThi,
       int? idLoaiHinhDoanhNghiep,
+      int? ntdHinhthucdoanhnghiep,
       int? idNganhKinhTe,
       int? idThoiGianHoatDong,
       int? idStatus,
@@ -555,6 +563,7 @@ class __$$NtdImplCopyWithImpl<$Res> extends _$NtdCopyWithImpl<$Res, _$NtdImpl>
     Object? ntdLoai = freezed,
     Object? nongThonThanhThi = freezed,
     Object? idLoaiHinhDoanhNghiep = freezed,
+    Object? ntdHinhthucdoanhnghiep = freezed,
     Object? idNganhKinhTe = freezed,
     Object? idThoiGianHoatDong = freezed,
     Object? idStatus = freezed,
@@ -734,6 +743,10 @@ class __$$NtdImplCopyWithImpl<$Res> extends _$NtdCopyWithImpl<$Res, _$NtdImpl>
           ? _value.idLoaiHinhDoanhNghiep
           : idLoaiHinhDoanhNghiep // ignore: cast_nullable_to_non_nullable
               as int?,
+      ntdHinhthucdoanhnghiep: freezed == ntdHinhthucdoanhnghiep
+          ? _value.ntdHinhthucdoanhnghiep
+          : ntdHinhthucdoanhnghiep // ignore: cast_nullable_to_non_nullable
+              as int?,
       idNganhKinhTe: freezed == idNganhKinhTe
           ? _value.idNganhKinhTe
           : idNganhKinhTe // ignore: cast_nullable_to_non_nullable
@@ -820,6 +833,7 @@ class _$NtdImpl implements _Ntd {
       this.ntdLoai,
       this.nongThonThanhThi,
       this.idLoaiHinhDoanhNghiep,
+      this.ntdHinhthucdoanhnghiep,
       this.idNganhKinhTe,
       this.idThoiGianHoatDong,
       this.idStatus,
@@ -942,6 +956,8 @@ class _$NtdImpl implements _Ntd {
   @override
   final int? idLoaiHinhDoanhNghiep;
   @override
+  final int? ntdHinhthucdoanhnghiep;
+  @override
   final int? idNganhKinhTe;
   @override
   final int? idThoiGianHoatDong;
@@ -965,7 +981,7 @@ class _$NtdImpl implements _Ntd {
 
   @override
   String toString() {
-    return 'Ntd(idDoanhNghiep: $idDoanhNghiep, username: $username, password: $password, ntdMadn: $ntdMadn, ntdTentat: $ntdTentat, ntdTen: $ntdTen, imagePath: $imagePath, mst: $mst, ntdSolaodong: $ntdSolaodong, ntdGioithieu: $ntdGioithieu, ntdThuockhucongnghiep: $ntdThuockhucongnghiep, ntdDiachithanhpho: $ntdDiachithanhpho, ntdDiachihuyen: $ntdDiachihuyen, ntdDiachixaphuong: $ntdDiachixaphuong, ntdDiachichitiet: $ntdDiachichitiet, ntdNguoilienhe: $ntdNguoilienhe, ntdChucvu: $ntdChucvu, ntdDienthoai: $ntdDienthoai, ntdFax: $ntdFax, ntdEmail: $ntdEmail, ntdWebsite: $ntdWebsite, ntdDuyet: $ntdDuyet, ntdTopblock: $ntdTopblock, ntdQuocgia: $ntdQuocgia, ntdNamthanhlap: $ntdNamthanhlap, ntdLinhvuchoatdong: $ntdLinhvuchoatdong, ntdhtNlh: $ntdhtNlh, ntdhtTelephone: $ntdhtTelephone, ntdhtWeb: $ntdhtWeb, ntdhtFax: $ntdhtFax, ntdhtEmail: $ntdhtEmail, ntdhtAddress: $ntdhtAddress, createdDate: $createdDate, createdBy: $createdBy, modifiredDate: $modifiredDate, modifiredBy: $modifiredBy, ntdId: $ntdId, newsletterSubscription: $newsletterSubscription, jobsletterSubscription: $jobsletterSubscription, ntdLoai: $ntdLoai, nongThonThanhThi: $nongThonThanhThi, idLoaiHinhDoanhNghiep: $idLoaiHinhDoanhNghiep, idNganhKinhTe: $idNganhKinhTe, idThoiGianHoatDong: $idThoiGianHoatDong, idStatus: $idStatus, displayOrder: $displayOrder, ntdTenTinh: $ntdTenTinh, ntdTenHuyen: $ntdTenHuyen, ntdTenXa: $ntdTenXa, idnongThonThanhThi: $idnongThonThanhThi, idQuocGia: $idQuocGia)';
+    return 'Ntd(idDoanhNghiep: $idDoanhNghiep, username: $username, password: $password, ntdMadn: $ntdMadn, ntdTentat: $ntdTentat, ntdTen: $ntdTen, imagePath: $imagePath, mst: $mst, ntdSolaodong: $ntdSolaodong, ntdGioithieu: $ntdGioithieu, ntdThuockhucongnghiep: $ntdThuockhucongnghiep, ntdDiachithanhpho: $ntdDiachithanhpho, ntdDiachihuyen: $ntdDiachihuyen, ntdDiachixaphuong: $ntdDiachixaphuong, ntdDiachichitiet: $ntdDiachichitiet, ntdNguoilienhe: $ntdNguoilienhe, ntdChucvu: $ntdChucvu, ntdDienthoai: $ntdDienthoai, ntdFax: $ntdFax, ntdEmail: $ntdEmail, ntdWebsite: $ntdWebsite, ntdDuyet: $ntdDuyet, ntdTopblock: $ntdTopblock, ntdQuocgia: $ntdQuocgia, ntdNamthanhlap: $ntdNamthanhlap, ntdLinhvuchoatdong: $ntdLinhvuchoatdong, ntdhtNlh: $ntdhtNlh, ntdhtTelephone: $ntdhtTelephone, ntdhtWeb: $ntdhtWeb, ntdhtFax: $ntdhtFax, ntdhtEmail: $ntdhtEmail, ntdhtAddress: $ntdhtAddress, createdDate: $createdDate, createdBy: $createdBy, modifiredDate: $modifiredDate, modifiredBy: $modifiredBy, ntdId: $ntdId, newsletterSubscription: $newsletterSubscription, jobsletterSubscription: $jobsletterSubscription, ntdLoai: $ntdLoai, nongThonThanhThi: $nongThonThanhThi, idLoaiHinhDoanhNghiep: $idLoaiHinhDoanhNghiep, ntdHinhthucdoanhnghiep: $ntdHinhthucdoanhnghiep, idNganhKinhTe: $idNganhKinhTe, idThoiGianHoatDong: $idThoiGianHoatDong, idStatus: $idStatus, displayOrder: $displayOrder, ntdTenTinh: $ntdTenTinh, ntdTenHuyen: $ntdTenHuyen, ntdTenXa: $ntdTenXa, idnongThonThanhThi: $idnongThonThanhThi, idQuocGia: $idQuocGia)';
   }
 
   @override
@@ -1051,6 +1067,8 @@ class _$NtdImpl implements _Ntd {
                 other.nongThonThanhThi == nongThonThanhThi) &&
             (identical(other.idLoaiHinhDoanhNghiep, idLoaiHinhDoanhNghiep) ||
                 other.idLoaiHinhDoanhNghiep == idLoaiHinhDoanhNghiep) &&
+            (identical(other.ntdHinhthucdoanhnghiep, ntdHinhthucdoanhnghiep) ||
+                other.ntdHinhthucdoanhnghiep == ntdHinhthucdoanhnghiep) &&
             (identical(other.idNganhKinhTe, idNganhKinhTe) ||
                 other.idNganhKinhTe == idNganhKinhTe) &&
             (identical(other.idThoiGianHoatDong, idThoiGianHoatDong) ||
@@ -1063,8 +1081,7 @@ class _$NtdImpl implements _Ntd {
                 other.ntdTenTinh == ntdTenTinh) &&
             (identical(other.ntdTenHuyen, ntdTenHuyen) ||
                 other.ntdTenHuyen == ntdTenHuyen) &&
-            (identical(other.ntdTenXa, ntdTenXa) ||
-                other.ntdTenXa == ntdTenXa) &&
+            (identical(other.ntdTenXa, ntdTenXa) || other.ntdTenXa == ntdTenXa) &&
             (identical(other.idnongThonThanhThi, idnongThonThanhThi) || other.idnongThonThanhThi == idnongThonThanhThi) &&
             (identical(other.idQuocGia, idQuocGia) || other.idQuocGia == idQuocGia));
   }
@@ -1115,6 +1132,7 @@ class _$NtdImpl implements _Ntd {
         ntdLoai,
         nongThonThanhThi,
         idLoaiHinhDoanhNghiep,
+        ntdHinhthucdoanhnghiep,
         idNganhKinhTe,
         idThoiGianHoatDong,
         idStatus,
@@ -1186,6 +1204,7 @@ abstract class _Ntd implements Ntd {
       final int? ntdLoai,
       final String? nongThonThanhThi,
       final int? idLoaiHinhDoanhNghiep,
+      final int? ntdHinhthucdoanhnghiep,
       final int? idNganhKinhTe,
       final int? idThoiGianHoatDong,
       final int? idStatus,
@@ -1294,6 +1313,8 @@ abstract class _Ntd implements Ntd {
   String? get nongThonThanhThi;
   @override
   int? get idLoaiHinhDoanhNghiep;
+  @override
+  int? get ntdHinhthucdoanhnghiep;
   @override
   int? get idNganhKinhTe;
   @override

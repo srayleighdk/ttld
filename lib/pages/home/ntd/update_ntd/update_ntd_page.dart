@@ -51,7 +51,6 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
   final _ntdTenTinhController = TextEditingController();
   final _ntdTenHuyenController = TextEditingController();
   final _ntdTenXaController = TextEditingController();
-  int? idLoaiHinhDoanhNghiep;
 
   String? _selectedTinh;
   String? _selectedHuyen;
@@ -204,10 +203,15 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   controller: _ntdTenController,
                   hintText: 'Tên nhà tuyển dụng',
                 ),
-                 const SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 CustomPicker<String>(
                   label: const Text("Loại hình"),
-                  items: const ["Doanh nghiệp nội tỉnh", "Doanh nghiệp ngoại tỉnh", "Doanh nghiệp XKLD", "Khác"],
+                  items: const [
+                    "Doanh nghiệp nội tỉnh",
+                    "Doanh nghiệp ngoại tỉnh",
+                    "Doanh nghiệp XKLD",
+                    "Khác"
+                  ],
                   selectedItem: ntdLoai,
                   onChanged: (ntdLoai) {
                     setState(() {
@@ -228,7 +232,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   },
                   displayItemBuilder: (QuocGia? item) => item?.name ?? '',
                 ),
-                 const SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 CustomPicker<QuocGia>(
                   label: const Text("Hình thức doanh nghiệp"),
                   items: _quocGias,
@@ -258,8 +262,8 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   },
                   displayItemBuilder: (QuocGia? item) => item?.name ?? '',
                 ),
-                 const SizedBox(height: 16.0),
-                 CustomPicker<String>(
+                const SizedBox(height: 16.0),
+                CustomPicker<String>(
                   label: const Text("Nông thôn/Thành thị"),
                   items: const ["Nông thôn", "Thành thị"],
                   selectedItem: idnongThonThanhThi,
@@ -294,21 +298,17 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                     });
                   },
                 ),
-                 const SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 CustomTextField(
                   labelText: "Website",
                   controller: _ntdWebsiteController,
                   hintText: 'Website',
                 ),
-                 const SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 CustomTextField(
                   labelText: "Fax",
                   controller: _ntdFaxController,
                   hintText: 'Fax',
-                ),
-                 const SizedBox(height: 16.0),
-                CustomTextField.email(
-                  controller: _ntdEmailController,
                 ),
                 const SizedBox(height: 16.0),
                 CustomTextField(
