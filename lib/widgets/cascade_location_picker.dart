@@ -215,6 +215,36 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
           },
         ),
         const SizedBox(height: 14),
+        BlocBuilder<KcnCubit, KcnState>(
+          bloc: _kcnCubit,
+          builder: (context, state) {
+            Widget child;
+            if (state is KcnLoading) {
+              child = const CircularProgressIndicator();
+            } else if (state is KcnLoaded) {
+              child = CustomPicker<KCN>(
+                items: state.kcnList,
+                selectedItem: selectedKCN,
+                displayItemBuilder: (KCN? kcn) => kcn?.kcnTen ?? '',
+                hint: 'Chọn KCN',
+                onChanged: (KCN? newValue) {
+                  setState(() {
+                    selectedKCN = newValue;
+                    _showAddressDetail = true;
+                    _updateAddressDetail();
+                  });
+                  widget.onKCNChanged?.call(newValue);
+                },
+              );
+            } else if (state is KcnError) {
+              child = Text('Error: ${state.message}');
+            } else {
+              child = const SizedBox.shrink();
+            }
+            return child;
+          },
+        ),
+        const SizedBox(height: 14),
         if (_showAddressDetail)
           CustomTextField.addressDetail(
             controller: widget.addressDetailController,

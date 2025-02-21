@@ -303,7 +303,8 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   onKCNChanged: (kcn) {
                     setState(() {
                       _selectedKCN = kcn?.kcnTen;
-                  });
+                    });
+                    _ntdThuockhucongnghiepController.text = kcn?.kcnTen ?? '';
                   },
                 ),
                 const SizedBox(height: 16.0),
