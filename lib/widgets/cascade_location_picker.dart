@@ -51,6 +51,7 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
     super.initState();
     BlocProvider.of<TinhBloc>(context).add(LoadTinhs());
     _kcnCubit = locator<KcnCubit>();
+    _kcnCubit.getKCN(selectedTinh?.matinh ?? '');
     _updateAddressDetail();
   }
 
