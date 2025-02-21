@@ -102,14 +102,13 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
         _ntdhtAddress = ntd.ntdhtAddress ?? false;
 
         if (ntd.ntdQuocgia != null) {
-          _selectedQuocGia = _quocGias.firstWhere(
-            (q) => q.tenQuocGia == ntd.ntdQuocgia,
-            orElse: () => QuocGia(
-                tenQuocGia: ntd.ntdQuocgia ?? '',
-                status: false,
-                viettat: '',
-                displayOrder: 0),
-          );
+          try {
+            _selectedQuocGia = _quocGias.firstWhere(
+              (q) => q.tenQuocGia == ntd.ntdQuocgia,
+            );
+          } catch (e) {
+            _selectedQuocGia = null;
+          }
         } else {
           _selectedQuocGia = null;
         }
