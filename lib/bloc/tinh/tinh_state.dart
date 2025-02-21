@@ -1,6 +1,8 @@
 import 'package:ttld/models/tinh/tinh.dart';
 
-abstract class TinhState {}
+abstract class TinhState {
+  String get message => '';
+}
 
 class TinhInitial extends TinhState {}
 
@@ -13,6 +15,7 @@ class TinhLoaded extends TinhState {
 }
 
 class TinhError extends TinhState {
+  @override
   final String message;
 
   TinhError({required this.message});

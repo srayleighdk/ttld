@@ -1,6 +1,8 @@
 import 'package:ttld/models/huyen/huyen.dart';
 
-abstract class HuyenState {}
+abstract class HuyenState {
+  String get message => '';
+}
 
 class HuyenInitial extends HuyenState {}
 
@@ -19,6 +21,7 @@ class HuyenLoaded extends HuyenState {
 }
 
 class HuyenError extends HuyenState {
+  @override
   final String message;
 
   HuyenError({required this.message});

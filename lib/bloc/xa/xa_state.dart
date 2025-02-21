@@ -1,6 +1,8 @@
 import 'package:ttld/models/xa/xa.dart';
 
-abstract class XaState {}
+abstract class XaState {
+  String get message => '';
+}
 
 class XaInitial extends XaState {}
 
@@ -19,6 +21,7 @@ class XaLoaded extends XaState {
 }
 
 class XaError extends XaState {
+  @override
   final String message;
 
   XaError({required this.message});
