@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ttld/bloc/tblNhaTuyenDung/ntd_bloc.dart';
 import 'package:ttld/widgets/cascade_location_picker.dart';
+import 'package:ttld/widgets/field/custom_checkbox.dart';
 import 'package:ttld/widgets/field/custom_picker.dart';
 import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
 
@@ -44,6 +45,13 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
   String? _selectedHuyen;
   String? _selectedXa;
 
+  bool _ntdhtNlh = false;
+  bool _ntdhtTelephone = false;
+  bool _ntdhtWeb = false;
+  bool _ntdhtFax = false;
+  bool _ntdhtEmail = false;
+  bool _ntdhtAddress = false;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -79,6 +87,13 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
         _selectedTinh = ntd.ntdTenTinh;
         _selectedHuyen = ntd.ntdTenHuyen;
         _selectedXa = ntd.ntdTenXa;
+
+        _ntdhtNlh = ntd.ntdhtNlh ?? false;
+        _ntdhtTelephone = ntd.ntdhtTelephone ?? false;
+        _ntdhtWeb = ntd.ntdhtWeb ?? false;
+        _ntdhtFax = ntd.ntdhtFax ?? false;
+        _ntdhtEmail = ntd.ntdhtEmail ?? false;
+        _ntdhtAddress = ntd.ntdhtAddress ?? false;
       }
     }
   }
@@ -180,6 +195,60 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                     });
                   },
                 ),
+                CustomCheckbox(
+                  label: "ntdhtNlh",
+                  value: _ntdhtNlh,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      _ntdhtNlh = value ?? false;
+                    });
+                  },
+                ),
+                CustomCheckbox(
+                  label: "ntdhtTelephone",
+                  value: _ntdhtTelephone,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      _ntdhtTelephone = value ?? false;
+                    });
+                  },
+                ),
+                CustomCheckbox(
+                  label: "ntdhtWeb",
+                  value: _ntdhtWeb,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      _ntdhtWeb = value ?? false;
+                    });
+                  },
+                ),
+                CustomCheckbox(
+                  label: "ntdhtFax",
+                  value: _ntdhtFax,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      _ntdhtFax = value ?? false;
+                    });
+                  },
+                ),
+                CustomCheckbox(
+                  label: "ntdhtEmail",
+                  value: _ntdhtEmail,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      _ntdhtEmail = value ?? false;
+                    });
+                  },
+                ),
+                CustomCheckbox(
+                  label: "ntdhtAddress",
+                  value: _ntdhtAddress,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      _ntdhtAddress = value ?? false;
+                    });
+                  },
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 24.0),
                   child: ElevatedButton(
@@ -201,6 +270,12 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                               ntdTenTinh: _selectedTinh,
                               ntdTenHuyen: _selectedHuyen,
                               ntdTenXa: _selectedXa,
+                              ntdhtNlh: _ntdhtNlh,
+                              ntdhtTelephone: _ntdhtTelephone,
+                              ntdhtWeb: _ntdhtWeb,
+                              ntdhtFax: _ntdhtFax,
+                              ntdhtEmail: _ntdhtEmail,
+                              ntdhtAddress: _ntdhtAddress,
                             );
                             context.read<NTDBloc>().add(NTDUpdate(updatedNtd));
                           }
