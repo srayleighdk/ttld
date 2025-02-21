@@ -59,6 +59,11 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
   bool _ntdhtAddress = false;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     final ntdBloc = BlocProvider.of<NTDBloc>(context);
