@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ttld/bloc/tblNhaTuyenDung/ntd_bloc.dart';
 import 'package:ttld/core/di/injection.dart';
+import 'package:ttld/models/hinhthuc_doanhnghiep/hinhthuc_doanhnghiep_model.dart';
 import 'package:ttld/models/quocgia/quocgia_model.dart';
+import 'package:ttld/repositories/hinhthuc_doanhnghiep/hinhthuc_doanhnghiep_repository.dart';
 import 'package:ttld/repositories/quocgia/quocgia_repository.dart';
 import 'package:ttld/widgets/cascade_location_picker.dart';
 import 'package:ttld/widgets/field/custom_checkbox.dart';
@@ -61,6 +63,8 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
 
   List<QuocGia> _quocGias = [];
   QuocGia? quocGia;
+  List<HinhThucDoanhNghiep> _hinhthucDoanhNghieps = [];
+  HinhThucDoanhNghiep? hinhthucDoanhNghiep;
 
   bool _ntdhtNlh = false;
   bool _ntdhtTelephone = false;
@@ -129,6 +133,23 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
       if (mounted) {
         setState(() {
           _quocGias = quocGias;
+        });
+      }
+    } catch (e) {
+      // Handle error (e.g., show a snackbar)
+      print("Error loading countries: $e");
+    }
+  }
+
+  Future<void> _loadHinhThucDoanhNghiep() async {
+    final hinhThucDoanhNghiepRepository =
+        locator<HinhThucDoanhNghiepRepository>();
+    try {
+      final hinhthucDoanhNghieps =
+          await hinhThucDoanhNghiepRepository.getHinhThucDoanhNghieps();
+      if (mounted) {
+        setState(() {
+          _hinhthucDoanhNghieps = hinhthucDoanhNghieps;
         });
       }
     } catch (e) {
@@ -222,7 +243,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   },
                   displayItemBuilder: (String? item) => item ?? '',
                 ),
-                 const SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 CustomPicker<String>(
                   label: const Text("Thời gian hoạt động"),
                   items: const ["Sáng", "Chiều", "Tối"],
@@ -247,7 +268,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   displayItemBuilder: (QuocGia? item) => item?.name ?? '',
                 ),
                 const SizedBox(height: 16.0),
-                CustomPicker<QuocGia>(
+                CustomPicker<HinhThucDoanhNghiep>(
                   label: const Text("Hình thức doanh nghiệp"),
                   items: _quocGias,
                   selectedItem: quocGia,
@@ -335,7 +356,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                 CustomTextField(
                   labelText: "Điện thoại",
                   controller: _ntdDienthoaiController,
-                  hintText: 'Fax',
+                  hintText: 'Điện thoại',
                 ),
                 const SizedBox(height: 16.0),
                 CustomTextField(
@@ -473,7 +494,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
     _ntdTenTinhController.dispose();
     _ntdTenHuyenController.dispose();
     _ntdTenXaController.dispose();
-     _ntdThuockhucongnghiepController.dispose();
+    _ntdThuockhucongnghiepController.dispose();
     _ntdWebsiteController.dispose();
     _ntdFaxController.dispose();
     _ntdEmailController.dispose();
