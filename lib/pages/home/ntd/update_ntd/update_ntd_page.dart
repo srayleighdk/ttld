@@ -346,6 +346,19 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   controller: _ntdWebsiteController,
                   hintText: 'Website',
                 ),
+                 const SizedBox(height: 16.0),
+                CustomPickDate(
+                  labelText: "Năm thành lập",
+                  hintText: 'Năm thành lập',
+                  selectedDate: DateTime.tryParse(_ntdNamthanhlapController.text),
+                  onChanged: (DateTime? dateTime) {
+                    setState(() {
+                      if (dateTime != null) {
+                        _ntdNamthanhlapController.text = dateTime.toString();
+                      }
+                    });
+                  },
+                ),
                 const SizedBox(height: 16.0),
                 CustomTextField(
                   labelText: "Fax",
@@ -498,6 +511,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
     _ntdWebsiteController.dispose();
     _ntdFaxController.dispose();
     _ntdEmailController.dispose();
+    _ntdNamthanhlapController.dispose();
     super.dispose();
   }
 }
