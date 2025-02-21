@@ -49,8 +49,6 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
   void initState() {
     super.initState();
     final tinhBloc = locator<TinhBloc>();
-    final huyenBloc = locator<HuyenBloc>();
-    final xaBloc = locator<XaBloc>();
 
     tinhBloc.add(LoadTinhs());
     _kcnCubit = locator<KcnCubit>();
@@ -104,8 +102,7 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
                   widget.onTinhChanged?.call(newValue);
                 },
               );
-            }
-             else if (state is TinhError) {
+            } else if (state is TinhError) {
               child = Text('Error: ${state.message}');
             } else if (state is TinhLoading) {
               child = const CircularProgressIndicator();
