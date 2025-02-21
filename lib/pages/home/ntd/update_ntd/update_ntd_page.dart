@@ -201,6 +201,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   },
                   displayItemBuilder: (QuocGia? item) => item?.tenQuocGia ?? '',
                 ),
+                Text('CustomPicker items: $_quocGias'),
                 const SizedBox(height: 16.0),
                 CustomTextField(
                   labelText: "Tên viết tắt",

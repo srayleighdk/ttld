@@ -41,7 +41,6 @@ class CustomPicker<T> extends StatelessWidget {
             );
           }).toList(),
           hintText: hint,
-          width: double.infinity,
         ));
   }
 }
