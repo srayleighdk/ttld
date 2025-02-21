@@ -137,7 +137,18 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
                   widget.onHuyenChanged?.call(newValue);
                 },
               );
-            } else if (state is HuyenError) {
+            } else if (state is TinhLoaded) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (selectedTinh != null) {
+                  context
+                      .read<HuyenBloc>()
+                      .add(LoadHuyensByTinh(matinh: selectedTinh!.matinh));
+                  BlocProvider.of<KcnCubit>(context).getKCN(selectedTinh!.matinh);
+                }
+              });
+              return const SizedBox.shrink();
+            }
+             else if (state is HuyenError) {
               child = Text('Error: ${state.message}');
             } else if (state is HuyenLoading) {
               child = const CircularProgressIndicator();
