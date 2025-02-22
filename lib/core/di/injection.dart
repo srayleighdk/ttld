@@ -1,10 +1,12 @@
 import 'package:get_it/get_it.dart';
+import 'package:ttld/bloc/chuc_danh/chuc_danh_bloc.dart';
 import 'package:ttld/bloc/huyen/huyen_bloc.dart';
 import 'package:ttld/bloc/nganh_nghe/nganh_nghe_bloc.dart';
 import 'package:ttld/bloc/quocgia/quocgia_bloc.dart';
 import 'package:ttld/bloc/tinh/tinh_bloc.dart';
 import 'package:ttld/bloc/xa/xa_bloc.dart';
 import 'package:ttld/core/api_client.dart';
+import 'package:ttld/core/services/chuc_danh_api_service.dart';
 import 'package:ttld/core/services/chuyenmon_api_service.dart';
 import 'package:ttld/core/services/danhmuc_kcn_api_service.dart';
 import 'package:ttld/core/services/doituongchinhsach_api_service.dart';
@@ -21,6 +23,7 @@ import 'package:ttld/features/auth/repositories/auth_repository.dart';
 import 'package:ttld/features/ds-ld/repositories/ld_repository.dart';
 import 'package:ttld/features/ds-ld/repositories/ld_repository_impl.dart';
 import 'package:ttld/features/user_group/repository/group_repository.dart';
+import 'package:ttld/repositories/chuc_danh_repository.dart';
 import 'package:ttld/repositories/huyen/huyen_repository.dart';
 import 'package:ttld/repositories/nganh_nghe/nganh_nghe_repository.dart';
 import 'package:ttld/repositories/quocgia/quocgia_repository.dart';
@@ -110,7 +113,6 @@ void setupLocator() {
 
   locator.registerLazySingleton<QuocGiaApiService>(
       () => QuocGiaApiService(locator<ApiClient>().dio));
-
   locator.registerLazySingleton<QuocGiaRepository>(
     () =>
         QuocGiaRepositoryImpl(quocGiaApiService: locator<QuocGiaApiService>()),
@@ -131,6 +133,16 @@ void setupLocator() {
           nganhNgheApiService: locator<NganhNgheApiService>()));
   locator.registerFactory(
       () => NganhNgheBloc(nganhNgheRepository: locator<NganhNgheRepository>()));
+
+  // Chức Danh
+
+  locator.registerLazySingleton<ChucDanhApiService>(
+      () => ChucDanhApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<ChucDanhRepository>(() =>
+      ChucDanhRepositoryImpl(
+          chucDanhApiService: locator<ChucDanhApiService>()));
+  locator.registerFactory(
+      () => ChucDanhBloc(chucDanhRepository: locator<ChucDanhRepository>()));
 
   //ThoiGianLamViec
 

@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ttld/bloc/chuc_danh/chuc_danh_bloc.dart';
 import 'package:ttld/bloc/huyen/huyen_bloc.dart';
 import 'package:ttld/bloc/quocgia/quocgia_bloc.dart';
 import 'package:ttld/bloc/tinh/tinh_bloc.dart';
@@ -17,6 +18,7 @@ import 'package:ttld/features/user_group/repository/group_repository.dart';
 import 'package:ttld/pages/forgot_password/bloc/forgot_password_bloc.dart';
 import 'package:ttld/pages/hosoungvien/bloc/hosoungvien_bloc.dart';
 import 'package:ttld/pages/signup/bloc/signup_bloc.dart';
+import 'package:ttld/repositories/chuc_danh_repository.dart';
 import 'package:ttld/repositories/huyen/huyen_repository.dart';
 import 'package:ttld/repositories/quocgia/quocgia_repository.dart';
 import 'package:ttld/repositories/tblNhaTuyenDung/ntd_repository.dart';
@@ -86,6 +88,11 @@ List<BlocProvider> getBlocProviders() {
     BlocProvider<QuocGiaBloc>(
       create: (context) => QuocGiaBloc(
         quocGiaRepository: locator<QuocGiaRepository>(),
+      ),
+    ),
+    BlocProvider<ChucDanhBloc>(
+      create: (context) => ChucDanhBloc(
+        chucDanhRepository: locator<ChucDanhRepository>(),
       ),
     ),
   ];

@@ -10,14 +10,14 @@ class DanTocApiService {
   }
 
   Future<Response> postDanToc(Map<String, dynamic> data) async {
-    return await _dio.post('/api/danhmuc/dan-toc', data);
+    return await _dio.post('/api/danhmuc/dan-toc', data:data);
   }
 
   Future<Response> putDanToc(Map<String, dynamic> data) async {
-    return await _dio.put('/api/danhmuc/dan-toc', data);
+    return await _dio.put('/api/danhmuc/dan-toc', data:data);
   }
 
   Future<void> deleteDanToc(String id) async {
-    await _dio.delete('/api/danhmuc/dan-toc/$id');
+    await _dio.delete('/api/danhmuc/dan-toc', queryParameters: {'id': id});
   }
 }

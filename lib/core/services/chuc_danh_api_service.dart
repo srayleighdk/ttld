@@ -11,7 +11,7 @@ class ChucDanhApiService {
     try {
       final response = await dio.get(ApiEndpoints.chucDanh);
       if (response.statusCode == 200) {
-        final List<dynamic> data = response.data;
+        final List<dynamic> data = response.data['data'];
         return data.map((json) => ChucDanhModel.fromJson(json)).toList();
       } else {
         throw Exception('Failed to load chuc danh: ${response.statusCode}');
