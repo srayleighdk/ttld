@@ -2,6 +2,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ttld/bloc/chuc_danh/chuc_danh_bloc.dart';
+import 'package:ttld/bloc/ntv/ntv_bloc.dart';
+import 'package:ttld/core/services/ntv_api_service.dart';
 import 'package:ttld/bloc/huyen/huyen_bloc.dart';
 import 'package:ttld/bloc/nganh_nghe/nganh_nghe_bloc.dart';
 import 'package:ttld/bloc/quocgia/quocgia_bloc.dart';
@@ -43,6 +45,7 @@ import 'package:ttld/repositories/tblViecLamUngVien/vieclam_ungvien_repository.d
 import 'package:ttld/repositories/tblViecLamUngVien/vieclam_ungvien_repository_impl.dart';
 import 'package:ttld/repositories/tblNhaTuyenDung/ntd_repository.dart';
 import 'package:ttld/repositories/tblNhaTuyenDung/ntd_repository_impl.dart';
+import 'package:ttld/repositories/ntv_repository.dart';
 import 'package:ttld/repositories/tinh/tinh_repository.dart';
 import 'package:ttld/repositories/xa/xa_repository.dart';
 import 'package:ttld/bloc/kcn/kcn_cubit.dart';
@@ -203,4 +206,11 @@ void setupLocator() async {
   //TinhTrangViecLam
 
   //LoaiViecLam
+
+  // NTV
+  locator.registerLazySingleton<NtvApiService>(
+      () => NtvApiService(baseUrl: 'YOUR_BASE_URL')); // Replace with your base URL
+  locator.registerLazySingleton<NtvRepository>(
+      () => NtvRepository(apiService: locator<NtvApiService>()));
+  locator.registerFactory(() => NtvBloc(ntvRepository: locator<NtvRepository>()));
 }

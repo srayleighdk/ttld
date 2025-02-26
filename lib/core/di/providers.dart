@@ -27,6 +27,7 @@ import 'package:ttld/repositories/tblNhaTuyenDung/ntd_repository.dart';
 import 'package:ttld/repositories/tblViecLamUngVien/vieclam_ungvien_repository.dart';
 import 'package:ttld/repositories/tinh/tinh_repository.dart';
 import 'package:ttld/repositories/xa/xa_repository.dart';
+import 'package:ttld/bloc/ntv/ntv_bloc.dart'; // Import NtvBloc
 
 import '../../bloc/tblViecLamUngVien/vieclam_ungvien_bloc.dart';
 
@@ -99,6 +100,9 @@ List<BlocProvider> getBlocProviders() {
     ),
     BlocProvider<KcnCubit>(
       create: (context) => KcnCubit(locator<DanhMucKcnApiService>()),
+    ),
+    BlocProvider<NtvBloc>( // Add NtvBloc
+      create: (context) => NtvBloc(ntvRepository: locator<NtvRepository>()),
     ),
   ];
 }
