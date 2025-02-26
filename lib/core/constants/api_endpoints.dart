@@ -37,4 +37,8 @@ class ApiEndpoints {
   static String thon = '$baseUrl/danhmuc/hanh-chinh/thon';
 
   static String chucDanh = '$baseUrl/danhmuc/chuc-danh';
+
+  // Ho so ung vien
+  static String hosoUngVien = '$baseUrl/nghiep-vu/hoso-uv';
+  static String hosoUngVienById = '$baseUrl/nghiep-vu/hoso-uvid';
 }
