@@ -2,7 +2,13 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ttld/bloc/chuc_danh/chuc_danh_bloc.dart';
-import 'package:ttld/bloc/ntv/ntv_bloc.dart';
+import 'package:ttld/core/services/dan_toc_api_service.dart';
+import 'package:ttld/core/services/hinh_thuc_dao_tao_api_service.dart';
+import 'package:ttld/core/services/hinh_thuc_dia_diem_api_service.dart';
+import 'package:ttld/core/services/hinh_thuc_loai_hinh_api_service.dart';
+import 'package:ttld/core/services/loai_vl_api_service.dart';
+import 'package:ttld/core/services/nguon_thuthap_api_service.dart';
+import 'package:ttld/core/services/nguon_vieclam_api_service.dart';
 import 'package:ttld/core/services/ntv_api_service.dart';
 import 'package:ttld/bloc/huyen/huyen_bloc.dart';
 import 'package:ttld/bloc/nganh_nghe/nganh_nghe_bloc.dart';
@@ -22,7 +28,13 @@ import 'package:ttld/core/services/nganh_nghe_api_service.dart';
 import 'package:ttld/core/services/ntd_api_service.dart';
 import 'package:ttld/core/services/quocgia_api_service.dart';
 import 'package:ttld/core/services/thoigianhoatdong_api_service.dart';
+import 'package:ttld/core/services/thoigianlamviec_api_service.dart';
 import 'package:ttld/core/services/tinh_api_service.dart';
+import 'package:ttld/core/services/tinh_trangvl_api_service.dart';
+import 'package:ttld/core/services/trinh_do_hoc_van_api_service.dart';
+import 'package:ttld/core/services/trinh_do_ngoai_ngu_api_service.dart';
+import 'package:ttld/core/services/trinh_do_tin_hoc_api_service.dart';
+import 'package:ttld/core/services/trinh_do_van_hoa_api_service.dart';
 import 'package:ttld/core/services/tttantat_api_service.dart';
 import 'package:ttld/core/services/vieclam_ungvien_api_service.dart';
 import 'package:ttld/core/services/xa_api_service.dart';
@@ -31,9 +43,16 @@ import 'package:ttld/features/ds-ld/repositories/ld_repository.dart';
 import 'package:ttld/features/ds-ld/repositories/ld_repository_impl.dart';
 import 'package:ttld/features/user_group/repository/group_repository.dart';
 import 'package:ttld/repositories/chuc_danh_repository.dart';
+import 'package:ttld/repositories/dan_toc/dan_toc_repository.dart';
+import 'package:ttld/repositories/hinh_thuc_dao_tao/hinh_thuc_dao_tao_repository.dart';
+import 'package:ttld/repositories/hinh_thuc_dia_diem/hinh_thuc_dia_diem_repository.dart';
+import 'package:ttld/repositories/hinh_thuc_loai_hinh/hinh_thuc_loai_hinh_repository.dart';
 import 'package:ttld/repositories/hinhthuc_doanhnghiep/hinhthuc_doanhnghiep_repository.dart';
 import 'package:ttld/repositories/huyen/huyen_repository.dart';
+import 'package:ttld/repositories/loai_vl/loai_vl_repository.dart';
 import 'package:ttld/repositories/nganh_nghe/nganh_nghe_repository.dart';
+import 'package:ttld/repositories/nguon_thuthap/nguon_thuthap_repository.dart';
+import 'package:ttld/repositories/nguon_vieclam/nguon_vieclam_repository.dart';
 import 'package:ttld/repositories/quocgia/quocgia_repository.dart';
 import 'package:ttld/repositories/tblDmChuyenMon/chuyenmon_repository.dart';
 import 'package:ttld/repositories/tblDmChuyenMon/chuyenmon_repository_impl.dart';
@@ -41,12 +60,18 @@ import 'package:ttld/repositories/tblDmDoiTuongChinhSach/doituong_repository.dar
 import 'package:ttld/repositories/tblDmDoiTuongChinhSach/doituong_repository_impl.dart';
 import 'package:ttld/repositories/tblDmTTtantat/tantat_repository.dart';
 import 'package:ttld/repositories/tblDmTTtantat/tantat_repository_impl.dart';
+import 'package:ttld/repositories/tblHoSoUngVien/ntv_repository.dart';
 import 'package:ttld/repositories/tblViecLamUngVien/vieclam_ungvien_repository.dart';
 import 'package:ttld/repositories/tblViecLamUngVien/vieclam_ungvien_repository_impl.dart';
 import 'package:ttld/repositories/tblNhaTuyenDung/ntd_repository.dart';
 import 'package:ttld/repositories/tblNhaTuyenDung/ntd_repository_impl.dart';
-import 'package:ttld/repositories/ntv_repository.dart';
+import 'package:ttld/repositories/thoigianlamviec/thoigianlamviec_repository.dart';
 import 'package:ttld/repositories/tinh/tinh_repository.dart';
+import 'package:ttld/repositories/tinh_trangvl/tinh_trangvl_repository.dart';
+import 'package:ttld/repositories/trinh_do_hoc_van/trinh_do_hoc_van_repository.dart';
+import 'package:ttld/repositories/trinh_do_ngoai_ngu/trinh_do_ngoai_ngu_repository.dart';
+import 'package:ttld/repositories/trinh_do_tin_hoc/trinh_do_tin_hoc_repository.dart';
+import 'package:ttld/repositories/trinh_do_van_hoa/trinh_do_van_hoa_repository.dart';
 import 'package:ttld/repositories/xa/xa_repository.dart';
 import 'package:ttld/bloc/kcn/kcn_cubit.dart';
 
@@ -58,20 +83,21 @@ void setupLocator() async {
   locator.registerLazySingleton<SharedPreferences>(() => prefs);
 
   // Register FlutterSecureStorage as a singleton:
-  locator.registerLazySingleton<FlutterSecureStorage>(() => FlutterSecureStorage());
+  locator.registerLazySingleton<FlutterSecureStorage>(
+      () => FlutterSecureStorage());
 
   // Register ApiClient as a singleton:
   locator.registerLazySingleton<ApiClient>(() => ApiClient());
 
   // Register AuthApiService as a singleton:
-  locator.registerLazySingleton<AuthApiService>(() => AuthApiService(locator<ApiClient>()));
+  locator.registerLazySingleton<AuthApiService>(
+      () => AuthApiService(locator<ApiClient>()));
 
   // Register repositories:
-  locator.registerLazySingleton<AuthRepository>(
-      () => AuthRepository(
-          authApiService: locator<AuthApiService>(),
-          prefs: locator<SharedPreferences>(),
-          storage: locator<FlutterSecureStorage>()));
+  locator.registerLazySingleton<AuthRepository>(() => AuthRepository(
+      authApiService: locator<AuthApiService>(),
+      prefs: locator<SharedPreferences>(),
+      storage: locator<FlutterSecureStorage>()));
   locator.registerLazySingleton<LdRepository>(
       () => LdRepositoryImpl(locator<ApiClient>().dio));
   locator.registerLazySingleton<GroupRepository>(() => GroupRepository());
@@ -105,9 +131,16 @@ void setupLocator() async {
       ViecLamUngVienRepositoryImpl(
           viecLamUngVienApiService: locator<ViecLamUngVienApiService>()));
 
+  // NTD
   locator.registerLazySingleton<NTDApiService>(() => NTDApiService());
   locator.registerLazySingleton<NTDRepository>(
       () => NTDRepositoryImpl(locator<NTDApiService>()));
+
+  // NTV
+  locator.registerLazySingleton<NTVApiService>(
+      () => NTVApiService()); // Replace with your base URL
+  locator.registerLazySingleton<NTVRepository>(
+      () => NTVRepository(locator<NTVApiService>()));
 
   //Register Tinh, Huyen, Xa dependencies:
   locator.registerLazySingleton<TinhApiService>(
@@ -180,37 +213,100 @@ void setupLocator() async {
       () => ThoiGianHoatDongApiService(locator<ApiClient>().dio));
 
   //ThoiGianLamViec
+  locator.registerLazySingleton<ThoiGianLamViecApiService>(
+      () => ThoiGianLamViecApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<ThoiGianLamViecRepository>(() =>
+      ThoiGianLamViecRepositoryImpl(
+          thoiGianLamViecApiService: locator<ThoiGianLamViecApiService>()));
 
   //NguonViecLam
+  locator.registerLazySingleton<NguonViecLamApiService>(
+      () => NguonViecLamApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<NguonViecLamRepository>(() =>
+      NguonViecLamRepositoryImpl(
+          nguonViecLamApiService: locator<NguonViecLamApiService>()));
 
   //NguonThuThap
+  locator.registerLazySingleton<NguonThuThapApiService>(
+      () => NguonThuThapApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<NguonThuThapRepository>(() =>
+      NguonThuThapRepositoryImpl(
+          nguonThuThapApiService: locator<NguonThuThapApiService>()));
 
   //DanToc
+  locator.registerLazySingleton<DanTocApiService>(
+      () => DanTocApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<DanTocRepository>(() =>
+      DanTocRepositoryImpl(danTocApiService: locator<DanTocApiService>()));
 
   //TonGiao
 
   //TrinhDoVanHoa
+  locator.registerLazySingleton<TrinhDoVanHoaApiService>(
+      () => TrinhDoVanHoaApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<TrinhDoVanHoaRepository>(() =>
+      TrinhDoVanHoaRepositoryImpl(
+          trinhDoVanHoaApiService: locator<TrinhDoVanHoaApiService>()));
 
   //TrinhDoHocVan
+  locator.registerLazySingleton<TrinhDoHocVanApiService>(
+      () => TrinhDoHocVanApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<TrinhDoHocVanRepository>(() =>
+      TrinhDoHocVanRepositoryImpl(
+          trinhDoHocVanApiService: locator<TrinhDoHocVanApiService>()));
 
   //TrinhDoTinHoc
+  locator.registerLazySingleton<TrinhDoTinHocApiService>(
+      () => TrinhDoTinHocApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<TrinhDoTinHocRepository>(() =>
+      TrinhDoTinHocRepositoryImpl(
+          trinhDoTinHocApiService: locator<TrinhDoTinHocApiService>()));
 
   //TrinhDoNgoaiNgu
+  locator.registerLazySingleton<TrinhDoNgoaiNguApiService>(
+      () => TrinhDoNgoaiNguApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<TrinhDoNgoaiNguRepository>(() =>
+      TrinhDoNgoaiNguRepositoryImpl(
+          trinhDoNgoaiNguApiService: locator<TrinhDoNgoaiNguApiService>()));
 
   //HinhThucDaoTao
+  locator.registerLazySingleton<HinhThucDaoTaoApiService>(
+      () => HinhThucDaoTaoApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<HinhThucDaoTaoRepository>(() =>
+      HinhThucDaoTaoRepositoryImpl(
+          hinhThucDaoTaoApiService: locator<HinhThucDaoTaoApiService>()));
 
   //HinhThucLoaiHinh
+  locator.registerLazySingleton<HinhThucLoaiHinhApiService>(
+      () => HinhThucLoaiHinhApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<HinhThucLoaiHinhRepository>(() =>
+      HinhThucLoaiHinhRepositoryImpl(
+          hinhThucLoaiHinhApiService: locator<HinhThucLoaiHinhApiService>()));
 
   //HinhThucDiaDiem
+  locator.registerLazySingleton<HinhThucDiaDiemApiService>(
+      () => HinhThucDiaDiemApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<HinhThucDiaDiemRepository>(() =>
+      HinhThucDiaDiemRepositoryImpl(
+          hinhThucDiaDiemApiService: locator<HinhThucDiaDiemApiService>()));
 
   //TinhTrangViecLam
+  locator.registerLazySingleton<TinhTrangVLApiService>(
+      () => TinhTrangVLApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<TinhTrangVLRepository>(() =>
+      TinhTrangVLRepositoryImpl(
+          tinhTrangVLApiService: locator<TinhTrangVLApiService>()));
 
   //LoaiViecLam
+  locator.registerLazySingleton<LoaiVLApiService>(
+      () => LoaiVLApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<LoaiVLRepository>(() =>
+      LoaiVLRepositoryImpl(
+          loaiVLApiService: locator<LoaiVLApiService>()));
 
-  // NTV
-  locator.registerLazySingleton<NtvApiService>(
-      () => NtvApiService(baseUrl: 'YOUR_BASE_URL')); // Replace with your base URL
-  locator.registerLazySingleton<NtvRepository>(
-      () => NtvRepository(apiService: locator<NtvApiService>()));
-  locator.registerFactory(() => NtvBloc(ntvRepository: locator<NtvRepository>()));
+  //TinhTrangTanTat
+  locator.registerLazySingleton<TinhTrangTanTatApiService>(
+      () => TinhTrangTanTatApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<TinhTrangTanTatRepository>(() =>
+      TinhTrangTanTatRepositoryImpl(locator<TinhTrangTanTatApiService>()));
 }
