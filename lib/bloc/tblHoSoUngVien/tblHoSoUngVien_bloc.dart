@@ -2,16 +2,16 @@ import 'package:bloc/bloc.dart';
 import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_event.dart';
 import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_state.dart';
 import 'package:ttld/models/tblHoSoUngVien/tblHoSoUngVien_model.dart';
-import 'package:ttld/repositories/tblViecLamUngVien/vieclam_ungvien_repository.dart';
+import 'package:ttld/repositories/ntv_repository.dart';
 
 class TblHoSoUngVienBloc extends Bloc<TblHoSoUngVienEvent, TblHoSoUngVienState> {
-  final ViecLamUngVienRepository _tblHoSoUngVienRepository;
+  final NtvRepository _ntvRepository;
 
-  TblHoSoUngVienBloc(this._tblHoSoUngVienRepository) : super(TblHoSoUngVienInitial()) {
+  TblHoSoUngVienBloc(this._ntvRepository) : super(TblHoSoUngVienInitial()) {
     on<LoadTblHoSoUngViens>((event, emit) async {
       emit(TblHoSoUngVienLoading());
       try {
-        final tblHoSoUngViens = await _tblHoSoUngVienRepository.getViecLamUngViens();
+        final tblHoSoUngViens = await _ntvRepository.getAllHoSoUngVien();
         emit(TblHoSoUngVienLoaded(tblHoSoUngViens));
       } catch (e) {
         emit(TblHoSoUngVienError(e.toString()));
@@ -21,7 +21,7 @@ class TblHoSoUngVienBloc extends Bloc<TblHoSoUngVienEvent, TblHoSoUngVienState> 
     on<LoadTblHoSoUngVien>((event, emit) async {
       emit(TblHoSoUngVienLoading());
       try {
-        final tblHoSoUngVien = await _tblHoSoUngVienRepository.getViecLamUngVien(event.id);
+        final tblHoSoUngVien = await _ntvRepository.getHoSoUngVienById(event.id);
         emit(TblHoSoUngVienLoadedById(tblHoSoUngVien));
       } catch (e) {
         emit(TblHoSoUngVienError(e.toString()));
@@ -30,8 +30,8 @@ class TblHoSoUngVienBloc extends Bloc<TblHoSoUngVienEvent, TblHoSoUngVienState> 
 
     on<AddTblHoSoUngVien>((event, emit) async {
       try {
-        await _tblHoSoUngVienRepository.addViecLamUngVien(event.tblHoSoUngVien);
-        final tblHoSoUngViens = await _tblHoSoUngVienRepository.getViecLamUngViens();
+        await _ntvRepository.createHoSoUngVien(event.tblHoSoUngVien);
+        final tblHoSoUngViens = await _ntvRepository.getAllHoSoUngVien();
         emit(TblHoSoUngVienLoaded(tblHoSoUngViens));
       } catch (e) {
         emit(TblHoSoUngVienError(e.toString()));
@@ -40,8 +40,8 @@ class TblHoSoUngVienBloc extends Bloc<TblHoSoUngVienEvent, TblHoSoUngVienState> 
 
     on<UpdateTblHoSoUngVien>((event, emit) async {
       try {
-        await _tblHoSoUngVienRepository.updateViecLamUngVien(event.tblHoSoUngVien);
-        final tblHoSoUngViens = await _tblHoSoUngVienRepository.getViecLamUngViens();
+        await _ntvRepository.updateHoSoUngVien(event.tblHoSoUngVien.idHoSo!, event.tblHoSoUngVien);
+        final tblHoSoUngViens = await _ntvRepository.getAllHoSoUngVien();
         emit(TblHoSoUngVienLoaded(tblHoSoUngViens));
       } catch (e) {
         emit(TblHoSoUngVienError(e.toString()));
@@ -50,8 +50,8 @@ class TblHoSoUngVienBloc extends Bloc<TblHoSoUngVienEvent, TblHoSoUngVienState> 
 
     on<DeleteTblHoSoUngVien>((event, emit) async {
       try {
-        await _tblHoSoUngVienRepository.deleteViecLamUngVien(event.id);
-        final tblHoSoUngViens = await _tblHoSoUngVienRepository.getViecLamUngViens();
+        await _ntvRepository.deleteHoSoUngVien(event.id.toString());
+        final tblHoSoUngViens = await _ntvRepository.getAllHoSoUngVien();
         emit(TblHoSoUngVienLoaded(tblHoSoUngViens));
       } catch (e) {
         emit(TblHoSoUngVienError(e.toString()));
