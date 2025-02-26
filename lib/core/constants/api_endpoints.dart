@@ -2,7 +2,22 @@ import 'package:ttld/helppers/help.dart';
 
 class ApiEndpoints {
   static final String baseUrl = getEnv('API_BASE_URL');
-  static String ld = '/ld';
+
+  // Auth
+  static String login = '$baseUrl/auth/login';
+  static String logout = '$baseUrl/auth/logout';
+  static String registerNTD = '$baseUrl/auth/register-NTD';
+  static String registerNTV = '$baseUrl/auth/register-TVL';
+  static String registerXKLD = '$baseUrl/auth/register-XKLD';
+  static String forgotPassword = '$baseUrl/auth/forgot-password';
+  static String resetPassword = '$baseUrl/auth/reset-password';
+
+  //ld
+  static String ld = '$baseUrl/ld';
+  static String addLD = '$baseUrl/ld';
+  static String editLD = '$baseUrl/ld';
+  static String deleteLD = '$baseUrl/ld';
+
   // DSLD M03TT11
   static String getDSNLD = '$baseUrl/ds-ld';
   static String addDSNLD = '$baseUrl/ds-ld';
