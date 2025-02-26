@@ -6,12 +6,12 @@ class DoiTuongChinhSachApiService {
 
   DoiTuongChinhSachApiService(this._dio); // Inject the Dio instance
 
-  Future<List<DoiTuongChinhSach>> getDoiTuongChinhSachs() async {
+  Future<List<DoiTuong>> getDoiTuongChinhSachs() async {
     try {
       final response = await _dio.get('/tblDmDoiTuongChinhSach');
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data as List<dynamic>;
-        return data.map((json) => DoiTuongChinhSach.fromJson(json)).toList();
+        return data.map((json) => DoiTuong.fromJson(json)).toList();
       } else {
         throw Exception(
             'Failed to load DoiTuongChinhSachs: ${response.statusCode}');
@@ -21,13 +21,13 @@ class DoiTuongChinhSachApiService {
     }
   }
 
-  Future<DoiTuongChinhSach> createDoiTuongChinhSach(
-      DoiTuongChinhSach doiTuongChinhSach) async {
+  Future<DoiTuong> createDoiTuongChinhSach(
+      DoiTuong doiTuong) async {
     try {
       final response = await _dio.post('/tblDmDoiTuongChinhSach',
-          data: doiTuongChinhSach.toJson());
+          data: doiTuong.toJson());
       if (response.statusCode == 201) {
-        return DoiTuongChinhSach.fromJson(response.data);
+        return DoiTuong.fromJson(response.data);
       } else {
         throw Exception(
             'Failed to create DoiTuongChinhSach: ${response.statusCode}');
@@ -37,13 +37,13 @@ class DoiTuongChinhSachApiService {
     }
   }
 
-  Future<DoiTuongChinhSach> updateDoiTuongChinhSach(
-      int id, DoiTuongChinhSach doiTuongChinhSach) async {
+  Future<DoiTuong> updateDoiTuongChinhSach(
+      int id, DoiTuong doiTuong) async {
     try {
       final response = await _dio.put('/tblDmDoiTuongChinhSach/$id',
-          data: doiTuongChinhSach.toJson());
+          data: doiTuong.toJson());
       if (response.statusCode == 200) {
-        return DoiTuongChinhSach.fromJson(response.data);
+        return DoiTuong.fromJson(response.data);
       } else {
         throw Exception(
             'Failed to update DoiTuongChinhSach: ${response.statusCode}');
