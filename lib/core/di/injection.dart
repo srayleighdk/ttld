@@ -39,6 +39,8 @@ import 'package:ttld/core/services/tttantat_api_service.dart';
 import 'package:ttld/core/services/vieclam_ungvien_api_service.dart';
 import 'package:ttld/core/services/xa_api_service.dart';
 import 'package:ttld/features/auth/repositories/auth_repository.dart';
+import 'package:ttld/core/services/tinh_thanh_api_service.dart';
+import 'package:ttld/bloc/tinh_thanh/tinh_thanh_cubit.dart';
 import 'package:ttld/features/ds-ld/repositories/ld_repository.dart';
 import 'package:ttld/features/ds-ld/repositories/ld_repository_impl.dart';
 import 'package:ttld/features/user_group/repository/group_repository.dart';
@@ -309,4 +311,10 @@ void setupLocator() async {
       () => TinhTrangTanTatApiService(locator<ApiClient>().dio));
   locator.registerLazySingleton<TinhTrangTanTatRepository>(() =>
       TinhTrangTanTatRepositoryImpl(locator<TinhTrangTanTatApiService>()));
+
+  //TinhThanh
+  locator.registerLazySingleton<TinhThanhApiService>(
+      () => TinhThanhApiService(locator<ApiClient>().dio));
+  locator.registerFactory(() => TinhThanhCubit(
+      tinhThanhApiService: locator<TinhThanhApiService>()));
 }
