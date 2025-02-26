@@ -1,12 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ttld/bloc/chuc_danh/chuc_danh_bloc.dart';
 import 'package:ttld/bloc/huyen/huyen_bloc.dart';
+import 'package:ttld/bloc/kcn/kcn_cubit.dart';
 import 'package:ttld/bloc/quocgia/quocgia_bloc.dart';
 import 'package:ttld/bloc/tinh/tinh_bloc.dart';
 import 'package:ttld/bloc/tblNhaTuyenDung/ntd_bloc.dart';
 import 'package:ttld/bloc/xa/xa_bloc.dart';
 import 'package:ttld/core/api_client.dart';
 import 'package:ttld/core/di/injection.dart';
+import 'package:ttld/core/services/danhmuc_kcn_api_service.dart';
 import 'package:ttld/core/services/hosoungvien_api_service.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/login_bloc.dart';
@@ -94,6 +96,9 @@ List<BlocProvider> getBlocProviders() {
       create: (context) => ChucDanhBloc(
         chucDanhRepository: locator<ChucDanhRepository>(),
       ),
+    ),
+    BlocProvider<KcnCubit>(
+      create: (context) => KcnCubit(locator<DanhMucKcnApiService>()),
     ),
   ];
 }
