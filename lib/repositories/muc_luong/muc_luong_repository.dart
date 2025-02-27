@@ -1,24 +1,38 @@
-import 'package:your_app_name/core/services/muc_luong_api_service.dart'; // Replace with your actual import
-import 'package:your_app_name/models/muc_luong_mm.dart'; // Replace with your actual import
+import 'package:your_app_name/core/services/muc_luong_api_service.dart';
+import 'package:your_app_name/models/muc_luong_mm.dart';
 
-class MucLuongRepository {
+abstract class MucLuongRepository {
+  Future<List<MucLuongMM>> getMucLuongs();
+  Future<MucLuongMM> addMucLuong(MucLuongMM mucLuong);
+  Future<MucLuongMM> updateMucLuong(MucLuongMM mucLuong);
+  Future<void> deleteMucLuong(int id);
+}
+
+class MucLuongRepositoryImpl implements MucLuongRepository {
   final MucLuongApiService mucLuongApiService;
 
-  MucLuongRepository({required this.mucLuongApiService});
+  MucLuongRepositoryImpl({required this.mucLuongApiService});
 
+  @override
   Future<List<MucLuongMM>> getMucLuongs() async {
-    return await mucLuongApiService.getMucLuongs();
+    final response = await mucLuongApiService.getMucLuongs();
+    return response;
   }
 
-  Future<MucLuongMM> createMucLuong(MucLuongMM mucLuong) async {
-    return await mucLuongApiService.createMucLuong(mucLuong);
+  @override
+  Future<MucLuongMM> addMucLuong(MucLuongMM mucLuong) async {
+    final response = await mucLuongApiService.createMucLuong(mucLuong);
+    return response;
   }
 
+  @override
   Future<MucLuongMM> updateMucLuong(MucLuongMM mucLuong) async {
-    return await mucLuongApiService.updateMucLuong(mucLuong);
+    final response = await mucLuongApiService.updateMucLuong(mucLuong);
+    return response;
   }
 
+  @override
   Future<void> deleteMucLuong(int id) async {
-    return await mucLuongApiService.deleteMucLuong(id);
+    await mucLuongApiService.deleteMucLuong(id);
   }
 }
