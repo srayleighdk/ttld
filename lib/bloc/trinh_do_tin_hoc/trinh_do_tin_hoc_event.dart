@@ -17,7 +17,7 @@ class UpdateTrinhDoTinHoc extends TrinhDoTinHocEvent {
 }
 
 class DeleteTrinhDoTinHoc extends TrinhDoTinHocEvent {
-  final String tdthId;
+  final String id;
 
-  DeleteTrinhDoTinHoc({required this.tdthId});
+  DeleteTrinhDoTinHoc({required this.id});
 }

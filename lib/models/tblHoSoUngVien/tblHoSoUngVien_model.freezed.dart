@@ -20,31 +20,47 @@ TblHoSoUngVienModel _$TblHoSoUngVienModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$TblHoSoUngVienModel {
-  String get id => throw _privateConstructorUsedError; // Changed to String
+  String get id => throw _privateConstructorUsedError;
   String? get uvUsername => throw _privateConstructorUsedError;
   String? get uvPassword => throw _privateConstructorUsedError;
   String? get uvHoten => throw _privateConstructorUsedError;
   String? get uvEmail => throw _privateConstructorUsedError;
   String? get maHoSo => throw _privateConstructorUsedError;
+  String? get tenDanToc => throw _privateConstructorUsedError;
   int? get idDanToc => throw _privateConstructorUsedError;
   String? get cvMongMuon => throw _privateConstructorUsedError;
   String? get documentPath => throw _privateConstructorUsedError;
   String? get imagePath => throw _privateConstructorUsedError;
   String? get uvDiachichitiet => throw _privateConstructorUsedError;
   String? get uvDienthoai => throw _privateConstructorUsedError;
-  String? get uvSoCMND => throw _privateConstructorUsedError;
-  DateTime? get uvNgaycap => throw _privateConstructorUsedError;
+  String? get uvSoCmnd => throw _privateConstructorUsedError;
+  String? get uvNgaycap => throw _privateConstructorUsedError;
   String? get uvNoicap => throw _privateConstructorUsedError;
   int? get uvGioitinh => throw _privateConstructorUsedError;
   String? get uvChieucao => throw _privateConstructorUsedError;
   String? get uvCannang => throw _privateConstructorUsedError;
-  DateTime? get uvNgaysinh => throw _privateConstructorUsedError;
+  String? get uvDoituongchinhsach => throw _privateConstructorUsedError;
+  int? get uvDoituongchinhsachId => throw _privateConstructorUsedError;
+  String? get uvTinhtrangtantat => throw _privateConstructorUsedError;
+  int? get uvTinhtrangtantatId => throw _privateConstructorUsedError;
+  String? get uvHonnhan => throw _privateConstructorUsedError;
+  bool? get uvHonnhanId => throw _privateConstructorUsedError;
+  String? get uvNgaysinh => throw _privateConstructorUsedError;
   String? get uvcmCongviechientai => throw _privateConstructorUsedError;
   String? get uvnvNganhnghe => throw _privateConstructorUsedError;
+  int? get uvnvNganhngheId => throw _privateConstructorUsedError;
+  String? get uvnvVitrimongmuon => throw _privateConstructorUsedError;
+  int? get uvnvVitrimongmuonid => throw _privateConstructorUsedError;
+  String? get uvnvThoigian => throw _privateConstructorUsedError;
+  int? get uvnvThoigianId => throw _privateConstructorUsedError;
   String? get uvnvNoilamviec => throw _privateConstructorUsedError;
   int? get idMucluong => throw _privateConstructorUsedError;
   double? get uvnvTienluong => throw _privateConstructorUsedError;
+  String? get uvnvHinhthuccongty => throw _privateConstructorUsedError;
+  int? get uvnvHinhthuccongtyId => throw _privateConstructorUsedError;
   String? get uvGhichu => throw _privateConstructorUsedError;
+  String? get uvcmTrinhdo => throw _privateConstructorUsedError;
+  int? get uvcmTrinhdoId => throw _privateConstructorUsedError;
   String? get uvcmBangcap => throw _privateConstructorUsedError;
   String? get uvcmKynang => throw _privateConstructorUsedError;
   String? get uvcmTrinhdongoaingu => throw _privateConstructorUsedError;
@@ -58,37 +74,24 @@ mixin _$TblHoSoUngVienModel {
   bool? get uvhtTelephone => throw _privateConstructorUsedError;
   bool? get uvhtEmail => throw _privateConstructorUsedError;
   bool? get uvhtAddress => throw _privateConstructorUsedError;
-  DateTime? get createdDate => throw _privateConstructorUsedError;
-  String? get createdBy => throw _privateConstructorUsedError;
-  DateTime? get modifiredDate => throw _privateConstructorUsedError;
-  String? get modifiredBy => throw _privateConstructorUsedError;
   String? get uvId => throw _privateConstructorUsedError;
   bool? get newsletterSubscription => throw _privateConstructorUsedError;
   bool? get jobsletterSubscription => throw _privateConstructorUsedError;
-  bool? get coBHTN => throw _privateConstructorUsedError;
+  bool? get coBhtn => throw _privateConstructorUsedError;
   String? get soNhaDuong => throw _privateConstructorUsedError;
   int? get idThanhPho => throw _privateConstructorUsedError;
   String? get idTinh => throw _privateConstructorUsedError;
-  String? get idHuyen => throw _privateConstructorUsedError;
-  String? get idXa => throw _privateConstructorUsedError;
-  String? get idTv => throw _privateConstructorUsedError; // Changed to String?
-  String? get mahoGD => throw _privateConstructorUsedError;
-  String? get fileCV => throw _privateConstructorUsedError;
+  String? get idhuyen => throw _privateConstructorUsedError;
+  String? get idxa => throw _privateConstructorUsedError;
+  String? get idtv => throw _privateConstructorUsedError;
+  String? get mahoGd => throw _privateConstructorUsedError;
+  String? get fileCv => throw _privateConstructorUsedError;
   int? get displayOrder => throw _privateConstructorUsedError;
   DateTime? get ngayduyet => throw _privateConstructorUsedError;
   String? get idNguonThuThap => throw _privateConstructorUsedError;
   String? get avatarUrl => throw _privateConstructorUsedError;
   String? get idBacHoc => throw _privateConstructorUsedError;
   String? get diachilienhe => throw _privateConstructorUsedError;
-  int? get uvnvNganhngheId => throw _privateConstructorUsedError;
-  int? get uvcmTrinhdoId => throw _privateConstructorUsedError;
-  int? get uvDoituongchinhsachId => throw _privateConstructorUsedError;
-  int? get uvnvThoigianId => throw _privateConstructorUsedError;
-  int? get uvnvVitrimongmuonid => throw _privateConstructorUsedError;
-  bool? get uvHonnhanId => throw _privateConstructorUsedError;
-  String? get tenDanToc => throw _privateConstructorUsedError;
-  int? get uvTinhtrangtantatId => throw _privateConstructorUsedError;
-  int? get uvnvHinhthuccongtyId => throw _privateConstructorUsedError;
 
   /// Serializes this TblHoSoUngVienModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -113,25 +116,41 @@ abstract class $TblHoSoUngVienModelCopyWith<$Res> {
       String? uvHoten,
       String? uvEmail,
       String? maHoSo,
+      String? tenDanToc,
       int? idDanToc,
       String? cvMongMuon,
       String? documentPath,
       String? imagePath,
       String? uvDiachichitiet,
       String? uvDienthoai,
-      String? uvSoCMND,
-      DateTime? uvNgaycap,
+      String? uvSoCmnd,
+      String? uvNgaycap,
       String? uvNoicap,
       int? uvGioitinh,
       String? uvChieucao,
       String? uvCannang,
-      DateTime? uvNgaysinh,
+      String? uvDoituongchinhsach,
+      int? uvDoituongchinhsachId,
+      String? uvTinhtrangtantat,
+      int? uvTinhtrangtantatId,
+      String? uvHonnhan,
+      bool? uvHonnhanId,
+      String? uvNgaysinh,
       String? uvcmCongviechientai,
       String? uvnvNganhnghe,
+      int? uvnvNganhngheId,
+      String? uvnvVitrimongmuon,
+      int? uvnvVitrimongmuonid,
+      String? uvnvThoigian,
+      int? uvnvThoigianId,
       String? uvnvNoilamviec,
       int? idMucluong,
       double? uvnvTienluong,
+      String? uvnvHinhthuccongty,
+      int? uvnvHinhthuccongtyId,
       String? uvGhichu,
+      String? uvcmTrinhdo,
+      int? uvcmTrinhdoId,
       String? uvcmBangcap,
       String? uvcmKynang,
       String? uvcmTrinhdongoaingu,
@@ -145,37 +164,24 @@ abstract class $TblHoSoUngVienModelCopyWith<$Res> {
       bool? uvhtTelephone,
       bool? uvhtEmail,
       bool? uvhtAddress,
-      DateTime? createdDate,
-      String? createdBy,
-      DateTime? modifiredDate,
-      String? modifiredBy,
       String? uvId,
       bool? newsletterSubscription,
       bool? jobsletterSubscription,
-      bool? coBHTN,
+      bool? coBhtn,
       String? soNhaDuong,
       int? idThanhPho,
       String? idTinh,
-      String? idHuyen,
-      String? idXa,
-      String? idTv,
-      String? mahoGD,
-      String? fileCV,
+      String? idhuyen,
+      String? idxa,
+      String? idtv,
+      String? mahoGd,
+      String? fileCv,
       int? displayOrder,
       DateTime? ngayduyet,
       String? idNguonThuThap,
       String? avatarUrl,
       String? idBacHoc,
-      String? diachilienhe,
-      int? uvnvNganhngheId,
-      int? uvcmTrinhdoId,
-      int? uvDoituongchinhsachId,
-      int? uvnvThoigianId,
-      int? uvnvVitrimongmuonid,
-      bool? uvHonnhanId,
-      String? tenDanToc,
-      int? uvTinhtrangtantatId,
-      int? uvnvHinhthuccongtyId});
+      String? diachilienhe});
 }
 
 /// @nodoc
@@ -199,25 +205,41 @@ class _$TblHoSoUngVienModelCopyWithImpl<$Res, $Val extends TblHoSoUngVienModel>
     Object? uvHoten = freezed,
     Object? uvEmail = freezed,
     Object? maHoSo = freezed,
+    Object? tenDanToc = freezed,
     Object? idDanToc = freezed,
     Object? cvMongMuon = freezed,
     Object? documentPath = freezed,
     Object? imagePath = freezed,
     Object? uvDiachichitiet = freezed,
     Object? uvDienthoai = freezed,
-    Object? uvSoCMND = freezed,
+    Object? uvSoCmnd = freezed,
     Object? uvNgaycap = freezed,
     Object? uvNoicap = freezed,
     Object? uvGioitinh = freezed,
     Object? uvChieucao = freezed,
     Object? uvCannang = freezed,
+    Object? uvDoituongchinhsach = freezed,
+    Object? uvDoituongchinhsachId = freezed,
+    Object? uvTinhtrangtantat = freezed,
+    Object? uvTinhtrangtantatId = freezed,
+    Object? uvHonnhan = freezed,
+    Object? uvHonnhanId = freezed,
     Object? uvNgaysinh = freezed,
     Object? uvcmCongviechientai = freezed,
     Object? uvnvNganhnghe = freezed,
+    Object? uvnvNganhngheId = freezed,
+    Object? uvnvVitrimongmuon = freezed,
+    Object? uvnvVitrimongmuonid = freezed,
+    Object? uvnvThoigian = freezed,
+    Object? uvnvThoigianId = freezed,
     Object? uvnvNoilamviec = freezed,
     Object? idMucluong = freezed,
     Object? uvnvTienluong = freezed,
+    Object? uvnvHinhthuccongty = freezed,
+    Object? uvnvHinhthuccongtyId = freezed,
     Object? uvGhichu = freezed,
+    Object? uvcmTrinhdo = freezed,
+    Object? uvcmTrinhdoId = freezed,
     Object? uvcmBangcap = freezed,
     Object? uvcmKynang = freezed,
     Object? uvcmTrinhdongoaingu = freezed,
@@ -231,37 +253,24 @@ class _$TblHoSoUngVienModelCopyWithImpl<$Res, $Val extends TblHoSoUngVienModel>
     Object? uvhtTelephone = freezed,
     Object? uvhtEmail = freezed,
     Object? uvhtAddress = freezed,
-    Object? createdDate = freezed,
-    Object? createdBy = freezed,
-    Object? modifiredDate = freezed,
-    Object? modifiredBy = freezed,
     Object? uvId = freezed,
     Object? newsletterSubscription = freezed,
     Object? jobsletterSubscription = freezed,
-    Object? coBHTN = freezed,
+    Object? coBhtn = freezed,
     Object? soNhaDuong = freezed,
     Object? idThanhPho = freezed,
     Object? idTinh = freezed,
-    Object? idHuyen = freezed,
-    Object? idXa = freezed,
-    Object? idTv = freezed,
-    Object? mahoGD = freezed,
-    Object? fileCV = freezed,
+    Object? idhuyen = freezed,
+    Object? idxa = freezed,
+    Object? idtv = freezed,
+    Object? mahoGd = freezed,
+    Object? fileCv = freezed,
     Object? displayOrder = freezed,
     Object? ngayduyet = freezed,
     Object? idNguonThuThap = freezed,
     Object? avatarUrl = freezed,
     Object? idBacHoc = freezed,
     Object? diachilienhe = freezed,
-    Object? uvnvNganhngheId = freezed,
-    Object? uvcmTrinhdoId = freezed,
-    Object? uvDoituongchinhsachId = freezed,
-    Object? uvnvThoigianId = freezed,
-    Object? uvnvVitrimongmuonid = freezed,
-    Object? uvHonnhanId = freezed,
-    Object? tenDanToc = freezed,
-    Object? uvTinhtrangtantatId = freezed,
-    Object? uvnvHinhthuccongtyId = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -288,6 +297,10 @@ class _$TblHoSoUngVienModelCopyWithImpl<$Res, $Val extends TblHoSoUngVienModel>
           ? _value.maHoSo
           : maHoSo // ignore: cast_nullable_to_non_nullable
               as String?,
+      tenDanToc: freezed == tenDanToc
+          ? _value.tenDanToc
+          : tenDanToc // ignore: cast_nullable_to_non_nullable
+              as String?,
       idDanToc: freezed == idDanToc
           ? _value.idDanToc
           : idDanToc // ignore: cast_nullable_to_non_nullable
@@ -312,14 +325,14 @@ class _$TblHoSoUngVienModelCopyWithImpl<$Res, $Val extends TblHoSoUngVienModel>
           ? _value.uvDienthoai
           : uvDienthoai // ignore: cast_nullable_to_non_nullable
               as String?,
-      uvSoCMND: freezed == uvSoCMND
-          ? _value.uvSoCMND
-          : uvSoCMND // ignore: cast_nullable_to_non_nullable
+      uvSoCmnd: freezed == uvSoCmnd
+          ? _value.uvSoCmnd
+          : uvSoCmnd // ignore: cast_nullable_to_non_nullable
               as String?,
       uvNgaycap: freezed == uvNgaycap
           ? _value.uvNgaycap
           : uvNgaycap // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+              as String?,
       uvNoicap: freezed == uvNoicap
           ? _value.uvNoicap
           : uvNoicap // ignore: cast_nullable_to_non_nullable
@@ -336,10 +349,34 @@ class _$TblHoSoUngVienModelCopyWithImpl<$Res, $Val extends TblHoSoUngVienModel>
           ? _value.uvCannang
           : uvCannang // ignore: cast_nullable_to_non_nullable
               as String?,
+      uvDoituongchinhsach: freezed == uvDoituongchinhsach
+          ? _value.uvDoituongchinhsach
+          : uvDoituongchinhsach // ignore: cast_nullable_to_non_nullable
+              as String?,
+      uvDoituongchinhsachId: freezed == uvDoituongchinhsachId
+          ? _value.uvDoituongchinhsachId
+          : uvDoituongchinhsachId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      uvTinhtrangtantat: freezed == uvTinhtrangtantat
+          ? _value.uvTinhtrangtantat
+          : uvTinhtrangtantat // ignore: cast_nullable_to_non_nullable
+              as String?,
+      uvTinhtrangtantatId: freezed == uvTinhtrangtantatId
+          ? _value.uvTinhtrangtantatId
+          : uvTinhtrangtantatId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      uvHonnhan: freezed == uvHonnhan
+          ? _value.uvHonnhan
+          : uvHonnhan // ignore: cast_nullable_to_non_nullable
+              as String?,
+      uvHonnhanId: freezed == uvHonnhanId
+          ? _value.uvHonnhanId
+          : uvHonnhanId // ignore: cast_nullable_to_non_nullable
+              as bool?,
       uvNgaysinh: freezed == uvNgaysinh
           ? _value.uvNgaysinh
           : uvNgaysinh // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+              as String?,
       uvcmCongviechientai: freezed == uvcmCongviechientai
           ? _value.uvcmCongviechientai
           : uvcmCongviechientai // ignore: cast_nullable_to_non_nullable
@@ -348,6 +385,26 @@ class _$TblHoSoUngVienModelCopyWithImpl<$Res, $Val extends TblHoSoUngVienModel>
           ? _value.uvnvNganhnghe
           : uvnvNganhnghe // ignore: cast_nullable_to_non_nullable
               as String?,
+      uvnvNganhngheId: freezed == uvnvNganhngheId
+          ? _value.uvnvNganhngheId
+          : uvnvNganhngheId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      uvnvVitrimongmuon: freezed == uvnvVitrimongmuon
+          ? _value.uvnvVitrimongmuon
+          : uvnvVitrimongmuon // ignore: cast_nullable_to_non_nullable
+              as String?,
+      uvnvVitrimongmuonid: freezed == uvnvVitrimongmuonid
+          ? _value.uvnvVitrimongmuonid
+          : uvnvVitrimongmuonid // ignore: cast_nullable_to_non_nullable
+              as int?,
+      uvnvThoigian: freezed == uvnvThoigian
+          ? _value.uvnvThoigian
+          : uvnvThoigian // ignore: cast_nullable_to_non_nullable
+              as String?,
+      uvnvThoigianId: freezed == uvnvThoigianId
+          ? _value.uvnvThoigianId
+          : uvnvThoigianId // ignore: cast_nullable_to_non_nullable
+              as int?,
       uvnvNoilamviec: freezed == uvnvNoilamviec
           ? _value.uvnvNoilamviec
           : uvnvNoilamviec // ignore: cast_nullable_to_non_nullable
@@ -360,10 +417,26 @@ class _$TblHoSoUngVienModelCopyWithImpl<$Res, $Val extends TblHoSoUngVienModel>
           ? _value.uvnvTienluong
           : uvnvTienluong // ignore: cast_nullable_to_non_nullable
               as double?,
+      uvnvHinhthuccongty: freezed == uvnvHinhthuccongty
+          ? _value.uvnvHinhthuccongty
+          : uvnvHinhthuccongty // ignore: cast_nullable_to_non_nullable
+              as String?,
+      uvnvHinhthuccongtyId: freezed == uvnvHinhthuccongtyId
+          ? _value.uvnvHinhthuccongtyId
+          : uvnvHinhthuccongtyId // ignore: cast_nullable_to_non_nullable
+              as int?,
       uvGhichu: freezed == uvGhichu
           ? _value.uvGhichu
           : uvGhichu // ignore: cast_nullable_to_non_nullable
               as String?,
+      uvcmTrinhdo: freezed == uvcmTrinhdo
+          ? _value.uvcmTrinhdo
+          : uvcmTrinhdo // ignore: cast_nullable_to_non_nullable
+              as String?,
+      uvcmTrinhdoId: freezed == uvcmTrinhdoId
+          ? _value.uvcmTrinhdoId
+          : uvcmTrinhdoId // ignore: cast_nullable_to_non_nullable
+              as int?,
       uvcmBangcap: freezed == uvcmBangcap
           ? _value.uvcmBangcap
           : uvcmBangcap // ignore: cast_nullable_to_non_nullable
@@ -416,22 +489,6 @@ class _$TblHoSoUngVienModelCopyWithImpl<$Res, $Val extends TblHoSoUngVienModel>
           ? _value.uvhtAddress
           : uvhtAddress // ignore: cast_nullable_to_non_nullable
               as bool?,
-      createdDate: freezed == createdDate
-          ? _value.createdDate
-          : createdDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      createdBy: freezed == createdBy
-          ? _value.createdBy
-          : createdBy // ignore: cast_nullable_to_non_nullable
-              as String?,
-      modifiredDate: freezed == modifiredDate
-          ? _value.modifiredDate
-          : modifiredDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      modifiredBy: freezed == modifiredBy
-          ? _value.modifiredBy
-          : modifiredBy // ignore: cast_nullable_to_non_nullable
-              as String?,
       uvId: freezed == uvId
           ? _value.uvId
           : uvId // ignore: cast_nullable_to_non_nullable
@@ -444,9 +501,9 @@ class _$TblHoSoUngVienModelCopyWithImpl<$Res, $Val extends TblHoSoUngVienModel>
           ? _value.jobsletterSubscription
           : jobsletterSubscription // ignore: cast_nullable_to_non_nullable
               as bool?,
-      coBHTN: freezed == coBHTN
-          ? _value.coBHTN
-          : coBHTN // ignore: cast_nullable_to_non_nullable
+      coBhtn: freezed == coBhtn
+          ? _value.coBhtn
+          : coBhtn // ignore: cast_nullable_to_non_nullable
               as bool?,
       soNhaDuong: freezed == soNhaDuong
           ? _value.soNhaDuong
@@ -460,25 +517,25 @@ class _$TblHoSoUngVienModelCopyWithImpl<$Res, $Val extends TblHoSoUngVienModel>
           ? _value.idTinh
           : idTinh // ignore: cast_nullable_to_non_nullable
               as String?,
-      idHuyen: freezed == idHuyen
-          ? _value.idHuyen
-          : idHuyen // ignore: cast_nullable_to_non_nullable
+      idhuyen: freezed == idhuyen
+          ? _value.idhuyen
+          : idhuyen // ignore: cast_nullable_to_non_nullable
               as String?,
-      idXa: freezed == idXa
-          ? _value.idXa
-          : idXa // ignore: cast_nullable_to_non_nullable
+      idxa: freezed == idxa
+          ? _value.idxa
+          : idxa // ignore: cast_nullable_to_non_nullable
               as String?,
-      idTv: freezed == idTv
-          ? _value.idTv
-          : idTv // ignore: cast_nullable_to_non_nullable
+      idtv: freezed == idtv
+          ? _value.idtv
+          : idtv // ignore: cast_nullable_to_non_nullable
               as String?,
-      mahoGD: freezed == mahoGD
-          ? _value.mahoGD
-          : mahoGD // ignore: cast_nullable_to_non_nullable
+      mahoGd: freezed == mahoGd
+          ? _value.mahoGd
+          : mahoGd // ignore: cast_nullable_to_non_nullable
               as String?,
-      fileCV: freezed == fileCV
-          ? _value.fileCV
-          : fileCV // ignore: cast_nullable_to_non_nullable
+      fileCv: freezed == fileCv
+          ? _value.fileCv
+          : fileCv // ignore: cast_nullable_to_non_nullable
               as String?,
       displayOrder: freezed == displayOrder
           ? _value.displayOrder
@@ -504,42 +561,6 @@ class _$TblHoSoUngVienModelCopyWithImpl<$Res, $Val extends TblHoSoUngVienModel>
           ? _value.diachilienhe
           : diachilienhe // ignore: cast_nullable_to_non_nullable
               as String?,
-      uvnvNganhngheId: freezed == uvnvNganhngheId
-          ? _value.uvnvNganhngheId
-          : uvnvNganhngheId // ignore: cast_nullable_to_non_nullable
-              as int?,
-      uvcmTrinhdoId: freezed == uvcmTrinhdoId
-          ? _value.uvcmTrinhdoId
-          : uvcmTrinhdoId // ignore: cast_nullable_to_non_nullable
-              as int?,
-      uvDoituongchinhsachId: freezed == uvDoituongchinhsachId
-          ? _value.uvDoituongchinhsachId
-          : uvDoituongchinhsachId // ignore: cast_nullable_to_non_nullable
-              as int?,
-      uvnvThoigianId: freezed == uvnvThoigianId
-          ? _value.uvnvThoigianId
-          : uvnvThoigianId // ignore: cast_nullable_to_non_nullable
-              as int?,
-      uvnvVitrimongmuonid: freezed == uvnvVitrimongmuonid
-          ? _value.uvnvVitrimongmuonid
-          : uvnvVitrimongmuonid // ignore: cast_nullable_to_non_nullable
-              as int?,
-      uvHonnhanId: freezed == uvHonnhanId
-          ? _value.uvHonnhanId
-          : uvHonnhanId // ignore: cast_nullable_to_non_nullable
-              as bool?,
-      tenDanToc: freezed == tenDanToc
-          ? _value.tenDanToc
-          : tenDanToc // ignore: cast_nullable_to_non_nullable
-              as String?,
-      uvTinhtrangtantatId: freezed == uvTinhtrangtantatId
-          ? _value.uvTinhtrangtantatId
-          : uvTinhtrangtantatId // ignore: cast_nullable_to_non_nullable
-              as int?,
-      uvnvHinhthuccongtyId: freezed == uvnvHinhthuccongtyId
-          ? _value.uvnvHinhthuccongtyId
-          : uvnvHinhthuccongtyId // ignore: cast_nullable_to_non_nullable
-              as int?,
     ) as $Val);
   }
 }
@@ -559,25 +580,41 @@ abstract class _$$TblHoSoUngVienModelImplCopyWith<$Res>
       String? uvHoten,
       String? uvEmail,
       String? maHoSo,
+      String? tenDanToc,
       int? idDanToc,
       String? cvMongMuon,
       String? documentPath,
       String? imagePath,
       String? uvDiachichitiet,
       String? uvDienthoai,
-      String? uvSoCMND,
-      DateTime? uvNgaycap,
+      String? uvSoCmnd,
+      String? uvNgaycap,
       String? uvNoicap,
       int? uvGioitinh,
       String? uvChieucao,
       String? uvCannang,
-      DateTime? uvNgaysinh,
+      String? uvDoituongchinhsach,
+      int? uvDoituongchinhsachId,
+      String? uvTinhtrangtantat,
+      int? uvTinhtrangtantatId,
+      String? uvHonnhan,
+      bool? uvHonnhanId,
+      String? uvNgaysinh,
       String? uvcmCongviechientai,
       String? uvnvNganhnghe,
+      int? uvnvNganhngheId,
+      String? uvnvVitrimongmuon,
+      int? uvnvVitrimongmuonid,
+      String? uvnvThoigian,
+      int? uvnvThoigianId,
       String? uvnvNoilamviec,
       int? idMucluong,
       double? uvnvTienluong,
+      String? uvnvHinhthuccongty,
+      int? uvnvHinhthuccongtyId,
       String? uvGhichu,
+      String? uvcmTrinhdo,
+      int? uvcmTrinhdoId,
       String? uvcmBangcap,
       String? uvcmKynang,
       String? uvcmTrinhdongoaingu,
@@ -591,37 +628,24 @@ abstract class _$$TblHoSoUngVienModelImplCopyWith<$Res>
       bool? uvhtTelephone,
       bool? uvhtEmail,
       bool? uvhtAddress,
-      DateTime? createdDate,
-      String? createdBy,
-      DateTime? modifiredDate,
-      String? modifiredBy,
       String? uvId,
       bool? newsletterSubscription,
       bool? jobsletterSubscription,
-      bool? coBHTN,
+      bool? coBhtn,
       String? soNhaDuong,
       int? idThanhPho,
       String? idTinh,
-      String? idHuyen,
-      String? idXa,
-      String? idTv,
-      String? mahoGD,
-      String? fileCV,
+      String? idhuyen,
+      String? idxa,
+      String? idtv,
+      String? mahoGd,
+      String? fileCv,
       int? displayOrder,
       DateTime? ngayduyet,
       String? idNguonThuThap,
       String? avatarUrl,
       String? idBacHoc,
-      String? diachilienhe,
-      int? uvnvNganhngheId,
-      int? uvcmTrinhdoId,
-      int? uvDoituongchinhsachId,
-      int? uvnvThoigianId,
-      int? uvnvVitrimongmuonid,
-      bool? uvHonnhanId,
-      String? tenDanToc,
-      int? uvTinhtrangtantatId,
-      int? uvnvHinhthuccongtyId});
+      String? diachilienhe});
 }
 
 /// @nodoc
@@ -643,25 +667,41 @@ class __$$TblHoSoUngVienModelImplCopyWithImpl<$Res>
     Object? uvHoten = freezed,
     Object? uvEmail = freezed,
     Object? maHoSo = freezed,
+    Object? tenDanToc = freezed,
     Object? idDanToc = freezed,
     Object? cvMongMuon = freezed,
     Object? documentPath = freezed,
     Object? imagePath = freezed,
     Object? uvDiachichitiet = freezed,
     Object? uvDienthoai = freezed,
-    Object? uvSoCMND = freezed,
+    Object? uvSoCmnd = freezed,
     Object? uvNgaycap = freezed,
     Object? uvNoicap = freezed,
     Object? uvGioitinh = freezed,
     Object? uvChieucao = freezed,
     Object? uvCannang = freezed,
+    Object? uvDoituongchinhsach = freezed,
+    Object? uvDoituongchinhsachId = freezed,
+    Object? uvTinhtrangtantat = freezed,
+    Object? uvTinhtrangtantatId = freezed,
+    Object? uvHonnhan = freezed,
+    Object? uvHonnhanId = freezed,
     Object? uvNgaysinh = freezed,
     Object? uvcmCongviechientai = freezed,
     Object? uvnvNganhnghe = freezed,
+    Object? uvnvNganhngheId = freezed,
+    Object? uvnvVitrimongmuon = freezed,
+    Object? uvnvVitrimongmuonid = freezed,
+    Object? uvnvThoigian = freezed,
+    Object? uvnvThoigianId = freezed,
     Object? uvnvNoilamviec = freezed,
     Object? idMucluong = freezed,
     Object? uvnvTienluong = freezed,
+    Object? uvnvHinhthuccongty = freezed,
+    Object? uvnvHinhthuccongtyId = freezed,
     Object? uvGhichu = freezed,
+    Object? uvcmTrinhdo = freezed,
+    Object? uvcmTrinhdoId = freezed,
     Object? uvcmBangcap = freezed,
     Object? uvcmKynang = freezed,
     Object? uvcmTrinhdongoaingu = freezed,
@@ -675,37 +715,24 @@ class __$$TblHoSoUngVienModelImplCopyWithImpl<$Res>
     Object? uvhtTelephone = freezed,
     Object? uvhtEmail = freezed,
     Object? uvhtAddress = freezed,
-    Object? createdDate = freezed,
-    Object? createdBy = freezed,
-    Object? modifiredDate = freezed,
-    Object? modifiredBy = freezed,
     Object? uvId = freezed,
     Object? newsletterSubscription = freezed,
     Object? jobsletterSubscription = freezed,
-    Object? coBHTN = freezed,
+    Object? coBhtn = freezed,
     Object? soNhaDuong = freezed,
     Object? idThanhPho = freezed,
     Object? idTinh = freezed,
-    Object? idHuyen = freezed,
-    Object? idXa = freezed,
-    Object? idTv = freezed,
-    Object? mahoGD = freezed,
-    Object? fileCV = freezed,
+    Object? idhuyen = freezed,
+    Object? idxa = freezed,
+    Object? idtv = freezed,
+    Object? mahoGd = freezed,
+    Object? fileCv = freezed,
     Object? displayOrder = freezed,
     Object? ngayduyet = freezed,
     Object? idNguonThuThap = freezed,
     Object? avatarUrl = freezed,
     Object? idBacHoc = freezed,
     Object? diachilienhe = freezed,
-    Object? uvnvNganhngheId = freezed,
-    Object? uvcmTrinhdoId = freezed,
-    Object? uvDoituongchinhsachId = freezed,
-    Object? uvnvThoigianId = freezed,
-    Object? uvnvVitrimongmuonid = freezed,
-    Object? uvHonnhanId = freezed,
-    Object? tenDanToc = freezed,
-    Object? uvTinhtrangtantatId = freezed,
-    Object? uvnvHinhthuccongtyId = freezed,
   }) {
     return _then(_$TblHoSoUngVienModelImpl(
       id: null == id
@@ -732,6 +759,10 @@ class __$$TblHoSoUngVienModelImplCopyWithImpl<$Res>
           ? _value.maHoSo
           : maHoSo // ignore: cast_nullable_to_non_nullable
               as String?,
+      tenDanToc: freezed == tenDanToc
+          ? _value.tenDanToc
+          : tenDanToc // ignore: cast_nullable_to_non_nullable
+              as String?,
       idDanToc: freezed == idDanToc
           ? _value.idDanToc
           : idDanToc // ignore: cast_nullable_to_non_nullable
@@ -756,14 +787,14 @@ class __$$TblHoSoUngVienModelImplCopyWithImpl<$Res>
           ? _value.uvDienthoai
           : uvDienthoai // ignore: cast_nullable_to_non_nullable
               as String?,
-      uvSoCMND: freezed == uvSoCMND
-          ? _value.uvSoCMND
-          : uvSoCMND // ignore: cast_nullable_to_non_nullable
+      uvSoCmnd: freezed == uvSoCmnd
+          ? _value.uvSoCmnd
+          : uvSoCmnd // ignore: cast_nullable_to_non_nullable
               as String?,
       uvNgaycap: freezed == uvNgaycap
           ? _value.uvNgaycap
           : uvNgaycap // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+              as String?,
       uvNoicap: freezed == uvNoicap
           ? _value.uvNoicap
           : uvNoicap // ignore: cast_nullable_to_non_nullable
@@ -780,10 +811,34 @@ class __$$TblHoSoUngVienModelImplCopyWithImpl<$Res>
           ? _value.uvCannang
           : uvCannang // ignore: cast_nullable_to_non_nullable
               as String?,
+      uvDoituongchinhsach: freezed == uvDoituongchinhsach
+          ? _value.uvDoituongchinhsach
+          : uvDoituongchinhsach // ignore: cast_nullable_to_non_nullable
+              as String?,
+      uvDoituongchinhsachId: freezed == uvDoituongchinhsachId
+          ? _value.uvDoituongchinhsachId
+          : uvDoituongchinhsachId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      uvTinhtrangtantat: freezed == uvTinhtrangtantat
+          ? _value.uvTinhtrangtantat
+          : uvTinhtrangtantat // ignore: cast_nullable_to_non_nullable
+              as String?,
+      uvTinhtrangtantatId: freezed == uvTinhtrangtantatId
+          ? _value.uvTinhtrangtantatId
+          : uvTinhtrangtantatId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      uvHonnhan: freezed == uvHonnhan
+          ? _value.uvHonnhan
+          : uvHonnhan // ignore: cast_nullable_to_non_nullable
+              as String?,
+      uvHonnhanId: freezed == uvHonnhanId
+          ? _value.uvHonnhanId
+          : uvHonnhanId // ignore: cast_nullable_to_non_nullable
+              as bool?,
       uvNgaysinh: freezed == uvNgaysinh
           ? _value.uvNgaysinh
           : uvNgaysinh // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
+              as String?,
       uvcmCongviechientai: freezed == uvcmCongviechientai
           ? _value.uvcmCongviechientai
           : uvcmCongviechientai // ignore: cast_nullable_to_non_nullable
@@ -792,6 +847,26 @@ class __$$TblHoSoUngVienModelImplCopyWithImpl<$Res>
           ? _value.uvnvNganhnghe
           : uvnvNganhnghe // ignore: cast_nullable_to_non_nullable
               as String?,
+      uvnvNganhngheId: freezed == uvnvNganhngheId
+          ? _value.uvnvNganhngheId
+          : uvnvNganhngheId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      uvnvVitrimongmuon: freezed == uvnvVitrimongmuon
+          ? _value.uvnvVitrimongmuon
+          : uvnvVitrimongmuon // ignore: cast_nullable_to_non_nullable
+              as String?,
+      uvnvVitrimongmuonid: freezed == uvnvVitrimongmuonid
+          ? _value.uvnvVitrimongmuonid
+          : uvnvVitrimongmuonid // ignore: cast_nullable_to_non_nullable
+              as int?,
+      uvnvThoigian: freezed == uvnvThoigian
+          ? _value.uvnvThoigian
+          : uvnvThoigian // ignore: cast_nullable_to_non_nullable
+              as String?,
+      uvnvThoigianId: freezed == uvnvThoigianId
+          ? _value.uvnvThoigianId
+          : uvnvThoigianId // ignore: cast_nullable_to_non_nullable
+              as int?,
       uvnvNoilamviec: freezed == uvnvNoilamviec
           ? _value.uvnvNoilamviec
           : uvnvNoilamviec // ignore: cast_nullable_to_non_nullable
@@ -804,10 +879,26 @@ class __$$TblHoSoUngVienModelImplCopyWithImpl<$Res>
           ? _value.uvnvTienluong
           : uvnvTienluong // ignore: cast_nullable_to_non_nullable
               as double?,
+      uvnvHinhthuccongty: freezed == uvnvHinhthuccongty
+          ? _value.uvnvHinhthuccongty
+          : uvnvHinhthuccongty // ignore: cast_nullable_to_non_nullable
+              as String?,
+      uvnvHinhthuccongtyId: freezed == uvnvHinhthuccongtyId
+          ? _value.uvnvHinhthuccongtyId
+          : uvnvHinhthuccongtyId // ignore: cast_nullable_to_non_nullable
+              as int?,
       uvGhichu: freezed == uvGhichu
           ? _value.uvGhichu
           : uvGhichu // ignore: cast_nullable_to_non_nullable
               as String?,
+      uvcmTrinhdo: freezed == uvcmTrinhdo
+          ? _value.uvcmTrinhdo
+          : uvcmTrinhdo // ignore: cast_nullable_to_non_nullable
+              as String?,
+      uvcmTrinhdoId: freezed == uvcmTrinhdoId
+          ? _value.uvcmTrinhdoId
+          : uvcmTrinhdoId // ignore: cast_nullable_to_non_nullable
+              as int?,
       uvcmBangcap: freezed == uvcmBangcap
           ? _value.uvcmBangcap
           : uvcmBangcap // ignore: cast_nullable_to_non_nullable
@@ -860,22 +951,6 @@ class __$$TblHoSoUngVienModelImplCopyWithImpl<$Res>
           ? _value.uvhtAddress
           : uvhtAddress // ignore: cast_nullable_to_non_nullable
               as bool?,
-      createdDate: freezed == createdDate
-          ? _value.createdDate
-          : createdDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      createdBy: freezed == createdBy
-          ? _value.createdBy
-          : createdBy // ignore: cast_nullable_to_non_nullable
-              as String?,
-      modifiredDate: freezed == modifiredDate
-          ? _value.modifiredDate
-          : modifiredDate // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      modifiredBy: freezed == modifiredBy
-          ? _value.modifiredBy
-          : modifiredBy // ignore: cast_nullable_to_non_nullable
-              as String?,
       uvId: freezed == uvId
           ? _value.uvId
           : uvId // ignore: cast_nullable_to_non_nullable
@@ -888,9 +963,9 @@ class __$$TblHoSoUngVienModelImplCopyWithImpl<$Res>
           ? _value.jobsletterSubscription
           : jobsletterSubscription // ignore: cast_nullable_to_non_nullable
               as bool?,
-      coBHTN: freezed == coBHTN
-          ? _value.coBHTN
-          : coBHTN // ignore: cast_nullable_to_non_nullable
+      coBhtn: freezed == coBhtn
+          ? _value.coBhtn
+          : coBhtn // ignore: cast_nullable_to_non_nullable
               as bool?,
       soNhaDuong: freezed == soNhaDuong
           ? _value.soNhaDuong
@@ -904,25 +979,25 @@ class __$$TblHoSoUngVienModelImplCopyWithImpl<$Res>
           ? _value.idTinh
           : idTinh // ignore: cast_nullable_to_non_nullable
               as String?,
-      idHuyen: freezed == idHuyen
-          ? _value.idHuyen
-          : idHuyen // ignore: cast_nullable_to_non_nullable
+      idhuyen: freezed == idhuyen
+          ? _value.idhuyen
+          : idhuyen // ignore: cast_nullable_to_non_nullable
               as String?,
-      idXa: freezed == idXa
-          ? _value.idXa
-          : idXa // ignore: cast_nullable_to_non_nullable
+      idxa: freezed == idxa
+          ? _value.idxa
+          : idxa // ignore: cast_nullable_to_non_nullable
               as String?,
-      idTv: freezed == idTv
-          ? _value.idTv
-          : idTv // ignore: cast_nullable_to_non_nullable
+      idtv: freezed == idtv
+          ? _value.idtv
+          : idtv // ignore: cast_nullable_to_non_nullable
               as String?,
-      mahoGD: freezed == mahoGD
-          ? _value.mahoGD
-          : mahoGD // ignore: cast_nullable_to_non_nullable
+      mahoGd: freezed == mahoGd
+          ? _value.mahoGd
+          : mahoGd // ignore: cast_nullable_to_non_nullable
               as String?,
-      fileCV: freezed == fileCV
-          ? _value.fileCV
-          : fileCV // ignore: cast_nullable_to_non_nullable
+      fileCv: freezed == fileCv
+          ? _value.fileCv
+          : fileCv // ignore: cast_nullable_to_non_nullable
               as String?,
       displayOrder: freezed == displayOrder
           ? _value.displayOrder
@@ -948,42 +1023,6 @@ class __$$TblHoSoUngVienModelImplCopyWithImpl<$Res>
           ? _value.diachilienhe
           : diachilienhe // ignore: cast_nullable_to_non_nullable
               as String?,
-      uvnvNganhngheId: freezed == uvnvNganhngheId
-          ? _value.uvnvNganhngheId
-          : uvnvNganhngheId // ignore: cast_nullable_to_non_nullable
-              as int?,
-      uvcmTrinhdoId: freezed == uvcmTrinhdoId
-          ? _value.uvcmTrinhdoId
-          : uvcmTrinhdoId // ignore: cast_nullable_to_non_nullable
-              as int?,
-      uvDoituongchinhsachId: freezed == uvDoituongchinhsachId
-          ? _value.uvDoituongchinhsachId
-          : uvDoituongchinhsachId // ignore: cast_nullable_to_non_nullable
-              as int?,
-      uvnvThoigianId: freezed == uvnvThoigianId
-          ? _value.uvnvThoigianId
-          : uvnvThoigianId // ignore: cast_nullable_to_non_nullable
-              as int?,
-      uvnvVitrimongmuonid: freezed == uvnvVitrimongmuonid
-          ? _value.uvnvVitrimongmuonid
-          : uvnvVitrimongmuonid // ignore: cast_nullable_to_non_nullable
-              as int?,
-      uvHonnhanId: freezed == uvHonnhanId
-          ? _value.uvHonnhanId
-          : uvHonnhanId // ignore: cast_nullable_to_non_nullable
-              as bool?,
-      tenDanToc: freezed == tenDanToc
-          ? _value.tenDanToc
-          : tenDanToc // ignore: cast_nullable_to_non_nullable
-              as String?,
-      uvTinhtrangtantatId: freezed == uvTinhtrangtantatId
-          ? _value.uvTinhtrangtantatId
-          : uvTinhtrangtantatId // ignore: cast_nullable_to_non_nullable
-              as int?,
-      uvnvHinhthuccongtyId: freezed == uvnvHinhthuccongtyId
-          ? _value.uvnvHinhthuccongtyId
-          : uvnvHinhthuccongtyId // ignore: cast_nullable_to_non_nullable
-              as int?,
     ));
   }
 }
@@ -998,25 +1037,41 @@ class _$TblHoSoUngVienModelImpl implements _TblHoSoUngVienModel {
       this.uvHoten,
       this.uvEmail,
       this.maHoSo,
+      this.tenDanToc,
       this.idDanToc,
       this.cvMongMuon,
       this.documentPath,
       this.imagePath,
       this.uvDiachichitiet,
       this.uvDienthoai,
-      this.uvSoCMND,
+      this.uvSoCmnd,
       this.uvNgaycap,
       this.uvNoicap,
       this.uvGioitinh,
       this.uvChieucao,
       this.uvCannang,
+      this.uvDoituongchinhsach,
+      this.uvDoituongchinhsachId,
+      this.uvTinhtrangtantat,
+      this.uvTinhtrangtantatId,
+      this.uvHonnhan,
+      this.uvHonnhanId = false,
       this.uvNgaysinh,
       this.uvcmCongviechientai,
       this.uvnvNganhnghe,
+      this.uvnvNganhngheId,
+      this.uvnvVitrimongmuon,
+      this.uvnvVitrimongmuonid,
+      this.uvnvThoigian,
+      this.uvnvThoigianId,
       this.uvnvNoilamviec,
       this.idMucluong,
       this.uvnvTienluong,
+      this.uvnvHinhthuccongty,
+      this.uvnvHinhthuccongtyId,
       this.uvGhichu,
+      this.uvcmTrinhdo,
+      this.uvcmTrinhdoId,
       this.uvcmBangcap,
       this.uvcmKynang,
       this.uvcmTrinhdongoaingu,
@@ -1030,44 +1085,30 @@ class _$TblHoSoUngVienModelImpl implements _TblHoSoUngVienModel {
       this.uvhtTelephone = false,
       this.uvhtEmail = false,
       this.uvhtAddress = false,
-      this.createdDate,
-      this.createdBy,
-      this.modifiredDate,
-      this.modifiredBy,
       this.uvId,
       this.newsletterSubscription = false,
       this.jobsletterSubscription = false,
-      this.coBHTN,
+      this.coBhtn,
       this.soNhaDuong,
       this.idThanhPho,
       this.idTinh,
-      this.idHuyen,
-      this.idXa,
-      this.idTv,
-      this.mahoGD,
-      this.fileCV,
+      this.idhuyen,
+      this.idxa,
+      this.idtv,
+      this.mahoGd,
+      this.fileCv,
       this.displayOrder,
       this.ngayduyet,
       this.idNguonThuThap,
       this.avatarUrl,
       this.idBacHoc,
-      this.diachilienhe,
-      this.uvnvNganhngheId,
-      this.uvcmTrinhdoId,
-      this.uvDoituongchinhsachId,
-      this.uvnvThoigianId,
-      this.uvnvVitrimongmuonid,
-      this.uvHonnhanId = false,
-      this.tenDanToc,
-      this.uvTinhtrangtantatId,
-      this.uvnvHinhthuccongtyId});
+      this.diachilienhe});
 
   factory _$TblHoSoUngVienModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$TblHoSoUngVienModelImplFromJson(json);
 
   @override
   final String id;
-// Changed to String
   @override
   final String? uvUsername;
   @override
@@ -1078,6 +1119,8 @@ class _$TblHoSoUngVienModelImpl implements _TblHoSoUngVienModel {
   final String? uvEmail;
   @override
   final String? maHoSo;
+  @override
+  final String? tenDanToc;
   @override
   final int? idDanToc;
   @override
@@ -1091,9 +1134,9 @@ class _$TblHoSoUngVienModelImpl implements _TblHoSoUngVienModel {
   @override
   final String? uvDienthoai;
   @override
-  final String? uvSoCMND;
+  final String? uvSoCmnd;
   @override
-  final DateTime? uvNgaycap;
+  final String? uvNgaycap;
   @override
   final String? uvNoicap;
   @override
@@ -1103,11 +1146,34 @@ class _$TblHoSoUngVienModelImpl implements _TblHoSoUngVienModel {
   @override
   final String? uvCannang;
   @override
-  final DateTime? uvNgaysinh;
+  final String? uvDoituongchinhsach;
+  @override
+  final int? uvDoituongchinhsachId;
+  @override
+  final String? uvTinhtrangtantat;
+  @override
+  final int? uvTinhtrangtantatId;
+  @override
+  final String? uvHonnhan;
+  @override
+  @JsonKey()
+  final bool? uvHonnhanId;
+  @override
+  final String? uvNgaysinh;
   @override
   final String? uvcmCongviechientai;
   @override
   final String? uvnvNganhnghe;
+  @override
+  final int? uvnvNganhngheId;
+  @override
+  final String? uvnvVitrimongmuon;
+  @override
+  final int? uvnvVitrimongmuonid;
+  @override
+  final String? uvnvThoigian;
+  @override
+  final int? uvnvThoigianId;
   @override
   final String? uvnvNoilamviec;
   @override
@@ -1115,7 +1181,15 @@ class _$TblHoSoUngVienModelImpl implements _TblHoSoUngVienModel {
   @override
   final double? uvnvTienluong;
   @override
+  final String? uvnvHinhthuccongty;
+  @override
+  final int? uvnvHinhthuccongtyId;
+  @override
   final String? uvGhichu;
+  @override
+  final String? uvcmTrinhdo;
+  @override
+  final int? uvcmTrinhdoId;
   @override
   final String? uvcmBangcap;
   @override
@@ -1152,14 +1226,6 @@ class _$TblHoSoUngVienModelImpl implements _TblHoSoUngVienModel {
   @JsonKey()
   final bool? uvhtAddress;
   @override
-  final DateTime? createdDate;
-  @override
-  final String? createdBy;
-  @override
-  final DateTime? modifiredDate;
-  @override
-  final String? modifiredBy;
-  @override
   final String? uvId;
   @override
   @JsonKey()
@@ -1168,7 +1234,7 @@ class _$TblHoSoUngVienModelImpl implements _TblHoSoUngVienModel {
   @JsonKey()
   final bool? jobsletterSubscription;
   @override
-  final bool? coBHTN;
+  final bool? coBhtn;
   @override
   final String? soNhaDuong;
   @override
@@ -1176,16 +1242,15 @@ class _$TblHoSoUngVienModelImpl implements _TblHoSoUngVienModel {
   @override
   final String? idTinh;
   @override
-  final String? idHuyen;
+  final String? idhuyen;
   @override
-  final String? idXa;
+  final String? idxa;
   @override
-  final String? idTv;
-// Changed to String?
+  final String? idtv;
   @override
-  final String? mahoGD;
+  final String? mahoGd;
   @override
-  final String? fileCV;
+  final String? fileCv;
   @override
   final int? displayOrder;
   @override
@@ -1198,29 +1263,10 @@ class _$TblHoSoUngVienModelImpl implements _TblHoSoUngVienModel {
   final String? idBacHoc;
   @override
   final String? diachilienhe;
-  @override
-  final int? uvnvNganhngheId;
-  @override
-  final int? uvcmTrinhdoId;
-  @override
-  final int? uvDoituongchinhsachId;
-  @override
-  final int? uvnvThoigianId;
-  @override
-  final int? uvnvVitrimongmuonid;
-  @override
-  @JsonKey()
-  final bool? uvHonnhanId;
-  @override
-  final String? tenDanToc;
-  @override
-  final int? uvTinhtrangtantatId;
-  @override
-  final int? uvnvHinhthuccongtyId;
 
   @override
   String toString() {
-    return 'TblHoSoUngVienModel(id: $id, uvUsername: $uvUsername, uvPassword: $uvPassword, uvHoten: $uvHoten, uvEmail: $uvEmail, maHoSo: $maHoSo, idDanToc: $idDanToc, cvMongMuon: $cvMongMuon, documentPath: $documentPath, imagePath: $imagePath, uvDiachichitiet: $uvDiachichitiet, uvDienthoai: $uvDienthoai, uvSoCMND: $uvSoCMND, uvNgaycap: $uvNgaycap, uvNoicap: $uvNoicap, uvGioitinh: $uvGioitinh, uvChieucao: $uvChieucao, uvCannang: $uvCannang, uvNgaysinh: $uvNgaysinh, uvcmCongviechientai: $uvcmCongviechientai, uvnvNganhnghe: $uvnvNganhnghe, uvnvNoilamviec: $uvnvNoilamviec, idMucluong: $idMucluong, uvnvTienluong: $uvnvTienluong, uvGhichu: $uvGhichu, uvcmBangcap: $uvcmBangcap, uvcmKynang: $uvcmKynang, uvcmTrinhdongoaingu: $uvcmTrinhdongoaingu, uvcmTrinhdotinhoc: $uvcmTrinhdotinhoc, uvcmKinhnghiem: $uvcmKinhnghiem, uvSolanxem: $uvSolanxem, interview: $interview, interviewed: $interviewed, uvDuyet: $uvDuyet, uvHienthi: $uvHienthi, uvhtTelephone: $uvhtTelephone, uvhtEmail: $uvhtEmail, uvhtAddress: $uvhtAddress, createdDate: $createdDate, createdBy: $createdBy, modifiredDate: $modifiredDate, modifiredBy: $modifiredBy, uvId: $uvId, newsletterSubscription: $newsletterSubscription, jobsletterSubscription: $jobsletterSubscription, coBHTN: $coBHTN, soNhaDuong: $soNhaDuong, idThanhPho: $idThanhPho, idTinh: $idTinh, idHuyen: $idHuyen, idXa: $idXa, idTv: $idTv, mahoGD: $mahoGD, fileCV: $fileCV, displayOrder: $displayOrder, ngayduyet: $ngayduyet, idNguonThuThap: $idNguonThuThap, avatarUrl: $avatarUrl, idBacHoc: $idBacHoc, diachilienhe: $diachilienhe, uvnvNganhngheId: $uvnvNganhngheId, uvcmTrinhdoId: $uvcmTrinhdoId, uvDoituongchinhsachId: $uvDoituongchinhsachId, uvnvThoigianId: $uvnvThoigianId, uvnvVitrimongmuonid: $uvnvVitrimongmuonid, uvHonnhanId: $uvHonnhanId, tenDanToc: $tenDanToc, uvTinhtrangtantatId: $uvTinhtrangtantatId, uvnvHinhthuccongtyId: $uvnvHinhthuccongtyId)';
+    return 'TblHoSoUngVienModel(id: $id, uvUsername: $uvUsername, uvPassword: $uvPassword, uvHoten: $uvHoten, uvEmail: $uvEmail, maHoSo: $maHoSo, tenDanToc: $tenDanToc, idDanToc: $idDanToc, cvMongMuon: $cvMongMuon, documentPath: $documentPath, imagePath: $imagePath, uvDiachichitiet: $uvDiachichitiet, uvDienthoai: $uvDienthoai, uvSoCmnd: $uvSoCmnd, uvNgaycap: $uvNgaycap, uvNoicap: $uvNoicap, uvGioitinh: $uvGioitinh, uvChieucao: $uvChieucao, uvCannang: $uvCannang, uvDoituongchinhsach: $uvDoituongchinhsach, uvDoituongchinhsachId: $uvDoituongchinhsachId, uvTinhtrangtantat: $uvTinhtrangtantat, uvTinhtrangtantatId: $uvTinhtrangtantatId, uvHonnhan: $uvHonnhan, uvHonnhanId: $uvHonnhanId, uvNgaysinh: $uvNgaysinh, uvcmCongviechientai: $uvcmCongviechientai, uvnvNganhnghe: $uvnvNganhnghe, uvnvNganhngheId: $uvnvNganhngheId, uvnvVitrimongmuon: $uvnvVitrimongmuon, uvnvVitrimongmuonid: $uvnvVitrimongmuonid, uvnvThoigian: $uvnvThoigian, uvnvThoigianId: $uvnvThoigianId, uvnvNoilamviec: $uvnvNoilamviec, idMucluong: $idMucluong, uvnvTienluong: $uvnvTienluong, uvnvHinhthuccongty: $uvnvHinhthuccongty, uvnvHinhthuccongtyId: $uvnvHinhthuccongtyId, uvGhichu: $uvGhichu, uvcmTrinhdo: $uvcmTrinhdo, uvcmTrinhdoId: $uvcmTrinhdoId, uvcmBangcap: $uvcmBangcap, uvcmKynang: $uvcmKynang, uvcmTrinhdongoaingu: $uvcmTrinhdongoaingu, uvcmTrinhdotinhoc: $uvcmTrinhdotinhoc, uvcmKinhnghiem: $uvcmKinhnghiem, uvSolanxem: $uvSolanxem, interview: $interview, interviewed: $interviewed, uvDuyet: $uvDuyet, uvHienthi: $uvHienthi, uvhtTelephone: $uvhtTelephone, uvhtEmail: $uvhtEmail, uvhtAddress: $uvhtAddress, uvId: $uvId, newsletterSubscription: $newsletterSubscription, jobsletterSubscription: $jobsletterSubscription, coBhtn: $coBhtn, soNhaDuong: $soNhaDuong, idThanhPho: $idThanhPho, idTinh: $idTinh, idhuyen: $idhuyen, idxa: $idxa, idtv: $idtv, mahoGd: $mahoGd, fileCv: $fileCv, displayOrder: $displayOrder, ngayduyet: $ngayduyet, idNguonThuThap: $idNguonThuThap, avatarUrl: $avatarUrl, idBacHoc: $idBacHoc, diachilienhe: $diachilienhe)';
   }
 
   @override
@@ -1236,6 +1282,8 @@ class _$TblHoSoUngVienModelImpl implements _TblHoSoUngVienModel {
             (identical(other.uvHoten, uvHoten) || other.uvHoten == uvHoten) &&
             (identical(other.uvEmail, uvEmail) || other.uvEmail == uvEmail) &&
             (identical(other.maHoSo, maHoSo) || other.maHoSo == maHoSo) &&
+            (identical(other.tenDanToc, tenDanToc) ||
+                other.tenDanToc == tenDanToc) &&
             (identical(other.idDanToc, idDanToc) ||
                 other.idDanToc == idDanToc) &&
             (identical(other.cvMongMuon, cvMongMuon) ||
@@ -1248,8 +1296,8 @@ class _$TblHoSoUngVienModelImpl implements _TblHoSoUngVienModel {
                 other.uvDiachichitiet == uvDiachichitiet) &&
             (identical(other.uvDienthoai, uvDienthoai) ||
                 other.uvDienthoai == uvDienthoai) &&
-            (identical(other.uvSoCMND, uvSoCMND) ||
-                other.uvSoCMND == uvSoCMND) &&
+            (identical(other.uvSoCmnd, uvSoCmnd) ||
+                other.uvSoCmnd == uvSoCmnd) &&
             (identical(other.uvNgaycap, uvNgaycap) ||
                 other.uvNgaycap == uvNgaycap) &&
             (identical(other.uvNoicap, uvNoicap) ||
@@ -1260,20 +1308,50 @@ class _$TblHoSoUngVienModelImpl implements _TblHoSoUngVienModel {
                 other.uvChieucao == uvChieucao) &&
             (identical(other.uvCannang, uvCannang) ||
                 other.uvCannang == uvCannang) &&
+            (identical(other.uvDoituongchinhsach, uvDoituongchinhsach) ||
+                other.uvDoituongchinhsach == uvDoituongchinhsach) &&
+            (identical(other.uvDoituongchinhsachId, uvDoituongchinhsachId) ||
+                other.uvDoituongchinhsachId == uvDoituongchinhsachId) &&
+            (identical(other.uvTinhtrangtantat, uvTinhtrangtantat) ||
+                other.uvTinhtrangtantat == uvTinhtrangtantat) &&
+            (identical(other.uvTinhtrangtantatId, uvTinhtrangtantatId) ||
+                other.uvTinhtrangtantatId == uvTinhtrangtantatId) &&
+            (identical(other.uvHonnhan, uvHonnhan) ||
+                other.uvHonnhan == uvHonnhan) &&
+            (identical(other.uvHonnhanId, uvHonnhanId) ||
+                other.uvHonnhanId == uvHonnhanId) &&
             (identical(other.uvNgaysinh, uvNgaysinh) ||
                 other.uvNgaysinh == uvNgaysinh) &&
             (identical(other.uvcmCongviechientai, uvcmCongviechientai) ||
                 other.uvcmCongviechientai == uvcmCongviechientai) &&
             (identical(other.uvnvNganhnghe, uvnvNganhnghe) ||
                 other.uvnvNganhnghe == uvnvNganhnghe) &&
+            (identical(other.uvnvNganhngheId, uvnvNganhngheId) ||
+                other.uvnvNganhngheId == uvnvNganhngheId) &&
+            (identical(other.uvnvVitrimongmuon, uvnvVitrimongmuon) ||
+                other.uvnvVitrimongmuon == uvnvVitrimongmuon) &&
+            (identical(other.uvnvVitrimongmuonid, uvnvVitrimongmuonid) ||
+                other.uvnvVitrimongmuonid == uvnvVitrimongmuonid) &&
+            (identical(other.uvnvThoigian, uvnvThoigian) ||
+                other.uvnvThoigian == uvnvThoigian) &&
+            (identical(other.uvnvThoigianId, uvnvThoigianId) ||
+                other.uvnvThoigianId == uvnvThoigianId) &&
             (identical(other.uvnvNoilamviec, uvnvNoilamviec) ||
                 other.uvnvNoilamviec == uvnvNoilamviec) &&
             (identical(other.idMucluong, idMucluong) ||
                 other.idMucluong == idMucluong) &&
             (identical(other.uvnvTienluong, uvnvTienluong) ||
                 other.uvnvTienluong == uvnvTienluong) &&
+            (identical(other.uvnvHinhthuccongty, uvnvHinhthuccongty) ||
+                other.uvnvHinhthuccongty == uvnvHinhthuccongty) &&
+            (identical(other.uvnvHinhthuccongtyId, uvnvHinhthuccongtyId) ||
+                other.uvnvHinhthuccongtyId == uvnvHinhthuccongtyId) &&
             (identical(other.uvGhichu, uvGhichu) ||
                 other.uvGhichu == uvGhichu) &&
+            (identical(other.uvcmTrinhdo, uvcmTrinhdo) ||
+                other.uvcmTrinhdo == uvcmTrinhdo) &&
+            (identical(other.uvcmTrinhdoId, uvcmTrinhdoId) ||
+                other.uvcmTrinhdoId == uvcmTrinhdoId) &&
             (identical(other.uvcmBangcap, uvcmBangcap) ||
                 other.uvcmBangcap == uvcmBangcap) &&
             (identical(other.uvcmKynang, uvcmKynang) ||
@@ -1286,60 +1364,31 @@ class _$TblHoSoUngVienModelImpl implements _TblHoSoUngVienModel {
                 other.uvcmKinhnghiem == uvcmKinhnghiem) &&
             (identical(other.uvSolanxem, uvSolanxem) ||
                 other.uvSolanxem == uvSolanxem) &&
-            (identical(other.interview, interview) ||
-                other.interview == interview) &&
-            (identical(other.interviewed, interviewed) ||
-                other.interviewed == interviewed) &&
+            (identical(other.interview, interview) || other.interview == interview) &&
+            (identical(other.interviewed, interviewed) || other.interviewed == interviewed) &&
             (identical(other.uvDuyet, uvDuyet) || other.uvDuyet == uvDuyet) &&
-            (identical(other.uvHienthi, uvHienthi) ||
-                other.uvHienthi == uvHienthi) &&
-            (identical(other.uvhtTelephone, uvhtTelephone) ||
-                other.uvhtTelephone == uvhtTelephone) &&
-            (identical(other.uvhtEmail, uvhtEmail) ||
-                other.uvhtEmail == uvhtEmail) &&
-            (identical(other.uvhtAddress, uvhtAddress) ||
-                other.uvhtAddress == uvhtAddress) &&
-            (identical(other.createdDate, createdDate) ||
-                other.createdDate == createdDate) &&
-            (identical(other.createdBy, createdBy) ||
-                other.createdBy == createdBy) &&
-            (identical(other.modifiredDate, modifiredDate) ||
-                other.modifiredDate == modifiredDate) &&
-            (identical(other.modifiredBy, modifiredBy) ||
-                other.modifiredBy == modifiredBy) &&
+            (identical(other.uvHienthi, uvHienthi) || other.uvHienthi == uvHienthi) &&
+            (identical(other.uvhtTelephone, uvhtTelephone) || other.uvhtTelephone == uvhtTelephone) &&
+            (identical(other.uvhtEmail, uvhtEmail) || other.uvhtEmail == uvhtEmail) &&
+            (identical(other.uvhtAddress, uvhtAddress) || other.uvhtAddress == uvhtAddress) &&
             (identical(other.uvId, uvId) || other.uvId == uvId) &&
-            (identical(other.newsletterSubscription, newsletterSubscription) ||
-                other.newsletterSubscription == newsletterSubscription) &&
-            (identical(other.jobsletterSubscription, jobsletterSubscription) ||
-                other.jobsletterSubscription == jobsletterSubscription) &&
-            (identical(other.coBHTN, coBHTN) || other.coBHTN == coBHTN) &&
-            (identical(other.soNhaDuong, soNhaDuong) ||
-                other.soNhaDuong == soNhaDuong) &&
-            (identical(other.idThanhPho, idThanhPho) ||
-                other.idThanhPho == idThanhPho) &&
+            (identical(other.newsletterSubscription, newsletterSubscription) || other.newsletterSubscription == newsletterSubscription) &&
+            (identical(other.jobsletterSubscription, jobsletterSubscription) || other.jobsletterSubscription == jobsletterSubscription) &&
+            (identical(other.coBhtn, coBhtn) || other.coBhtn == coBhtn) &&
+            (identical(other.soNhaDuong, soNhaDuong) || other.soNhaDuong == soNhaDuong) &&
+            (identical(other.idThanhPho, idThanhPho) || other.idThanhPho == idThanhPho) &&
             (identical(other.idTinh, idTinh) || other.idTinh == idTinh) &&
-            (identical(other.idHuyen, idHuyen) || other.idHuyen == idHuyen) &&
-            (identical(other.idXa, idXa) || other.idXa == idXa) &&
-            (identical(other.idTv, idTv) || other.idTv == idTv) &&
-            (identical(other.mahoGD, mahoGD) || other.mahoGD == mahoGD) &&
-            (identical(other.fileCV, fileCV) || other.fileCV == fileCV) &&
-            (identical(other.displayOrder, displayOrder) ||
-                other.displayOrder == displayOrder) &&
-            (identical(other.ngayduyet, ngayduyet) ||
-                other.ngayduyet == ngayduyet) &&
+            (identical(other.idhuyen, idhuyen) || other.idhuyen == idhuyen) &&
+            (identical(other.idxa, idxa) || other.idxa == idxa) &&
+            (identical(other.idtv, idtv) || other.idtv == idtv) &&
+            (identical(other.mahoGd, mahoGd) || other.mahoGd == mahoGd) &&
+            (identical(other.fileCv, fileCv) || other.fileCv == fileCv) &&
+            (identical(other.displayOrder, displayOrder) || other.displayOrder == displayOrder) &&
+            (identical(other.ngayduyet, ngayduyet) || other.ngayduyet == ngayduyet) &&
             (identical(other.idNguonThuThap, idNguonThuThap) || other.idNguonThuThap == idNguonThuThap) &&
             (identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl) &&
             (identical(other.idBacHoc, idBacHoc) || other.idBacHoc == idBacHoc) &&
-            (identical(other.diachilienhe, diachilienhe) || other.diachilienhe == diachilienhe) &&
-            (identical(other.uvnvNganhngheId, uvnvNganhngheId) || other.uvnvNganhngheId == uvnvNganhngheId) &&
-            (identical(other.uvcmTrinhdoId, uvcmTrinhdoId) || other.uvcmTrinhdoId == uvcmTrinhdoId) &&
-            (identical(other.uvDoituongchinhsachId, uvDoituongchinhsachId) || other.uvDoituongchinhsachId == uvDoituongchinhsachId) &&
-            (identical(other.uvnvThoigianId, uvnvThoigianId) || other.uvnvThoigianId == uvnvThoigianId) &&
-            (identical(other.uvnvVitrimongmuonid, uvnvVitrimongmuonid) || other.uvnvVitrimongmuonid == uvnvVitrimongmuonid) &&
-            (identical(other.uvHonnhanId, uvHonnhanId) || other.uvHonnhanId == uvHonnhanId) &&
-            (identical(other.tenDanToc, tenDanToc) || other.tenDanToc == tenDanToc) &&
-            (identical(other.uvTinhtrangtantatId, uvTinhtrangtantatId) || other.uvTinhtrangtantatId == uvTinhtrangtantatId) &&
-            (identical(other.uvnvHinhthuccongtyId, uvnvHinhthuccongtyId) || other.uvnvHinhthuccongtyId == uvnvHinhthuccongtyId));
+            (identical(other.diachilienhe, diachilienhe) || other.diachilienhe == diachilienhe));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1352,25 +1401,41 @@ class _$TblHoSoUngVienModelImpl implements _TblHoSoUngVienModel {
         uvHoten,
         uvEmail,
         maHoSo,
+        tenDanToc,
         idDanToc,
         cvMongMuon,
         documentPath,
         imagePath,
         uvDiachichitiet,
         uvDienthoai,
-        uvSoCMND,
+        uvSoCmnd,
         uvNgaycap,
         uvNoicap,
         uvGioitinh,
         uvChieucao,
         uvCannang,
+        uvDoituongchinhsach,
+        uvDoituongchinhsachId,
+        uvTinhtrangtantat,
+        uvTinhtrangtantatId,
+        uvHonnhan,
+        uvHonnhanId,
         uvNgaysinh,
         uvcmCongviechientai,
         uvnvNganhnghe,
+        uvnvNganhngheId,
+        uvnvVitrimongmuon,
+        uvnvVitrimongmuonid,
+        uvnvThoigian,
+        uvnvThoigianId,
         uvnvNoilamviec,
         idMucluong,
         uvnvTienluong,
+        uvnvHinhthuccongty,
+        uvnvHinhthuccongtyId,
         uvGhichu,
+        uvcmTrinhdo,
+        uvcmTrinhdoId,
         uvcmBangcap,
         uvcmKynang,
         uvcmTrinhdongoaingu,
@@ -1384,37 +1449,24 @@ class _$TblHoSoUngVienModelImpl implements _TblHoSoUngVienModel {
         uvhtTelephone,
         uvhtEmail,
         uvhtAddress,
-        createdDate,
-        createdBy,
-        modifiredDate,
-        modifiredBy,
         uvId,
         newsletterSubscription,
         jobsletterSubscription,
-        coBHTN,
+        coBhtn,
         soNhaDuong,
         idThanhPho,
         idTinh,
-        idHuyen,
-        idXa,
-        idTv,
-        mahoGD,
-        fileCV,
+        idhuyen,
+        idxa,
+        idtv,
+        mahoGd,
+        fileCv,
         displayOrder,
         ngayduyet,
         idNguonThuThap,
         avatarUrl,
         idBacHoc,
-        diachilienhe,
-        uvnvNganhngheId,
-        uvcmTrinhdoId,
-        uvDoituongchinhsachId,
-        uvnvThoigianId,
-        uvnvVitrimongmuonid,
-        uvHonnhanId,
-        tenDanToc,
-        uvTinhtrangtantatId,
-        uvnvHinhthuccongtyId
+        diachilienhe
       ]);
 
   /// Create a copy of TblHoSoUngVienModel
@@ -1442,25 +1494,41 @@ abstract class _TblHoSoUngVienModel implements TblHoSoUngVienModel {
       final String? uvHoten,
       final String? uvEmail,
       final String? maHoSo,
+      final String? tenDanToc,
       final int? idDanToc,
       final String? cvMongMuon,
       final String? documentPath,
       final String? imagePath,
       final String? uvDiachichitiet,
       final String? uvDienthoai,
-      final String? uvSoCMND,
-      final DateTime? uvNgaycap,
+      final String? uvSoCmnd,
+      final String? uvNgaycap,
       final String? uvNoicap,
       final int? uvGioitinh,
       final String? uvChieucao,
       final String? uvCannang,
-      final DateTime? uvNgaysinh,
+      final String? uvDoituongchinhsach,
+      final int? uvDoituongchinhsachId,
+      final String? uvTinhtrangtantat,
+      final int? uvTinhtrangtantatId,
+      final String? uvHonnhan,
+      final bool? uvHonnhanId,
+      final String? uvNgaysinh,
       final String? uvcmCongviechientai,
       final String? uvnvNganhnghe,
+      final int? uvnvNganhngheId,
+      final String? uvnvVitrimongmuon,
+      final int? uvnvVitrimongmuonid,
+      final String? uvnvThoigian,
+      final int? uvnvThoigianId,
       final String? uvnvNoilamviec,
       final int? idMucluong,
       final double? uvnvTienluong,
+      final String? uvnvHinhthuccongty,
+      final int? uvnvHinhthuccongtyId,
       final String? uvGhichu,
+      final String? uvcmTrinhdo,
+      final int? uvcmTrinhdoId,
       final String? uvcmBangcap,
       final String? uvcmKynang,
       final String? uvcmTrinhdongoaingu,
@@ -1474,43 +1542,30 @@ abstract class _TblHoSoUngVienModel implements TblHoSoUngVienModel {
       final bool? uvhtTelephone,
       final bool? uvhtEmail,
       final bool? uvhtAddress,
-      final DateTime? createdDate,
-      final String? createdBy,
-      final DateTime? modifiredDate,
-      final String? modifiredBy,
       final String? uvId,
       final bool? newsletterSubscription,
       final bool? jobsletterSubscription,
-      final bool? coBHTN,
+      final bool? coBhtn,
       final String? soNhaDuong,
       final int? idThanhPho,
       final String? idTinh,
-      final String? idHuyen,
-      final String? idXa,
-      final String? idTv,
-      final String? mahoGD,
-      final String? fileCV,
+      final String? idhuyen,
+      final String? idxa,
+      final String? idtv,
+      final String? mahoGd,
+      final String? fileCv,
       final int? displayOrder,
       final DateTime? ngayduyet,
       final String? idNguonThuThap,
       final String? avatarUrl,
       final String? idBacHoc,
-      final String? diachilienhe,
-      final int? uvnvNganhngheId,
-      final int? uvcmTrinhdoId,
-      final int? uvDoituongchinhsachId,
-      final int? uvnvThoigianId,
-      final int? uvnvVitrimongmuonid,
-      final bool? uvHonnhanId,
-      final String? tenDanToc,
-      final int? uvTinhtrangtantatId,
-      final int? uvnvHinhthuccongtyId}) = _$TblHoSoUngVienModelImpl;
+      final String? diachilienhe}) = _$TblHoSoUngVienModelImpl;
 
   factory _TblHoSoUngVienModel.fromJson(Map<String, dynamic> json) =
       _$TblHoSoUngVienModelImpl.fromJson;
 
   @override
-  String get id; // Changed to String
+  String get id;
   @override
   String? get uvUsername;
   @override
@@ -1521,6 +1576,8 @@ abstract class _TblHoSoUngVienModel implements TblHoSoUngVienModel {
   String? get uvEmail;
   @override
   String? get maHoSo;
+  @override
+  String? get tenDanToc;
   @override
   int? get idDanToc;
   @override
@@ -1534,9 +1591,9 @@ abstract class _TblHoSoUngVienModel implements TblHoSoUngVienModel {
   @override
   String? get uvDienthoai;
   @override
-  String? get uvSoCMND;
+  String? get uvSoCmnd;
   @override
-  DateTime? get uvNgaycap;
+  String? get uvNgaycap;
   @override
   String? get uvNoicap;
   @override
@@ -1546,11 +1603,33 @@ abstract class _TblHoSoUngVienModel implements TblHoSoUngVienModel {
   @override
   String? get uvCannang;
   @override
-  DateTime? get uvNgaysinh;
+  String? get uvDoituongchinhsach;
+  @override
+  int? get uvDoituongchinhsachId;
+  @override
+  String? get uvTinhtrangtantat;
+  @override
+  int? get uvTinhtrangtantatId;
+  @override
+  String? get uvHonnhan;
+  @override
+  bool? get uvHonnhanId;
+  @override
+  String? get uvNgaysinh;
   @override
   String? get uvcmCongviechientai;
   @override
   String? get uvnvNganhnghe;
+  @override
+  int? get uvnvNganhngheId;
+  @override
+  String? get uvnvVitrimongmuon;
+  @override
+  int? get uvnvVitrimongmuonid;
+  @override
+  String? get uvnvThoigian;
+  @override
+  int? get uvnvThoigianId;
   @override
   String? get uvnvNoilamviec;
   @override
@@ -1558,7 +1637,15 @@ abstract class _TblHoSoUngVienModel implements TblHoSoUngVienModel {
   @override
   double? get uvnvTienluong;
   @override
+  String? get uvnvHinhthuccongty;
+  @override
+  int? get uvnvHinhthuccongtyId;
+  @override
   String? get uvGhichu;
+  @override
+  String? get uvcmTrinhdo;
+  @override
+  int? get uvcmTrinhdoId;
   @override
   String? get uvcmBangcap;
   @override
@@ -1586,21 +1673,13 @@ abstract class _TblHoSoUngVienModel implements TblHoSoUngVienModel {
   @override
   bool? get uvhtAddress;
   @override
-  DateTime? get createdDate;
-  @override
-  String? get createdBy;
-  @override
-  DateTime? get modifiredDate;
-  @override
-  String? get modifiredBy;
-  @override
   String? get uvId;
   @override
   bool? get newsletterSubscription;
   @override
   bool? get jobsletterSubscription;
   @override
-  bool? get coBHTN;
+  bool? get coBhtn;
   @override
   String? get soNhaDuong;
   @override
@@ -1608,15 +1687,15 @@ abstract class _TblHoSoUngVienModel implements TblHoSoUngVienModel {
   @override
   String? get idTinh;
   @override
-  String? get idHuyen;
+  String? get idhuyen;
   @override
-  String? get idXa;
+  String? get idxa;
   @override
-  String? get idTv; // Changed to String?
+  String? get idtv;
   @override
-  String? get mahoGD;
+  String? get mahoGd;
   @override
-  String? get fileCV;
+  String? get fileCv;
   @override
   int? get displayOrder;
   @override
@@ -1629,24 +1708,6 @@ abstract class _TblHoSoUngVienModel implements TblHoSoUngVienModel {
   String? get idBacHoc;
   @override
   String? get diachilienhe;
-  @override
-  int? get uvnvNganhngheId;
-  @override
-  int? get uvcmTrinhdoId;
-  @override
-  int? get uvDoituongchinhsachId;
-  @override
-  int? get uvnvThoigianId;
-  @override
-  int? get uvnvVitrimongmuonid;
-  @override
-  bool? get uvHonnhanId;
-  @override
-  String? get tenDanToc;
-  @override
-  int? get uvTinhtrangtantatId;
-  @override
-  int? get uvnvHinhthuccongtyId;
 
   /// Create a copy of TblHoSoUngVienModel
   /// with the given fields replaced by the non-null parameter values.

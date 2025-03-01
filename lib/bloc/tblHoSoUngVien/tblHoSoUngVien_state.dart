@@ -1,39 +1,39 @@
 import 'package:equatable/equatable.dart';
 import 'package:ttld/models/tblHoSoUngVien/tblHoSoUngVien_model.dart';
 
-abstract class TblHoSoUngVienState extends Equatable {
-  const TblHoSoUngVienState();
+abstract class NTVState extends Equatable {
+  const NTVState();
 
   @override
   List<Object> get props => [];
 }
 
-class TblHoSoUngVienInitial extends TblHoSoUngVienState {}
+class NTVInitial extends NTVState {}
 
-class TblHoSoUngVienLoading extends TblHoSoUngVienState {}
+class NTVLoading extends NTVState {}
 
-class TblHoSoUngVienLoaded extends TblHoSoUngVienState {
+class NTVLoaded extends NTVState {
   final List<TblHoSoUngVienModel> tblHoSoUngViens;
 
-  const TblHoSoUngVienLoaded(this.tblHoSoUngViens);
+  const NTVLoaded(this.tblHoSoUngViens);
 
   @override
   List<Object> get props => [tblHoSoUngViens];
 }
 
-class TblHoSoUngVienLoadedById extends TblHoSoUngVienState {
+class NTVLoadedById extends NTVState {
   final TblHoSoUngVienModel? tblHoSoUngVien;
 
-  const TblHoSoUngVienLoadedById(this.tblHoSoUngVien);
+  const NTVLoadedById(this.tblHoSoUngVien);
 
   @override
   List<Object> get props => [tblHoSoUngVien!];
 }
 
-class TblHoSoUngVienError extends TblHoSoUngVienState {
+class NTVError extends NTVState {
   final String message;
 
-  const TblHoSoUngVienError(this.message);
+  const NTVError(this.message);
 
   @override
   List<Object> get props => [message];

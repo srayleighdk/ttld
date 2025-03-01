@@ -1,31 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class CustomPickYear extends StatefulWidget {
-  const CustomPickYear({
+class CustomPickDateTime extends StatefulWidget {
+  const CustomPickDateTime({
     Key? key,
     this.labelText,
     this.hintText,
     this.onChanged,
     this.selectedDate,
+    this.validator,
+    this.initialValue,
   }) : super(key: key);
 
   final String? labelText;
   final String? hintText;
   final ValueChanged<DateTime?>? onChanged;
   final DateTime? selectedDate;
+  final String? Function(DateTime?)? validator;
+  final DateTime? initialValue;
 
   @override
-  State<CustomPickYear> createState() => _CustomPickYearState();
+  State<CustomPickDateTime> createState() => _CustomPickDateTimeState();
 }
 
-class _CustomPickYearState extends State<CustomPickYear> {
+class _CustomPickDateTimeState extends State<CustomPickDateTime> {
   DateTime? _selectedDate;
+  String? _errorText;
 
   @override
   void initState() {
     super.initState();
-    _selectedDate = widget.selectedDate;
+    _selectedDate = widget.initialValue ?? widget.selectedDate;
   }
 
   Future<void> _selectYear(BuildContext context) async {
@@ -62,16 +67,17 @@ class _CustomPickYearState extends State<CustomPickYear> {
           onTap: () => _selectYear(context),
           child: InputDecorator(
             decoration: InputDecoration(
-              labelText: widget.hintText ?? 'Select Year',
+              labelText: widget.hintText ?? 'Select Date',
               border: const OutlineInputBorder(),
+              errorText: _errorText,
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
                   _selectedDate != null
-                      ? DateFormat('yyyy').format(_selectedDate!)
-                      : widget.hintText ?? 'Select Year',
+                      ? DateFormat('dd/MM/yyyy').format(_selectedDate!)
+                      : widget.hintText ?? 'Select Date',
                   style: TextStyle(
                     fontSize: 16,
                     color: _selectedDate != null ? Colors.black : Colors.grey,
@@ -84,5 +90,15 @@ class _CustomPickYearState extends State<CustomPickYear> {
         ),
       ],
     );
+  }
+
+  String? validate() {
+    if (widget.validator != null) {
+      setState(() {
+        _errorText = widget.validator!(_selectedDate);
+      });
+      return _errorText;
+    }
+    return null;
   }
 }

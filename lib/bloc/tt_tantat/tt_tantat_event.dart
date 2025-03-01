@@ -10,7 +10,7 @@ abstract class TTTanTatEvent extends Equatable {
 class LoadTTTanTats extends TTTanTatEvent {}
 
 class AddTTTanTat extends TTTanTatEvent {
-  final TTTanTat ttTanTat;
+  final TtTantat ttTanTat;
 
   const AddTTTanTat({required this.ttTanTat});
 
@@ -19,7 +19,7 @@ class AddTTTanTat extends TTTanTatEvent {
 }
 
 class UpdateTTTanTat extends TTTanTatEvent {
-  final TTTanTat ttTanTat;
+  final TtTantat ttTanTat;
 
   const UpdateTTTanTat({required this.ttTanTat});
 

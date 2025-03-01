@@ -1,40 +1,40 @@
 part of 'doituong_bloc.dart';
 
-abstract class DoiTuongChinhSachState extends Equatable {
-  const DoiTuongChinhSachState();
+abstract class DoiTuongState extends Equatable {
+  const DoiTuongState();
 
   @override
   List<Object> get props => [];
 }
 
-class DoiTuongChinhSachInitial extends DoiTuongChinhSachState {}
+class DoiTuongInitial extends DoiTuongState {}
 
-class DoiTuongChinhSachLoading extends DoiTuongChinhSachState {}
+class DoiTuongLoading extends DoiTuongState {}
 
-class DoiTuongChinhSachLoaded extends DoiTuongChinhSachState {
-  final List<DoiTuongChinhSach> doiTuongChinhSachs;
+class DoiTuongLoaded extends DoiTuongState {
+  final List<DoiTuong> doiTuongs;
 
-  const DoiTuongChinhSachLoaded(this.doiTuongChinhSachs);
+  const DoiTuongLoaded(this.doiTuongs);
 
   @override
-  List<Object> get props => [doiTuongChinhSachs];
+  List<Object> get props => [doiTuongs];
 }
 
-class DoiTuongChinhSachError extends DoiTuongChinhSachState {
+class DoiTuongError extends DoiTuongState {
   final String message;
 
-  const DoiTuongChinhSachError(this.message);
+  const DoiTuongError(this.message);
 
   @override
   List<Object> get props => [message];
 }
 
-class DoiTuongChinhSachOperationSuccess extends DoiTuongChinhSachState {}
+class DoiTuongOperationSuccess extends DoiTuongState {}
 
-class DoiTuongChinhSachOperationFailure extends DoiTuongChinhSachState {
+class DoiTuongOperationFailure extends DoiTuongState {
   final String message;
 
-  const DoiTuongChinhSachOperationFailure(this.message);
+  const DoiTuongOperationFailure(this.message);
 
   @override
   List<Object> get props => [message];

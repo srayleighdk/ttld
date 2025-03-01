@@ -20,10 +20,6 @@ Ntd _$NtdFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Ntd {
-// required String? idDoanhNghiep,
-// required String? username,
-// required String? password,
-// required String? ntdMadn,
   String? get idDoanhNghiep => throw _privateConstructorUsedError;
   String? get username => throw _privateConstructorUsedError;
   String? get password => throw _privateConstructorUsedError;
@@ -847,10 +843,6 @@ class _$NtdImpl implements _Ntd {
   factory _$NtdImpl.fromJson(Map<String, dynamic> json) =>
       _$$NtdImplFromJson(json);
 
-// required String? idDoanhNghiep,
-// required String? username,
-// required String? password,
-// required String? ntdMadn,
   @override
   final String? idDoanhNghiep;
   @override
@@ -1217,10 +1209,6 @@ abstract class _Ntd implements Ntd {
 
   factory _Ntd.fromJson(Map<String, dynamic> json) = _$NtdImpl.fromJson;
 
-// required String? idDoanhNghiep,
-// required String? username,
-// required String? password,
-// required String? ntdMadn,
   @override
   String? get idDoanhNghiep;
   @override

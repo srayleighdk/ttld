@@ -6,18 +6,20 @@ class HinhThucLoaiHinhApiService {
   HinhThucLoaiHinhApiService(this._dio);
 
   Future<Response> getHinhThucLoaiHinh() async {
-    return await _dio.get('/api/danhmuc/hinh-thuc/loai-hinh');
+    return await _dio.get('/danhmuc/hinh-thuc/loai-hinh');
   }
 
   Future<Response> postHinhThucLoaiHinh(Map<String, dynamic> data) async {
-    return await _dio.post('/api/danhmuc/hinh-thuc/loai-hinh', data);
+    return await _dio.post('/danhmuc/hinh-thuc/loai-hinh', data: data);
   }
 
   Future<Response> putHinhThucLoaiHinh(Map<String, dynamic> data) async {
-    return await _dio.put('/api/danhmuc/hinh-thuc/loai-hinh', data);
+    return await _dio.put('/danhmuc/hinh-thuc/loai-hinh', data: data);
   }
 
   Future<void> deleteHinhThucLoaiHinh(String id) async {
-    await _dio.delete('/api/danhmuc/hinh-thuc/loai-hinh/$id');
+    await _dio.delete('/danhmuc/hinh-thuc/loai-hinh', queryParameters: {
+      'id': id,
+    });
   }
 }

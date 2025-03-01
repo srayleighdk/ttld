@@ -30,7 +30,7 @@ class TTTanTatBloc extends Bloc<TTTanTatEvent, TTTanTatState> {
     try {
       final ttTanTat = await ttTanTatRepository.addTTTanTat(event.ttTanTat);
       if (state is TTTanTatLoaded) {
-        final updatedTTTanTats = List<TTTanTat>.from((state as TTTanTatLoaded).ttTanTats)..add(ttTanTat);
+        final updatedTTTanTats = List<TtTantat>.from((state as TTTanTatLoaded).ttTanTats)..add(ttTanTat);
         emit(TTTanTatLoaded(ttTanTats: updatedTTTanTats));
       }
     } catch (e) {

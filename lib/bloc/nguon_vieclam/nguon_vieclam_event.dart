@@ -17,7 +17,7 @@ class UpdateNguonViecLam extends NguonViecLamEvent {
 }
 
 class DeleteNguonViecLam extends NguonViecLamEvent {
-  final int maNguonVlt;
+  final String id;
 
-  DeleteNguonViecLam({required this.maNguonVlt});
+  DeleteNguonViecLam({required this.id});
 }

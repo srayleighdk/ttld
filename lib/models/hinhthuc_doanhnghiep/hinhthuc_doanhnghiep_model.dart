@@ -1,11 +1,13 @@
 class HinhThucDoanhNghiep {
-  final String tenHinhthuc;
+  final int id;
+  final String name;
   final String idLhdn;
   final int displayOrder;
   final bool status;
 
   HinhThucDoanhNghiep({
-    required this.tenHinhthuc,
+    required this.id,
+    required this.name,
     required this.idLhdn,
     required this.displayOrder,
     required this.status,
@@ -13,7 +15,8 @@ class HinhThucDoanhNghiep {
 
   factory HinhThucDoanhNghiep.fromJson(Map<String, dynamic> json) {
     return HinhThucDoanhNghiep(
-      tenHinhthuc: json['tenHinhthuc'],
+      id: json['id'],
+      name: json['name'],
       idLhdn: json['idLhdn'],
       displayOrder: json['displayOrder'],
       status: json['status'],
@@ -22,7 +25,8 @@ class HinhThucDoanhNghiep {
 
   Map<String, dynamic> toJson() {
     return {
-      'tenHinhthuc': tenHinhthuc,
+      'id': id,
+      'name': name,
       'idLhdn': idLhdn,
       'displayOrder': displayOrder,
       'status': status,

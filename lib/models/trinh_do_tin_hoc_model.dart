@@ -1,20 +1,20 @@
 class TrinhDoTinHoc {
-  final String tdthId;
-  final String tdthTen;
+  final String id;
+  final String name;
   final int displayOrder;
   final bool status;
 
   TrinhDoTinHoc({
-    required this.tdthId,
-    required this.tdthTen,
+    required this.id,
+    required this.name,
     required this.displayOrder,
     required this.status,
   });
 
   factory TrinhDoTinHoc.fromJson(Map<String, dynamic> json) {
     return TrinhDoTinHoc(
-      tdthId: json['tdthId'],
-      tdthTen: json['tdthTen'],
+      id: json['id'],
+      name: json['name'],
       displayOrder: json['displayOrder'],
       status: json['status'],
     );
@@ -22,8 +22,8 @@ class TrinhDoTinHoc {
 
   Map<String, dynamic> toJson() {
     return {
-      'tdthId': tdthId,
-      'tdthTen': tdthTen,
+      'id': id,
+      'name': name,
       'displayOrder': displayOrder,
       'status': status,
     };

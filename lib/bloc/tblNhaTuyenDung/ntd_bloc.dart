@@ -45,8 +45,7 @@ class NTDBloc extends Bloc<NTDEvent, NTDState> {
       emit(NTDLoading());
       try {
         await _ntdRepository.updateNtd(event.ntd);
-        final ntdList = await _ntdRepository.getNtdList();
-        emit(NTDLoaded(ntdList));
+        emit(NTDSuccess('Cập nhật thành công'));
       } catch (e) {
         emit(NTDError('Failed to update NTD: $e'));
       }

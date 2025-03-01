@@ -6,18 +6,20 @@ class TrinhDoHocVanApiService {
   TrinhDoHocVanApiService(this._dio);
 
   Future<Response> getTrinhDoHocVan() async {
-    return await _dio.get('/api/danhmuc/trinh-do/hoc-van');
+    return await _dio.get('/danhmuc/trinh-do/hoc-van');
   }
 
   Future<Response> postTrinhDoHocVan(Map<String, dynamic> data) async {
-    return await _dio.post('/api/danhmuc/trinh-do/hoc-van', data);
+    return await _dio.post('/danhmuc/trinh-do/hoc-van', data: data);
   }
 
   Future<Response> putTrinhDoHocVan(Map<String, dynamic> data) async {
-    return await _dio.put('/api/danhmuc/trinh-do/hoc-van', data);
+    return await _dio.put('/danhmuc/trinh-do/hoc-van', data: data);
   }
 
   Future<void> deleteTrinhDoHocVan(String id) async {
-    await _dio.delete('/api/danhmuc/trinh-do/hoc-van/$id');
+    await _dio.delete('/danhmuc/trinh-do/hoc-van', queryParameters: {
+      'id': id,
+    });
   }
 }

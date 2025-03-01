@@ -3,40 +3,43 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get_it/get_it.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ttld/features/auth/repositories/auth_repository.dart';
 import 'package:ttld/helppers/help.dart';
 
 class ApiClient {
-  static final ApiClient _instance = ApiClient._internal();
-  late final Dio dio;
+  final Dio dio;
+  final getIt = GetIt.instance;
 
-  final FlutterSecureStorage storage = const FlutterSecureStorage();
-
-  factory ApiClient() => _instance;
-
-  ApiClient._internal() {
-    dio = Dio(
-      BaseOptions(
-        baseUrl: getEnv('API_BASE_URL'),
-        connectTimeout: const Duration(seconds: 5),
-        receiveTimeout: const Duration(seconds: 3),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-      ),
-    );
-
+  ApiClient()
+      : dio = Dio(
+          BaseOptions(
+            baseUrl: getEnv('API_BASE_URL'),
+            connectTimeout: const Duration(seconds: 5),
+            receiveTimeout: const Duration(seconds: 5),
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+          ),
+        ) {
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          final token = await getToken();
-          if (token != null) {
-            options.headers['Authorization'] = 'Bearer $token';
-          }
-          return handler.next(options);
+          // final token = await getToken();
+          final token = await getIt<AuthRepository>().getTokenFromStorage();
+          options.headers['Authorization'] = 'Bearer $token';
+                  return handler.next(options);
+        },
+        onResponse: (response, handler) {
+          // Handle success response (if needed)
+          return handler.next(response);
+        },
+        onError: (error, handler) {
+          // Handle error response (if needed)
+          _handleError(error);
+          return handler.next(error);
         },
       ),
     );
@@ -69,21 +72,100 @@ class ApiClient {
         }));
   }
 
-  Future<String?> getToken() async {
-    if (kIsWeb || Platform.isLinux) {
-      final prefs = await SharedPreferences.getInstance();
-      return prefs.getString('auth_token');
-    } else {
-      return await storage.read(key: 'auth_token');
+// Example GET request
+  Future<Response> get(String path,
+      {Map<String, dynamic>? queryParameters}) async {
+    try {
+      final response = await dio.get(path, queryParameters: queryParameters);
+      return response;
+    } on DioException catch (e) {
+      // Handle Dio errors
+      throw _handleError(e);
     }
   }
 
-  Future<void> saveToken(String token) async {
-    if (kIsWeb || Platform.isLinux) {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('auth_token', token);
-    } else {
-      await storage.write(key: 'auth_token', value: token);
+  // Example POST request
+  Future<Response> post(String path, {dynamic data}) async {
+    try {
+      final response = await dio.post(path, data: data);
+      return response;
+    } on DioException catch (e) {
+      // Handle Dio errors
+      throw _handleError(e);
+    }
+  }
+
+  // Example PUT request
+  Future<Response> put(String path, {dynamic data}) async {
+    try {
+      final response = await dio.put(path, data: data);
+      return response;
+    } on DioException catch (e) {
+      // Handle Dio errors
+      throw _handleError(e);
+    }
+  }
+
+  // Example DELETE request
+  Future<Response> delete(String path) async {
+    try {
+      final response = await dio.delete(path);
+      return response;
+    } on DioException catch (e) {
+      // Handle Dio errors
+      throw _handleError(e);
+    }
+  }
+
+  Exception _handleError(DioException error) {
+    switch (error.type) {
+      case DioExceptionType.connectionTimeout:
+        debugPrint('Connection timeout');
+        return Exception('Connection timeout');
+      case DioExceptionType.sendTimeout:
+        debugPrint('Send timeout');
+        return Exception('Send timeout');
+      case DioExceptionType.receiveTimeout:
+        debugPrint('Receive timeout');
+        return Exception('Receive timeout');
+      case DioExceptionType.badResponse:
+        return _handleHttpError(error.response);
+      case DioExceptionType.cancel:
+        debugPrint('Request canceled');
+        return Exception('Request canceled');
+      case DioExceptionType.unknown:
+        debugPrint('Unknown error: ${error.message}');
+        return Exception('Unknown error: ${error.message}');
+      default:
+        debugPrint('Unhandled Dio error: ${error.type}');
+        return Exception('Unhandled Dio error: ${error.type}');
+    }
+  }
+
+  Exception _handleHttpError(Response? response) {
+    if (response == null) {
+      debugPrint('No response received');
+      return Exception('No response received');
+    }
+
+    switch (response.statusCode) {
+      case 400:
+        debugPrint('Bad request: ${response.data}');
+        return Exception('Bad request: ${response.data}');
+      case 401:
+        debugPrint('Unauthorized — Token may be invalid');
+        return Exception('Unauthorized — Token may be invalid');
+      case 403:
+        debugPrint('Forbidden');
+        return Exception('Forbidden');
+      case 404:
+        debugPrint('Not found: ${response.requestOptions.path}');
+        return Exception('Not found: ${response.requestOptions.path}');
+      case 500:
+        return Exception('Internal server error');
+      default:
+        debugPrint('Unhandled HTTP error: ${response.statusCode}');
+        return Exception('Unhandled HTTP error: ${response.statusCode}');
     }
   }
 }

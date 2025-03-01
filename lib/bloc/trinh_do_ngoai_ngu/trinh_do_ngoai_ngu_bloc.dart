@@ -41,7 +41,7 @@ class TrinhDoNgoaiNguBloc extends Bloc<TrinhDoNgoaiNguEvent, TrinhDoNgoaiNguStat
     try {
       final trinhDoNgoaiNgu = await trinhDoNgoaiNguRepository.updateTrinhDoNgoaiNgu(event.trinhDoNgoaiNgu);
       if (state is TrinhDoNgoaiNguLoaded) {
-        final updatedTrinhDoNgoaiNgus = (state as TrinhDoNgoaiNguLoaded).trinhDoNgoaiNgus.map((q) => q.tdnnId == trinhDoNgoaiNgu.tdnnId ? trinhDoNgoaiNgu : q).toList();
+        final updatedTrinhDoNgoaiNgus = (state as TrinhDoNgoaiNguLoaded).trinhDoNgoaiNgus.map((q) => q.id == trinhDoNgoaiNgu.id ? trinhDoNgoaiNgu : q).toList();
         emit(TrinhDoNgoaiNguLoaded(trinhDoNgoaiNgus: updatedTrinhDoNgoaiNgus));
       }
     } catch (e) {
@@ -51,9 +51,9 @@ class TrinhDoNgoaiNguBloc extends Bloc<TrinhDoNgoaiNguEvent, TrinhDoNgoaiNguStat
 
   Future<void> _onDeleteTrinhDoNgoaiNgu(DeleteTrinhDoNgoaiNgu event, Emitter<TrinhDoNgoaiNguState> emit) async {
     try {
-      await trinhDoNgoaiNguRepository.deleteTrinhDoNgoaiNgu(event.tdnnId);
+      await trinhDoNgoaiNguRepository.deleteTrinhDoNgoaiNgu(event.id);
       if (state is TrinhDoNgoaiNguLoaded) {
-        final updatedTrinhDoNgoaiNgus = (state as TrinhDoNgoaiNguLoaded).trinhDoNgoaiNgus.where((q) => q.tdnnId != event.tdnnId).toList();
+        final updatedTrinhDoNgoaiNgus = (state as TrinhDoNgoaiNguLoaded).trinhDoNgoaiNgus.where((q) => q.id != event.id).toList();
         emit(TrinhDoNgoaiNguLoaded(trinhDoNgoaiNgus: updatedTrinhDoNgoaiNgus));
       }
     } catch (e) {

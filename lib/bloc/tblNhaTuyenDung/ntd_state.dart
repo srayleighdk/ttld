@@ -37,3 +37,12 @@ class NTDError extends NTDState {
   @override
   List<Object> get props => [message];
 }
+
+class NTDSuccess extends NTDState {
+  final String message;
+
+  const NTDSuccess(this.message);
+
+  @override
+  List<Object> get props => [message];
+}

@@ -41,7 +41,7 @@ class NganhNgheBloc extends Bloc<NganhNgheEvent, NganhNgheState> {
     try {
       final nganhNghe = await nganhNgheRepository.updateNganhNghe(event.nganhNghe);
       if (state is NganhNgheLoaded) {
-        final updatedNganhNghes = (state as NganhNgheLoaded).nganhNghes.map((q) => q.idNkt == nganhNghe.idNkt ? nganhNghe : q).toList();
+        final updatedNganhNghes = (state as NganhNgheLoaded).nganhNghes.map((q) => q.id == nganhNghe.id ? nganhNghe : q).toList();
         emit(NganhNgheLoaded(nganhNghes: updatedNganhNghes));
       }
     } catch (e) {
@@ -51,9 +51,9 @@ class NganhNgheBloc extends Bloc<NganhNgheEvent, NganhNgheState> {
 
   Future<void> _onDeleteNganhNghe(DeleteNganhNghe event, Emitter<NganhNgheState> emit) async {
     try {
-      await nganhNgheRepository.deleteNganhNghe(event.idNkt);
+      await nganhNgheRepository.deleteNganhNghe(event.id);
       if (state is NganhNgheLoaded) {
-        final updatedNganhNghes = (state as NganhNgheLoaded).nganhNghes.where((q) => q.idNkt != event.idNkt).toList();
+        final updatedNganhNghes = (state as NganhNgheLoaded).nganhNghes.where((q) => q.id != event.id).toList();
         emit(NganhNgheLoaded(nganhNghes: updatedNganhNghes));
       }
     } catch (e) {

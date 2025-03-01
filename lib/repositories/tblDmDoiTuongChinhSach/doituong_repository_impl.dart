@@ -2,33 +2,33 @@ import 'package:ttld/core/services/doituongchinhsach_api_service.dart';
 import 'package:ttld/models/doituong_chinhsach/doituong.dart';
 import 'package:ttld/repositories/tblDmDoiTuongChinhSach/doituong_repository.dart';
 
-class DoiTuongChinhSachRepositoryImpl implements DoiTuongChinhSachRepository {
-  final DoiTuongChinhSachApiService doiTuongChinhSachApiService;
+class DoiTuongRepositoryImpl implements DoiTuongRepository {
+  final DoiTuongApiService doiTuongApiService;
 
-  DoiTuongChinhSachRepositoryImpl(
-      this.doiTuongChinhSachApiService); // Inject the API service
+  DoiTuongRepositoryImpl(this.doiTuongApiService); // Inject the API service
 
   @override
-  Future<List<DoiTuongChinhSach>> getDoiTuongChinhSachs() async {
-    return await doiTuongChinhSachApiService.getDoiTuongChinhSachs();
+  Future<List<DoiTuong>> getDoiTuongs() async {
+    final response = await doiTuongApiService.getDoiTuongs();
+    return (response.data['data'] as List)
+        .map((json) => DoiTuong.fromJson(json))
+        .toList();
   }
 
   @override
-  Future<DoiTuongChinhSach> createDoiTuongChinhSach(
-      DoiTuongChinhSach doiTuongChinhSach) async {
-    return await doiTuongChinhSachApiService
-        .createDoiTuongChinhSach(doiTuongChinhSach);
+  Future<DoiTuong> createDoiTuong(DoiTuong doiTuong) async {
+    final response = await doiTuongApiService.postDoiTuong(doiTuong.toJson());
+    return DoiTuong.fromJson(response.data);
   }
 
   @override
-  Future<DoiTuongChinhSach> updateDoiTuongChinhSach(
-      int id, DoiTuongChinhSach doiTuongChinhSach) async {
-    return await doiTuongChinhSachApiService.updateDoiTuongChinhSach(
-        id, doiTuongChinhSach);
+  Future<DoiTuong> updateDoiTuong(String id, DoiTuong doiTuong) async {
+    final response = await doiTuongApiService.putDoiTuong(doiTuong.toJson());
+    return DoiTuong.fromJson(response.data);
   }
 
   @override
-  Future<void> deleteDoiTuongChinhSach(int id) async {
-    await doiTuongChinhSachApiService.deleteDoiTuongChinhSach(id);
+  Future<void> deleteDoiTuong(String id) async {
+    await doiTuongApiService.deleteDoiTuong(id);
   }
 }

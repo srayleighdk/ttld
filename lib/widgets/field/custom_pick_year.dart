@@ -1,88 +1,90 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
-class CustomPickYear extends StatefulWidget {
-  const CustomPickYear({
-    Key? key,
-    this.labelText,
-    this.hintText,
-    this.onChanged,
-    this.selectedDate,
-  }) : super(key: key);
+class CustomYearPicker extends StatefulWidget {
+  const CustomYearPicker({
+    super.key,
+    required this.onChanged,
+    this.selectedItem,
+    this.minYear = 1900,
+    this.maxYear,
+    this.hint = 'Chọn Năm',
+    this.backgroundColor,
+    this.label,
+  });
 
-  final String? labelText;
-  final String? hintText;
-  final ValueChanged<DateTime?>? onChanged;
-  final DateTime? selectedDate;
+  final ValueChanged<int?> onChanged;
+  final int? selectedItem;
+  final int minYear;
+  final int? maxYear;
+  final String hint;
+  final Color? backgroundColor;
+  final Widget? label;
 
   @override
-  State<CustomPickYear> createState() => _CustomPickYearState();
+  State<CustomYearPicker> createState() => _CustomYearPickerState();
 }
 
-class _CustomPickYearState extends State<CustomPickYear> {
-  DateTime? _selectedDate;
+class _CustomYearPickerState extends State<CustomYearPicker> {
+  late int? _selectedYear;
+  late int _effectiveMaxYear;
 
   @override
   void initState() {
     super.initState();
-    _selectedDate = widget.selectedDate;
+    _effectiveMaxYear = widget.maxYear ?? DateTime.now().year;
+    _selectedYear = widget.selectedItem ?? _effectiveMaxYear;
   }
 
-  Future<void> _selectYear(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _selectedDate ?? DateTime.now(),
-      firstDate: DateTime(1900),
-      lastDate: DateTime(2100),
-      initialDatePickerMode: DatePickerMode.year,
-    );
-    if (picked != null && picked != _selectedDate) {
-      setState(() {
-        _selectedDate = picked;
-      });
-      widget.onChanged?.call(picked);
+  @override
+  void didUpdateWidget(covariant CustomYearPicker oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.selectedItem != oldWidget.selectedItem) {
+      _selectedYear = widget.selectedItem ?? _effectiveMaxYear;
+    }
+    if (widget.maxYear != oldWidget.maxYear) {
+      _effectiveMaxYear = widget.maxYear ?? DateTime.now().year;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (widget.labelText != null)
-          Text(
-            widget.labelText!,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        const SizedBox(height: 8),
-        InkWell(
-          onTap: () => _selectYear(context),
-          child: InputDecorator(
-            decoration: InputDecoration(
-              labelText: widget.hintText ?? 'Select Year',
-              border: const OutlineInputBorder(),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  _selectedDate != null
-                      ? DateFormat('yyyy').format(_selectedDate!)
-                      : widget.hintText ?? 'Select Year',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: _selectedDate != null ? Colors.black : Colors.grey,
-                  ),
-                ),
-                const Icon(Icons.calendar_today),
-              ],
-            ),
-          ),
-        ),
-      ],
+    return Container(
+      decoration: BoxDecoration(
+        color: widget.backgroundColor ?? Colors.grey.shade100,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      width: double.infinity,
+      child: DropdownMenu<int>(
+        label: widget.label,
+        initialSelection: _selectedYear,
+        onSelected: (int? newValue) {
+          setState(() {
+            _selectedYear = newValue;
+          });
+          widget.onChanged(newValue);
+        },
+        dropdownMenuEntries: _generateYearEntries(),
+        hintText: widget.hint,
+        width: double.infinity,
+        textStyle: const TextStyle(color: Colors.black),
+      ),
     );
+  }
+
+  List<DropdownMenuEntry<int>> _generateYearEntries() {
+    final years = List.generate(
+      _effectiveMaxYear - widget.minYear + 1,
+      (index) => widget.minYear + index,
+    ).reversed.toList();
+
+    return years.map((year) {
+      return DropdownMenuEntry<int>(
+        value: year,
+        label: year.toString(),
+        style: MenuItemButton.styleFrom(
+          foregroundColor: Colors.black, // Ensures text is visible
+        ),
+      );
+    }).toList();
   }
 }

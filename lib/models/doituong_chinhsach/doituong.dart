@@ -1,17 +1,31 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+class DoiTuong {
+  final int id;
+  final String name;
+  final int displayOrder;
+  final bool status;
 
-part 'doituong.freezed.dart';
-part 'doituong.g.dart';
+  DoiTuong({
+    required this.id,
+    required this.name,
+    required this.displayOrder,
+    required this.status,
+  });
 
-@freezed
-abstract class DoiTuongChinhSach with _$DoiTuongChinhSach {
-  factory DoiTuongChinhSach(
-    @JsonKey(name: 'dtcs_id') int dtcsId,
-    @JsonKey(name: 'dtcs_ten') String? dtcsTen, // Nullable
-    @JsonKey(name: 'DisplayOrder') int displayOrder,
-    @JsonKey(name: 'Status') bool status,
-  ) = _DoiTuongChinhSach;
+  factory DoiTuong.fromJson(Map<String, dynamic> json) {
+    return DoiTuong(
+      id: json['id'],
+      name: json['name'],
+      displayOrder: json['displayOrder'],
+      status: json['status'],
+    );
+  }
 
-  factory DoiTuongChinhSach.fromJson(Map<String, dynamic> json) =>
-      _$DoiTuongChinhSachFromJson(json);
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'displayOrder': displayOrder,
+      'status': status,
+    };
+  }
 }

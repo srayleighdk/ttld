@@ -41,7 +41,7 @@ class NganhNgheBacHocBloc extends Bloc<NganhNgheBacHocEvent, NganhNgheBacHocStat
     try {
       final nganhNgheBacHoc = await nganhNgheBacHocRepository.updateNganhNgheBacHoc(event.nganhNgheBacHoc);
       if (state is NganhNgheBacHocLoaded) {
-        final updatedNganhNgheBacHocs = (state as NganhNgheBacHocLoaded).nganhNgheBacHocs.map((q) => q.idBacHoc == nganhNgheBacHoc.idBacHoc ? nganhNgheBacHoc : q).toList();
+        final updatedNganhNgheBacHocs = (state as NganhNgheBacHocLoaded).nganhNgheBacHocs.map((q) => q.id == nganhNgheBacHoc.id ? nganhNgheBacHoc : q).toList();
         emit(NganhNgheBacHocLoaded(nganhNgheBacHocs: updatedNganhNgheBacHocs));
       }
     } catch (e) {
@@ -51,9 +51,9 @@ class NganhNgheBacHocBloc extends Bloc<NganhNgheBacHocEvent, NganhNgheBacHocStat
 
   Future<void> _onDeleteNganhNgheBacHoc(DeleteNganhNgheBacHoc event, Emitter<NganhNgheBacHocState> emit) async {
     try {
-      await nganhNgheBacHocRepository.deleteNganhNgheBacHoc(event.idBacHoc);
+      await nganhNgheBacHocRepository.deleteNganhNgheBacHoc(event.id);
       if (state is NganhNgheBacHocLoaded) {
-        final updatedNganhNgheBacHocs = (state as NganhNgheBacHocLoaded).nganhNgheBacHocs.where((q) => q.idBacHoc != event.idBacHoc).toList();
+        final updatedNganhNgheBacHocs = (state as NganhNgheBacHocLoaded).nganhNgheBacHocs.where((q) => q.id != event.id).toList();
         emit(NganhNgheBacHocLoaded(nganhNgheBacHocs: updatedNganhNgheBacHocs));
       }
     } catch (e) {

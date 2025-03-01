@@ -2,20 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ttld/bloc/tblNhaTuyenDung/ntd_bloc.dart';
 import 'package:ttld/core/di/injection.dart';
+import 'package:ttld/core/services/thoigianhoatdong_api_service.dart';
+import 'package:ttld/helppers/map_help.dart';
 import 'package:ttld/models/chuc_danh_model.dart';
 import 'package:ttld/models/hinhthuc_doanhnghiep/hinhthuc_doanhnghiep_model.dart';
 import 'package:ttld/models/quocgia/quocgia_model.dart';
+import 'package:ttld/models/thoigian_hoatdong.dart';
 import 'package:ttld/repositories/chuc_danh_repository.dart';
 import 'package:ttld/repositories/hinhthuc_doanhnghiep/hinhthuc_doanhnghiep_repository.dart';
 import 'package:ttld/repositories/quocgia/quocgia_repository.dart';
 import 'package:ttld/widgets/cascade_location_picker.dart';
 import 'package:ttld/widgets/field/custom_checkbox.dart';
 import 'package:ttld/widgets/field/custom_pick_date.dart';
+import 'package:ttld/widgets/field/custom_pick_year.dart';
 import 'package:ttld/widgets/field/custom_picker.dart';
+import 'package:ttld/widgets/field/custom_picker_map.dart';
 import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
 
 class UpdateNTDPage extends StatefulWidget {
-  static const routePath = '/update-ntd';
+  static const routePath = '/update_ntd';
   const UpdateNTDPage({super.key});
 
   @override
@@ -64,11 +69,10 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
   bool _newletterSubscription = false;
   bool _jobsletterSubscription = false;
 
-  String? ntdLoai;
+  int? ntdLoai;
   final _nongThonThanhThiController = TextEditingController();
   int? idLoaiHinhDoanhNghiep;
   int? idNganhKinhTe;
-  int? idThoiGianHoatDong;
   int? idStatus;
   int? displayOrder;
   int? ntdHinhthucdoanhnghiep;
@@ -77,6 +81,10 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
   String? _selectedHuyen;
   String? _selectedXa;
   String? _selectedKCN;
+  int? maTinh;
+  String? maHuyen;
+  String? maXa;
+  int? maKCN;
 
   List<QuocGia> _quocGias = [];
   QuocGia? quocGia;
@@ -89,10 +97,13 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
 
   final _idDoanhNghiepController = TextEditingController();
 
+  int? idThoiGianHoatDong;
+  List<ThoiGianHoatDong> _thoigianhoatdongs = [];
+  ThoiGianHoatDong? thoigianhoatdong;
+
   @override
   void initState() {
     super.initState();
-    _loadQuocGias(); // Load data when the widget is initialized
     _loadChucDanh();
     _loadHinhThucDoanhNghiep();
   }
@@ -114,6 +125,11 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
         _ntdSolaodongController.text = ntd.ntdSolaodong?.toString() ?? '';
         _ntdGioithieuController.text = ntd.ntdGioithieu ?? '';
         _ntdDiachithanhphoController.text = ntd.ntdDiachithanhpho ?? '';
+        maTinh = int.tryParse(ntd.ntdDiachithanhpho ?? '');
+        maHuyen = ntd.ntdDiachihuyen ?? '';
+        maXa = ntd.ntdDiachixaphuong ?? '';
+        maKCN = ntd.ntdThuockhucongnghiep;
+
         _ntdDiachihuyenController.text = ntd.ntdDiachihuyen ?? '';
         _ntdDiachixaphuongController.text = ntd.ntdDiachixaphuong ?? '';
         _ntdDiachichitietController.text = ntd.ntdDiachichitiet ?? '';
@@ -138,6 +154,13 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
         _ntdhtAddress = ntd.ntdhtAddress ?? false;
         _newletterSubscription = ntd.newsletterSubscription ?? false;
         _jobsletterSubscription = ntd.jobsletterSubscription ?? false;
+        idThoiGianHoatDong = ntd.idThoiGianHoatDong;
+        idStatus = ntd.idStatus;
+        idNganhKinhTe = ntd.idNganhKinhTe;
+        idLoaiHinhDoanhNghiep = ntd.idLoaiHinhDoanhNghiep;
+        ntdLoai = ntd.ntdLoai;
+
+        _loadQuocGias(ntd.idQuocGia);
       }
     }
   }
@@ -146,19 +169,19 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
     final chucDanhRepository = locator<ChucDanhRepository>();
     try {
       final chucDanhs = await chucDanhRepository.getChucDanhs();
-      print("chucDanhs: ${chucDanhs[0].tenChucDanh}");
+
       if (mounted) {
         setState(() {
           _chucDanhs = chucDanhs;
         });
       }
-    } catch (e) {
-      // Handle error (e.g., show a snackbar)
-      print("Error loading countries: $e");
+    } catch (e, stackTrace) {
+      // Added stackTrace
+      print("Error loading chuc danh: $e");
     }
   }
 
-  Future<void> _loadQuocGias() async {
+  Future<void> _loadQuocGias(int? maQuocGia) async {
     final quocGiaRepository = locator<QuocGiaRepository>();
     try {
       final quocGias = await quocGiaRepository.getQuocGias();
@@ -166,6 +189,15 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
         setState(() {
           _quocGias = quocGias;
         });
+        if (maQuocGia != null) {
+          QuocGia? _quocGia =
+              quocGias.firstWhere((element) => element.id == maQuocGia);
+          if (_quocGia != null) {
+            setState(() {
+              quocGia = _quocGia;
+            });
+          }
+        }
       }
     } catch (e) {
       // Handle error (e.g., show a snackbar)
@@ -187,6 +219,20 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
     } catch (e) {
       // Handle error (e.g., show a snackbar)
       print("Error loading countries: $e");
+    }
+  }
+
+  Future<void> _loadThoiGianHoatDong() async {
+    try {
+      final thoigianhoatdongs =
+          await locator<ThoiGianHoatDongApiService>().getThoiGianHoatDongList();
+      if (mounted) {
+        setState(() {
+          _thoigianhoatdongs = thoigianhoatdongs;
+        });
+      }
+    } catch (e) {
+      print("Error loading thoigianhoatdongs: $e");
     }
   }
 
@@ -213,6 +259,9 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
             key: _formKey,
             child: ListView(
               children: [
+                const SizedBox(height: 10.0),
+                Text("Thông tin tài khoản"),
+                const SizedBox(height: 16.0),
                 CustomTextField.email(
                   controller: _ntdEmailController,
                 ),
@@ -258,34 +307,50 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   controller: _ntdTenController,
                   hintText: 'Tên nhà tuyển dụng',
                 ),
+
                 const SizedBox(height: 16.0),
-                CustomPicker<String>(
+                CustomTextField(
+                  labelText: "Tên viết tắt",
+                  controller: _ntdTentatController,
+                  hintText: 'Tên viết tắt',
+                ),
+                const SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
+                CustomPickerMap(
                   label: const Text("Loại hình"),
-                  items: const [
-                    "Doanh nghiệp nội tỉnh",
-                    "Doanh nghiệp ngoại tỉnh",
-                    "Doanh nghiệp XKLD",
-                    "Khác"
-                  ],
+                  items: loaiDoanhNgiepOptions,
                   selectedItem: ntdLoai,
                   onChanged: (ntdLoai) {
                     setState(() {
                       this.ntdLoai = ntdLoai;
                     });
                   },
-                  displayItemBuilder: (String? item) => item ?? '',
                 ),
                 const SizedBox(height: 16.0),
-                CustomPicker<String>(
-                  label: const Text("Thời gian hoạt động"),
-                  items: const ["Sáng", "Chiều", "Tối"],
-                  selectedItem: idThoiGianHoatDong as String?,
-                  onChanged: (idThoiGianHoatDong) {
+                CustomPicker<int>(
+                  label: const Text("Trạng thái"),
+                  items: statusOptions.keys.toList(),
+                  selectedItem: idStatus,
+                  onChanged: (value) {
                     setState(() {
-                      this.idThoiGianHoatDong = idThoiGianHoatDong as int?;
+                      idStatus = value;
                     });
                   },
-                  displayItemBuilder: (String? item) => item ?? '',
+                  displayItemBuilder: (int? item) => statusOptions[item] ?? '',
+                ),
+
+                const SizedBox(height: 16.0),
+                CustomPicker<int>(
+                  label: const Text("Thời gian hoạt động"),
+                  items: thoiGianHoatDongOptions.keys.toList(),
+                  selectedItem: idThoiGianHoatDong,
+                  onChanged: (value) {
+                    setState(() {
+                      idThoiGianHoatDong = value;
+                    });
+                  },
+                  displayItemBuilder: (int? item) =>
+                      thoiGianHoatDongOptions[item] ?? '',
                 ),
                 const SizedBox(height: 16.0),
                 CustomPicker<ChucDanhModel>(
@@ -294,11 +359,10 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   selectedItem: chucDanh,
                   onChanged: (chucdanh) {
                     setState(() {
-                      _ntdChucvuController.text = chucdanh?.tenChucDanh ?? '';
+                      _ntdChucvuController.text = chucdanh?.name ?? '';
                     });
                   },
-                  displayItemBuilder: (ChucDanhModel? item) =>
-                      item?.tenChucDanh ?? '',
+                  displayItemBuilder: (ChucDanhModel? item) => item?.name ?? '',
                 ),
                 const SizedBox(height: 16.0),
                 CustomPicker<HinhThucDoanhNghiep>(
@@ -307,11 +371,11 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   selectedItem: hinhthucDoanhNghiep,
                   onChanged: (hinhthucdoanhnhiep) {
                     setState(() {
-                      _selectedQuocgia = hinhthucdoanhnhiep?.tenHinhthuc;
+                      _selectedQuocgia = hinhthucdoanhnhiep?.name;
                     });
                   },
                   displayItemBuilder: (HinhThucDoanhNghiep? item) =>
-                      item?.tenHinhthuc ?? '',
+                      item?.name ?? '',
                 ),
                 const SizedBox(height: 16.0),
                 CustomTextField(
@@ -345,34 +409,36 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   displayItemBuilder: (String? item) => item ?? '',
                 ),
                 const SizedBox(height: 16.0),
-                CustomTextField(
-                  labelText: "Tên viết tắt",
-                  controller: _ntdTentatController,
-                  hintText: 'Tên viết tắt',
-                ),
-                const SizedBox(height: 16.0),
                 CascadeLocationPicker(
+                  isNTD: true,
+                  initialTinh: maTinh.toString(),
+                  initialHuyen: maHuyen,
+                  initialXa: maXa,
+                  initialKCN: maKCN.toString(),
                   addressDetailController: _ntdDiachichitietController,
                   onTinhChanged: (tinh) {
                     setState(() {
                       _selectedTinh = tinh?.tentinh;
+                      maTinh = int.tryParse(tinh?.matinh ?? '');
                     });
                   },
                   onHuyenChanged: (huyen) {
                     setState(() {
                       _selectedHuyen = huyen?.tenhuyen;
+                      maHuyen = huyen?.mahuyen;
                     });
                   },
                   onXaChanged: (xa) {
                     setState(() {
                       _selectedXa = xa?.tenxa;
+                      maXa = xa?.maxa;
                     });
                   },
                   onKCNChanged: (kcn) {
                     setState(() {
                       _selectedKCN = kcn?.kcnTen;
+                      maKCN = kcn?.kcnId;
                     });
-                    _ntdThuockhucongnghiepController.text = kcn?.kcnTen ?? '';
                   },
                 ),
                 const SizedBox(height: 16.0),
@@ -382,15 +448,12 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   hintText: 'Website',
                 ),
                 const SizedBox(height: 16.0),
-                CustomPickYear(
-                  hintText: 'Năm thành lập',
-                  selectedDate:
-                      DateTime.tryParse(_ntdNamthanhlapController.text),
-                  onChanged: (DateTime? dateTime) {
+                CustomYearPicker(
+                  selectedItem: int.tryParse(_ntdNamthanhlapController.text),
+                  label: const Text("Năm tạo"),
+                  onChanged: (year) {
                     setState(() {
-                      if (dateTime != null) {
-                        _ntdNamthanhlapController.text = dateTime.toString();
-                      }
+                      _ntdNamthanhlapController.text = year.toString();
                     });
                   },
                 ),
@@ -510,14 +573,12 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                               ntdSolaodong:
                                   int.tryParse(_ntdSolaodongController.text),
                               ntdGioithieu: _ntdGioithieuController.text,
-                              ntdThuockhucongnghiep: 0,
+                              ntdThuockhucongnghiep: maKCN,
                               // ntdThuockhucongnghiep:
                               //     _ntdThuockhucongnghiepController.text,
-                              ntdDiachithanhpho:
-                                  _ntdDiachithanhphoController.text,
-                              ntdDiachihuyen: _ntdDiachihuyenController.text,
-                              ntdDiachixaphuong:
-                                  _ntdDiachixaphuongController.text,
+                              ntdDiachithanhpho: maTinh.toString(),
+                              ntdDiachihuyen: maHuyen,
+                              ntdDiachixaphuong: maXa,
                               ntdDiachichitiet:
                                   _ntdDiachichitietController.text,
                               ntdNguoilienhe: _ntdNguoilienheController.text,
@@ -540,7 +601,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                               ntdId: _ntdId,
                               newsletterSubscription: _newletterSubscription,
                               jobsletterSubscription: _jobsletterSubscription,
-                              // ntdLoai: _selectedLoai,
+                              ntdLoai: ntdLoai,
                               nongThonThanhThi:
                                   _nongThonThanhThiController.text,
                               idLoaiHinhDoanhNghiep: idLoaiHinhDoanhNghiep,
@@ -597,6 +658,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
     _ntdWebsiteController.dispose();
     _ntdFaxController.dispose();
     _ntdEmailController.dispose();
+
     super.dispose();
   }
 }

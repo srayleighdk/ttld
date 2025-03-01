@@ -1,20 +1,20 @@
 class TrinhDoNgoaiNgu {
-  final String tdnnId;
-  final String tdnnTen;
+  final String id;
+  final String name;
   final int displayOrder;
   final bool status;
 
   TrinhDoNgoaiNgu({
-    required this.tdnnId,
-    required this.tdnnTen,
+    required this.id,
+    required this.name,
     required this.displayOrder,
     required this.status,
   });
 
   factory TrinhDoNgoaiNgu.fromJson(Map<String, dynamic> json) {
     return TrinhDoNgoaiNgu(
-      tdnnId: json['tdnnId'],
-      tdnnTen: json['tdnnTen'],
+      id: json['id'],
+      name: json['name'],
       displayOrder: json['displayOrder'],
       status: json['status'],
     );
@@ -22,8 +22,8 @@ class TrinhDoNgoaiNgu {
 
   Map<String, dynamic> toJson() {
     return {
-      'tdnnId': tdnnId,
-      'tdnnTen': tdnnTen,
+      'id': id,
+      'name': name,
       'displayOrder': displayOrder,
       'status': status,
     };

@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ttld/core/utils/toast_utils.dart';
-import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/ds-ld/bloc/ld_bloc.dart';
 import 'package:ttld/features/ds-ld/models/ld.dart';
-import 'package:ttld/widgets/custom_text_field.dart';
+import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final String? profileId;
@@ -60,13 +59,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void _updateControllers(LdModel ld) {
-    _controllers['maphieu']?.text = ld.maphieu ?? '';
-    _controllers['hoten']?.text = ld.hoten ?? '';
+    _controllers['maphieu']?.text = ld.maphieu;
+    _controllers['hoten']?.text = ld.hoten;
     _controllers['soCmnd']?.text = ld.soCMND ?? '';
     _controllers['masoBhxh']?.text = ld.masoBHXH ?? '';
     _controllers['diachiHk']?.text = ld.diachiHK ?? '';
     _controllers['diachiTt']?.text = ld.diachiTT ?? '';
-    _controllers['viecdanglam']?.text = ld.viecdanglam ?? '';
+    _controllers['viecdanglam']?.text = ld.viecdanglam;
     _controllers['noilamviec']?.text = ld.noilamviec ?? '';
     _controllers['diachiNoilamviec']?.text = ld.diachiNoilamviec ?? '';
     _controllers['ghichu']?.text = ld.ghichu ?? '';
@@ -164,75 +163,84 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         CustomTextField(
                           controller: _controllers['maphieu']!,
                           labelText: 'Mã phiếu',
-                          validationRules: 'required',
+                          hintText: 'Mã phiếu',
                         ),
                         const SizedBox(height: 16),
                       ],
                       CustomTextField(
                         controller: _controllers['hoten']!,
                         labelText: 'Họ tên',
-                        validationRules: 'required',
+                        hintText: 'Họ tên',
                       ),
                       const SizedBox(height: 16),
                       CustomTextField(
                         controller: _controllers['soCmnd']!,
                         labelText: 'Số CMND',
+                        hintText: 'Số CMND',
                         keyboardType: TextInputType.number,
                       ),
                       const SizedBox(height: 16),
                       CustomTextField(
                         controller: _controllers['masoBhxh']!,
                         labelText: 'Mã số BHXH',
+                        hintText: 'Mã số BHXH',
                       ),
                       const SizedBox(height: 16),
                       CustomTextField(
                         controller: _controllers['diachiHk']!,
                         labelText: 'Địa chỉ hộ khẩu',
+                        hintText: 'Địa chỉ hộ khẩu',
                         maxLines: 2,
                       ),
                       const SizedBox(height: 16),
                       CustomTextField(
                         controller: _controllers['diachiTt']!,
                         labelText: 'Địa chỉ thường trú',
+                        hintText: 'Địa chỉ thường trú',
                         maxLines: 2,
                       ),
                       const SizedBox(height: 16),
                       CustomTextField(
                         controller: _controllers['viecdanglam']!,
                         labelText: 'Việc đang làm',
+                        hintText: 'Việc đang làm',
                       ),
                       const SizedBox(height: 16),
                       CustomTextField(
                         controller: _controllers['noilamviec']!,
                         labelText: 'Nơi làm việc',
+                        hintText: 'Nơi làm việc',
                       ),
                       const SizedBox(height: 16),
                       CustomTextField(
                         controller: _controllers['diachiNoilamviec']!,
                         labelText: 'Địa chỉ nơi làm việc',
+                        hintText: 'Địa chỉ nơi làm việc',
                         maxLines: 2,
                       ),
                       const SizedBox(height: 16),
                       CustomTextField(
                         controller: _controllers['ghichu']!,
                         labelText: 'Ghi chú',
+                        hintText: 'Ghi chú',
                         maxLines: 3,
                       ),
                       const SizedBox(height: 16),
                       CustomTextField(
                         controller: _controllers['tenNguoiViet']!,
                         labelText: 'Tên người viết',
+                        hintText: 'Tên người viết',
                       ),
                       const SizedBox(height: 16),
                       CustomTextField(
                         controller: _controllers['dienthoai']!,
                         labelText: 'Điện thoại',
+                        hintText: 'Điện thoại',
                         keyboardType: TextInputType.phone,
                       ),
                       const SizedBox(height: 16),
-                      CustomTextField.emailAddress(
+                      CustomTextField.email(
                         controller: _controllers['email']!,
-                        labelText: 'Email',
                       ),
                       const SizedBox(height: 24),
                       SizedBox(

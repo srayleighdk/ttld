@@ -1,30 +1,30 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_event.dart';
 import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_state.dart';
-import 'package:ttld/models/tblHoSoUngVien/tblHoSoUngVien_model.dart';
-import 'package:ttld/repositories/ntv_repository.dart';
+import 'package:ttld/repositories/tblHoSoUngVien/ntv_repository.dart';
 
-class TblHoSoUngVienBloc extends Bloc<TblHoSoUngVienEvent, TblHoSoUngVienState> {
-  final NtvRepository _ntvRepository;
+class NTVBloc extends Bloc<NTVEvent, NTVState> {
+  final NTVRepository _ntvRepository;
 
-  TblHoSoUngVienBloc(this._ntvRepository) : super(TblHoSoUngVienInitial()) {
+  NTVBloc(this._ntvRepository) : super(NTVInitial()) {
     on<LoadTblHoSoUngViens>((event, emit) async {
-      emit(TblHoSoUngVienLoading());
+      emit(NTVLoading());
       try {
         final tblHoSoUngViens = await _ntvRepository.getAllHoSoUngVien();
-        emit(TblHoSoUngVienLoaded(tblHoSoUngViens));
+        emit(NTVLoaded(tblHoSoUngViens));
       } catch (e) {
-        emit(TblHoSoUngVienError(e.toString()));
+        emit(NTVError(e.toString()));
       }
     });
 
     on<LoadTblHoSoUngVien>((event, emit) async {
-      emit(TblHoSoUngVienLoading());
+      emit(NTVLoading());
       try {
-        final tblHoSoUngVien = await _ntvRepository.getHoSoUngVienById(event.id);
-        emit(TblHoSoUngVienLoadedById(tblHoSoUngVien));
+        final tblHoSoUngVien =
+            await _ntvRepository.getHoSoUngVienById(event.id);
+        emit(NTVLoadedById(tblHoSoUngVien));
       } catch (e) {
-        emit(TblHoSoUngVienError(e.toString()));
+        emit(NTVError(e.toString()));
       }
     });
 
@@ -32,19 +32,20 @@ class TblHoSoUngVienBloc extends Bloc<TblHoSoUngVienEvent, TblHoSoUngVienState> 
       try {
         await _ntvRepository.createHoSoUngVien(event.tblHoSoUngVien);
         final tblHoSoUngViens = await _ntvRepository.getAllHoSoUngVien();
-        emit(TblHoSoUngVienLoaded(tblHoSoUngViens));
+        emit(NTVLoaded(tblHoSoUngViens));
       } catch (e) {
-        emit(TblHoSoUngVienError(e.toString()));
+        emit(NTVError(e.toString()));
       }
     });
 
     on<UpdateTblHoSoUngVien>((event, emit) async {
       try {
-        await _ntvRepository.updateHoSoUngVien(event.tblHoSoUngVien.idHoSo!, event.tblHoSoUngVien);
+        await _ntvRepository.updateHoSoUngVien(
+            event.tblHoSoUngVien.id.toString(), event.tblHoSoUngVien);
         final tblHoSoUngViens = await _ntvRepository.getAllHoSoUngVien();
-        emit(TblHoSoUngVienLoaded(tblHoSoUngViens));
+        emit(NTVLoaded(tblHoSoUngViens));
       } catch (e) {
-        emit(TblHoSoUngVienError(e.toString()));
+        emit(NTVError(e.toString()));
       }
     });
 
@@ -52,9 +53,9 @@ class TblHoSoUngVienBloc extends Bloc<TblHoSoUngVienEvent, TblHoSoUngVienState> 
       try {
         await _ntvRepository.deleteHoSoUngVien(event.id.toString());
         final tblHoSoUngViens = await _ntvRepository.getAllHoSoUngVien();
-        emit(TblHoSoUngVienLoaded(tblHoSoUngViens));
+        emit(NTVLoaded(tblHoSoUngViens));
       } catch (e) {
-        emit(TblHoSoUngVienError(e.toString()));
+        emit(NTVError(e.toString()));
       }
     });
   }

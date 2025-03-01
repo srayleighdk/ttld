@@ -6,6 +6,6 @@ class TinhThanhApiService {
   TinhThanhApiService(this._dio);
 
   Future<Response> getTinhThanh() async {
-    return await _dio.get('/api/common/tinhthanh');
+    return await _dio.get('/common/tinhthanh');
   }
 }

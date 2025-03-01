@@ -63,6 +63,7 @@ class _LoginPageState extends State<LoginPage> {
                 description: 'Welcome back!',
                 message: '',
               );
+              context.go('/home');
             } else if (state is LoginFailure) {
               debugPrint('❌ Login failed in page: ${state.error}');
               ToastUtils.showToastOops(

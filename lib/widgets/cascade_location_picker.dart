@@ -14,7 +14,6 @@ import 'package:ttld/models/tinh/tinh.dart';
 import 'package:ttld/models/xa/xa.dart';
 import 'package:ttld/bloc/kcn/kcn_cubit.dart';
 import 'package:ttld/models/kcn/kcn_model.dart';
-import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/widgets/field/custom_picker.dart';
 import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
 
@@ -26,13 +25,23 @@ class CascadeLocationPicker extends StatefulWidget {
     this.onXaChanged,
     this.onKCNChanged,
     required this.addressDetailController,
+    this.initialTinh,
+    this.initialHuyen,
+    this.initialXa,
+    this.initialKCN,
+    required this.isNTD,
   });
 
+  final String? initialTinh;
+  final String? initialHuyen;
+  final String? initialXa;
+  final String? initialKCN;
   final Function(Tinh?)? onTinhChanged;
   final Function(Huyen?)? onHuyenChanged;
   final Function(Xa?)? onXaChanged;
   final Function(KCN?)? onKCNChanged;
   final TextEditingController addressDetailController;
+  final bool isNTD;
 
   @override
   State<CascadeLocationPicker> createState() => _CascadeLocationPickerState();
@@ -44,15 +53,104 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
   Xa? selectedXa;
   KCN? selectedKCN;
   late final KcnCubit _kcnCubit;
-  bool _showAddressDetail = false;
+  bool _showAddressDetail = true;
 
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<TinhBloc>(context).add(LoadTinhs());
-    _kcnCubit = locator<KcnCubit>();
-    _kcnCubit.getKCN(selectedTinh?.matinh ?? '');
+    _initializeTinh();
+  }
+
+  void _initializeTinh() async {
+    final tinhBloc = BlocProvider.of<TinhBloc>(context);
+    tinhBloc.add(LoadTinhs());
+
+    if (widget.initialTinh != null) {
+      final tinhState =
+          await tinhBloc.stream.firstWhere((state) => state is TinhLoaded);
+      if (tinhState is TinhLoaded) {
+        final foundTinh = tinhState.tinhs.firstWhere(
+          (tinh) => tinh.matinh == widget.initialTinh,
+          orElse: () => tinhState.tinhs.first,
+        );
+        setState(() {
+          selectedTinh = foundTinh;
+        });
+        _loadInitialData(foundTinh);
+      }
+    }
+
+    if (selectedTinh != null && widget.initialHuyen != null) {
+      final huyenBloc = context.read<HuyenBloc>();
+      huyenBloc.add(LoadHuyensByTinh(matinh: selectedTinh!.matinh));
+
+      final huyenState = await huyenBloc.stream
+          .firstWhere((state) => state is HuyenLoadedByTinh);
+      if (huyenState is HuyenLoadedByTinh) {
+        final foundHuyen = huyenState.huyens.firstWhere(
+          (huyen) => huyen.mahuyen == widget.initialHuyen,
+          orElse: () => huyenState.huyens.first,
+        );
+        setState(() {
+          selectedHuyen = foundHuyen;
+        });
+        _loadHuyenData(foundHuyen);
+      }
+    }
+
+    if (selectedHuyen != null && widget.initialXa != null) {
+      final xaBloc = context.read<XaBloc>();
+      xaBloc.add(LoadXasByHuyen(mahuyen: selectedHuyen!.mahuyen));
+
+      final xaState =
+          await xaBloc.stream.firstWhere((state) => state is XaLoadedByHuyen);
+      if (xaState is XaLoadedByHuyen) {
+        final foundXa = xaState.xas.firstWhere(
+          (xa) => xa.maxa == widget.initialXa,
+          orElse: () => xaState.xas.first,
+        );
+        setState(() {
+          selectedXa = foundXa;
+        });
+        _loadXaData(foundXa);
+      }
+    }
+
+    if (widget.isNTD && selectedTinh != null && widget.initialKCN != null) {
+      final kcnCubit = context.read<KcnCubit>();
+      kcnCubit.getKCN(selectedTinh!.matinh);
+
+      final kcnState =
+          await kcnCubit.stream.firstWhere((state) => state is KcnLoaded);
+      if (kcnState is KcnLoaded) {
+        final foundKCN = kcnState.kcnList.firstWhere(
+          (kcn) => kcn.kcnId == int.tryParse(widget.initialKCN ?? ''),
+          orElse: () => kcnState.kcnList.first,
+        );
+        setState(() {
+          selectedKCN = foundKCN;
+        });
+        widget.onKCNChanged?.call(foundKCN);
+      }
+    }
+
+    BlocProvider.of<KcnCubit>(context).getKCN(selectedTinh?.matinh ?? '');
     _updateAddressDetail();
+  }
+
+  void _loadInitialData(Tinh tinh) {
+    context.read<HuyenBloc>().add(LoadHuyensByTinh(matinh: tinh.matinh));
+    context.read<KcnCubit>().getKCN(tinh.matinh);
+    widget.onTinhChanged?.call(tinh);
+  }
+
+  void _loadHuyenData(Huyen huyen) {
+    context.read<XaBloc>().add(LoadXasByHuyen(mahuyen: huyen.mahuyen));
+    widget.onHuyenChanged?.call(huyen);
+  }
+
+  void _loadXaData(Xa xa) {
+    widget.onXaChanged?.call(xa);
   }
 
   @override
@@ -99,8 +197,6 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
               child = const CircularProgressIndicator();
             } else {
               child = const Text('Loading Tỉnh...');
-
-              print('TinhState: ${state.runtimeType}'); // Add this line
             }
             return child;
           },
@@ -142,17 +238,14 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
             } else if (state is HuyenLoading) {
               child = const CircularProgressIndicator();
             } else {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (selectedTinh != null) {
-                  context
-                      .read<HuyenBloc>()
-                      .add(LoadHuyensByTinh(matinh: selectedTinh!.matinh));
-                  _kcnCubit.getKCN(selectedTinh!.matinh);
-                }
-              });
-              child = const Text('Loading Tỉnh...');
-
-              print('TinhState: ${state.runtimeType}'); // Add this line
+              child = CustomPicker<Huyen>(
+                label: const Text('Quận/Huyện'),
+                items: const [],
+                selectedItem: selectedHuyen,
+                hint: 'Chọn Quận/Huyện',
+                displayItemBuilder: (Huyen? huyen) => huyen?.tenhuyen ?? '',
+                onChanged: (Huyen? newValue) {},
+              );
             }
             return child;
           },
@@ -183,49 +276,48 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
             } else if (state is XaLoading) {
               child = const CircularProgressIndicator();
             } else {
-              child = const Text('Loading Xã...');
+              child = CustomPicker<Xa>(
+                label: const Text('Xã/Phường'),
+                items: const [],
+                selectedItem: selectedXa,
+                displayItemBuilder: (Xa? xa) => xa?.tenxa ?? '',
+                hint: 'Chọn Xã/Phường',
+                onChanged: (Xa? newValue) {},
+              );
+              ;
             }
             print('XaState: ${state.runtimeType}'); // Add this line
-            return CustomPicker<Xa>(
-              label: const Text('Xã/Phường'),
-              items: const [],
-              selectedItem: selectedXa,
-              displayItemBuilder: (Xa? xa) => xa?.tenxa ?? '',
-              hint: 'Chọn Xã/Phường',
-              onChanged: (Xa? newValue) {},
-            );
-          },
-        ),
-        const SizedBox(height: 14),
-        BlocBuilder<KcnCubit, KcnState>(
-          bloc: _kcnCubit,
-          builder: (context, state) {
-            Widget child;
-            if (state is KcnLoading) {
-              child = const CircularProgressIndicator();
-            } else if (state is KcnLoaded) {
-              child = CustomPicker<KCN>(
-                items: state.kcnList,
-                selectedItem: selectedKCN,
-                displayItemBuilder: (KCN? kcn) => kcn?.kcnTen ?? '',
-                hint: 'Chọn KCN',
-                onChanged: (KCN? newValue) {
-                  setState(() {
-                    selectedKCN = newValue;
-                    _showAddressDetail = true;
-                    _updateAddressDetail();
-                  });
-                  widget.onKCNChanged?.call(newValue);
-                },
-              );
-            } else if (state is KcnError) {
-              child = Text('Error: ${state.message}');
-            } else {
-              child = const SizedBox.shrink();
-            }
             return child;
           },
         ),
+        const SizedBox(height: 14),
+        if (widget.isNTD)
+          BlocBuilder<KcnCubit, KcnState>(
+            builder: (context, state) {
+              Widget child;
+              if (state is KcnLoading) {
+                child = const CircularProgressIndicator();
+              } else if (state is KcnLoaded) {
+                child = CustomPicker<KCN>(
+                  items: state.kcnList,
+                  selectedItem: selectedKCN,
+                  displayItemBuilder: (KCN? kcn) => kcn?.kcnTen ?? '',
+                  hint: 'Chọn KCN',
+                  onChanged: (KCN? newValue) {
+                    setState(() {
+                      selectedKCN = newValue;
+                    });
+                    widget.onKCNChanged?.call(newValue);
+                  },
+                );
+              } else if (state is KcnError) {
+                child = Text('Error: ${state.message}');
+              } else {
+                child = const SizedBox.shrink();
+              }
+              return child;
+            },
+          ),
         const SizedBox(height: 14),
         if (_showAddressDetail)
           CustomTextField.addressDetail(
@@ -240,17 +332,15 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
 
   @override
   void dispose() {
-    _kcnCubit.close();
     super.dispose();
   }
 
   void _updateAddressDetail() {
-    widget.addressDetailController.text = _buildAddressString(selectedXa?.tenxa,
-        selectedHuyen?.tenhuyen, selectedTinh?.tentinh, selectedKCN?.kcnTen);
+    widget.addressDetailController.text = _buildAddressString(
+        selectedXa?.tenxa, selectedHuyen?.tenhuyen, selectedTinh?.tentinh);
   }
 
-  String _buildAddressString(
-      String? xa, String? huyen, String? tinh, String? kcn) {
+  String _buildAddressString(String? xa, String? huyen, String? tinh) {
     String address = "";
     if (xa != null && xa.isNotEmpty) {
       address += xa;
@@ -262,10 +352,6 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
     if (tinh != null && tinh.isNotEmpty) {
       if (address.isNotEmpty) address += ", ";
       address += " $tinh";
-    }
-    if (kcn != null && kcn.isNotEmpty) {
-      if (address.isNotEmpty) address += ", ";
-      address += " $kcn";
     }
     return address;
   }

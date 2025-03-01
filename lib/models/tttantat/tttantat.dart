@@ -1,16 +1,31 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+class TtTantat {
+  final int id;
+  final String name;
+  final int displayOrder;
+  final bool status;
 
-part 'tttantat.freezed.dart';
-part 'tttantat.g.dart';
+  TtTantat({
+    required this.id,
+    required this.name,
+    required this.displayOrder,
+    required this.status,
+  });
 
-@freezed
-abstract class TinhTrangTanTat with _$TinhTrangTanTat {
-  factory TinhTrangTanTat(
-    @JsonKey(name: 'tantat_id') int tantatId,
-    @JsonKey(name: 'tantat_ten') String tantatTen,
-    @JsonKey(name: 'DisplayOrder') int displayOrder,
-    @JsonKey(name: 'Status') bool status,
-  ) = _TinhTrangTanTat;
+  factory TtTantat.fromJson(Map<String, dynamic> json) {
+    return TtTantat(
+      id: json['id'],
+      name: json['name'],
+      displayOrder: json['displayOrder'],
+      status: json['status'],
+    );
+  }
 
-  factory TinhTrangTanTat.fromJson(Map<String, dynamic> json) => _$TinhTrangTanTatFromJson(json);
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'displayOrder': displayOrder,
+      'status': status,
+    };
+  }
 }

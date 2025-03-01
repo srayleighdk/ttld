@@ -1,17 +1,23 @@
 class ThoiGianLamViec {
-  final String tenThoigian;
+  final int id;
+  final String name;
+  final String idhinhthuclamviec;
   final int displayOrder;
   final bool status;
 
   ThoiGianLamViec({
-    required this.tenThoigian,
+    required this.id,
+    required this.name,
+    required this.idhinhthuclamviec,
     required this.displayOrder,
     required this.status,
   });
 
   factory ThoiGianLamViec.fromJson(Map<String, dynamic> json) {
     return ThoiGianLamViec(
-      tenThoigian: json['tenThoigian'],
+      id: json['id'],
+      name: json['name'],
+      idhinhthuclamviec: json['idhinhthuclamviec'],
       displayOrder: json['displayOrder'],
       status: json['status'],
     );
@@ -19,7 +25,9 @@ class ThoiGianLamViec {
 
   Map<String, dynamic> toJson() {
     return {
-      'tenThoigian': tenThoigian,
+      'id': id,
+      'name': name,
+      'idhinhthuclamviec': idhinhthuclamviec,
       'displayOrder': displayOrder,
       'status': status,
     };

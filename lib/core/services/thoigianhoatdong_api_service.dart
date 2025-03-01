@@ -6,13 +6,13 @@ class ThoiGianHoatDongApiService {
 
   ThoiGianHoatDongApiService(this._dio);
 
-  Future<List<ThoiGianLamViec>> getThoiGianHoatDongList() async {
+  Future<List<ThoiGianHoatDong>> getThoiGianHoatDongList() async {
     const String apiUrl = '/api/common/tg-hd';
     final response = await _dio.get(apiUrl);
 
     if (response.statusCode == 200) {
-      final List<dynamic> data = response.data as List<dynamic>;
-      return data.map((json) => ThoiGianLamViec.fromJson(json)).toList();
+      final List<dynamic> data = response.data['data'];
+      return data.map((json) => ThoiGianHoatDong.fromJson(json)).toList();
     } else {
       throw Exception(
           'Failed to load ThoiGianHoatDong: ${response.statusCode}');

@@ -60,7 +60,7 @@ class NyLogger {
     }
     try {
       if (shouldShowDateTime()) {
-        String dateTimeFormatted = "${DateTime.now().toDateTimeString()}";
+        String dateTimeFormatted = "${DateTime.now()}";
         _logMessage(
             '[$dateTimeFormatted] ${type != null ? "[$type] " : ""}$message');
         return;

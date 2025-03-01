@@ -1,20 +1,20 @@
 class NguonThuThap {
-  final String idNguonThuThap;
-  final String tenNguonThuThap;
+  final String id;
+  final String name;
   final int displayOrder;
   final bool status;
 
   NguonThuThap({
-    required this.idNguonThuThap,
-    required this.tenNguonThuThap,
+    required this.id,
+    required this.name,
     required this.displayOrder,
     required this.status,
   });
 
   factory NguonThuThap.fromJson(Map<String, dynamic> json) {
     return NguonThuThap(
-      idNguonThuThap: json['idNguonThuThap'],
-      tenNguonThuThap: json['tenNguonThuThap'],
+      id: json['id'],
+      name: json['name'],
       displayOrder: json['displayOrder'],
       status: json['status'],
     );
@@ -22,8 +22,8 @@ class NguonThuThap {
 
   Map<String, dynamic> toJson() {
     return {
-      'idNguonThuThap': idNguonThuThap,
-      'tenNguonThuThap': tenNguonThuThap,
+      'id': id,
+      'name': name,
       'displayOrder': displayOrder,
       'status': status,
     };

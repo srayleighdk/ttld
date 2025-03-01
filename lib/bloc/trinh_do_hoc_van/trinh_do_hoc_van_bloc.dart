@@ -12,7 +12,7 @@ class TrinhDoHocVanBloc extends Bloc<TrinhDoHocVanEvent, TrinhDoHocVanState> {
     on<LoadTrinhDoHocVans>(_onLoadTrinhDoHocVans);
     on<AddTrinhDoHocVan>(_onAddTrinhDoHocVan);
     on<UpdateTrinhDoHocVan>(_onUpdateTrinhDoHocVan);
-    on<DeleteTrinhDoHocVan>(_onDeleteTrinhDoHocVan);
+    // on<DeleteTrinhDoHocVan>(_onDeleteTrinhDoHocVan);
   }
 
   Future<void> _onLoadTrinhDoHocVans(LoadTrinhDoHocVans event, Emitter<TrinhDoHocVanState> emit) async {
@@ -41,7 +41,7 @@ class TrinhDoHocVanBloc extends Bloc<TrinhDoHocVanEvent, TrinhDoHocVanState> {
     try {
       final trinhDoHocVan = await trinhDoHocVanRepository.updateTrinhDoHocVan(event.trinhDoHocVan);
       if (state is TrinhDoHocVanLoaded) {
-        final updatedTrinhDoHocVans = (state as TrinhDoHocVanLoaded).trinhDoHocVans.map((q) => q.hocvanTen == trinhDoHocVan.hocvanTen ? trinhDoHocVan : q).toList();
+        final updatedTrinhDoHocVans = (state as TrinhDoHocVanLoaded).trinhDoHocVans.map((q) => q.name == trinhDoHocVan.name ? trinhDoHocVan : q).toList();
         emit(TrinhDoHocVanLoaded(trinhDoHocVans: updatedTrinhDoHocVans));
       }
     } catch (e) {
@@ -49,15 +49,15 @@ class TrinhDoHocVanBloc extends Bloc<TrinhDoHocVanEvent, TrinhDoHocVanState> {
     }
   }
 
-  Future<void> _onDeleteTrinhDoHocVan(DeleteTrinhDoHocVan event, Emitter<TrinhDoHocVanState> emit) async {
-    try {
-      await trinhDoHocVanRepository.deleteTrinhDoHocVan(event.hocvanTen);
-      if (state is TrinhDoHocVanLoaded) {
-        final updatedTrinhDoHocVans = (state as TrinhDoHocVanLoaded).trinhDoHocVans.where((q) => q.hocvanTen != event.hocvanTen).toList();
-        emit(TrinhDoHocVanLoaded(trinhDoHocVans: updatedTrinhDoHocVans));
-      }
-    } catch (e) {
-      emit(TrinhDoHocVanError(message: e.toString()));
-    }
-  }
+  // Future<void> _onDeleteTrinhDoHocVan(DeleteTrinhDoHocVan event, Emitter<TrinhDoHocVanState> emit) async {
+  //   try {
+  //     await trinhDoHocVanRepository.deleteTrinhDoHocVan(event.name);
+  //     if (state is TrinhDoHocVanLoaded) {
+  //       final updatedTrinhDoHocVans = (state as TrinhDoHocVanLoaded).trinhDoHocVans.where((q) => q.name != event.name).toList();
+  //       emit(TrinhDoHocVanLoaded(trinhDoHocVans: updatedTrinhDoHocVans));
+  //     }
+  //   } catch (e) {
+  //     emit(TrinhDoHocVanError(message: e.toString()));
+  //   }
+  // }
 }

@@ -10,14 +10,14 @@ class DonViApiService {
   }
 
   Future<Response> postDonVi(Map<String, dynamic> data) async {
-    return await _dio.post('/api/danhmuc/don-vi', data);
+    return await _dio.post('/api/danhmuc/don-vi', data: data);
   }
 
   Future<Response> putDonVi(Map<String, dynamic> data) async {
-    return await _dio.put('/api/danhmuc/don-vi', data);
+    return await _dio.put('/api/danhmuc/don-vi', data: data);
   }
 
   Future<void> deleteDonVi(String id) async {
-    await _dio.delete('/api/danhmuc/don-vi/$id');
+    await _dio.delete('/api/danhmuc/don-vi', queryParameters: {'id': id});
   }
 }

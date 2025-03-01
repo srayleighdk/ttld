@@ -17,7 +17,7 @@ class UpdateNguonThuThap extends NguonThuThapEvent {
 }
 
 class DeleteNguonThuThap extends NguonThuThapEvent {
-  final String idNguonThuThap;
+  final String id;
 
-  DeleteNguonThuThap({required this.idNguonThuThap});
+  DeleteNguonThuThap({required this.id});
 }

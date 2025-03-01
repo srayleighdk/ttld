@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_bloc.dart';
+import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_event.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
+import 'package:ttld/models/tblHoSoUngVien/tblHoSoUngVien_model.dart';
 
 class NTVHomePage extends StatefulWidget {
   const NTVHomePage({Key? key});
@@ -15,6 +18,16 @@ class NTVHomePage extends StatefulWidget {
 }
 
 class _NTVHomePageState extends State<NTVHomePage> {
+  TblHoSoUngVienModel? tblHoSoUngVien;
+  @override
+  void initState() {
+    super.initState();
+    final authState = context.read<AuthBloc>().state;
+    if (authState is AuthAuthenticated && authState.userType == 'ntv') {
+      context.read<NTVBloc>().add(LoadTblHoSoUngVien(int.parse(authState.userId)));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,7 +125,7 @@ class _NTVHomePageState extends State<NTVHomePage> {
             context: context,
             icon: FontAwesomeIcons.solidPenToSquare,
             label: 'Cập nhật NTV',
-            route: '/update_ntv',
+            route: '/ntv_home/update_ntv',
           ),
           _buildQuickAccessButton(
             context: context,

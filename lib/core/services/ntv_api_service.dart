@@ -18,14 +18,16 @@ class NTVApiService {
     }
   }
 
-  Future<TblHoSoUngVienModel> getHoSoUngVienById(String id) async {
+  Future<TblHoSoUngVienModel> getHoSoUngVienById(int id) async {
     try {
-      final response = await _dio.get(ApiEndpoints.hosoUngVienById,
-          queryParameters: {'id': id});
+      final response = await _dio
+          .get(ApiEndpoints.hosoUngVienById, queryParameters: {'id': id});
       final TblHoSoUngVienModel hoSoUngVien =
           TblHoSoUngVienModel.fromJson(response.data["data"]);
+
       return hoSoUngVien;
     } catch (e) {
+      print('error: $e');
       throw Exception('Failed to fetch HoSoUngVien by ID: $e');
     }
   }
@@ -34,7 +36,7 @@ class NTVApiService {
       TblHoSoUngVienModel hoSoUngVien) async {
     try {
       final response =
-          await _dio.post(ApiEndpoints.hosoUngVien,  hoSoUngVien.toJson());
+          await _dio.post(ApiEndpoints.hosoUngVien, data: hoSoUngVien.toJson());
       final TblHoSoUngVienModel addedHoSoUngVien =
           TblHoSoUngVienModel.fromJson(response.data);
       return addedHoSoUngVien;
@@ -47,8 +49,7 @@ class NTVApiService {
       TblHoSoUngVienModel hoSoUngVien) async {
     try {
       final response = await _dio.put(ApiEndpoints.hosoUngVien,
-           hoSoUngVien.toJson(),
-          queryParameters: {'id': hoSoUngVien.idHoSo});
+          data: hoSoUngVien.toJson(), queryParameters: {'id': hoSoUngVien.id});
       final TblHoSoUngVienModel updatedHoSoUngVien =
           TblHoSoUngVienModel.fromJson(response.data);
       return updatedHoSoUngVien;

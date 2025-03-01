@@ -17,7 +17,7 @@ class UpdateNganhNgheBacHoc extends NganhNgheBacHocEvent {
 }
 
 class DeleteNganhNgheBacHoc extends NganhNgheBacHocEvent {
-  final String idBacHoc;
+  final String id;
 
-  DeleteNganhNgheBacHoc({required this.idBacHoc});
+  DeleteNganhNgheBacHoc({required this.id});
 }

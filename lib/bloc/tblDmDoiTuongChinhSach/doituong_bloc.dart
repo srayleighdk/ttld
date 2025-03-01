@@ -6,54 +6,49 @@ import 'package:ttld/repositories/tblDmDoiTuongChinhSach/doituong_repository.dar
 part 'doituong_event.dart';
 part 'doituong_state.dart';
 
-class DoiTuongChinhSachBloc
-    extends Bloc<DoiTuongChinhSachEvent, DoiTuongChinhSachState> {
-  final DoiTuongChinhSachRepository doiTuongChinhSachRepository;
+class DoiTuongBloc extends Bloc<DoiTuongEvent, DoiTuongState> {
+  final DoiTuongRepository doiTuongRepository;
 
-  DoiTuongChinhSachBloc(this.doiTuongChinhSachRepository)
-      : super(DoiTuongChinhSachInitial()) {
-    on<LoadDoiTuongChinhSachs>((event, emit) async {
-      emit(DoiTuongChinhSachLoading());
+  DoiTuongBloc(this.doiTuongRepository) : super(DoiTuongInitial()) {
+    on<LoadDoiTuongs>((event, emit) async {
+      emit(DoiTuongLoading());
       try {
-        final doiTuongChinhSachs =
-            await doiTuongChinhSachRepository.getDoiTuongChinhSachs();
-        emit(DoiTuongChinhSachLoaded(doiTuongChinhSachs));
+        final doiTuongs = await doiTuongRepository.getDoiTuongs();
+        emit(DoiTuongLoaded(doiTuongs));
       } catch (e) {
-        emit(DoiTuongChinhSachError('Failed to load đối tượng chính sách: $e'));
+        emit(DoiTuongError('Failed to load đối tượng chính sách: $e'));
       }
     });
 
-    on<CreateDoiTuongChinhSach>((event, emit) async {
+    on<CreateDoiTuong>((event, emit) async {
       try {
-        await doiTuongChinhSachRepository
-            .createDoiTuongChinhSach(event.doiTuongChinhSach);
-        emit(DoiTuongChinhSachOperationSuccess());
-        add(LoadDoiTuongChinhSachs());
+        await doiTuongRepository.createDoiTuong(event.doiTuong);
+        emit(DoiTuongOperationSuccess());
+        add(LoadDoiTuongs());
       } catch (e) {
-        emit(DoiTuongChinhSachOperationFailure(
+        emit(DoiTuongOperationFailure(
             'Failed to create đối tượng chính sách: $e'));
       }
     });
 
-    on<UpdateDoiTuongChinhSach>((event, emit) async {
+    on<UpdateDoiTuong>((event, emit) async {
       try {
-        await doiTuongChinhSachRepository.updateDoiTuongChinhSach(
-            event.id, event.doiTuongChinhSach);
-        emit(DoiTuongChinhSachOperationSuccess());
-        add(LoadDoiTuongChinhSachs());
+        await doiTuongRepository.updateDoiTuong(event.id.toString(), event.doiTuong);
+        emit(DoiTuongOperationSuccess());
+        add(LoadDoiTuongs());
       } catch (e) {
-        emit(DoiTuongChinhSachOperationFailure(
+        emit(DoiTuongOperationFailure(
             'Failed to update đối tượng chính sách: $e'));
       }
     });
 
-    on<DeleteDoiTuongChinhSach>((event, emit) async {
+    on<DeleteDoiTuong>((event, emit) async {
       try {
-        await doiTuongChinhSachRepository.deleteDoiTuongChinhSach(event.id);
-        emit(DoiTuongChinhSachOperationSuccess());
-        add(LoadDoiTuongChinhSachs());
+        await doiTuongRepository.deleteDoiTuong(event.id.toString());
+        emit(DoiTuongOperationSuccess());
+        add(LoadDoiTuongs());
       } catch (e) {
-        emit(DoiTuongChinhSachOperationFailure(
+        emit(DoiTuongOperationFailure(
             'Failed to delete đối tượng chính sách: $e'));
       }
     });

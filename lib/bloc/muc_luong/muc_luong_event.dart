@@ -1,4 +1,4 @@
-import 'package:your_app_name/models/muc_luong_mm.dart'; // Replace with your actual import
+import 'package:ttld/models/muc_luong_mm.dart'; // Replace with your actual import
 
 abstract class MucLuongEvent {}
 

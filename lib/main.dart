@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
                   ).router;
                   return MaterialApp.router(
                     debugShowCheckedModeBanner: false,
-                    title: 'Flutter Demo',
+                    title: 'Thị Trường Lao Động',
                     theme: ThemeProvider.themeOf(themeContext).data,
                     routerConfig: router,
                     builder: (context, child) {

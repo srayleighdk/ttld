@@ -40,7 +40,8 @@ class NTDApiService {
 
   Future<Ntd> updateNtd(Ntd ntd) async {
     try {
-      final response = await _dio.put(ApiEndpoints.ntd, data: ntd.toJson());
+      final response = await _dio.put(ApiEndpoints.ntd,
+          data: ntd.toJson(), queryParameters: {'id': ntd.idDoanhNghiep});
       final Ntd updatedNtd = Ntd.fromJson(response.data);
       return updatedNtd;
     } catch (e) {

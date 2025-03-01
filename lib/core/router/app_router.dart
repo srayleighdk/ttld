@@ -11,12 +11,11 @@ import 'package:ttld/pages/error/error.dart';
 import 'package:ttld/pages/forgot_password/forgot_password.dart';
 import 'package:ttld/pages/giaiquyetvieclam/giaiquyetvieclam_page.dart';
 import 'package:ttld/pages/home/admin/admin_home.dart';
-import 'package:ttld/pages/home/admin/system/manager_groups.dart';
 import 'package:ttld/pages/home/home_page.dart';
 import 'package:ttld/pages/home/ntd/ntd_home.dart';
 import 'package:ttld/pages/home/ntd/update_ntd/update_ntd_page.dart';
-import 'package:ttld/pages/home/ntv/ntv_form_screen.dart';
 import 'package:ttld/pages/home/ntv/ntv_home.dart';
+import 'package:ttld/pages/home/ntv/update_ntv/update_ntv_page.dart';
 import 'package:ttld/pages/hosochapnoi/hosochapnoi_page.dart';
 import 'package:ttld/pages/hosocoquan/hosocoquan_page.dart';
 import 'package:ttld/pages/hosodoangnghiep/hosodoangnghiep_page.dart';
@@ -46,56 +45,17 @@ class AppRouter {
     navigatorKey: rootNavigatorKey,
     debugLogDiagnostics: true,
     refreshListenable: GoRouterRefreshStream(authBloc.stream),
-    redirect: (BuildContext context, GoRouterState state) {
-      debugPrint('🚦 Redirect - Current location: ${state.matchedLocation}');
-      debugPrint('🚦 Auth State: ${authBloc.state.runtimeType}');
-
-      final authState = authBloc.state;
-      final isGoingToLogin = state.matchedLocation == '/login';
-      final isGoingToSignup = state.matchedLocation == '/signup';
-      final isGoingToSplash = state.matchedLocation == '/splash';
-      final isGoingToForgotPassword =
-          state.matchedLocation == '/forgot_password';
-
-      // If not authenticated and not going to auth pages, redirect to login
-      if (authState is! AuthAuthenticated &&
-          !isGoingToLogin &&
-          !isGoingToSignup &&
-          !isGoingToSplash &&
-          !isGoingToForgotPassword) {
-        debugPrint('🔄 Redirecting to login - Not authenticated');
+    redirect: (context, state) {
+      if (authBloc.state is! AuthAuthenticated) {
         return '/login';
       }
-
-      // If authenticated and going to auth pages, redirect to appropriate dashboard
-      if (authState is AuthAuthenticated &&
-          (isGoingToLogin || isGoingToSignup)) {
-        debugPrint('🔄 Redirecting to dashboard - Already authenticated');
-        print(authState.userType);
-        if (authState.isAdmin) {
-          return AdminHomePage.routePath;
-        } else if (!authState.isAdmin && authState.userType == 'ntv') {
-          return NTVHomePage.routePath;
-        } else if (!authState.isAdmin && authState.userType == 'ntd') {
-          return NTDHomePage.routePath;
-        }
-        return ErrorPage.routePath;
-      }
-
-      debugPrint('✅ No redirect needed');
       return null;
     },
     routes: [
       // Root route with redirect
       GoRoute(
         path: '/',
-        redirect: (context, state) {
-          final authState = authBloc.state;
-          if (authState is AuthAuthenticated) {
-            AdminHomePage.routePath;
-          }
-          return '/login';
-        },
+        redirect: (context, state) => '/login',
       ),
       GoRoute(
         path: '/log-he-thong',
@@ -214,9 +174,9 @@ class AppRouter {
               const NTVHomePage(), // Create NtvHomePage widget
           routes: [
             GoRoute(
-              path: '/manager-group',
-              builder: (context, state) => const NTVFormScreen(),
-            ),
+              path: '/update_ntv',
+              builder: (context, state) => const UpdateNTVPage(),
+            )
           ]),
 
       GoRoute(
@@ -225,8 +185,8 @@ class AppRouter {
             const NTDHomePage(),
       ),
       GoRoute(
-        path: UpdateNTDPage.routePath,
-        builder: (context, state) => UpdateNTDPage(),
+        path: '/update_ntd',
+        builder: (context, state) => const UpdateNTDPage(),
       ),
       GoRoute(
         path: '/home',
@@ -240,24 +200,8 @@ class AppRouter {
       ),
     ],
   );
-
-  // static void navigateBasedOnUserType(BuildContext context, UserType userType) {
-  //   switch (userType) {
-  //     case UserType.admin:
-  //       context.go(AdminHomePage.routePath);
-  //       break;
-  //     case UserType.ntv:
-  //     case UserType.ntd:
-  //       context.go('/home');
-  //       break;
-  //   }
-  // }
 }
 
-// class HoSoNguoiLaoDongPage {
-//   const HoSoNguoiLaoDongPage();
-// }
-//
 class GoRouterRefreshStream extends ChangeNotifier {
   late final StreamSubscription<dynamic> _subscription;
   final Stream<dynamic> stream;
@@ -279,53 +223,5 @@ class GoRouterRefreshStream extends ChangeNotifier {
   void dispose() {
     _subscription.cancel();
     super.dispose();
-  }
-}
-
-// Add a navigation service for easier debugging
-class NavigationService {
-  static void goToHome(BuildContext context) {
-    debugPrint('🔄 Attempting to navigate to home');
-    try {
-      context.goNamed('home');
-      debugPrint('✅ Navigation to home successful');
-    } catch (e) {
-      debugPrint('❌ Navigation to home failed: $e');
-    }
-  }
-
-  static void goToLogin(BuildContext context) {
-    debugPrint('🔄 Attempting to navigate to login');
-    try {
-      context.goNamed('login');
-      debugPrint('✅ Navigation to login successful');
-    } catch (e) {
-      debugPrint('❌ Navigation to login failed: $e');
-    }
-  }
-
-  static void goToNewProfile(BuildContext context) {
-    debugPrint('🔄 Attempting to navigate to new profile');
-    try {
-      context.goNamed('newProfile');
-      debugPrint('✅ Navigation to new profile successful');
-    } catch (e) {
-      debugPrint('❌ Navigation to new profile failed: $e');
-    }
-  }
-
-  static void goToEditProfile(BuildContext context, String? profileId) {
-    debugPrint('🔄 Attempting to navigate to edit profile');
-    try {
-      if (profileId != null) {
-        context
-            .goNamed('editExistingProfile', pathParameters: {'id': profileId});
-      } else {
-        context.goNamed('editProfile');
-      }
-      debugPrint('✅ Navigation to edit profile successful');
-    } catch (e) {
-      debugPrint('❌ Navigation to edit profile failed: $e');
-    }
   }
 }

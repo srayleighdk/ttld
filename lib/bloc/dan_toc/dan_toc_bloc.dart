@@ -41,7 +41,7 @@ class DanTocBloc extends Bloc<DanTocEvent, DanTocState> {
     try {
       final danToc = await danTocRepository.updateDanToc(event.danToc);
       if (state is DanTocLoaded) {
-        final updatedDanTocs = (state as DanTocLoaded).danTocs.map((q) => q.tenDt == danToc.tenDt ? danToc : q).toList();
+        final updatedDanTocs = (state as DanTocLoaded).danTocs.map((q) => q.id == danToc.id ? danToc : q).toList();
         emit(DanTocLoaded(danTocs: updatedDanTocs));
       }
     } catch (e) {
@@ -51,9 +51,9 @@ class DanTocBloc extends Bloc<DanTocEvent, DanTocState> {
 
   Future<void> _onDeleteDanToc(DeleteDanToc event, Emitter<DanTocState> emit) async {
     try {
-      await danTocRepository.deleteDanToc(event.tenDt);
+      await danTocRepository.deleteDanToc(event.id);
       if (state is DanTocLoaded) {
-        final updatedDanTocs = (state as DanTocLoaded).danTocs.where((q) => q.tenDt != event.tenDt).toList();
+        final updatedDanTocs = (state as DanTocLoaded).danTocs.where((q) => q.id != event.id).toList();
         emit(DanTocLoaded(danTocs: updatedDanTocs));
       }
     } catch (e) {

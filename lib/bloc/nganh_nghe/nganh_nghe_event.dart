@@ -17,7 +17,7 @@ class UpdateNganhNghe extends NganhNgheEvent {
 }
 
 class DeleteNganhNghe extends NganhNgheEvent {
-  final String idNkt;
+  final String id;
 
-  DeleteNganhNghe({required this.idNkt});
+  DeleteNganhNghe({required this.id});
 }

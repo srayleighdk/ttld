@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
-import 'package:your_app_name/bloc/muc_luong/muc_luong_event.dart';
-import 'package:your_app_name/bloc/muc_luong/muc_luong_state.dart';
-import 'package:your_app_name/models/muc_luong_mm.dart'; // Replace with your actual import
-import 'package:your_app_name/repositories/muc_luong/muc_luong_repository.dart'; // Replace with your actual import
+import 'package:ttld/bloc/muc_luong/muc_luong_event.dart';
+import 'package:ttld/bloc/muc_luong/muc_luong_state.dart';
+import 'package:ttld/models/muc_luong_mm.dart'; // Replace with your actual import
+import 'package:ttld/repositories/muc_luong/muc_luong_repository.dart'; // Replace with your actual import
 
 class MucLuongBloc extends Bloc<MucLuongEvent, MucLuongState> {
   final MucLuongRepository mucLuongRepository;
@@ -26,7 +26,7 @@ class MucLuongBloc extends Bloc<MucLuongEvent, MucLuongState> {
 
   Future<void> _onCreateMucLuong(CreateMucLuong event, Emitter<MucLuongState> emit) async {
     try {
-      final createdMucLuong = await mucLuongRepository.createMucLuong(event.mucLuong);
+      final createdMucLuong = await mucLuongRepository.addMucLuong(event.mucLuong);
       // Optionally, reload the list or update the state optimistically
       if (state is MucLuongLoaded) {
         final updatedMucLuongs = List<MucLuongMM>.from((state as MucLuongLoaded).mucLuongs)..add(createdMucLuong);

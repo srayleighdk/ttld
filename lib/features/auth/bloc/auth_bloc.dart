@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ttld/core/services/auth_service.dart';
+import 'package:get_it/get_it.dart';
 import 'package:ttld/features/auth/bloc/auth_event.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
+import 'package:ttld/features/auth/repositories/auth_repository.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
+  final getIt = GetIt.instance;
   AuthBloc() : super(AuthUnauthenticated()) {
     on<AuthLoginSuccess>(_onAuthLoginSuccess);
     on<AuthLogout>(_onAuthLogout);
@@ -35,7 +37,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       debugPrint('🔓 AuthBloc: Handling logout');
 
-      await AuthService.clearAuth();
+      await getIt<AuthRepository>().logout();
       emit(AuthUnauthenticated());
     } catch (e) {
       // Handle error if needed

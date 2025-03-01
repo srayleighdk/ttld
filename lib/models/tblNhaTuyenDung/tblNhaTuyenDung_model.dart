@@ -6,10 +6,6 @@ part 'tblNhaTuyenDung_model.g.dart';
 @freezed
 class Ntd with _$Ntd {
   factory Ntd({
-    // required String? idDoanhNghiep,
-    // required String? username,
-    // required String? password,
-    // required String? ntdMadn,
     String? idDoanhNghiep,
     String? username,
     String? password,

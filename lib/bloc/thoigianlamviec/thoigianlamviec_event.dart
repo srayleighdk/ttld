@@ -17,7 +17,7 @@ class UpdateThoiGianLamViec extends ThoiGianLamViecEvent {
 }
 
 class DeleteThoiGianLamViec extends ThoiGianLamViecEvent {
-  final String tenThoigian;
+  final int id;
 
-  DeleteThoiGianLamViec({required this.tenThoigian});
+  DeleteThoiGianLamViec({required this.id});
 }

@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:ttld/bloc/tblNhaTuyenDung/ntd_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
-import 'package:ttld/pages/home/ntd/update_ntd/update_ntd_page.dart';
 
 class NTDHomePage extends StatefulWidget {
   static const routePath = '/ntd_home';
@@ -28,10 +27,10 @@ class _NTDHomePageState extends State<NTDHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('NTD Home'),
-        centerTitle: true,
-      ),
+      // appBar: AppBar(
+      //   title: const Text('NTD Home'),
+      //   centerTitle: true,
+      // ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -126,7 +125,7 @@ class _NTDHomePageState extends State<NTDHomePage> {
             context: context,
             icon: FontAwesomeIcons.solidPenToSquare,
             label: 'Cập nhật NTD',
-            route: UpdateNTDPage.routePath,
+            route: '/update_ntd',
           ),
           _buildQuickAccessButton(
             context: context,
@@ -181,7 +180,16 @@ class _NTDHomePageState extends State<NTDHomePage> {
       child: Card(
         elevation: 4.0,
         child: InkWell(
-          onTap: () => context.go(route),
+          onTap: () {
+            print('Button tapped');
+            print('Current route: ${GoRouterState.of(context).uri.path}');
+            print('Attempting to navigate to: $route');
+            try {
+              context.push(route); // Changed from context.go to context.push
+            } catch (e) {
+              print('Navigation error: $e');
+            }
+          },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(

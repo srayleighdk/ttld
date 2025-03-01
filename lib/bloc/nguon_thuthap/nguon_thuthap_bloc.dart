@@ -41,7 +41,7 @@ class NguonThuThapBloc extends Bloc<NguonThuThapEvent, NguonThuThapState> {
     try {
       final nguonThuThap = await nguonThuThapRepository.updateNguonThuThap(event.nguonThuThap);
       if (state is NguonThuThapLoaded) {
-        final updatedNguonThuThaps = (state as NguonThuThapLoaded).nguonThuThaps.map((q) => q.idNguonThuThap == nguonThuThap.idNguonThuThap ? nguonThuThap : q).toList();
+        final updatedNguonThuThaps = (state as NguonThuThapLoaded).nguonThuThaps.map((q) => q.id == nguonThuThap.id ? nguonThuThap : q).toList();
         emit(NguonThuThapLoaded(nguonThuThaps: updatedNguonThuThaps));
       }
     } catch (e) {
@@ -51,9 +51,9 @@ class NguonThuThapBloc extends Bloc<NguonThuThapEvent, NguonThuThapState> {
 
   Future<void> _onDeleteNguonThuThap(DeleteNguonThuThap event, Emitter<NguonThuThapState> emit) async {
     try {
-      await nguonThuThapRepository.deleteNguonThuThap(event.idNguonThuThap);
+      await nguonThuThapRepository.deleteNguonThuThap(event.id);
       if (state is NguonThuThapLoaded) {
-        final updatedNguonThuThaps = (state as NguonThuThapLoaded).nguonThuThaps.where((q) => q.idNguonThuThap != event.idNguonThuThap).toList();
+        final updatedNguonThuThaps = (state as NguonThuThapLoaded).nguonThuThaps.where((q) => q.id != event.id).toList();
         emit(NguonThuThapLoaded(nguonThuThaps: updatedNguonThuThaps));
       }
     } catch (e) {

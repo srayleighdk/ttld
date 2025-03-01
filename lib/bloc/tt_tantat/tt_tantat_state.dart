@@ -12,7 +12,7 @@ class TTTanTatInitial extends TTTanTatState {}
 class TTTanTatLoading extends TTTanTatState {}
 
 class TTTanTatLoaded extends TTTanTatState {
-  final List<TTTanTat> ttTanTats;
+  final List<TtTantat> ttTanTats;
 
   const TTTanTatLoaded({required this.ttTanTats});
 

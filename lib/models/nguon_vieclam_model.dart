@@ -1,30 +1,30 @@
 class NguonViecLam {
-  final int maNguonVlt;
+  final int id;
+  final String name;
   final int displayOrder;
-  final String tenNguonVlt;
   final bool status;
 
   NguonViecLam({
-    required this.maNguonVlt,
+    required this.id,
+    required this.name,
     required this.displayOrder,
-    required this.tenNguonVlt,
     required this.status,
   });
 
   factory NguonViecLam.fromJson(Map<String, dynamic> json) {
     return NguonViecLam(
-      maNguonVlt: json['maNguonVlt'],
+      id: json['id'],
+      name: json['name'],
       displayOrder: json['displayOrder'],
-      tenNguonVlt: json['tenNguonVlt'],
       status: json['status'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'maNguonVlt': maNguonVlt,
+      'id': id,
+      'name': name,
       'displayOrder': displayOrder,
-      'tenNguonVlt': tenNguonVlt,
       'status': status,
     };
   }

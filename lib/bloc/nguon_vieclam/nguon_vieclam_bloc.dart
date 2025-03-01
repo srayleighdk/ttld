@@ -41,7 +41,7 @@ class NguonViecLamBloc extends Bloc<NguonViecLamEvent, NguonViecLamState> {
     try {
       final nguonViecLam = await nguonViecLamRepository.updateNguonViecLam(event.nguonViecLam);
       if (state is NguonViecLamLoaded) {
-        final updatedNguonViecLams = (state as NguonViecLamLoaded).nguonViecLams.map((q) => q.maNguonVlt == nguonViecLam.maNguonVlt ? nguonViecLam : q).toList();
+        final updatedNguonViecLams = (state as NguonViecLamLoaded).nguonViecLams.map((q) => q.id == nguonViecLam.id ? nguonViecLam : q).toList();
         emit(NguonViecLamLoaded(nguonViecLams: updatedNguonViecLams));
       }
     } catch (e) {
@@ -51,9 +51,9 @@ class NguonViecLamBloc extends Bloc<NguonViecLamEvent, NguonViecLamState> {
 
   Future<void> _onDeleteNguonViecLam(DeleteNguonViecLam event, Emitter<NguonViecLamState> emit) async {
     try {
-      await nguonViecLamRepository.deleteNguonViecLam(event.maNguonVlt.toString());
+      await nguonViecLamRepository.deleteNguonViecLam(event.id);
       if (state is NguonViecLamLoaded) {
-        final updatedNguonViecLams = (state as NguonViecLamLoaded).nguonViecLams.where((q) => q.maNguonVlt != event.maNguonVlt).toList();
+        final updatedNguonViecLams = (state as NguonViecLamLoaded).nguonViecLams.where((q) => q.id != event.id).toList();
         emit(NguonViecLamLoaded(nguonViecLams: updatedNguonViecLams));
       }
     } catch (e) {

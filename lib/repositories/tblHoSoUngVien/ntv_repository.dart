@@ -1,16 +1,16 @@
 import 'package:ttld/core/services/ntv_api_service.dart';
 import 'package:ttld/models/tblHoSoUngVien/tblHoSoUngVien_model.dart';
 
-class NtvRepository {
+class NTVRepository {
   final NTVApiService _ntvApiService;
 
-  NtvRepository(this._ntvApiService);
+  NTVRepository(this._ntvApiService);
 
   Future<List<TblHoSoUngVienModel>> getAllHoSoUngVien() async {
     return await _ntvApiService.getHoSoUngVienList();
   }
 
-  Future<TblHoSoUngVienModel?> getHoSoUngVienById(String id) async {
+  Future<TblHoSoUngVienModel?> getHoSoUngVienById(id) async {
     return await _ntvApiService.getHoSoUngVienById(id);
   }
 

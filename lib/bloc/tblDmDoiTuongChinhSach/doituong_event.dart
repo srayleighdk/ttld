@@ -1,37 +1,37 @@
 part of 'doituong_bloc.dart';
 
-abstract class DoiTuongChinhSachEvent extends Equatable {
-  const DoiTuongChinhSachEvent();
+abstract class DoiTuongEvent extends Equatable {
+  const DoiTuongEvent();
 
   @override
   List<Object> get props => [];
 }
 
-class LoadDoiTuongChinhSachs extends DoiTuongChinhSachEvent {}
+class LoadDoiTuongs extends DoiTuongEvent {}
 
-class CreateDoiTuongChinhSach extends DoiTuongChinhSachEvent {
-  final DoiTuongChinhSach doiTuongChinhSach;
+class CreateDoiTuong extends DoiTuongEvent {
+  final DoiTuong doiTuong;
 
-  const CreateDoiTuongChinhSach(this.doiTuongChinhSach);
-
-  @override
-  List<Object> get props => [doiTuongChinhSach];
-}
-
-class UpdateDoiTuongChinhSach extends DoiTuongChinhSachEvent {
-  final int id;
-  final DoiTuongChinhSach doiTuongChinhSach;
-
-  const UpdateDoiTuongChinhSach(this.id, this.doiTuongChinhSach);
+  const CreateDoiTuong(this.doiTuong);
 
   @override
-  List<Object> get props => [id, doiTuongChinhSach];
+  List<Object> get props => [doiTuong];
 }
 
-class DeleteDoiTuongChinhSach extends DoiTuongChinhSachEvent {
+class UpdateDoiTuong extends DoiTuongEvent {
+  final int id;
+  final DoiTuong doiTuong;
+
+  const UpdateDoiTuong(this.id, this.doiTuong);
+
+  @override
+  List<Object> get props => [id, doiTuong];
+}
+
+class DeleteDoiTuong extends DoiTuongEvent {
   final int id;
 
-  const DeleteDoiTuongChinhSach(this.id);
+  const DeleteDoiTuong(this.id);
 
   @override
   List<Object> get props => [id];

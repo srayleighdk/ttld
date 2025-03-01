@@ -1,5 +1,5 @@
-import 'package:your_app_name/core/services/muc_luong_api_service.dart';
-import 'package:your_app_name/models/muc_luong_mm.dart';
+import 'package:ttld/core/services/muc_luong_api_service.dart';
+import 'package:ttld/models/muc_luong_mm.dart';
 
 abstract class MucLuongRepository {
   Future<List<MucLuongMM>> getMucLuongs();
@@ -16,19 +16,21 @@ class MucLuongRepositoryImpl implements MucLuongRepository {
   @override
   Future<List<MucLuongMM>> getMucLuongs() async {
     final response = await mucLuongApiService.getMucLuongs();
-    return response;
+    return (response.data['data'] as List)
+        .map((json) => MucLuongMM.fromJson(json))
+        .toList();
   }
 
   @override
   Future<MucLuongMM> addMucLuong(MucLuongMM mucLuong) async {
     final response = await mucLuongApiService.createMucLuong(mucLuong);
-    return response;
+    return MucLuongMM.fromJson(response.data['data'] as Map<String, dynamic>);
   }
 
   @override
   Future<MucLuongMM> updateMucLuong(MucLuongMM mucLuong) async {
     final response = await mucLuongApiService.updateMucLuong(mucLuong);
-    return response;
+    return MucLuongMM.fromJson(response.data['data'] as Map<String, dynamic>);
   }
 
   @override

@@ -1,13 +1,13 @@
 class NganhNghe {
-  final String idNkt;
-  final String tenNganhKt;
+  final String id;
+  final String name;
   final String manhom;
   final int displayOrder;
   final bool status;
 
   NganhNghe({
-    required this.idNkt,
-    required this.tenNganhKt,
+    required this.id,
+    required this.name,
     required this.manhom,
     required this.displayOrder,
     required this.status,
@@ -15,8 +15,8 @@ class NganhNghe {
 
   factory NganhNghe.fromJson(Map<String, dynamic> json) {
     return NganhNghe(
-      idNkt: json['idNkt'],
-      tenNganhKt: json['tenNganhKt'],
+      id: json['id'],
+      name: json['name'],
       manhom: json['manhom'],
       displayOrder: json['displayOrder'],
       status: json['status'],
@@ -25,8 +25,8 @@ class NganhNghe {
 
   Map<String, dynamic> toJson() {
     return {
-      'idNkt': idNkt,
-      'tenNganhKt': tenNganhKt,
+      'id': id,
+      'name': name,
       'manhom': manhom,
       'displayOrder': displayOrder,
       'status': status,

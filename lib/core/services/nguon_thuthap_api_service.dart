@@ -6,18 +6,20 @@ class NguonThuThapApiService {
   NguonThuThapApiService(this._dio);
 
   Future<Response> getNguonThuThap() async {
-    return await _dio.get('/api/danhmuc/nguon-thuthap');
+    return await _dio.get('/danhmuc/nguon-thuthap');
   }
 
   Future<Response> postNguonThuThap(Map<String, dynamic> data) async {
-    return await _dio.post('/api/danhmuc/nguon-thuthap', data);
+    return await _dio.post('/danhmuc/nguon-thuthap', data: data);
   }
 
   Future<Response> putNguonThuThap(Map<String, dynamic> data) async {
-    return await _dio.put('/api/danhmuc/nguon-thuthap', data);
+    return await _dio.put('/danhmuc/nguon-thuthap', data: data);
   }
 
   Future<void> deleteNguonThuThap(String id) async {
-    await _dio.delete('/api/danhmuc/nguon-thuthap/$id');
+    await _dio.delete('/danhmuc/nguon-thuthap', queryParameters: {
+      'id': id,
+    });
   }
 }

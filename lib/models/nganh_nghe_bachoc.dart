@@ -1,20 +1,23 @@
 class NganhNgheBacHoc {
-  final String idBacHoc;
-  final String description;
+  final String id;
+  final String name;
+  final String idNhom;
   final int ordinalNumbers;
   final bool status;
 
   NganhNgheBacHoc({
-    required this.idBacHoc,
-    required this.description,
+    required this.id,
+    required this.name,
+    required this.idNhom,
     required this.ordinalNumbers,
     required this.status,
   });
 
   factory NganhNgheBacHoc.fromJson(Map<String, dynamic> json) {
     return NganhNgheBacHoc(
-      idBacHoc: json['idBacHoc'],
-      description: json['description'],
+      id: json['id'],
+      name: json['name'],
+      idNhom: json['idNhom'],
       ordinalNumbers: json['ordinalNumbers'],
       status: json['status'],
     );
@@ -22,8 +25,9 @@ class NganhNgheBacHoc {
 
   Map<String, dynamic> toJson() {
     return {
-      'idBacHoc': idBacHoc,
-      'description': description,
+      'id': id,
+      'name': name,
+      'idNhom': idNhom,
       'ordinalNumbers': ordinalNumbers,
       'status': status,
     };

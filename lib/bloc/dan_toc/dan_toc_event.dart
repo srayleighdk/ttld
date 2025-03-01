@@ -17,7 +17,7 @@ class UpdateDanToc extends DanTocEvent {
 }
 
 class DeleteDanToc extends DanTocEvent {
-  final String tenDt;
+  final String id;
 
-  DeleteDanToc({required this.tenDt});
+  DeleteDanToc({required this.id});
 }

@@ -17,7 +17,7 @@ class UpdateTrinhDoNgoaiNgu extends TrinhDoNgoaiNguEvent {
 }
 
 class DeleteTrinhDoNgoaiNgu extends TrinhDoNgoaiNguEvent {
-  final String tdnnId;
+  final String id;
 
-  DeleteTrinhDoNgoaiNgu({required this.tdnnId});
+  DeleteTrinhDoNgoaiNgu({required this.id});
 }

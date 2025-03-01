@@ -10,14 +10,14 @@ class TonGiaoApiService {
   }
 
   Future<Response> postTonGiao(Map<String, dynamic> data) async {
-    return await _dio.post('/api/danhmuc/ton-giao', data);
+    return await _dio.post('/api/danhmuc/ton-giao', data: data);
   }
 
   Future<Response> putTonGiao(Map<String, dynamic> data) async {
-    return await _dio.put('/api/danhmuc/ton-giao', data);
+    return await _dio.put('/api/danhmuc/ton-giao', data: data);
   }
 
   Future<void> deleteTonGiao(String id) async {
-    await _dio.delete('/api/danhmuc/ton-giao/$id');
+    await _dio.delete('/api/danhmuc/ton-giao', queryParameters: {'id': id});
   }
 }
