@@ -74,13 +74,14 @@ _$TblHoSoUngVienModelImpl _$$TblHoSoUngVienModelImplFromJson(
       idxa: json['idxa'] as String?,
       idtv: json['idtv'] as String?,
       mahoGd: json['mahoGd'] as String?,
-      fileCv: json['fileCv'] as String?,
+      fileCv: json['fileCv'],
       displayOrder: (json['displayOrder'] as num?)?.toInt(),
       ngayduyet: json['ngayduyet'] == null
           ? null
           : DateTime.parse(json['ngayduyet'] as String),
       idNguonThuThap: json['idNguonThuThap'] as String?,
-      avatarUrl: json['avatarUrl'] as String?,
+      avatarUrl: json['avatarUrl'],
+      avatar: json['avatar'],
       idBacHoc: json['idBacHoc'] as String?,
       diachilienhe: json['diachilienhe'] as String?,
     );
@@ -158,6 +159,7 @@ Map<String, dynamic> _$$TblHoSoUngVienModelImplToJson(
       'ngayduyet': instance.ngayduyet?.toIso8601String(),
       'idNguonThuThap': instance.idNguonThuThap,
       'avatarUrl': instance.avatarUrl,
+      'avatar': instance.avatar,
       'idBacHoc': instance.idBacHoc,
       'diachilienhe': instance.diachilienhe,
     };

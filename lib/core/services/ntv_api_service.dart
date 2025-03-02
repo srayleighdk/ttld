@@ -45,14 +45,13 @@ class NTVApiService {
     }
   }
 
-  Future<TblHoSoUngVienModel> updateHoSoUngVien(
-      TblHoSoUngVienModel hoSoUngVien) async {
+  Future<Response> updateHoSoUngVien(String id, dynamic hoSoUngVien) async {
     try {
       final response = await _dio.put(ApiEndpoints.hosoUngVien,
-          data: hoSoUngVien.toJson(), queryParameters: {'id': hoSoUngVien.id});
-      final TblHoSoUngVienModel updatedHoSoUngVien =
-          TblHoSoUngVienModel.fromJson(response.data);
-      return updatedHoSoUngVien;
+          data: hoSoUngVien, queryParameters: {'id': hoSoUngVien.id});
+      // final TblHoSoUngVienModel updatedHoSoUngVien =
+      //     TblHoSoUngVienModel.fromJson(response.data);
+      return response;
     } catch (e) {
       throw Exception('Failed to update HoSoUngVien: $e');
     }

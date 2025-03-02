@@ -22,8 +22,8 @@ import 'package:ttld/models/thoigianlamviec_model.dart';
 import 'package:ttld/models/tinh_thanh_model.dart';
 import 'package:ttld/models/trinh_do_hoc_van_model.dart';
 import 'package:ttld/models/trinh_do_ngoai_ngu_model.dart';
-import 'package:ttld/models/trinh_do_tin_hoc_model.dart'; 
-import 'package:ttld/models/tttantat/tttantat.dart'; 
+import 'package:ttld/models/trinh_do_tin_hoc_model.dart';
+import 'package:ttld/models/tttantat/tttantat.dart';
 import 'package:ttld/repositories/chuc_danh_repository.dart';
 import 'package:ttld/repositories/dan_toc/dan_toc_repository.dart';
 import 'package:ttld/repositories/hinhthuc_doanhnghiep/hinhthuc_doanhnghiep_repository.dart';
@@ -122,7 +122,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
   final _uvIdController = TextEditingController();
   bool? _newletterSubscription;
   bool? _jobsletterSubscription;
-  bool? _coBHTN;
+  bool? _coBhtn;
   final _soNhaDuongController = TextEditingController();
   int? _idThanhPho;
   final _idTinhController = TextEditingController();
@@ -165,7 +165,8 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
   TrinhDoTinHoc? trinhDoTinHoc;
 
   List<TrinhDoNgoaiNgu> _trinhDoNgoaiNgus = [];
-  TrinhDoNgoaiNgu? trinhDoNgoaiNgu; List<NganhNghe> _nganhNghes = [];
+  TrinhDoNgoaiNgu? trinhDoNgoaiNgu;
+  List<NganhNghe> _nganhNghes = [];
   NganhNghe? nganhNghe;
 
   List<NganhNgheBacHoc> _nganhNgheBacHocs = [];
@@ -242,7 +243,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
         _uvIdController.text = ntv.uvId.toString();
         _newletterSubscription = ntv.newsletterSubscription;
         _jobsletterSubscription = ntv.jobsletterSubscription;
-        _coBHTN = ntv.coBHTN;
+        _coBhtn = ntv.coBhtn;
         _soNhaDuongController.text = ntv.soNhaDuong ?? '';
         _idThanhPho = ntv.idThanhPho;
         _idTinhController.text = ntv.idTinh ?? '';
@@ -290,8 +291,8 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
           _chucDanhs = chucDanhs;
         });
         if (_uvnvVitrimongmuonId != null) {
-          ChucDanhModel? _chucDanh =
-              _chucDanhs.firstWhere((element) => element.id == _uvnvVitrimongmuonId);
+          ChucDanhModel? _chucDanh = _chucDanhs
+              .firstWhere((element) => element.id == _uvnvVitrimongmuonId);
           if (_chucDanh != null) {
             setState(() {
               chucDanh = _chucDanh;
@@ -317,8 +318,8 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
           _hinhthucdoanhnghieps = hinhthucdoanhnghieps;
         });
         if (_uvnvHinhthuccongtyId != null) {
-          HinhThucDoanhNghiep? _hinhthucdoanhnghiep =
-              _hinhthucdoanhnghieps.firstWhere((element) => element.id == _uvnvHinhthuccongtyId);
+          HinhThucDoanhNghiep? _hinhthucdoanhnghiep = _hinhthucdoanhnghieps
+              .firstWhere((element) => element.id == _uvnvHinhthuccongtyId);
           if (_hinhthucdoanhnghiep != null) {
             setState(() {
               hinhthucdoanhnghiep = _hinhthucdoanhnghiep;
@@ -342,8 +343,8 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
           _thoigianlamviecs = thoigianlamviecs;
         });
         if (_uvnvThoigianId != null) {
-          ThoiGianLamViec? _thoigianlamviec =
-              _thoigianlamviecs.firstWhere((element) => element.id == _uvnvThoigianId);
+          ThoiGianLamViec? _thoigianlamviec = _thoigianlamviecs
+              .firstWhere((element) => element.id == _uvnvThoigianId);
           if (_thoigianlamviec != null) {
             setState(() {
               thoigianlamviec = _thoigianlamviec;
@@ -366,8 +367,8 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
           _mucluongs = mucluongs;
         });
         if (_idMucluong != null) {
-          MucLuongMM? _mucluong =
-              _mucluongs.firstWhere((element) => element.idMucLuong == _idMucluong);
+          MucLuongMM? _mucluong = _mucluongs
+              .firstWhere((element) => element.idMucLuong == _idMucluong);
           if (_mucluong != null) {
             setState(() {
               mucLuong = _mucluong;
@@ -481,12 +482,11 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
           }
         }
         if (_uvnvNoilamviecController.text.isNotEmpty) {
-          TinhThanhModel? _tinhThanh =
-              _tinhThanhs.firstWhere((element) => element.tpId == int.parse(_uvnvNoilamviecController.text));
+          TinhThanhModel? _tinhThanh = _tinhThanhs.firstWhere((element) =>
+              element.tpId == int.parse(_uvnvNoilamviecController.text));
           if (_tinhThanh != null) {
             setState(() {
               tinhThanhmm = _tinhThanh;
-
             });
           }
         }
@@ -522,8 +522,8 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
           _trinhDoTinHocs = trinhDoTinHocs;
         });
         if (_uvcmTrinhdotinhocController.text.isNotEmpty) {
-          TrinhDoTinHoc? _trinhDoTinHoc =
-              _trinhDoTinHocs.firstWhere((element) => element.id == _uvcmTrinhdotinhocController.text);
+          TrinhDoTinHoc? _trinhDoTinHoc = _trinhDoTinHocs.firstWhere(
+              (element) => element.id == _uvcmTrinhdotinhocController.text);
           if (_trinhDoTinHoc != null) {
             setState(() {
               trinhDoTinHoc = _trinhDoTinHoc;
@@ -547,8 +547,8 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
           _trinhDoNgoaiNgus = trinhDoNgoaiNgus;
         });
         if (_uvcmTrinhdongoainguController.text.isNotEmpty) {
-          TrinhDoNgoaiNgu? _trinhDoNgoaiNgu =
-              _trinhDoNgoaiNgus.firstWhere((element) => element.id == _uvcmTrinhdongoainguController.text);
+          TrinhDoNgoaiNgu? _trinhDoNgoaiNgu = _trinhDoNgoaiNgus.firstWhere(
+              (element) => element.id == _uvcmTrinhdongoainguController.text);
           if (_trinhDoNgoaiNgu != null) {
             setState(() {
               trinhDoNgoaiNgu = _trinhDoNgoaiNgu;
@@ -588,11 +588,11 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
           _nganhNgheBacHocs = nganhNgheBacHocs;
         });
         if (_idBacHocController.text.isNotEmpty) {
-          NganhNgheBacHoc? _nganhNgheBacHoc =
-              _nganhNgheBacHocs.firstWhere((element) => element.id == _idBacHocController.text);
-            setState(() {
-              nganhNgheBacHoc = _nganhNgheBacHoc;
-            });
+          NganhNgheBacHoc? _nganhNgheBacHoc = _nganhNgheBacHocs
+              .firstWhere((element) => element.id == _idBacHocController.text);
+          setState(() {
+            nganhNgheBacHoc = _nganhNgheBacHoc;
+          });
         }
       }
     } catch (e) {
@@ -1005,7 +1005,6 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
           CustomPicker(
               label: Text('Thành phố nơi làm việc'),
               items: _tinhThanhs,
-              
               selectedItem: tinhThanh,
               onChanged: (TinhThanhModel? value) {
                 setState(() {
@@ -1092,10 +1091,10 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
           const SizedBox(height: 12.0),
           CustomCheckbox(
             label: 'Có Bảo Hiểm thất nghiệp',
-            value: _coBHTN ?? false,
+            value: _coBhtn ?? false,
             onChanged: (bool? value) {
               setState(() {
-                _coBHTN = value;
+                _coBhtn = value;
               });
             },
           ),
@@ -1299,17 +1298,14 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
         if (originalNtv != null) {
           final updatedNtv = TblHoSoUngVienModel(
             id: originalNtv.id,
-            uvEmail: _emailController.text,
             uvUsername: _usernameController.text,
-            maHoSo: '',
-            idDanToc: _idDanToc ?? 0,
-            tenDanToc: danToc?.name ?? '',
-            documentPath: '',
-            imagePath: '',
             uvPassword: _passwordController.text,
             uvHoten: _hotenController.text,
-            uvNgaysinh: _uvngaysinhController,
+            uvEmail: _emailController.text,
+            maHoSo: 'Test',
             cvMongMuon: _cvMongMuonController.text,
+            documentPath: 'Test',
+            imagePath: 'Test',
             uvDiachichitiet: _diachichitietController.text,
             uvDienthoai: _dienthoaiController.text,
             uvSoCmnd: _cmndController.text,
@@ -1318,31 +1314,18 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
             uvGioitinh: _uvGioitinh,
             uvChieucao: _uvchieucaoController.text,
             uvCannang: _uvcannangController.text,
-            uvTinhtrangtantatId: _uvTinhtrangtantatId ?? 0,
-            uvTinhtrangtantat: tinhTrangTanTat?.name ?? '',
-            uvHonnhanId: _uvHonnhanId,
-            uvHonnhan: hoNhanOptions[false],
+            idNguonThuThap: _idNguonThuThap,
+            uvNgaysinh: _uvngaysinhController,
             uvcmCongviechientai: _uvcmCongviechientaiController.text,
-            uvnvNganhngheId: _uvnvNganhngheId ?? 0,
-            uvnvNganhnghe: nganhNgheTD?.name ?? '',
-            uvnvVitrimongmuonid: _uvnvVitrimongmuonId ?? 0,
-            uvnvVitrimongmuon: chucDanh?.name ?? '',
-            uvnvThoigianId: _uvnvThoigianId ?? 0,
-            uvnvThoigian: thoigianlamviec?.name ?? '',
             uvnvNoilamviec: _uvnvNoilamviecController.text,
-            idMucluong: _idMucluong,
+            diachilienhe: _diachilienheController.text,
             uvnvTienluong: double.tryParse(_uvnvTienluong.text) ?? 0,
-            uvnvHinhthuccongtyId: _uvnvHinhthuccongtyId ?? 0,
-            uvnvHinhthuccongty: hinhthucdoanhnghiep?.name ?? '',
             uvGhichu: _uvGhichuController.text,
-            uvcmTrinhdoId: _uvcmTrinhdoId ?? 0,
-            uvcmTrinhdo: trinhDoHocVan?.name ?? '',
             uvcmBangcap: _uvcmBangcapController.text,
             uvcmKynang: _uvcmKynangController.text,
             uvcmTrinhdongoaingu: _uvcmTrinhdongoainguController.text,
             uvcmTrinhdotinhoc: _uvcmTrinhdotinhocController.text,
             uvcmKinhnghiem: int.tryParse(_uvcmKinhnghiem.text) ?? 0,
-            uvSolanxem: _uvSolanxem,
             uvDuyet: _uvDuyet,
             uvHienthi: _uvHienthi,
             uvhtTelephone: _uvhtTelephone,
@@ -1351,24 +1334,41 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
             uvId: _uvIdController.text,
             newsletterSubscription: _newletterSubscription,
             jobsletterSubscription: _jobsletterSubscription,
-            coBhtn: _coBHTN ?? false,
+            coBhtn: _coBhtn ?? false,
             soNhaDuong: _soNhaDuongController.text,
             idThanhPho: _idThanhPho,
             idTinh: _idTinhController.text,
             idhuyen: _idHuyenController.text,
             idxa: _idXaController.text,
             idtv: _idTv,
+            idBacHoc: _idBacHocController.text,
+            idMucluong: _idMucluong,
             mahoGd: _mahoGd,
-            fileCv: _fileCVController.text ?? '',
+            fileCv: _fileCVController.text ?? 'Test',
             displayOrder: _displayOrder,
             ngayduyet: _ngayduyet,
-            idNguonThuThap: _idNguonThuThap,
-            avatarUrl: _avatarUrlController.text ?? '',
-            idBacHoc: _idBacHocController.text,
-            diachilienhe: _diachilienheController.text,
+            uvTinhtrangtantatId: _uvTinhtrangtantatId ?? 0,
+            idDanToc: _idDanToc ?? 0,
+            uvHonnhanId: _uvHonnhanId,
+            uvnvVitrimongmuonid: _uvnvVitrimongmuonId ?? 0,
             uvDoituongchinhsachId: _uvDoiTuongChingSachId ?? 0,
-            uvDoituongchinhsach: doiTuongChinhSach?.name ?? '',
-            
+            uvcmTrinhdoId: _uvcmTrinhdoId ?? 0,
+            uvnvNganhngheId: _uvnvNganhngheId ?? 0,
+            uvnvHinhthuccongtyId: _uvnvHinhthuccongtyId ?? 0,
+            uvnvThoigianId: _uvnvThoigianId ?? 0,
+
+            // uvnvThoigian: thoigianlamviec?.name ?? '',
+            // tenDanToc: danToc?.name ?? '',
+            // uvTinhtrangtantat: tinhTrangTanTat?.name ?? '',
+            // uvHonnhan: hoNhanOptions[false],
+            // uvnvNganhnghe: nganhNgheTD?.name ?? '',
+            // uvnvVitrimongmuon: chucDanh?.name ?? '',
+            // uvnvHinhthuccongty: hinhthucdoanhnghiep?.name ?? '',
+            // uvcmTrinhdo: trinhDoHocVan?.name ?? '',
+            // uvSolanxem: _uvSolanxem,
+            // avatarUrl: _avatarUrlController.text ?? 'Test',
+            // uvDoituongchinhsach: doiTuongChinhSach?.name ?? '',
+            // avatar: _avatarUrlController.text ?? 'Test',
           );
           if (!mounted) return; // Prevent action if widget is disposed
           context.read<NTVBloc>().add(UpdateTblHoSoUngVien(updatedNtv));

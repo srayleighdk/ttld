@@ -41,9 +41,8 @@ class NTVBloc extends Bloc<NTVEvent, NTVState> {
     on<UpdateTblHoSoUngVien>((event, emit) async {
       try {
         await _ntvRepository.updateHoSoUngVien(
-            event.tblHoSoUngVien.id.toString(), event.tblHoSoUngVien);
-        final tblHoSoUngViens = await _ntvRepository.getAllHoSoUngVien();
-        emit(NTVLoaded(tblHoSoUngViens));
+            event.tblHoSoUngVien.id, event.tblHoSoUngVien);
+        // emit(NTVLoaded(tblHoSoUngViens));
       } catch (e) {
         emit(NTVError(e.toString()));
       }

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:ttld/core/services/ntv_api_service.dart';
 import 'package:ttld/models/tblHoSoUngVien/tblHoSoUngVien_model.dart';
 
@@ -19,9 +20,8 @@ class NTVRepository {
     return await _ntvApiService.addHoSoUngVien(tblHoSoUngVien);
   }
 
-  Future<TblHoSoUngVienModel> updateHoSoUngVien(
-      String id, TblHoSoUngVienModel tblHoSoUngVien) async {
-    return await _ntvApiService.updateHoSoUngVien(tblHoSoUngVien);
+  Future<Response> updateHoSoUngVien(String id, tblHoSoUngVien) async {
+    return await _ntvApiService.updateHoSoUngVien(id, tblHoSoUngVien);
   }
 
   Future<void> deleteHoSoUngVien(String id) async {
