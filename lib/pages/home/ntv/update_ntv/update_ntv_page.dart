@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_bloc.dart';
 import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_event.dart';
 import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_state.dart';
@@ -23,6 +26,7 @@ import 'package:ttld/models/tinh_thanh_model.dart';
 import 'package:ttld/models/trinh_do_hoc_van_model.dart';
 import 'package:ttld/models/trinh_do_ngoai_ngu_model.dart';
 import 'package:ttld/models/trinh_do_tin_hoc_model.dart';
+import 'package:ttld/models/trinh_do_van_hoa_model.dart';
 import 'package:ttld/models/tttantat/tttantat.dart';
 import 'package:ttld/repositories/chuc_danh_repository.dart';
 import 'package:ttld/repositories/dan_toc/dan_toc_repository.dart';
@@ -37,6 +41,7 @@ import 'package:ttld/repositories/thoigianlamviec/thoigianlamviec_repository.dar
 import 'package:ttld/repositories/trinh_do_hoc_van/trinh_do_hoc_van_repository.dart';
 import 'package:ttld/repositories/trinh_do_ngoai_ngu/trinh_do_ngoai_ngu_repository.dart';
 import 'package:ttld/repositories/trinh_do_tin_hoc/trinh_do_tin_hoc_repository.dart';
+import 'package:ttld/repositories/trinh_do_van_hoa/trinh_do_van_hoa_repository.dart';
 import 'package:ttld/repositories/tt_tantat/tt_tantat_repository.dart';
 import 'package:ttld/widgets/cascade_location_picker.dart';
 import 'package:ttld/widgets/field/custom_checkbox.dart';
@@ -64,7 +69,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
   int _currentStep = 0;
   final List<String> _steps = [
     'Thông tin\ncá nhân',
-    'Trình độ\nchuyên môn',
+    'Hiện thị\nthông tin',
     'Việc làm\nmong muốn',
     'Xác nhận',
   ];
@@ -187,6 +192,12 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
   List<HinhThucDoanhNghiep> _hinhthucdoanhnghieps = [];
   HinhThucDoanhNghiep? hinhthucdoanhnghiep;
 
+  List<TrinhDoVanHoa> _trinhDoVanHoas = [];
+  TrinhDoVanHoa? trinhDoVanHoa;
+
+  File? _selectedFile; // For file (e.g., CV)
+  File? _selectedImage; // For image (e.g., avatar)
+
   @override
   void initState() {
     super.initState();
@@ -258,6 +269,13 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
         _avatarUrlController.text = ntv.avatarUrl ?? '';
         _idBacHocController.text = ntv.idBacHoc ?? '';
         _diachilienheController.text = ntv.diachilienhe ?? '';
+        _uvTinhtrangtantatId = ntv.uvTinhtrangtantatId;
+        _uvDoiTuongChingSachId = ntv.uvDoituongchinhsachId;
+        _uvcmTrinhdoId = ntv.uvcmTrinhdoId;
+        _uvnvNganhngheId = ntv.uvnvNganhngheId;
+        _uvnvVitrimongmuonId = ntv.uvnvVitrimongmuonid;
+        _uvnvThoigianId = ntv.uvnvThoigianId;
+        _uvnvHinhthuccongtyId = ntv.uvnvHinhthuccongtyId;
       }
     }
 
@@ -279,6 +297,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
     _loadMucLuong();
     _loadThoiGianLamViec();
     _loadHinhThucDoanhNghiep();
+    _loadTrinhDoVanHoa();
   }
 
   Future<void> _loadChucDanh() async {
@@ -391,6 +410,15 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
         setState(() {
           _nguonThuThaps = nguonThuThaps;
         });
+        if (_idNguonThuThap != null) {
+          NguonThuThap? _nguonThuThap = _nguonThuThaps
+              .firstWhere((element) => element.id == _idNguonThuThap);
+          if (_nguonThuThap != null) {
+            setState(() {
+              nguonThuThap = _nguonThuThap;
+            });
+          }
+        }
       }
     } catch (e) {
       // Added stackTrace
@@ -407,6 +435,15 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
         setState(() {
           _danTocs = danTocs;
         });
+        if (_idDanToc != null) {
+          DanToc? _danToc =
+              _danTocs.firstWhere((element) => element.id == _idDanToc);
+          if (_danToc != null) {
+            setState(() {
+              danToc = _danToc;
+            });
+          }
+        }
       }
     } catch (e) {
       // Added stackTrace
@@ -423,6 +460,15 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
         setState(() {
           _tinhTrangTanTats = tinhTrangTanTats;
         });
+        if (_uvTinhtrangtantatId != null) {
+          TtTantat? _tinhTrangTanTat = _tinhTrangTanTats
+              .firstWhere((element) => element.id == _uvTinhtrangtantatId);
+          if (_tinhTrangTanTat != null) {
+            setState(() {
+              tinhTrangTanTat = _tinhTrangTanTat;
+            });
+          }
+        }
       }
     } catch (e) {
       // Added stackTrace
@@ -439,6 +485,15 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
         setState(() {
           _doiTuongChinhSachs = doiTuongs;
         });
+        if (_uvDoiTuongChingSach != null) {
+          DoiTuong? _doiTuong = _doiTuongChinhSachs
+              .firstWhere((element) => element.id == _uvDoiTuongChingSachId);
+          if (_doiTuong != null) {
+            setState(() {
+              doiTuongChinhSach = _doiTuong;
+            });
+          }
+        }
       }
     } catch (e) {
       // Added stackTrace
@@ -505,10 +560,44 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
         setState(() {
           _trinhDoHocVans = trinhDoHocVans;
         });
+        if (_uvcmTrinhdoId != null) {
+          TrinhDoHocVan? _trinhDoHocVan = _trinhDoHocVans
+              .firstWhere((element) => element.id == _uvcmTrinhdoId);
+          if (_trinhDoHocVan != null) {
+            setState(() {
+              trinhDoHocVan = _trinhDoHocVan;
+            });
+          }
+        }
       }
     } catch (e) {
       // Added stackTrace
       print("Error loading trinh do hoc van: $e");
+    }
+  }
+
+  Future<void> _loadTrinhDoVanHoa() async {
+    final trinhDoVanHoaRepository = locator<TrinhDoVanHoaRepository>();
+    try {
+      final trinhDoVanHoas = await trinhDoVanHoaRepository.getTrinhDoVanHoas();
+
+      if (mounted) {
+        setState(() {
+          _trinhDoVanHoas = trinhDoVanHoas;
+        });
+        if (_uvcmTrinhdoId != null) {
+          TrinhDoVanHoa? _trinhDoVanHoa = _trinhDoVanHoas
+              .firstWhere((element) => element.id == _uvcmTrinhdoId);
+          if (_trinhDoVanHoa != null) {
+            setState(() {
+              trinhDoVanHoa = _trinhDoVanHoa;
+            });
+          }
+        }
+      }
+    } catch (e) {
+      // Added stackTrace
+      print("Error loading trinh do van hoa: $e");
     }
   }
 
@@ -570,9 +659,17 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
         setState(() {
           _nganhNghes = nganhNghes;
         });
+        if (_uvnvNganhngheId != null) {
+          NganhNghe? _nganhNghe = _nganhNghes.firstWhere(
+              (element) => element.id == _uvnvNganhngheId.toString());
+          if (_nganhNghe != null) {
+            setState(() {
+              nganhNghe = _nganhNghe;
+            });
+          }
+        }
       }
-    } catch (e, stackTrace) {
-      // Added stackTrace
+    } catch (e) {
       print("Error loading nganh nghe: $e");
     }
   }
@@ -609,10 +706,44 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
         setState(() {
           _nganhNgheTDs = nganhNgheTDs;
         });
+        if (_uvnvNganhngheId != null) {
+          NganhNgheTD? _nganhNgheTD = _nganhNgheTDs
+              .firstWhere((element) => element.id == _uvnvNganhngheId);
+          if (_nganhNgheTD != null) {
+            setState(() {
+              nganhNgheTD = _nganhNgheTD;
+            });
+          }
+        }
       }
     } catch (e, stackTrace) {
       // Added stackTrace
       print("Error loading nganh nghe td: $e");
+    }
+  }
+
+// Pick a file
+  Future<void> _pickFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf', 'doc', 'docx'], // Restrict to specific types
+    );
+    if (result != null && result.files.single.path != null) {
+      setState(() {
+        _selectedFile = File(result.files.single.path!);
+      });
+    }
+  }
+
+  // Pick an image
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(
+        source: ImageSource.gallery); // Or ImageSource.camera
+    if (pickedFile != null) {
+      setState(() {
+        _selectedImage = File(pickedFile.path);
+      });
     }
   }
 
@@ -870,6 +1001,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
             selectedItem: nguonThuThap,
             onChanged: (NguonThuThap? value) {
               setState(() {
+                _idNguonThuThap = value?.id;
                 nguonThuThap = value;
               });
             },
@@ -980,6 +1112,9 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
           ),
           const SizedBox(height: 12.0),
           CascadeLocationPicker(
+            initialTinh: _idTinhController.text,
+            initialHuyen: _idHuyenController.text,
+            initialXa: _idXaController.text,
             onTinhChanged: (tinh) {
               setState(() {
                 _selectedTinh = tinh?.tentinh;
@@ -1016,19 +1151,19 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
           Text("Trình độ chuyên môn:"),
           const SizedBox(height: 12.0),
           CustomPicker(
-            label: Text('Trình độ học vấn'),
-            items: _trinhDoHocVans,
-            selectedItem: trinhDoHocVan,
-            onChanged: (TrinhDoHocVan? value) {
+            label: Text('Trình độ văn hóa'),
+            items: _trinhDoVanHoas,
+            selectedItem: trinhDoVanHoa,
+            onChanged: (TrinhDoVanHoa? value) {
               setState(() {
                 _uvcmTrinhdoId = value?.id;
               });
             },
-            displayItemBuilder: (TrinhDoHocVan? item) => item?.name ?? '',
+            displayItemBuilder: (TrinhDoVanHoa? item) => item?.name ?? '',
           ),
           const SizedBox(height: 12.0),
           CustomPicker(
-            label: Text('Ngành nghề TD'),
+            label: Text('Ngành nghề'),
             items: _nganhNgheTDs,
             selectedItem: nganhNgheTD,
             onChanged: (NganhNgheTD? value) {
@@ -1154,6 +1289,38 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                 _jobsletterSubscription = value;
               });
             },
+          ),
+          const SizedBox(height: 12.0),
+          Row(
+            children: [
+              ElevatedButton(
+                onPressed: _pickFile,
+                child: Text('Chọn File CV'),
+              ),
+              SizedBox(width: 10),
+              Text(_selectedFile != null
+                  ? _selectedFile!.path.split('/').last
+                  : 'No file selected'),
+            ],
+          ),
+          SizedBox(height: 20),
+          // Image picker with preview
+          Row(
+            children: [
+              ElevatedButton(
+                onPressed: _pickImage,
+                child: Text('Chọn Ảnh Avatar'),
+              ),
+              SizedBox(width: 10),
+              _selectedImage != null
+                  ? Image.file(
+                      _selectedImage!,
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.cover,
+                    )
+                  : Text('No image selected'),
+            ],
           ),
         ]));
   }
@@ -1344,7 +1511,6 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
             idBacHoc: _idBacHocController.text,
             idMucluong: _idMucluong,
             mahoGd: _mahoGd,
-            fileCv: _fileCVController.text ?? 'Test',
             displayOrder: _displayOrder,
             ngayduyet: _ngayduyet,
             uvTinhtrangtantatId: _uvTinhtrangtantatId ?? 0,
@@ -1356,6 +1522,8 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
             uvnvNganhngheId: _uvnvNganhngheId ?? 0,
             uvnvHinhthuccongtyId: _uvnvHinhthuccongtyId ?? 0,
             uvnvThoigianId: _uvnvThoigianId ?? 0,
+            fileCv: _selectedFile?.path ?? originalNtv.fileCv,
+            avatarUrl: _selectedImage?.path ?? originalNtv.avatarUrl,
 
             // uvnvThoigian: thoigianlamviec?.name ?? '',
             // tenDanToc: danToc?.name ?? '',

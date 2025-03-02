@@ -58,6 +58,7 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
   @override
   void initState() {
     super.initState();
+    _kcnCubit = context.read<KcnCubit>();
     _initializeTinh();
   }
 
@@ -134,13 +135,15 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
       }
     }
 
-    BlocProvider.of<KcnCubit>(context).getKCN(selectedTinh?.matinh ?? '');
+    // BlocProvider.of<KcnCubit>(context).getKCN(selectedTinh?.matinh ?? '');
     _updateAddressDetail();
   }
 
   void _loadInitialData(Tinh tinh) {
     context.read<HuyenBloc>().add(LoadHuyensByTinh(matinh: tinh.matinh));
-    context.read<KcnCubit>().getKCN(tinh.matinh);
+    if (widget.isNTD) {
+      _kcnCubit.getKCN(tinh.matinh);
+    }
     widget.onTinhChanged?.call(tinh);
   }
 
@@ -186,7 +189,9 @@ class _CascadeLocationPickerState extends State<CascadeLocationPicker> {
                     context
                         .read<HuyenBloc>()
                         .add(LoadHuyensByTinh(matinh: newValue.matinh));
-                    _kcnCubit.getKCN(newValue.matinh);
+                    if (widget.isNTD) {
+                      _kcnCubit.getKCN(newValue.matinh);
+                    }
                   }
                   widget.onTinhChanged?.call(newValue);
                 },
