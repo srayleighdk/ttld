@@ -1,15 +1,19 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_bloc.dart';
 import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_event.dart';
 import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_state.dart';
 import 'package:ttld/bloc/tinh_thanh/tinh_thanh_cubit.dart';
 import 'package:ttld/core/di/injection.dart';
+import 'package:ttld/core/utils/toast_utils.dart';
 import 'package:ttld/helppers/map_help.dart';
 import 'package:ttld/models/chuc_danh_model.dart';
 import 'package:ttld/models/dan_toc_model.dart';
@@ -33,7 +37,6 @@ import 'package:ttld/repositories/dan_toc/dan_toc_repository.dart';
 import 'package:ttld/repositories/hinhthuc_doanhnghiep/hinhthuc_doanhnghiep_repository.dart';
 import 'package:ttld/repositories/muc_luong/muc_luong_repository.dart';
 import 'package:ttld/repositories/nganh_nghe/nganh_nghe_bachoc_repository.dart';
-import 'package:ttld/repositories/nganh_nghe/nganh_nghe_repository.dart';
 import 'package:ttld/repositories/nganh_nghe/nganh_nghe_td_repository.dart';
 import 'package:ttld/repositories/nguon_thuthap/nguon_thuthap_repository.dart';
 import 'package:ttld/repositories/tblDmDoiTuongChinhSach/doituong_repository.dart';
@@ -51,8 +54,9 @@ import 'package:ttld/widgets/field/custom_picker_map.dart';
 import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
 
 class UpdateNTVPage extends StatefulWidget {
+  final TblHoSoUngVienModel? hoSoUngVien;
   static const routePath = '/update_ntv';
-  const UpdateNTVPage({super.key});
+  const UpdateNTVPage({super.key, this.hoSoUngVien});
 
   @override
   _UpdateNTVPageState createState() => _UpdateNTVPageState();
@@ -171,8 +175,8 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
 
   List<TrinhDoNgoaiNgu> _trinhDoNgoaiNgus = [];
   TrinhDoNgoaiNgu? trinhDoNgoaiNgu;
-  List<NganhNghe> _nganhNghes = [];
-  NganhNghe? nganhNghe;
+  List<NganhNgheKT> _nganhNghes = [];
+  NganhNgheKT? nganhNghe;
 
   List<NganhNgheBacHoc> _nganhNgheBacHocs = [];
   NganhNgheBacHoc? nganhNgheBacHoc;
@@ -201,87 +205,87 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
   @override
   void initState() {
     super.initState();
-    final ntvBloc = BlocProvider.of<NTVBloc>(context);
-    print('ntvBloc: ${ntvBloc.state}');
+    // final ntvBloc = BlocProvider.of<NTVBloc>(context);
+    // print('ntvBloc: ${ntvBloc.state}');
 
-    if (ntvBloc.state is NTVLoadedById) {
-      final ntv = (ntvBloc.state as NTVLoadedById).tblHoSoUngVien;
-      if (ntv != null) {
-        _usernameController.text = ntv.uvUsername ?? '';
-        _passwordController.text = ntv.uvPassword ?? '';
-        _hotenController.text = ntv.uvHoten ?? '';
-        _emailController.text = ntv.uvEmail ?? '';
-        _maHoSoController.text = ntv.maHoSo ?? '';
-        _idDanToc = ntv.idDanToc;
-        _cvMongMuonController.text = ntv.cvMongMuon ?? '';
-        _documentPathController.text = ntv.documentPath ?? '';
-        _imagePathController.text = ntv.imagePath ?? '';
-        _diachichitietController.text = ntv.uvDiachichitiet ?? '';
-        _dienthoaiController.text = ntv.uvDienthoai ?? '';
-        _cmndController.text = ntv.uvSoCmnd ?? '';
-        _uvNgaycap = ntv.uvNgaycap;
-        _uvnoicapController.text = ntv.uvNoicap ?? '';
-        _uvGioitinh = ntv.uvGioitinh;
-        _uvchieucaoController.text = ntv.uvChieucao ?? '';
-        _uvcannangController.text = ntv.uvCannang ?? '';
-        _uvDoiTuongChingSach = ntv.uvDoituongchinhsachId.toString();
-        _uvTinhtrangtantat = ntv.uvTinhtrangtantatId.toString();
-        _uvHonnhanId = ntv.uvHonnhanId;
-        _uvngaysinhController = ntv.uvNgaysinh;
-        _uvcmCongviechientaiController.text = ntv.uvcmCongviechientai ?? '';
-        _uvnvNganhnghe = ntv.uvnvNganhngheId.toString();
-        _uvnvVitrimongmuon = ntv.uvnvVitrimongmuonid.toString();
-        _uvnvThoigian = ntv.uvnvThoigianId.toString();
-        _uvnvNoilamviecController.text = ntv.uvnvNoilamviec ?? '';
-        _idMucluong = ntv.idMucluong;
-        _uvnvTienluong.text = ntv.uvnvTienluong?.toString() ?? '';
-        _uvnvHinhthuccongty = ntv.uvnvHinhthuccongtyId.toString();
-        _uvGhichuController.text = ntv.uvGhichu ?? '';
-        _uvcmTrinhdo = ntv.uvcmTrinhdoId.toString();
-        _uvcmBangcapController.text = ntv.uvcmBangcap ?? '';
-        _uvcmKynangController.text = ntv.uvcmKynang ?? '';
-        _uvcmTrinhdongoainguController.text = ntv.uvcmTrinhdongoaingu ?? '';
-        _uvcmTrinhdotinhocController.text = ntv.uvcmTrinhdotinhoc ?? '';
-        _uvcmKinhnghiem.text = ntv.uvcmKinhnghiem?.toString() ?? '';
-        _uvSolanxem = ntv.uvSolanxem;
-        _interview = ntv.interview;
-        _interviewed = ntv.interviewed;
-        _uvDuyet = ntv.uvDuyet;
-        _uvHienthi = ntv.uvHienthi;
-        _uvhtTelephone = ntv.uvhtTelephone;
-        _uvhtEmail = ntv.uvhtEmail;
-        _uvhtAddress = ntv.uvhtAddress;
-        _uvIdController.text = ntv.uvId.toString();
-        _newletterSubscription = ntv.newsletterSubscription;
-        _jobsletterSubscription = ntv.jobsletterSubscription;
-        _coBhtn = ntv.coBhtn;
-        _soNhaDuongController.text = ntv.soNhaDuong ?? '';
-        _idThanhPho = ntv.idThanhPho;
-        _idTinhController.text = ntv.idTinh ?? '';
-        _idHuyenController.text = ntv.idhuyen ?? '';
-        _idXaController.text = ntv.idxa ?? '';
-        _idTv = ntv.idtv;
-        _mahoGd = ntv.mahoGd;
-        _fileCVController.text = ntv.fileCv ?? '';
-        _displayOrder = ntv.displayOrder;
-        _ngayduyet = ntv.ngayduyet;
-        _idNguonThuThap = ntv.idNguonThuThap;
-        _avatarUrlController.text = ntv.avatarUrl ?? '';
-        _idBacHocController.text = ntv.idBacHoc ?? '';
-        _diachilienheController.text = ntv.diachilienhe ?? '';
-        _uvTinhtrangtantatId = ntv.uvTinhtrangtantatId;
-        _uvDoiTuongChingSachId = ntv.uvDoituongchinhsachId;
-        _uvcmTrinhdoId = ntv.uvcmTrinhdoId;
-        _uvnvNganhngheId = ntv.uvnvNganhngheId;
-        _uvnvVitrimongmuonId = ntv.uvnvVitrimongmuonid;
-        _uvnvThoigianId = ntv.uvnvThoigianId;
-        _uvnvHinhthuccongtyId = ntv.uvnvHinhthuccongtyId;
-      }
+    // if (ntvBloc.state is NTVLoadedById || widget.hoSoUngVien != null) {
+    final ntv = widget.hoSoUngVien;
+    if (ntv != null) {
+      _usernameController.text = ntv.uvUsername ?? '';
+      _passwordController.text = ntv.uvPassword ?? '';
+      _hotenController.text = ntv.uvHoten ?? '';
+      _emailController.text = ntv.uvEmail ?? '';
+      _maHoSoController.text = ntv.maHoSo ?? '';
+      _idDanToc = ntv.idDanToc;
+      _cvMongMuonController.text = ntv.cvMongMuon ?? '';
+      _documentPathController.text = ntv.documentPath ?? '';
+      _imagePathController.text = ntv.imagePath ?? '';
+      _diachichitietController.text = ntv.uvDiachichitiet ?? '';
+      _dienthoaiController.text = ntv.uvDienthoai ?? '';
+      _cmndController.text = ntv.uvSoCmnd ?? '';
+      _uvNgaycap = ntv.uvNgaycap;
+      _uvnoicapController.text = ntv.uvNoicap ?? '';
+      _uvGioitinh = ntv.uvGioitinh;
+      _uvchieucaoController.text = ntv.uvChieucao ?? '';
+      _uvcannangController.text = ntv.uvCannang ?? '';
+      _uvDoiTuongChingSach = ntv.uvDoituongchinhsachId.toString();
+      _uvTinhtrangtantat = ntv.uvTinhtrangtantatId.toString();
+      _uvHonnhanId = ntv.uvHonnhanId;
+      _uvngaysinhController = ntv.uvNgaysinh;
+      _uvcmCongviechientaiController.text = ntv.uvcmCongviechientai ?? '';
+      _uvnvNganhnghe = ntv.uvnvNganhngheId.toString();
+      _uvnvVitrimongmuon = ntv.uvnvVitrimongmuonid.toString();
+      _uvnvThoigian = ntv.uvnvThoigianId.toString();
+      _uvnvNoilamviecController.text = ntv.uvnvNoilamviec ?? '';
+      _idMucluong = ntv.idMucluong;
+      _uvnvTienluong.text = ntv.uvnvTienluong?.toString() ?? '';
+      _uvnvHinhthuccongty = ntv.uvnvHinhthuccongtyId.toString();
+      _uvGhichuController.text = ntv.uvGhichu ?? '';
+      _uvcmTrinhdo = ntv.uvcmTrinhdoId.toString();
+      _uvcmBangcapController.text = ntv.uvcmBangcap ?? '';
+      _uvcmKynangController.text = ntv.uvcmKynang ?? '';
+      _uvcmTrinhdongoainguController.text = ntv.uvcmTrinhdongoaingu ?? '';
+      _uvcmTrinhdotinhocController.text = ntv.uvcmTrinhdotinhoc ?? '';
+      _uvcmKinhnghiem.text = ntv.uvcmKinhnghiem?.toString() ?? '';
+      _uvSolanxem = ntv.uvSolanxem;
+      _interview = ntv.interview;
+      _interviewed = ntv.interviewed;
+      _uvDuyet = ntv.uvDuyet;
+      _uvHienthi = ntv.uvHienthi;
+      _uvhtTelephone = ntv.uvhtTelephone;
+      _uvhtEmail = ntv.uvhtEmail;
+      _uvhtAddress = ntv.uvhtAddress;
+      _uvIdController.text = ntv.uvId.toString();
+      _newletterSubscription = ntv.newsletterSubscription;
+      _jobsletterSubscription = ntv.jobsletterSubscription;
+      _coBhtn = ntv.coBhtn;
+      _soNhaDuongController.text = ntv.soNhaDuong ?? '';
+      _idThanhPho = ntv.idThanhPho;
+      _idTinhController.text = ntv.idTinh ?? '';
+      _idHuyenController.text = ntv.idhuyen ?? '';
+      _idXaController.text = ntv.idxa ?? '';
+      _idTv = ntv.idtv;
+      _mahoGd = ntv.mahoGd;
+      _fileCVController.text = ntv.fileCv ?? '';
+      _displayOrder = ntv.displayOrder;
+      _ngayduyet = ntv.ngayduyet;
+      _idNguonThuThap = ntv.idNguonThuThap;
+      _avatarUrlController.text = ntv.avatarUrl ?? '';
+      _idBacHocController.text = ntv.idBacHoc ?? '';
+      _diachilienheController.text = ntv.diachilienhe ?? '';
+      _uvTinhtrangtantatId = ntv.uvTinhtrangtantatId;
+      _uvDoiTuongChingSachId = ntv.uvDoituongchinhsachId;
+      _uvcmTrinhdoId = ntv.uvcmTrinhdoId;
+      _uvnvNganhngheId = ntv.uvnvNganhngheId;
+      _uvnvVitrimongmuonId = ntv.uvnvVitrimongmuonid;
+      _uvnvThoigianId = ntv.uvnvThoigianId;
+      _uvnvHinhthuccongtyId = ntv.uvnvHinhthuccongtyId;
     }
+    // }
 
-    if (ntvBloc.state is NTVError) {
-      print('Error message: ${(ntvBloc.state as NTVError).message}');
-    }
+    // if (ntvBloc.state is NTVError) {
+    //   print('Error message: ${(ntvBloc.state as NTVError).message}');
+    // }
     _loadNguonThuThap();
     _loadDanToc();
     _loadTinhTrangTanTat();
@@ -290,7 +294,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
     _loadTrinhDoHocVan();
     _loadTrinhDoTinHoc();
     _loadTrinhDoNgoaiNgu();
-    _loadNganhNghe();
+    // _loadNganhNghe();
     _loadNganhNgheBacHoc();
     _loadNganhNgheTD();
     _loadChucDanh();
@@ -503,7 +507,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
 
 // Option 3: Using a separate method with BlocListener
   Future<void> _loadTinhThanh() async {
-    final tinhThanhCubit = BlocProvider.of<TinhThanhCubit>(context);
+    final tinhThanhCubit = locator<TinhThanhCubit>();
     try {
       // Subscribe to state changes
       _tinhThanhSubscription = tinhThanhCubit.stream.listen((state) {
@@ -650,29 +654,29 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
     }
   }
 
-  Future<void> _loadNganhNghe() async {
-    final nganhNgheRepository = locator<NganhNgheRepository>();
-    try {
-      final nganhNghes = await nganhNgheRepository.getNganhNghes();
-
-      if (mounted) {
-        setState(() {
-          _nganhNghes = nganhNghes;
-        });
-        if (_uvnvNganhngheId != null) {
-          NganhNghe? _nganhNghe = _nganhNghes.firstWhere(
-              (element) => element.id == _uvnvNganhngheId.toString());
-          if (_nganhNghe != null) {
-            setState(() {
-              nganhNghe = _nganhNghe;
-            });
-          }
-        }
-      }
-    } catch (e) {
-      print("Error loading nganh nghe: $e");
-    }
-  }
+  // Future<void> _loadNganhNghe() async {
+  //   final nganhNgheRepository = locator<NganhNgheRepository>();
+  //   try {
+  //     final nganhNghes = await nganhNgheRepository.getNganhNghes();
+  //
+  //     if (mounted) {
+  //       setState(() {
+  //         _nganhNghes = nganhNghes;
+  //       });
+  //       if (_uvnvNganhngheId != null) {
+  //         NganhNgheKT? _nganhNghe = _nganhNghes.firstWhere(
+  //             (element) => element.id == _uvnvNganhngheId.toString());
+  //         if (_nganhNghe != null) {
+  //           setState(() {
+  //             nganhNghe = _nganhNghe;
+  //           });
+  //         }
+  //       }
+  //     }
+  //   } catch (e) {
+  //     print("Error loading nganh nghe: $e");
+  //   }
+  // }
 
   Future<void> _loadNganhNgheBacHoc() async {
     final nganhNgheBacHocRepository = locator<NganhNgheBacHocRepository>();
@@ -754,6 +758,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
         title: const Text('Update NTV'),
       ),
       body: BlocListener<NTVBloc, NTVState>(
+        bloc: locator<NTVBloc>(),
         listener: (context, state) {
           if (state is NTVLoaded) {
             Navigator.pop(context);
@@ -762,6 +767,14 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.message)),
             );
+          }
+          if (state is NTVUpdated) {
+            ToastUtils.showToastSuccess(
+              context,
+              message: 'Cập nhật thành công',
+              description: 'Test',
+            );
+            context.go('/ntv_home');
           }
         },
         child: Column(
@@ -1457,9 +1470,9 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
     );
   }
 
-  void _submitForm() {
+  void _submitForm() async {
     if (_formKeys[_currentStep]?.currentState?.validate() ?? false) {
-      final ntvBloc = BlocProvider.of<NTVBloc>(context);
+      final ntvBloc = locator<NTVBloc>();
       if (ntvBloc.state is NTVLoadedById) {
         final originalNtv = (ntvBloc.state as NTVLoadedById).tblHoSoUngVien;
         if (originalNtv != null) {
@@ -1538,50 +1551,122 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
             // uvDoituongchinhsach: doiTuongChinhSach?.name ?? '',
             // avatar: _avatarUrlController.text ?? 'Test',
           );
+          FormData formData = FormData.fromMap({
+            'id': originalNtv.id,
+            'uvUsername': _usernameController.text,
+            'uvPassword': _passwordController.text,
+            'uvHoten': _hotenController.text,
+            'uvEmail': _emailController.text,
+            'maHoSo': 'Test',
+            'cvMongMuon': _cvMongMuonController.text,
+            'documentPath': 'Test',
+            'imagePath': 'Test',
+            'uvDiachichitiet': _diachichitietController.text,
+            'uvDienthoai': _dienthoaiController.text,
+            'uvSoCmnd': _cmndController.text,
+            'uvNgaycap': _uvNgaycap,
+            'uvNoicap': _uvnoicapController.text,
+            'uvGioitinh': _uvGioitinh,
+            'uvChieucao': _uvchieucaoController.text,
+            'uvCannang': _uvcannangController.text,
+            'idNguonThuThap': _idNguonThuThap,
+            'uvNgaysinh': _uvngaysinhController,
+            'uvcmCongviechientai': _uvcmCongviechientaiController.text,
+            'uvnvNoilamviec': _uvnvNoilamviecController.text,
+            'diachilienhe': _diachilienheController.text,
+            'uvnvTienluong': double.tryParse(_uvnvTienluong.text) ?? 0,
+            'uvGhichu': _uvGhichuController.text,
+            'uvcmBangcap': _uvcmBangcapController.text,
+            'uvcmKynang': _uvcmKynangController.text,
+            'uvcmTrinhdongoaingu': _uvcmTrinhdongoainguController.text,
+            'uvcmTrinhdotinhoc': _uvcmTrinhdotinhocController.text,
+            'uvcmKinhnghiem': int.tryParse(_uvcmKinhnghiem.text) ?? 0,
+            'uvDuyet': _uvDuyet,
+            'uvHienthi': _uvHienthi,
+            'uvhtTelephone': _uvhtTelephone,
+            'uvhtEmail': _uvhtEmail,
+            'uvhtAddress': _uvhtAddress,
+            'uvId': _uvIdController.text,
+            'newsletterSubscription': _newletterSubscription,
+            'jobsletterSubscription': _jobsletterSubscription,
+            'coBhtn': _coBhtn ?? false,
+            'soNhaDuong': _soNhaDuongController.text,
+            'idThanhPho': _idThanhPho,
+            'idTinh': _idTinhController.text,
+            'idhuyen': _idHuyenController.text,
+            'idxa': _idXaController.text,
+            'idtv': _idTv,
+            'idBacHoc': _idBacHocController.text,
+            'idMucluong': _idMucluong,
+            'mahoGd': _mahoGd,
+            'displayOrder': _displayOrder,
+            'ngayduyet': _ngayduyet,
+            'uvTinhtrangtantatId': _uvTinhtrangtantatId ?? 0,
+            'idDanToc': _idDanToc ?? 0,
+            'uvHonnhanId': _uvHonnhanId,
+            'uvnvVitrimongmuonid': _uvnvVitrimongmuonId ?? 0,
+            'uvDoituongchinhsachId': _uvDoiTuongChingSachId ?? 0,
+            'uvcmTrinhdoId': _uvcmTrinhdoId ?? 0,
+            'uvnvNganhngheId': _uvnvNganhngheId ?? 0,
+            'uvnvHinhthuccongtyId': _uvnvHinhthuccongtyId ?? 0,
+            'uvnvThoigianId': _uvnvThoigianId ?? 0,
+            'fileCv': _selectedFile?.path ?? originalNtv.fileCv,
+            'avatarUrl': _selectedImage?.path ?? originalNtv.avatarUrl,
+            if (_selectedFile != null)
+              'CV': await MultipartFile.fromFile(
+                _selectedFile!.path,
+                filename: _selectedFile!.path.split('/').last,
+                contentType: MediaType('application', 'pdf'),
+              ),
+            if (_selectedImage != null)
+              'avatar': await MultipartFile.fromFile(
+                _selectedImage!.path,
+                filename: _selectedImage!.path.split('/').last,
+                contentType: MediaType('image', 'png'),
+              ),
+          });
           if (!mounted) return; // Prevent action if widget is disposed
-          context.read<NTVBloc>().add(UpdateTblHoSoUngVien(updatedNtv));
+          locator<NTVBloc>().add(UpdateTblHoSoUngVien(updatedNtv.id, formData));
         } else {
-          print("Original NTV is null");
+          print("Invalid state: ${ntvBloc.state}");
         }
       } else {
-        print("Invalid state: ${ntvBloc.state}");
+        print("Form validation failed");
       }
-    } else {
-      print("Form validation failed");
     }
-  }
 
-  @override
-  void dispose() {
-    _usernameController.dispose();
-    _passwordController.dispose();
-    _hotenController.dispose();
-    _emailController.dispose();
-    _maHoSoController.dispose();
-    _cvMongMuonController.dispose();
-    _documentPathController.dispose();
-    _imagePathController.dispose();
-    _diachichitietController.dispose();
-    _dienthoaiController.dispose();
-    _cmndController.dispose();
-    _uvnoicapController.dispose();
-    _uvcmCongviechientaiController.dispose();
-    _uvnvNoilamviecController.dispose();
-    _uvGhichuController.dispose();
-    _uvcmBangcapController.dispose();
-    _uvcmKynangController.dispose();
-    _uvcmTrinhdongoainguController.dispose();
-    _uvcmTrinhdotinhocController.dispose();
-    _uvIdController.dispose();
-    _soNhaDuongController.dispose();
-    _idTinhController.dispose();
-    _idHuyenController.dispose();
-    _idXaController.dispose();
-    _fileCVController.dispose();
-    _idBacHocController.dispose();
-    _diachilienheController.dispose();
-    _tinhThanhSubscription?.cancel();
-    _tinhThanhSubscription = null;
-    super.dispose();
+    @override
+    void dispose() {
+      _usernameController.dispose();
+      _passwordController.dispose();
+      _hotenController.dispose();
+      _emailController.dispose();
+      _maHoSoController.dispose();
+      _cvMongMuonController.dispose();
+      _documentPathController.dispose();
+      _imagePathController.dispose();
+      _diachichitietController.dispose();
+      _dienthoaiController.dispose();
+      _cmndController.dispose();
+      _uvnoicapController.dispose();
+      _uvcmCongviechientaiController.dispose();
+      _uvnvNoilamviecController.dispose();
+      _uvGhichuController.dispose();
+      _uvcmBangcapController.dispose();
+      _uvcmKynangController.dispose();
+      _uvcmTrinhdongoainguController.dispose();
+      _uvcmTrinhdotinhocController.dispose();
+      _uvIdController.dispose();
+      _soNhaDuongController.dispose();
+      _idTinhController.dispose();
+      _idHuyenController.dispose();
+      _idXaController.dispose();
+      _fileCVController.dispose();
+      _idBacHocController.dispose();
+      _diachilienheController.dispose();
+      _tinhThanhSubscription?.cancel();
+      _tinhThanhSubscription = null;
+      super.dispose();
+    }
   }
 }

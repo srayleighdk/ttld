@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get_it/get_it.dart';
-import 'package:ttld/core/router/app_router.dart';
-import 'package:ttld/features/auth/bloc/auth_bloc.dart';
+import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/features/auth/repositories/auth_repository.dart';
 import 'package:ttld/pages/home/admin/admin_home.dart';
 import 'package:ttld/pages/home/custom_bottom_nav_bar.dart';
@@ -15,7 +12,8 @@ import 'package:ttld/pages/home/search_page.dart';
 import 'package:ttld/widgets/logout_button.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  String? userId;
+  HomePage({super.key, this.userId});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -26,18 +24,19 @@ class _HomePageState extends State<HomePage> {
   bool isAdmin = false;
   bool isNTD = false;
   bool isNTV = false;
-  final getIt = GetIt.instance;
+  String? userId;
 
   @override
   void initState() {
-    final authRepository = getIt<AuthRepository>();
+    final authRepository = locator<AuthRepository>();
     isAdmin = authRepository.isAdmin();
     isNTD = authRepository.isNTD();
     isNTV = authRepository.isNTV();
+    userId = authRepository.getUserId();
 
     super.initState();
   }
-  
+
   final List<Widget> _adminPages = [
     const AdminHomePage(),
     const SearchPage(),
@@ -68,7 +67,11 @@ class _HomePageState extends State<HomePage> {
       ),
       body: IndexedStack(
         index: _currentIndex,
-        children: isAdmin ? _adminPages : isNTD ? _ntdPages : _ntvPages,
+        children: isAdmin
+            ? _adminPages
+            : isNTD
+                ? _ntdPages
+                : _ntvPages,
       ),
       bottomNavigationBar: CustomNavigationBar(
         currentIndex: _currentIndex,
@@ -145,7 +148,6 @@ class PostCreationSheet extends StatelessWidget {
     );
   }
 }
-
 
 // Section 3: Analytics Section
 class AnalyticsSection extends StatelessWidget {

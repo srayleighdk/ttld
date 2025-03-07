@@ -46,7 +46,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       debugPrint('🔐 Auth state update triggered');
 
       // Then emit login success
-      emit(LoginSuccess());
+      emit(LoginSuccess(
+        response.id,
+      ));
 
       debugPrint('🎉 Login success state emitted');
     } catch (e) {

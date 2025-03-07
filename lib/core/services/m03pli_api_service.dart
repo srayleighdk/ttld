@@ -1,4 +1,3 @@
-class M03pliApiService {}
 import 'package:dio/dio.dart';
 import 'package:ttld/models/m03pli_model.dart';
 
@@ -23,7 +22,8 @@ class M03PLIApiService {
 
   Future<M03PLIModel> createM03PLI(M03PLIModel m03pli) async {
     try {
-      final response = await _dio.post('/api/tttt/m03pli', data: m03pli.toJson());
+      final response =
+          await _dio.post('/api/tttt/m03pli', data: m03pli.toJson());
       if (response.statusCode == 201) {
         return M03PLIModel.fromJson(response.data);
       } else {
@@ -36,7 +36,8 @@ class M03PLIApiService {
 
   Future<M03PLIModel> updateM03PLI(M03PLIModel m03pli) async {
     try {
-      final response = await _dio.put('/api/tttt/m03pli',  m03pli.toJson());
+      final response =
+          await _dio.put('/api/tttt/m03pli', data: m03pli.toJson());
       if (response.statusCode == 200) {
         return M03PLIModel.fromJson(response.data);
       } else {
@@ -49,7 +50,8 @@ class M03PLIApiService {
 
   Future<void> deleteM03PLI(String id) async {
     try {
-      final response = await _dio.delete('/api/tttt/m03pli',  {'id': id});
+      final response =
+          await _dio.delete('/api/tttt/m03pli', queryParameters: {'id': id});
       if (response.statusCode != 204) {
         throw Exception('Failed to delete M03PLI');
       }

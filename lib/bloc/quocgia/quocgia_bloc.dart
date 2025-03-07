@@ -47,7 +47,8 @@ class QuocGiaBloc extends Bloc<QuocGiaEvent, QuocGiaState> {
       if (state is QuocGiaLoaded) {
         final updatedQuocGias = (state as QuocGiaLoaded)
             .quocGias
-            .map((q) => q.name == quocGia.name ? quocGia : q)
+            .map((q) =>
+                q.displayName == event.quocGia.displayName ? event.quocGia : q)
             .toList();
         emit(QuocGiaLoaded(quocGias: updatedQuocGias));
       }
@@ -63,7 +64,7 @@ class QuocGiaBloc extends Bloc<QuocGiaEvent, QuocGiaState> {
       if (state is QuocGiaLoaded) {
         final updatedQuocGias = (state as QuocGiaLoaded)
             .quocGias
-            .where((q) => q.name != event.tenQuocGia)
+            .where((q) => q.displayName != event.tenQuocGia)
             .toList();
         emit(QuocGiaLoaded(quocGias: updatedQuocGias));
       }

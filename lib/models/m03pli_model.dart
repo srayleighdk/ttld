@@ -1,122 +1,122 @@
 class M03PLIModel {
-  final String idphieu;
-  final DateTime ngaylap;
-  final String madk;
-  final String idDoanhnghiep;
-  final String idDn;
-  final String tenDn;
-  final String tenGd;
-  final String masothue;
-  final String idLhdn;
-  final String matinh;
-  final String mahuyen;
-  final String maxa;
-  final int idKhuCn;
-  final String diachiDn;
-  final String idNkt;
-  final bool chkNl;
-  final bool chkCn;
-  final bool chkSxpp;
-  final bool chkVtkb;
-  final bool chkTttt;
-  final bool chkBds;
-  final bool chkDvhc;
-  final bool chkYt;
-  final bool chkBbl;
-  final bool chkThue;
-  final bool chkKk;
-  final bool chkXd;
-  final bool chkCcn;
-  final bool chkDvlt;
-  final bool chkTcnh;
-  final bool chkKhcn;
-  final bool chkGd;
-  final bool chkNt;
-  final bool chkHdxh;
-  final bool chkDv;
-  final bool chkHdqt;
-  final int idQuymo;
-  final int soluong;
-  final DateTime ngaydky;
-  final bool chkTuvanCs;
-  final bool chkTuvanVl;
-  final bool chkTuvanDt;
-  final bool chkDKy03A;
-  final String dKyKhac;
-  final String tenLienhe;
-  final String chucvu;
-  final String dienthoai;
-  final String email;
-  final bool nhanSms;
-  final bool nhanEMail;
-  final String hinhthuckhac;
-  final String userName;
-  final int displayOrder;
-  final DateTime createdDate;
-  final String createdBy;
-  final DateTime modifiredDate;
-  final String modifiredBy;
-  final bool status;
+  String? idphieu;
+  DateTime? ngaylap;
+  String? madk;
+  String? idDoanhnghiep;
+  String? idDn;
+  String? tenDn;
+  String? tenGd;
+  String? masothue;
+  String? idLhdn;
+  String? matinh;
+  String? mahuyen;
+  String? maxa;
+  int? idKhuCn;
+  String? diachiDn;
+  String? idNkt;
+  bool? chkNl;
+  bool? chkCn;
+  bool? chkSxpp;
+  bool? chkVtkb;
+  bool? chkTttt;
+  bool? chkBds;
+  bool? chkDvhc;
+  bool? chkYt;
+  bool? chkBbl;
+  bool? chkThue;
+  bool? chkKk;
+  bool? chkXd;
+  bool? chkCcn;
+  bool? chkDvlt;
+  bool? chkTcnh;
+  bool? chkKhcn;
+  bool? chkGd;
+  bool? chkNt;
+  bool? chkHdxh;
+  bool? chkDv;
+  bool? chkHdqt;
+  int? idQuymo;
+  int? soluong;
+  DateTime? ngaydky;
+  bool? chkTuvanCs;
+  bool? chkTuvanVl;
+  bool? chkTuvanDt;
+  bool? chkDKy03A;
+  String? dKyKhac;
+  String? tenLienhe;
+  String? chucvu;
+  String? dienthoai;
+  String? email;
+  bool? nhanSms;
+  bool? nhanEMail;
+  String? hinhthuckhac;
+  String? userName;
+  int? displayOrder;
+  DateTime? createdDate;
+  String? createdBy;
+  DateTime? modifiredDate;
+  String? modifiredBy;
+  bool? status;
 
   M03PLIModel({
-    required this.idphieu,
-    required this.ngaylap,
-    required this.madk,
-    required this.idDoanhnghiep,
-    required this.idDn,
-    required this.tenDn,
-    required this.tenGd,
-    required this.masothue,
-    required this.idLhdn,
-    required this.matinh,
-    required this.mahuyen,
-    required this.maxa,
-    required this.idKhuCn,
-    required this.diachiDn,
-    required this.idNkt,
-    required this.chkNl,
-    required this.chkCn,
-    required this.chkSxpp,
-    required this.chkVtkb,
-    required this.chkTttt,
-    required this.chkBds,
-    required this.chkDvhc,
-    required this.chkYt,
-    required this.chkBbl,
-    required this.chkThue,
-    required this.chkKk,
-    required this.chkXd,
-    required this.chkCcn,
-    required this.chkDvlt,
-    required this.chkTcnh,
-    required this.chkKhcn,
-    required this.chkGd,
-    required this.chkNt,
-    required this.chkHdxh,
-    required this.chkDv,
-    required this.chkHdqt,
-    required this.idQuymo,
-    required this.soluong,
-    required this.ngaydky,
-    required this.chkTuvanCs,
-    required this.chkTuvanVl,
-    required this.chkTuvanDt,
-    required this.chkDKy03A,
-    required this.dKyKhac,
-    required this.tenLienhe,
-    required this.chucvu,
-    required this.dienthoai,
-    required this.email,
-    required this.nhanSms,
-    required this.nhanEMail,
-    required this.hinhthuckhac,
-    required this.userName,
-    required this.displayOrder,
-    required this.createdDate,
-    required this.createdBy,
-    required this.modifiredDate,
-    required this.modifiredBy,
-    required this.status,
+    this.idphieu,
+    this.ngaylap,
+    this.madk,
+    this.idDoanhnghiep,
+    this.idDn,
+    this.tenDn,
+    this.tenGd,
+    this.masothue,
+    this.idLhdn,
+    this.matinh,
+    this.mahuyen,
+    this.maxa,
+    this.idKhuCn,
+    this.diachiDn,
+    this.idNkt,
+    this.chkNl,
+    this.chkCn,
+    this.chkSxpp,
+    this.chkVtkb,
+    this.chkTttt,
+    this.chkBds,
+    this.chkDvhc,
+    this.chkYt,
+    this.chkBbl,
+    this.chkThue,
+    this.chkKk,
+    this.chkXd,
+    this.chkCcn,
+    this.chkDvlt,
+    this.chkTcnh,
+    this.chkKhcn,
+    this.chkGd,
+    this.chkNt,
+    this.chkHdxh,
+    this.chkDv,
+    this.chkHdqt,
+    this.idQuymo,
+    this.soluong,
+    this.ngaydky,
+    this.chkTuvanCs,
+    this.chkTuvanVl,
+    this.chkTuvanDt,
+    this.chkDKy03A,
+    this.dKyKhac,
+    this.tenLienhe,
+    this.chucvu,
+    this.dienthoai,
+    this.email,
+    this.nhanSms,
+    this.nhanEMail,
+    this.hinhthuckhac,
+    this.userName,
+    this.displayOrder,
+    this.createdDate,
+    this.createdBy,
+    this.modifiredDate,
+    this.modifiredBy,
+    this.status,
   });
 
   factory M03PLIModel.fromJson(Map<String, dynamic> json) {
@@ -185,7 +185,7 @@ class M03PLIModel {
   Map<String, dynamic> toJson() {
     return {
       'idphieu': idphieu,
-      'ngaylap': ngaylap.toIso8601String(),
+      'ngaylap': ngaylap?.toIso8601String(),
       'madk': madk,
       'idDoanhnghiep': idDoanhnghiep,
       'idDn': idDn,
@@ -218,11 +218,11 @@ class M03PLIModel {
       'chkGd': chkGd,
       'chkNt': chkNt,
       'chkHdxh': chkHdxh,
-      chkDv: chkDv,
+      'chkDv': chkDv,
       'chkHdqt': chkHdqt,
       'idQuymo': idQuymo,
       'soluong': soluong,
-      'ngaydky': ngaydky.toIso8601String(),
+      'ngaydky': ngaydky?.toIso8601String(),
       'chkTuvanCs': chkTuvanCs,
       'chkTuvanVl': chkTuvanVl,
       'chkTuvanDt': chkTuvanDt,
@@ -237,9 +237,9 @@ class M03PLIModel {
       'hinhthuckhac': hinhthuckhac,
       'userName': userName,
       'displayOrder': displayOrder,
-      'createdDate': createdDate.toIso8601String(),
+      'createdDate': createdDate?.toIso8601String(),
       'createdBy': createdBy,
-      'modifiredDate': modifiredDate.toIso8601String(),
+      'modifiredDate': modifiredDate?.toIso8601String(),
       'modifiredBy': modifiredBy,
       'status': status,
     };

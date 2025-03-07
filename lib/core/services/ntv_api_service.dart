@@ -45,10 +45,10 @@ class NTVApiService {
     }
   }
 
-  Future<Response> updateHoSoUngVien(String id, dynamic hoSoUngVien) async {
+  Future<Response> updateHoSoUngVien(String id, dynamic formData) async {
     try {
       final response = await _dio.put(ApiEndpoints.hosoUngVien,
-          data: hoSoUngVien, queryParameters: {'id': hoSoUngVien.id});
+          data: formData, queryParameters: {'id': id});
       // final TblHoSoUngVienModel updatedHoSoUngVien =
       //     TblHoSoUngVienModel.fromJson(response.data);
       return response;

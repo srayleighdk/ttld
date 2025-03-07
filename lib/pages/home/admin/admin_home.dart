@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
 
@@ -12,10 +13,10 @@ class AdminHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Admin Home'),
-        centerTitle: true,
-      ),
+      // appBar: AppBar(
+      //   title: const Text('Admin Home'),
+      //   centerTitle: true,
+      // ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -40,6 +41,7 @@ class AdminHomePage extends StatelessWidget {
   // Section 1: User Information
   Widget _buildUserInfoSection(BuildContext context) {
     return BlocBuilder<AuthBloc, AuthState>(
+      bloc: locator<AuthBloc>(),
       builder: (context, state) {
         if (state is AuthAuthenticated) {
           final user = state;
@@ -263,7 +265,7 @@ class AdminHomePage extends StatelessWidget {
       child: Card(
         elevation: 4.0,
         child: InkWell(
-          onTap: () => context.go(route),
+          onTap: () => context.push(route),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(

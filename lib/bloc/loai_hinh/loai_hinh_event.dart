@@ -17,7 +17,7 @@ class UpdateLoaiHinh extends LoaiHinhEvent {
 }
 
 class DeleteLoaiHinh extends LoaiHinhEvent {
-  final String idLhdn;
+  final String id;
 
-  DeleteLoaiHinh({required this.idLhdn});
+  DeleteLoaiHinh({required this.id});
 }

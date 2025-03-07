@@ -7,7 +7,7 @@ import 'package:ttld/features/auth/models/signup_request.dart';
 
 class AuthRepository {
   final AuthApiService authApiService;
-  final FlutterSecureStorage storage ;
+  final FlutterSecureStorage storage;
   final SharedPreferences prefs;
 
   AuthRepository({
@@ -26,7 +26,7 @@ class AuthRepository {
     } catch (e) {
       throw Exception('Failed to login: $e');
     }
- }
+  }
 
   Future<LoginResponse> signup(BaseSignupRequest request, userType) async {
     try {
@@ -47,7 +47,8 @@ class AuthRepository {
     }
   }
 
-  Future<void> saveUserDataToPrefs(LoginResponse response, String userType) async {
+  Future<void> saveUserDataToPrefs(
+      LoginResponse response, String userType) async {
     await prefs.setString('token', response.token);
     await prefs.setString('userId', response.id.toString());
     await prefs.setString('userName', response.name);
@@ -67,6 +68,10 @@ class AuthRepository {
   bool isNTV() {
     final userType = prefs.getString('userType');
     return userType == 'NTV';
+  }
+
+  getUserId() {
+    return prefs.getString('userId');
   }
 
   Future<void> saveTokenToStorage(String token) async {

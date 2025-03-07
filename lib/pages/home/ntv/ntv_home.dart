@@ -4,12 +4,16 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_bloc.dart';
 import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_event.dart';
+import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_state.dart';
+import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
 import 'package:ttld/models/tblHoSoUngVien/tblHoSoUngVien_model.dart';
 
 class NTVHomePage extends StatefulWidget {
-  const NTVHomePage({Key? key});
+  const NTVHomePage({
+    super.key,
+  });
 
   static const String routePath = '/ntv_home';
 
@@ -22,35 +26,59 @@ class _NTVHomePageState extends State<NTVHomePage> {
   @override
   void initState() {
     super.initState();
-    final authState = context.read<AuthBloc>().state;
+    final authState = locator<AuthBloc>().state;
     if (authState is AuthAuthenticated && authState.userType == 'ntv') {
-      context.read<NTVBloc>().add(LoadTblHoSoUngVien(int.parse(authState.userId)));
+      print("it run thought this");
+      locator<NTVBloc>().add(LoadTblHoSoUngVien(int.parse(authState.userId)));
     }
+    // // context.read<NTVBloc>().add(LoadTblHoSoUngVien(int.parse(widget.userId)));
+    // final ntvState = locator<NTVBloc>().state;
+    // print("State updated with ntvState: ${ntvState.runtimeType}");
+    // if (ntvState is NTVLoadedById) {
+    //   print("State updated with ntvState: ${ntvState.runtimeType}");
+    //   tblHoSoUngVien = ntvState.tblHoSoUngVien;
+    // }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Section 1: User Information
-            _buildUserInfoSection(context),
-            const SizedBox(height: 24.0),
+    return BlocListener<NTVBloc, NTVState>(
+      bloc: locator<NTVBloc>(),
+      listener: (context, state) {
+        if (state is NTVLoadedById) {
+          setState(() {
+            tblHoSoUngVien = state.tblHoSoUngVien; // Update local state
+          });
+          print("NTV data loaded: ${state.tblHoSoUngVien}");
+        } else if (state is NTVError) {
+          print("Error loading NTV data: ${state.message}");
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Error: ${state.message}")),
+          );
+        }
+      },
+      child: Scaffold(
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Section 1: User Information
+              _buildUserInfoSection(context),
+              const SizedBox(height: 24.0),
 
-            // Section 2: Quick Access Buttons
-            _buildQuickAccessSection(context),
-            const SizedBox(height: 24.0),
+              // Section 2: Quick Access Buttons
+              _buildQuickAccessSection(context),
+              const SizedBox(height: 24.0),
 
-            // Section 3: NTV Information (Placeholder)
-            _buildNTVInfoSection(context),
-            const SizedBox(height: 24.0),
+              // Section 3: NTV Information
+              _buildNTVInfoSection(context),
+              const SizedBox(height: 24.0),
 
-            // Section 4: Statistics
-            _buildStatisticsSection(),
-          ],
+              // Section 4: Statistics
+              _buildStatisticsSection(),
+            ],
+          ),
         ),
       ),
     );
@@ -59,6 +87,7 @@ class _NTVHomePageState extends State<NTVHomePage> {
   // Section 1: User Information
   Widget _buildUserInfoSection(BuildContext context) {
     return BlocBuilder<AuthBloc, AuthState>(
+      bloc: locator<AuthBloc>(),
       builder: (context, state) {
         if (state is AuthAuthenticated) {
           final user = state;
@@ -185,7 +214,11 @@ class _NTVHomePageState extends State<NTVHomePage> {
             print('Current route: ${GoRouterState.of(context).uri.path}');
             print('Attempting to navigate to: $route');
             try {
-              context.push(route); // Changed from context.go to context.push
+              if (route == '/ntv_home/update_ntv') {
+                context.push(route, extra: tblHoSoUngVien);
+              } else {
+                context.push(route);
+              }
             } catch (e) {
               print('Navigation error: $e');
             }

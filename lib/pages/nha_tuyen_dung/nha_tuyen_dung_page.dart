@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ttld/bloc/tblNhaTuyenDung/ntd_bloc.dart';
+import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/models/tblNhaTuyenDung/tblNhaTuyenDung_model.dart';
 
 class NhaTuyenDungPage extends StatelessWidget {
@@ -14,6 +15,7 @@ class NhaTuyenDungPage extends StatelessWidget {
         title: const Text('Nhà Tuyển Dụng'),
       ),
       body: BlocBuilder<NTDBloc, NTDState>(
+        bloc: locator<NTDBloc>(),
         builder: (context, state) {
           if (state is NTDInitial) {
             context.read<NTDBloc>().add(NTDFetchList());

@@ -1,23 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ttld/bloc/tblNhaTuyenDung/ntd_bloc.dart';
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/core/services/thoigianhoatdong_api_service.dart';
+import 'package:ttld/core/utils/toast_utils.dart';
 import 'package:ttld/helppers/map_help.dart';
 import 'package:ttld/models/chuc_danh_model.dart';
 import 'package:ttld/models/hinhthuc_doanhnghiep/hinhthuc_doanhnghiep_model.dart';
+import 'package:ttld/models/loai_hinh_model.dart';
+import 'package:ttld/models/nganh_nghe_model.dart';
 import 'package:ttld/models/quocgia/quocgia_model.dart';
 import 'package:ttld/models/thoigian_hoatdong.dart';
 import 'package:ttld/repositories/chuc_danh_repository.dart';
 import 'package:ttld/repositories/hinhthuc_doanhnghiep/hinhthuc_doanhnghiep_repository.dart';
+import 'package:ttld/repositories/loai_hinh/loai_hinh_repository.dart';
+import 'package:ttld/repositories/nganh_nghe/nganh_nghe_repository.dart';
 import 'package:ttld/repositories/quocgia/quocgia_repository.dart';
 import 'package:ttld/widgets/cascade_location_picker.dart';
 import 'package:ttld/widgets/field/custom_checkbox.dart';
-import 'package:ttld/widgets/field/custom_pick_date.dart';
 import 'package:ttld/widgets/field/custom_pick_year.dart';
 import 'package:ttld/widgets/field/custom_picker.dart';
 import 'package:ttld/widgets/field/custom_picker_map.dart';
 import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
+import 'package:ttld/widgets/reuseable_widgets/generic_picker.dart';
+import 'package:ttld/widgets/reuseable_widgets/pick_quocgia.dart';
 
 class UpdateNTDPage extends StatefulWidget {
   static const routePath = '/update_ntd';
@@ -44,7 +51,6 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
   final _ntdDiachixaphuongController = TextEditingController();
   final _ntdDiachichitietController = TextEditingController();
   final _ntdNguoilienheController = TextEditingController();
-  final _ntdChucvuController = TextEditingController();
   final _ntdDienthoaiController = TextEditingController();
   final _ntdFaxController = TextEditingController();
   final _ntdEmailController = TextEditingController();
@@ -52,7 +58,6 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
 
   bool _ntdDuyet = false;
   bool _ntdTopbloc = false;
-  String? _selectedQuocgia;
 
   final _ntdNamthanhlapController = TextEditingController();
   final _ntdLinhvuchoatdongController = TextEditingController();
@@ -71,11 +76,12 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
 
   int? ntdLoai;
   final _nongThonThanhThiController = TextEditingController();
-  int? idLoaiHinhDoanhNghiep;
-  int? idNganhKinhTe;
+  String? idLoaiHinhDoanhNghiep;
+  String? idNganhKinhTe;
   int? idStatus;
   int? displayOrder;
   int? ntdHinhthucdoanhnghiep;
+  int? ntdChucvu;
 
   String? _selectedTinh;
   String? _selectedHuyen;
@@ -85,9 +91,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
   String? maHuyen;
   String? maXa;
   int? maKCN;
-
-  List<QuocGia> _quocGias = [];
-  QuocGia? quocGia;
+  int? ntdQuocgia;
 
   List<ChucDanhModel> _chucDanhs = [];
   ChucDanhModel? chucDanh;
@@ -95,23 +99,31 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
   List<HinhThucDoanhNghiep> _hinhthucDoanhNghieps = [];
   HinhThucDoanhNghiep? hinhthucDoanhNghiep;
 
+  List<LoaiHinh> _loaihinhs = [];
+  LoaiHinh? loaihinh;
+
   final _idDoanhNghiepController = TextEditingController();
 
   int? idThoiGianHoatDong;
   List<ThoiGianHoatDong> _thoigianhoatdongs = [];
   ThoiGianHoatDong? thoigianhoatdong;
 
+  List<NganhNgheKT> _nganhNghes = [];
+  NganhNgheKT? nganhNghe;
+
   @override
   void initState() {
     super.initState();
     _loadChucDanh();
     _loadHinhThucDoanhNghiep();
+    _loadLoaiHinh();
+    _loadNganhNghe();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final ntdBloc = BlocProvider.of<NTDBloc>(context);
+    final ntdBloc = locator<NTDBloc>();
     if (ntdBloc.state is NTDLoadedById) {
       final ntd = (ntdBloc.state as NTDLoadedById).ntd;
       if (ntd != null) {
@@ -129,7 +141,8 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
         maHuyen = ntd.ntdDiachihuyen ?? '';
         maXa = ntd.ntdDiachixaphuong ?? '';
         maKCN = ntd.ntdThuockhucongnghiep;
-
+        _mstController.text = ntd.mst ?? '';
+        ntdChucvu = ntd.ntdChucvu;
         _ntdDiachihuyenController.text = ntd.ntdDiachihuyen ?? '';
         _ntdDiachixaphuongController.text = ntd.ntdDiachixaphuong ?? '';
         _ntdDiachichitietController.text = ntd.ntdDiachichitiet ?? '';
@@ -144,7 +157,6 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
         _selectedTinh = ntd.ntdTenTinh;
         _selectedHuyen = ntd.ntdTenHuyen;
         _selectedXa = ntd.ntdTenXa;
-        _selectedQuocgia = ntd.ntdQuocgia;
 
         _ntdhtNlh = ntd.ntdhtNlh ?? false;
         _ntdhtTelephone = ntd.ntdhtTelephone ?? false;
@@ -159,8 +171,8 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
         idNganhKinhTe = ntd.idNganhKinhTe;
         idLoaiHinhDoanhNghiep = ntd.idLoaiHinhDoanhNghiep;
         ntdLoai = ntd.ntdLoai;
-
-        _loadQuocGias(ntd.idQuocGia);
+        ntdHinhthucdoanhnghiep = ntd.ntdHinhthucdoanhnghiep;
+        ntdQuocgia = ntd.idQuocGia;
       }
     }
   }
@@ -174,34 +186,18 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
         setState(() {
           _chucDanhs = chucDanhs;
         });
-      }
-    } catch (e, stackTrace) {
-      // Added stackTrace
-      print("Error loading chuc danh: $e");
-    }
-  }
-
-  Future<void> _loadQuocGias(int? maQuocGia) async {
-    final quocGiaRepository = locator<QuocGiaRepository>();
-    try {
-      final quocGias = await quocGiaRepository.getQuocGias();
-      if (mounted) {
-        setState(() {
-          _quocGias = quocGias;
-        });
-        if (maQuocGia != null) {
-          QuocGia? _quocGia =
-              quocGias.firstWhere((element) => element.id == maQuocGia);
-          if (_quocGia != null) {
+        if (ntdChucvu != null) {
+          ChucDanhModel? _chucDanh =
+              chucDanhs.firstWhere((element) => element.id == ntdChucvu);
+          if (_chucDanh != null) {
             setState(() {
-              quocGia = _quocGia;
+              chucDanh = _chucDanh;
             });
           }
         }
       }
     } catch (e) {
-      // Handle error (e.g., show a snackbar)
-      print("Error loading countries: $e");
+      print("Error loading chuc danh: $e");
     }
   }
 
@@ -215,10 +211,67 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
         setState(() {
           _hinhthucDoanhNghieps = hinhthucDoanhNghieps;
         });
+        if (ntdHinhthucdoanhnghiep != null) {
+          HinhThucDoanhNghiep? _hinhthucDoanhNghiep = hinhthucDoanhNghieps
+              .firstWhere((element) => element.id == ntdHinhthucdoanhnghiep);
+          if (_hinhthucDoanhNghiep != null) {
+            setState(() {
+              hinhthucDoanhNghiep = _hinhthucDoanhNghiep;
+            });
+          }
+        }
       }
     } catch (e) {
-      // Handle error (e.g., show a snackbar)
-      print("Error loading countries: $e");
+      print("Error loading hinh thuc doanh nghiep: $e");
+    }
+  }
+
+  Future<void> _loadNganhNghe() async {
+    final nganhNgheRepository = locator<NganhNgheRepository>();
+    try {
+      final nganhNghes = await nganhNgheRepository.getNganhNghes();
+
+      if (mounted) {
+        setState(() {
+          _nganhNghes = nganhNghes;
+        });
+        if (idNganhKinhTe != null) {
+          NganhNgheKT? _nganhNghe =
+              _nganhNghes.firstWhere((element) => element.id == idNganhKinhTe);
+          if (_nganhNghe != null) {
+            setState(() {
+              idNganhKinhTe = _nganhNghe?.id;
+              nganhNghe = _nganhNghe;
+            });
+          }
+        }
+      }
+    } catch (e) {
+      print("Error loading nganh nghe: $e");
+    }
+  }
+
+  Future<void> _loadLoaiHinh() async {
+    final loaihinhRepository = locator<LoaiHinhRepository>();
+    try {
+      final loaihinhs = await loaihinhRepository.getLoaiHinhs();
+      if (mounted) {
+        setState(() {
+          _loaihinhs = loaihinhs;
+        });
+        if (idLoaiHinhDoanhNghiep != null) {
+          LoaiHinh? _loaihinh = loaihinhs
+              .firstWhere((element) => element.id == idLoaiHinhDoanhNghiep);
+          if (_loaihinh != null) {
+            setState(() {
+              idLoaiHinhDoanhNghiep = _loaihinh.id;
+              loaihinh = _loaihinh;
+            });
+          }
+        }
+      }
+    } catch (e) {
+      print("Error loading loai hinh: $e");
     }
   }
 
@@ -243,14 +296,35 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
         title: const Text('Update NTD'),
       ),
       body: BlocListener<NTDBloc, NTDState>(
+        // bloc: locator<NTDBloc>(),
+        // listener: (context, state) {
+        //   if (state is NTDLoaded) {
+        //     Navigator.pop(context);
+        //   }
+        //   if (state is NTDError) {
+        //     ScaffoldMessenger.of(context).showSnackBar(
+        //       SnackBar(content: Text(state.message)),
+        //     );
+        //   }
+        // },
+        bloc: locator<NTDBloc>(),
         listener: (context, state) {
+          debugPrint('👂 NTD state: ${state.runtimeType}');
           if (state is NTDLoaded) {
+            debugPrint('✅ NTD loaded, popping screen');
             Navigator.pop(context);
+            debugPrint('🚪 Screen popped');
           }
           if (state is NTDError) {
+            debugPrint('❌ NTD error: ${state.message}');
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.message)),
             );
+          }
+          if (state is NTDSuccess) {
+            ToastUtils.showToastSuccess(context,
+                message: state.message, description: 'Cập nhật thành công');
+            context.go('/ntd_home');
           }
         },
         child: Padding(
@@ -299,6 +373,27 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   },
                   hintText: 'Mã NTD',
                 ),
+
+                const SizedBox(height: 16.0),
+                const Text("Thông tin của người liên hệ:"),
+                const SizedBox(height: 16.0),
+                CustomTextField(
+                  labelText: "Tên người liên hệ",
+                  controller: _ntdNguoilienheController,
+                  hintText: 'Tên người liên hệ',
+                ),
+                const SizedBox(height: 16.0),
+                CustomPicker<ChucDanhModel>(
+                  label: const Text("Chức vụ người liên hệ"),
+                  items: _chucDanhs,
+                  selectedItem: chucDanh,
+                  onChanged: (chucdanh) {
+                    setState(() {
+                      ntdChucvu = chucdanh?.id;
+                    });
+                  },
+                  displayItemBuilder: (ChucDanhModel? item) => item?.name ?? '',
+                ),
                 const SizedBox(height: 16.0),
                 const Text("Thông tin của đơn vị, doanh nghiệp :"),
                 const SizedBox(height: 16.0),
@@ -317,7 +412,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                 const SizedBox(height: 16.0),
                 const SizedBox(height: 16.0),
                 CustomPickerMap(
-                  label: const Text("Loại hình"),
+                  label: const Text("Loại doanh nghiệp"),
                   items: loaiDoanhNgiepOptions,
                   selectedItem: ntdLoai,
                   onChanged: (ntdLoai) {
@@ -325,6 +420,17 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                       this.ntdLoai = ntdLoai;
                     });
                   },
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                GenericPicker(
+                  initialValue: idNganhKinhTe,
+                  items: locator<List<NganhNgheKT>>(),
+                  onChanged: (NganhNgheKT? value) {
+                    idNganhKinhTe = value!.id.toString();
+                  },
+                  label: 'Ngành nghề chính',
                 ),
                 const SizedBox(height: 16.0),
                 CustomPicker<int>(
@@ -353,29 +459,30 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                       thoiGianHoatDongOptions[item] ?? '',
                 ),
                 const SizedBox(height: 16.0),
-                CustomPicker<ChucDanhModel>(
-                  label: const Text("Chức vụ"),
-                  items: _chucDanhs,
-                  selectedItem: chucDanh,
-                  onChanged: (chucdanh) {
-                    setState(() {
-                      _ntdChucvuController.text = chucdanh?.name ?? '';
-                    });
-                  },
-                  displayItemBuilder: (ChucDanhModel? item) => item?.name ?? '',
-                ),
-                const SizedBox(height: 16.0),
                 CustomPicker<HinhThucDoanhNghiep>(
                   label: const Text("Hình thức doanh nghiệp"),
                   items: _hinhthucDoanhNghieps,
                   selectedItem: hinhthucDoanhNghiep,
                   onChanged: (hinhthucdoanhnhiep) {
                     setState(() {
-                      _selectedQuocgia = hinhthucdoanhnhiep?.name;
+                      ntdHinhthucdoanhnghiep = hinhthucdoanhnhiep?.id;
                     });
                   },
                   displayItemBuilder: (HinhThucDoanhNghiep? item) =>
                       item?.name ?? '',
+                ),
+
+                const SizedBox(height: 16.0),
+                CustomPicker<LoaiHinh>(
+                  label: const Text("Loại hình doanh nghiệp"),
+                  items: _loaihinhs,
+                  selectedItem: loaihinh,
+                  onChanged: (loaihinh) {
+                    setState(() {
+                      idLoaiHinhDoanhNghiep = loaihinh?.id;
+                    });
+                  },
+                  displayItemBuilder: (LoaiHinh? item) => item?.name ?? '',
                 ),
                 const SizedBox(height: 16.0),
                 CustomTextField(
@@ -385,17 +492,27 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   keyboardType: TextInputType.number,
                 ),
                 const SizedBox(height: 16.0),
-                CustomPicker<QuocGia>(
-                  label: const Text("Quốc gia"),
-                  items: _quocGias,
-                  selectedItem: quocGia,
-                  onChanged: (quocgia) {
+                // CustomPicker<QuocGia>(
+                //   label: const Text("Quốc gia"),
+                //   items: _quocGias,
+                //   selectedItem: quocGia,
+                //   onChanged: (quocgia) {
+                //     setState(() {
+                //       _selectedQuocgia = quocgia?.name;
+                //     });
+                //   },
+                //   displayItemBuilder: (QuocGia? item) => item?.name ?? '',
+                // ),
+                // const SizedBox(height: 16.0),
+                PickerQuocGia(
+                  initialValue: ntdQuocgia,
+                  onChanged: (value) {
                     setState(() {
-                      _selectedQuocgia = quocgia?.name;
+                      ntdQuocgia = value?.id;
                     });
                   },
-                  displayItemBuilder: (QuocGia? item) => item?.name ?? '',
                 ),
+
                 const SizedBox(height: 16.0),
                 CustomPicker<String>(
                   label: const Text("Nông thôn/Thành thị"),
@@ -558,7 +675,8 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        final ntdBloc = BlocProvider.of<NTDBloc>(context);
+                        final ntdBloc = locator<NTDBloc>();
+
                         if (ntdBloc.state is NTDLoadedById) {
                           final originalNtd =
                               (ntdBloc.state as NTDLoadedById).ntd;
@@ -582,12 +700,12 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                               ntdDiachichitiet:
                                   _ntdDiachichitietController.text,
                               ntdNguoilienhe: _ntdNguoilienheController.text,
-                              // ntdChucvu: _ntdChucvuController.text,
+                              ntdChucvu: chucDanh?.id,
                               ntdDienthoai: _ntdDienthoaiController.text,
                               ntdFax: _ntdFaxController.text,
                               ntdEmail: _ntdEmailController.text,
                               ntdWebsite: _ntdWebsiteController.text,
-                              ntdQuocgia: _selectedQuocgia,
+                              ntdQuocgia: ntdQuocgia?.toString(),
                               ntdNamthanhlap:
                                   int.tryParse(_ntdNamthanhlapController.text),
                               ntdLinhvuchoatdong:
@@ -613,7 +731,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                               ntdTenHuyen: _selectedHuyen,
                               ntdTenXa: _selectedXa,
                             );
-                            context.read<NTDBloc>().add(NTDUpdate(updatedNtd));
+                            locator<NTDBloc>().add(NTDUpdate(updatedNtd));
                           }
                         }
                       }
@@ -653,7 +771,6 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
     _ntdLinhvuchoatdongController.dispose();
     _nongThonThanhThiController.dispose();
     _ntdSolaodongController.dispose();
-    _ntdChucvuController.dispose();
     _ntdThuockhucongnghiepController.dispose();
     _ntdWebsiteController.dispose();
     _ntdFaxController.dispose();

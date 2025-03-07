@@ -1,20 +1,20 @@
-class HinhThucLoaiHinh {
-  final String idLhdn;
-  final String tenLoaiHinh;
+import 'package:ttld/widgets/reuseable_widgets/generic_picker.dart';
+
+class HinhThucLoaiHinh extends GenericPickerItem {
   final int displayOrder;
   final bool status;
 
   HinhThucLoaiHinh({
-    required this.idLhdn,
-    required this.tenLoaiHinh,
+    required String id,
+    required String name,
     required this.displayOrder,
     required this.status,
-  });
+  }) : super(id: id, displayName: name);
 
   factory HinhThucLoaiHinh.fromJson(Map<String, dynamic> json) {
     return HinhThucLoaiHinh(
-      idLhdn: json['idLhdn'],
-      tenLoaiHinh: json['tenLoaiHinh'],
+      id: json['id'],
+      name: json['name'],
       displayOrder: json['displayOrder'],
       status: json['status'],
     );
@@ -22,8 +22,8 @@ class HinhThucLoaiHinh {
 
   Map<String, dynamic> toJson() {
     return {
-      'idLhdn': idLhdn,
-      'tenLoaiHinh': tenLoaiHinh,
+      'id': id,
+      'name': displayName,
       'displayOrder': displayOrder,
       'status': status,
     };

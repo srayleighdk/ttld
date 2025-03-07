@@ -1,17 +1,17 @@
-class NganhNgheTD {
-  final int id;
-  final String name;
+import 'package:ttld/widgets/reuseable_widgets/generic_picker.dart';
+
+class NganhNgheTD extends GenericPickerItem {
   final String manhom;
   final int displayOrder;
   final bool status;
 
   NganhNgheTD({
-    required this.id,
-    required this.name,
+    required int id,
+    required String name,
     required this.manhom,
     required this.displayOrder,
     required this.status,
-  });
+  }) : super(id: id, displayName: name);
 
   factory NganhNgheTD.fromJson(Map<String, dynamic> json) {
     return NganhNgheTD(
@@ -26,7 +26,7 @@ class NganhNgheTD {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'name': name,
+      'name': displayName,
       'manhom': manhom,
       'displayOrder': displayOrder,
       'status': status,

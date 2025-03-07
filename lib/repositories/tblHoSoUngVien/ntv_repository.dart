@@ -20,8 +20,9 @@ class NTVRepository {
     return await _ntvApiService.addHoSoUngVien(tblHoSoUngVien);
   }
 
-  Future<Response> updateHoSoUngVien(String id, tblHoSoUngVien) async {
-    return await _ntvApiService.updateHoSoUngVien(id, tblHoSoUngVien);
+  Future<Response> updateHoSoUngVien(String id, formData) async {
+    final response = await _ntvApiService.updateHoSoUngVien(id, formData);
+    return response;
   }
 
   Future<void> deleteHoSoUngVien(String id) async {

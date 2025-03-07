@@ -12,6 +12,11 @@ class M03PLILoaded extends M03PLIState {
   M03PLILoaded(this.m03plis);
 }
 
+class M03PLIUpdated extends M03PLIState {
+  final M03PLIModel m03pli;
+  M03PLIUpdated(this.m03pli);
+}
+
 class M03PLIError extends M03PLIState {
   final String message;
 

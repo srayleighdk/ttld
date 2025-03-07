@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
+import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/core/utils/toast_utils.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_event.dart';
@@ -19,7 +19,7 @@ class LogoutButton extends StatelessWidget {
       await getIt<AuthRepository>().logout();
 
       if (context.mounted) {
-        context.read<AuthBloc>().add(AuthLogout());
+        locator<AuthBloc>().add(AuthLogout());
       }
     } catch (e) {
       if (context.mounted) {

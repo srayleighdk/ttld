@@ -24,6 +24,9 @@ class ApiEndpoints {
   static String editDSNLD = '$baseUrl/ds-ld';
   static String deleteDSNLD = '$baseUrl/ds-ld'; // Add other endpoints as needed
 
+  // M03PLI
+  static String m03pli = '$baseUrl/tttt/m03pli';
+
   // groups
   static String groups = '$baseUrl/user/group';
 

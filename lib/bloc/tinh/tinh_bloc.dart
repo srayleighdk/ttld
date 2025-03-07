@@ -15,12 +15,25 @@ class TinhBloc extends Bloc<TinhEvent, TinhState> {
   }
 
   Future<void> _onLoadTinhs(LoadTinhs event, Emitter<TinhState> emit) async {
+    // emit(TinhLoading());
+    // try {
+    //   final tinhs = await tinhRepository.getTinhs();
+    //   emit(TinhLoaded(tinhs: tinhs));
+    // } catch (e) {
+    //   emit(TinhError(message: e.toString()));
+    // }
+    print("TinhBloc: Processing LoadTinhs event");
     emit(TinhLoading());
+    print("TinhBloc: Emitted TinhLoading");
     try {
-      final tinhs = await tinhRepository.getTinhs();
+      final tinhs =
+          await tinhRepository.getTinhs(); // Replace with your repo method
+      print("TinhBloc: Fetched ${tinhs.length} tinhs");
       emit(TinhLoaded(tinhs: tinhs));
+      print("TinhBloc: Emitted TinhLoaded");
     } catch (e) {
       emit(TinhError(message: e.toString()));
+      print("TinhBloc: Emitted TinhError - $e");
     }
   }
 

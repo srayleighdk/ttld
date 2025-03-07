@@ -81,9 +81,9 @@ mixin _$Ntd {
       throw _privateConstructorUsedError; // required int ntdLoai,
   int? get ntdLoai => throw _privateConstructorUsedError;
   String? get nongThonThanhThi => throw _privateConstructorUsedError;
-  int? get idLoaiHinhDoanhNghiep => throw _privateConstructorUsedError;
+  String? get idLoaiHinhDoanhNghiep => throw _privateConstructorUsedError;
   int? get ntdHinhthucdoanhnghiep => throw _privateConstructorUsedError;
-  int? get idNganhKinhTe => throw _privateConstructorUsedError;
+  String? get idNganhKinhTe => throw _privateConstructorUsedError;
   int? get idThoiGianHoatDong =>
       throw _privateConstructorUsedError; // required int idStatus,
   int? get idStatus =>
@@ -152,9 +152,9 @@ abstract class $NtdCopyWith<$Res> {
       bool? jobsletterSubscription,
       int? ntdLoai,
       String? nongThonThanhThi,
-      int? idLoaiHinhDoanhNghiep,
+      String? idLoaiHinhDoanhNghiep,
       int? ntdHinhthucdoanhnghiep,
-      int? idNganhKinhTe,
+      String? idNganhKinhTe,
       int? idThoiGianHoatDong,
       int? idStatus,
       int? displayOrder,
@@ -400,7 +400,7 @@ class _$NtdCopyWithImpl<$Res, $Val extends Ntd> implements $NtdCopyWith<$Res> {
       idLoaiHinhDoanhNghiep: freezed == idLoaiHinhDoanhNghiep
           ? _value.idLoaiHinhDoanhNghiep
           : idLoaiHinhDoanhNghiep // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as String?,
       ntdHinhthucdoanhnghiep: freezed == ntdHinhthucdoanhnghiep
           ? _value.ntdHinhthucdoanhnghiep
           : ntdHinhthucdoanhnghiep // ignore: cast_nullable_to_non_nullable
@@ -408,7 +408,7 @@ class _$NtdCopyWithImpl<$Res, $Val extends Ntd> implements $NtdCopyWith<$Res> {
       idNganhKinhTe: freezed == idNganhKinhTe
           ? _value.idNganhKinhTe
           : idNganhKinhTe // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as String?,
       idThoiGianHoatDong: freezed == idThoiGianHoatDong
           ? _value.idThoiGianHoatDong
           : idThoiGianHoatDong // ignore: cast_nullable_to_non_nullable
@@ -493,9 +493,9 @@ abstract class _$$NtdImplCopyWith<$Res> implements $NtdCopyWith<$Res> {
       bool? jobsletterSubscription,
       int? ntdLoai,
       String? nongThonThanhThi,
-      int? idLoaiHinhDoanhNghiep,
+      String? idLoaiHinhDoanhNghiep,
       int? ntdHinhthucdoanhnghiep,
-      int? idNganhKinhTe,
+      String? idNganhKinhTe,
       int? idThoiGianHoatDong,
       int? idStatus,
       int? displayOrder,
@@ -738,7 +738,7 @@ class __$$NtdImplCopyWithImpl<$Res> extends _$NtdCopyWithImpl<$Res, _$NtdImpl>
       idLoaiHinhDoanhNghiep: freezed == idLoaiHinhDoanhNghiep
           ? _value.idLoaiHinhDoanhNghiep
           : idLoaiHinhDoanhNghiep // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as String?,
       ntdHinhthucdoanhnghiep: freezed == ntdHinhthucdoanhnghiep
           ? _value.ntdHinhthucdoanhnghiep
           : ntdHinhthucdoanhnghiep // ignore: cast_nullable_to_non_nullable
@@ -746,7 +746,7 @@ class __$$NtdImplCopyWithImpl<$Res> extends _$NtdCopyWithImpl<$Res, _$NtdImpl>
       idNganhKinhTe: freezed == idNganhKinhTe
           ? _value.idNganhKinhTe
           : idNganhKinhTe // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as String?,
       idThoiGianHoatDong: freezed == idThoiGianHoatDong
           ? _value.idThoiGianHoatDong
           : idThoiGianHoatDong // ignore: cast_nullable_to_non_nullable
@@ -946,11 +946,11 @@ class _$NtdImpl implements _Ntd {
   @override
   final String? nongThonThanhThi;
   @override
-  final int? idLoaiHinhDoanhNghiep;
+  final String? idLoaiHinhDoanhNghiep;
   @override
   final int? ntdHinhthucdoanhnghiep;
   @override
-  final int? idNganhKinhTe;
+  final String? idNganhKinhTe;
   @override
   final int? idThoiGianHoatDong;
 // required int idStatus,
@@ -1195,9 +1195,9 @@ abstract class _Ntd implements Ntd {
       final bool? jobsletterSubscription,
       final int? ntdLoai,
       final String? nongThonThanhThi,
-      final int? idLoaiHinhDoanhNghiep,
+      final String? idLoaiHinhDoanhNghiep,
       final int? ntdHinhthucdoanhnghiep,
-      final int? idNganhKinhTe,
+      final String? idNganhKinhTe,
       final int? idThoiGianHoatDong,
       final int? idStatus,
       final int? displayOrder,
@@ -1300,11 +1300,11 @@ abstract class _Ntd implements Ntd {
   @override
   String? get nongThonThanhThi;
   @override
-  int? get idLoaiHinhDoanhNghiep;
+  String? get idLoaiHinhDoanhNghiep;
   @override
   int? get ntdHinhthucdoanhnghiep;
   @override
-  int? get idNganhKinhTe;
+  String? get idNganhKinhTe;
   @override
   int? get idThoiGianHoatDong; // required int idStatus,
   @override

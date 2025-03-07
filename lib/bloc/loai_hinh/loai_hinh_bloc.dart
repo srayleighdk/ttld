@@ -41,7 +41,7 @@ class LoaiHinhBloc extends Bloc<LoaiHinhEvent, LoaiHinhState> {
     try {
       final loaiHinh = await loaiHinhRepository.updateLoaiHinh(event.loaiHinh);
       if (state is LoaiHinhLoaded) {
-        final updatedLoaiHinhs = (state as LoaiHinhLoaded).loaiHinhs.map((q) => q.idLhdn == loaiHinh.idLhdn ? loaiHinh : q).toList();
+        final updatedLoaiHinhs = (state as LoaiHinhLoaded).loaiHinhs.map((q) => q.id == loaiHinh.id ? loaiHinh : q).toList();
         emit(LoaiHinhLoaded(loaiHinhs: updatedLoaiHinhs));
       }
     } catch (e) {
@@ -51,9 +51,9 @@ class LoaiHinhBloc extends Bloc<LoaiHinhEvent, LoaiHinhState> {
 
   Future<void> _onDeleteLoaiHinh(DeleteLoaiHinh event, Emitter<LoaiHinhState> emit) async {
     try {
-      await loaiHinhRepository.deleteLoaiHinh(event.idLhdn);
+      await loaiHinhRepository.deleteLoaiHinh(event.id);
       if (state is LoaiHinhLoaded) {
-        final updatedLoaiHinhs = (state as LoaiHinhLoaded).loaiHinhs.where((q) => q.idLhdn != event.idLhdn).toList();
+        final updatedLoaiHinhs = (state as LoaiHinhLoaded).loaiHinhs.where((q) => q.id != event.id).toList();
         emit(LoaiHinhLoaded(loaiHinhs: updatedLoaiHinhs));
       }
     } catch (e) {

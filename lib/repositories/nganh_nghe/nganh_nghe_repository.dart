@@ -2,9 +2,9 @@ import 'package:ttld/core/services/nganh_nghe_api_service.dart';
 import 'package:ttld/models/nganh_nghe_model.dart';
 
 abstract class NganhNgheRepository {
-  Future<List<NganhNghe>> getNganhNghes();
-  Future<NganhNghe> addNganhNghe(NganhNghe nganhNghe);
-  Future<NganhNghe> updateNganhNghe(NganhNghe nganhNghe);
+  Future<List<NganhNgheKT>> getNganhNghes();
+  Future<NganhNgheKT> addNganhNghe(NganhNgheKT nganhNghe);
+  Future<NganhNgheKT> updateNganhNghe(NganhNgheKT nganhNghe);
   Future<void> deleteNganhNghe(String id);
 }
 
@@ -14,23 +14,24 @@ class NganhNgheRepositoryImpl implements NganhNgheRepository {
   NganhNgheRepositoryImpl({required this.nganhNgheApiService});
 
   @override
-  Future<List<NganhNghe>> getNganhNghes() async {
+  Future<List<NganhNgheKT>> getNganhNghes() async {
     final response = await nganhNgheApiService.getNganhNghe();
     return (response.data['data'] as List)
-        .map((json) => NganhNghe.fromJson(json))
+        .map((json) => NganhNgheKT.fromJson(json))
         .toList();
   }
 
   @override
-  Future<NganhNghe> addNganhNghe(NganhNghe nganhNghe) async {
-    final response = await nganhNgheApiService.postNganhNghe(nganhNghe.toJson());
-    return NganhNghe.fromJson(response.data['data'] as Map<String, dynamic>);
+  Future<NganhNgheKT> addNganhNghe(NganhNgheKT nganhNghe) async {
+    final response =
+        await nganhNgheApiService.postNganhNghe(nganhNghe.toJson());
+    return NganhNgheKT.fromJson(response.data['data'] as Map<String, dynamic>);
   }
 
   @override
-  Future<NganhNghe> updateNganhNghe(NganhNghe nganhNghe) async {
+  Future<NganhNgheKT> updateNganhNghe(NganhNgheKT nganhNghe) async {
     final response = await nganhNgheApiService.putNganhNghe(nganhNghe.toJson());
-    return NganhNghe.fromJson(response.data['data'] as Map<String, dynamic>);
+    return NganhNgheKT.fromJson(response.data['data'] as Map<String, dynamic>);
   }
 
   @override

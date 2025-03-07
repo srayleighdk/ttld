@@ -76,6 +76,7 @@ import 'package:ttld/repositories/nganh_nghe/nganh_nghe_bachoc_repository.dart';
 import 'package:ttld/repositories/nganh_nghe/nganh_nghe_capdo_repository.dart';
 import 'package:ttld/repositories/nganh_nghe/nganh_nghe_repository.dart';
 import 'package:ttld/repositories/nganh_nghe/nganh_nghe_td_repository.dart';
+import 'package:ttld/repositories/ngoai_ngu/ngoai_ngu_repository.dart';
 import 'package:ttld/repositories/nguon_thuthap/nguon_thuthap_repository.dart';
 import 'package:ttld/repositories/nguon_vieclam/nguon_vieclam_repository.dart';
 import 'package:ttld/repositories/quocgia/quocgia_repository.dart';
@@ -127,7 +128,8 @@ Future<void> setupLocator() async {
       () => LdRepositoryImpl(locator<ApiClient>().dio));
   locator.registerLazySingleton<GroupRepository>(() => GroupRepository());
 
-  locator.registerLazySingleton<NgoaiNguRepository>(() => NgoaiNguRepositoryImpl(locator<ApiClient>()));
+  locator.registerLazySingleton<NgoaiNguRepository>(
+      () => NgoaiNguRepositoryImpl(locator<ApiClient>()));
 
   //Register DanhMucRepository
   // locator.registerLazySingleton<DanhMucKcnRepository>(
@@ -395,7 +397,7 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton<NganhNgheCapDoRepository>(() =>
       NganhNgheCapDoRepositoryImpl(
           nganhNgheCapDoApiService: locator<NganhNgheCapDoApiService>()));
-  locator.registerLazySingleton(
-      () => NganhNgheCapDoBloc(nganhNgheCapDoRepository: locator<NganhNgheCapDoRepository>()));
+  locator.registerLazySingleton(() => NganhNgheCapDoBloc(
+      nganhNgheCapDoRepository: locator<NganhNgheCapDoRepository>()));
   locator.registerFactory(() => NgoaiNguCubit(locator<NgoaiNguRepository>()));
 }

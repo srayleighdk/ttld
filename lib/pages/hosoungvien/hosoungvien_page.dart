@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ttld/core/api_client.dart';
 import 'package:ttld/models/tblHoSoUngVien/tblHoSoUngVien_model.dart';
 import 'package:ttld/pages/hosoungvien/bloc/hosoungvien_bloc.dart';
@@ -25,6 +26,7 @@ class HoSoUngVienPage extends StatelessWidget {
                 icon: const Icon(Icons.add),
                 onPressed: () {
                   // Navigate to create new HoSoUngVien
+                  context.push('/ho-so-ung-vien/create-hoso-ungvien');
                 },
               ),
             ],
@@ -55,42 +57,6 @@ class HoSoUngVienPage extends StatelessWidget {
               }
             },
           ),
-          // bottomNavigationBar: BlocBuilder<HoSoUngVienBloc, HoSoUngVienState>(
-          //   builder: (context, state) {
-          //     if (state is HoSoUngVienLoading) {
-          //       return const SizedBox.shrink();
-          //     }
-          //     int currentPage = 1;
-          //     if (state is HoSoUngVienLoaded) {
-          //       currentPage = state.page;
-          //     }
-          //     return Row(
-          //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //       children: [
-          //         IconButton(
-          //           icon: const Icon(Icons.arrow_back),
-          //           onPressed: currentPage > 1
-          //               ? () {
-          //                   context.read<HoSoUngVienBloc>().add(
-          //                       HoSoUngVienFetchData(page: currentPage - 1));
-          //                 }
-          //               : null,
-          //         ),
-          //         Text('Trang $currentPage'),
-          //         IconButton(
-          //           icon: const Icon(Icons.arrow_forward),
-          //           onPressed: state is HoSoUngVienLoaded &&
-          //                   state.hoSoUngVienList.length == 10
-          //               ? () {
-          //                   context.read<HoSoUngVienBloc>().add(
-          //                       HoSoUngVienFetchData(page: currentPage + 1));
-          //                 }
-          //               : null,
-          //         ),
-          //       ],
-          //     );
-          //   },
-          // )));
         ));
   }
 }
@@ -113,6 +79,7 @@ class HoSoUngVienDataSource extends DataTableSource {
             icon: const Icon(Icons.edit),
             onPressed: () {
               // Navigate to edit HoSoUngVien
+              context.push('/ntv_home/update_ntv', extra: hoSoUngVien);
             },
           ),
           IconButton(
@@ -136,6 +103,10 @@ class HoSoUngVienDataSource extends DataTableSource {
                       TextButton(
                         onPressed: () {
                           // Delete HoSoUngVien
+                          context.read<HoSoUngVienBloc>().add(
+                                HoSoUngVienDelete(
+                                    int.tryParse(hoSoUngVien.id)!),
+                              );
                           Navigator.of(context).pop();
                         },
                         child: const Text('Xóa'),

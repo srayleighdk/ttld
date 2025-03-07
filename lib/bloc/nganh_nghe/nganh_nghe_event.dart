@@ -5,13 +5,13 @@ sealed class NganhNgheEvent {}
 class LoadNganhNghes extends NganhNgheEvent {}
 
 class AddNganhNghe extends NganhNgheEvent {
-  final NganhNghe nganhNghe;
+  final NganhNgheKT nganhNghe;
 
   AddNganhNghe({required this.nganhNghe});
 }
 
 class UpdateNganhNghe extends NganhNgheEvent {
-  final NganhNghe nganhNghe;
+  final NganhNgheKT nganhNghe;
 
   UpdateNganhNghe({required this.nganhNghe});
 }

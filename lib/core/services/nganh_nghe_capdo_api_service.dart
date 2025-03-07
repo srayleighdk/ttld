@@ -9,6 +9,11 @@ class NganhNgheCapDoApiService {
     return await _dio.get('/danhmuc/nganh-nghe/cap-do');
   }
 
+  Future<Response> getNganhNgheCapDoByIdAndLevel(int? id, int? level) async {
+    return await _dio.get('/danhmuc/nganh-nghe/cap-do',
+        queryParameters: {'id': id, 'level': level});
+  }
+
   Future<Response> postNganhNgheCapDo(Map<String, dynamic> data) async {
     return await _dio.post('/danhmuc/nganh-nghe/cap-do', data: data);
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CustomTextField extends StatefulWidget {
   final String labelText;
@@ -18,27 +19,28 @@ class CustomTextField extends StatefulWidget {
   final int? minLines;
   final int? maxLength;
   final bool expands;
+  final List<TextInputFormatter>? inputFormatters;
 
-  CustomTextField({
-    super.key,
-    this.labelText = '',
-    required this.hintText,
-    this.controller,
-    this.obscureText = false,
-    this.keyboardType = TextInputType.text,
-    this.prefixIcon,
-    this.suffixIcon,
-    this.validator,
-    this.onChanged,
-    this.decoration,
-    this.validateOnBlur = true,
-    this.autoValidate = false,
-    this.focusNode,
-    this.maxLines = 1,
-    this.minLines,
-    this.maxLength,
-    this.expands = false,
-  });
+  const CustomTextField(
+      {super.key,
+      this.labelText = '',
+      required this.hintText,
+      this.controller,
+      this.obscureText = false,
+      this.keyboardType = TextInputType.text,
+      this.prefixIcon,
+      this.suffixIcon,
+      this.validator,
+      this.onChanged,
+      this.decoration,
+      this.validateOnBlur = true,
+      this.autoValidate = false,
+      this.focusNode,
+      this.maxLines = 1,
+      this.minLines,
+      this.maxLength,
+      this.expands = false,
+      this.inputFormatters});
 
   factory CustomTextField.email({
     TextEditingController? controller,
@@ -71,6 +73,26 @@ class CustomTextField extends StatefulWidget {
       onChanged: onChanged,
     );
   }
+
+  factory CustomTextField.numberGrok({
+    TextEditingController? controller,
+    dynamic validator,
+    void Function(String)? onChanged,
+    String hintText = 'Enter a number',
+    String labelText = 'Number',
+  }) {
+    return CustomTextField(
+      labelText: labelText,
+      hintText: hintText,
+      keyboardType: TextInputType.number,
+      prefixIcon: const Icon(Icons.numbers),
+      controller: controller,
+      validator: validator,
+      onChanged: onChanged,
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+    );
+  }
+
   factory CustomTextField.addressDetail({
     Key? key,
     required TextEditingController controller,
@@ -162,18 +184,19 @@ class CustomTextField extends StatefulWidget {
     void Function(String)? onChanged,
   }) {
     final numberController = controller ?? TextEditingController();
-    
+
     return CustomTextField(
       key: key,
       labelText: labelText,
       hintText: hintText,
       controller: numberController,
-      keyboardType: allowDecimals 
+      keyboardType: allowDecimals
           ? const TextInputType.numberWithOptions(decimal: true)
           : TextInputType.number,
       validator: (String? value) {
         if (validator != null) {
-          final validatorResult = CustomTextField.handleValidation(value, validator);
+          final validatorResult =
+              CustomTextField.handleValidation(value, validator);
           if (validatorResult != null) return validatorResult;
         }
 
@@ -183,9 +206,7 @@ class CustomTextField extends StatefulWidget {
 
         // Try parsing the number
         try {
-          final number = allowDecimals 
-              ? double.parse(value)
-              : int.parse(value);
+          final number = allowDecimals ? double.parse(value) : int.parse(value);
 
           // Check min value
           if (min != null && number < min) {
@@ -197,7 +218,7 @@ class CustomTextField extends StatefulWidget {
             return 'Value must be less than or equal to $max';
           }
         } catch (e) {
-          return allowDecimals 
+          return allowDecimals
               ? 'Please enter a valid number'
               : 'Please enter a valid integer';
         }
@@ -207,10 +228,8 @@ class CustomTextField extends StatefulWidget {
       onChanged: (value) {
         // Remove any non-numeric characters except decimal point if allowed
         final newValue = value.replaceAll(
-          allowDecimals ? RegExp(r'[^0-9.]') : RegExp(r'[^0-9]'), 
-          ''
-        );
-        
+            allowDecimals ? RegExp(r'[^0-9.]') : RegExp(r'[^0-9]'), '');
+
         // Ensure only one decimal point
         if (allowDecimals && newValue.split('.').length > 2) {
           numberController.text = newValue.replaceFirst(RegExp(r'\..*\.'), '.');
@@ -223,7 +242,7 @@ class CustomTextField extends StatefulWidget {
             TextPosition(offset: newValue.length),
           );
         }
-        
+
         if (onChanged != null) {
           onChanged(newValue);
         }
@@ -308,6 +327,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       minLines: widget.minLines,
       maxLength: widget.maxLength,
       expands: widget.expands,
+      inputFormatters: widget.inputFormatters,
       validator: (value) {
         final error = CustomTextField.handleValidation(value, widget.validator);
         setState(() {
@@ -319,7 +339,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
       onChanged: (value) {
         if (widget.autoValidate) {
           setState(() {
-            _errorText = CustomTextField.handleValidation(value, widget.validator);
+            _errorText =
+                CustomTextField.handleValidation(value, widget.validator);
             _isValid = _errorText == null;
           });
         } else {

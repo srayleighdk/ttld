@@ -30,6 +30,15 @@ class NTVLoadedById extends NTVState {
   List<Object> get props => [tblHoSoUngVien!];
 }
 
+class NTVUpdated extends NTVState {
+  final String message;
+
+  const NTVUpdated(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
+
 class NTVError extends NTVState {
   final String message;
 

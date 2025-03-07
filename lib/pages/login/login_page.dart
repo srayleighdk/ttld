@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/core/utils/toast_utils.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
@@ -35,13 +36,13 @@ class _LoginPageState extends State<LoginPage> {
   void _handleLogin() {
     if (_formKey.currentState!.validate()) {
       debugPrint('📝 Login form submitted');
-      context.read<LoginBloc>().add(
-            LoginSubmitted(
-              userName: _userNameController.text,
-              password: _passwordController.text,
-              userType: _selectedUserType.name,
-            ),
-          );
+      locator<LoginBloc>().add(
+        LoginSubmitted(
+          userName: _userNameController.text,
+          password: _passwordController.text,
+          userType: _selectedUserType.name,
+        ),
+      );
     }
   }
 
@@ -53,17 +54,41 @@ class _LoginPageState extends State<LoginPage> {
     return MultiBlocListener(
       listeners: [
         BlocListener<LoginBloc, LoginState>(
+          bloc: locator<LoginBloc>(),
           listener: (context, state) {
+            // debugPrint('👂 Login state changed: ${state.runtimeType}');
+            //
+            // if (state is LoginSuccess) {
+            //   debugPrint('🎉 Login successful in page');
+            //   ToastUtils.showToastSuccess(
+            //     context,
+            //     description: 'Welcome back!',
+            //     message: '',
+            //   );
+            //   context.go('/home', extra: state.userId);
+            // } else if (state is LoginFailure) {
+            //   debugPrint('❌ Login failed in page: ${state.error}');
+            //   ToastUtils.showToastOops(
+            //     context,
+            //     description: state.error,
+            //   );
+            // }
             debugPrint('👂 Login state changed: ${state.runtimeType}');
 
             if (state is LoginSuccess) {
-              debugPrint('🎉 Login successful in page');
+              debugPrint(
+                  '🎉 Login successful in page, navigating to /home with userId: ${state.userId}');
               ToastUtils.showToastSuccess(
                 context,
                 description: 'Welcome back!',
                 message: '',
               );
-              context.go('/home');
+              try {
+                context.go('/home', extra: state.userId);
+                debugPrint('🚀 Navigation to /home triggered');
+              } catch (e) {
+                debugPrint('❌ Navigation error: $e');
+              }
             } else if (state is LoginFailure) {
               debugPrint('❌ Login failed in page: ${state.error}');
               ToastUtils.showToastOops(
@@ -73,26 +98,27 @@ class _LoginPageState extends State<LoginPage> {
             }
           },
         ),
-        BlocListener<AuthBloc, AuthState>(
-          listener: (context, state) {
-            debugPrint('👂 Auth state changed: ${state.runtimeType}');
-
-            // if (state is AuthAuthenticated) {
-            //   debugPrint('🔐 Auth state is authenticated, navigating...');
-            //   if (state.isAdmin) {
-            //     context.go('/admin/home');
-            //   } else if (state.isAdmin == false &&
-            //       state.userType == UserType.ntv.name) {
-            //     context.go('/ntv_home');
-            //   } else if (state.isAdmin == false &&
-            //       state.userType == UserType.ntd.name) {
-            //     context.go('/ntd_home');
-            //   } else {
-            //     context.go('/error');
-            //   }
-            // }
-          },
-        ),
+        // BlocListener<AuthBloc, AuthState>(
+        //   bloc: locator<AuthBloc>(),
+        //   listener: (context, state) {
+        //     debugPrint('👂 Auth state changed: ${state.runtimeType}');
+        //
+        //     // if (state is AuthAuthenticated) {
+        //     //   debugPrint('🔐 Auth state is authenticated, navigating...');
+        //     //   if (state.isAdmin) {
+        //     //     context.go('/admin/home');
+        //     //   } else if (state.isAdmin == false &&
+        //     //       state.userType == UserType.ntv.name) {
+        //     //     context.go('/ntv_home');
+        //     //   } else if (state.isAdmin == false &&
+        //     //       state.userType == UserType.ntd.name) {
+        //     //     context.go('/ntd_home');
+        //     //   } else {
+        //     //     context.go('/error');
+        //     //   }
+        //     // }
+        //   },
+        // ),
       ],
       child: Scaffold(
         body: SingleChildScrollView(
@@ -216,6 +242,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       const SizedBox(height: 24),
                       BlocBuilder<LoginBloc, LoginState>(
+                        bloc: locator<LoginBloc>(),
                         builder: (context, state) {
                           return ElevatedButton(
                             onPressed:

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ttld/bloc/tblNhaTuyenDung/ntd_bloc.dart';
+import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
 
@@ -18,19 +19,15 @@ class _NTDHomePageState extends State<NTDHomePage> {
   @override
   void initState() {
     super.initState();
-    final authState = context.read<AuthBloc>().state;
+    final authState = locator<AuthBloc>().state;
     if (authState is AuthAuthenticated && authState.userType == 'ntd') {
-      context.read<NTDBloc>().add(NTDFetchById(int.parse(authState.userId)));
+      locator<NTDBloc>().add(NTDFetchById(int.parse(authState.userId)));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text('NTD Home'),
-      //   centerTitle: true,
-      // ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -59,6 +56,7 @@ class _NTDHomePageState extends State<NTDHomePage> {
   // Section 1: User Information
   Widget _buildUserInfoSection(BuildContext context) {
     return BlocBuilder<AuthBloc, AuthState>(
+      bloc: locator<AuthBloc>(),
       builder: (context, state) {
         if (state is AuthAuthenticated) {
           final user = state;
@@ -130,14 +128,14 @@ class _NTDHomePageState extends State<NTDHomePage> {
           _buildQuickAccessButton(
             context: context,
             icon: FontAwesomeIcons.fileImport,
-            label: 'Tuyển Dụng Mới',
-            route: '/tuyen-dung-moi',
+            label: 'Nhu cầu tuyển dụng M01TT11',
+            route: '/ntd_home/m01tt11',
           ),
           _buildQuickAccessButton(
             context: context,
             icon: FontAwesomeIcons.calendarPlus,
-            label: 'Đăng Ký Phiên GD',
-            route: '/dang-ky-phien-gd',
+            label: 'Đăng ký sử dụng lao động',
+            route: '/dang-ky-su-dung-lao-dong-03pli',
           ),
           _buildQuickAccessButton(
             context: context,
@@ -216,6 +214,7 @@ class _NTDHomePageState extends State<NTDHomePage> {
   // Section 3: NTD Information
   Widget _buildNTDInfoSection(BuildContext context) {
     return BlocBuilder<NTDBloc, NTDState>(
+      bloc: locator<NTDBloc>(),
       builder: (context, state) {
         if (state is NTDLoading) {
           return const Center(child: CircularProgressIndicator());

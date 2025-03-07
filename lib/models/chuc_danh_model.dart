@@ -1,17 +1,17 @@
-class ChucDanhModel {
-  int? id;
-  String? name;
+import 'package:ttld/widgets/reuseable_widgets/generic_picker.dart';
+
+class ChucDanhModel extends GenericPickerItem {
   int? displayOrder;
   int? idLoai;
   bool? status;
 
   ChucDanhModel({
-    this.id,
-    this.name,
+    required int id,
+    required String name,
     this.displayOrder,
     this.idLoai,
     this.status,
-  });
+  }) : super(id: id, displayName: name);
 
   factory ChucDanhModel.fromJson(Map<String, dynamic> json) {
     return ChucDanhModel(
@@ -26,7 +26,7 @@ class ChucDanhModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
-    data['name'] = name;
+    data['name'] = displayName;
     data['displayOrder'] = displayOrder;
     data['idLoai'] = idLoai;
     data['status'] = status;

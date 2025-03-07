@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
 import 'package:ttld/features/ds-ld/repositories/ld_repository.dart';
+import 'package:ttld/models/tblHoSoUngVien/tblHoSoUngVien_model.dart';
+import 'package:ttld/models/tblNhaTuyenDung/tblNhaTuyenDung_model.dart';
 import 'package:ttld/pages/baocaohoatdong/baocaohoatdong_page.dart';
 import 'package:ttld/pages/danhmuc/danhmuc_page.dart';
 import 'package:ttld/pages/doisoatmau/doisoatmau_page.dart';
@@ -21,16 +23,19 @@ import 'package:ttld/pages/hosocoquan/hosocoquan_page.dart';
 import 'package:ttld/pages/hosodoangnghiep/hosodoangnghiep_page.dart';
 import 'package:ttld/pages/hosonguoilaodong/hosonguoilaodong_page.dart';
 import 'package:ttld/pages/hosonhatuyendung/hosontd_page.dart';
+import 'package:ttld/pages/hosoungvien/create_hoso_ungvien.dart';
 import 'package:ttld/pages/hosoungvien/hosoungvien_page.dart';
 import 'package:ttld/pages/laodongkhuyettat/laodongkhuyettat_page.dart';
 import 'package:ttld/pages/loghethong/loghethong_page.dart';
 import 'package:ttld/pages/login/login_page.dart';
+import 'package:ttld/pages/m01tt11/m01tt11.dart';
 import 'package:ttld/pages/phanquyen/phanquyen_page.dart';
 import 'package:ttld/pages/quantridulieu/quantridulieu_page.dart';
 import 'package:ttld/pages/quantringuoidung/quantringuoidung_page.dart';
 import 'package:ttld/pages/signup/signup.dart';
 import 'package:ttld/pages/splash/spash_page.dart';
 import 'package:ttld/pages/theodoivieclam/theodoivieclam_page.dart';
+import 'package:ttld/pages/thuThapCauLaoDong/m03pli.dart';
 
 class AppRouter {
   final AuthBloc authBloc;
@@ -45,9 +50,22 @@ class AppRouter {
     navigatorKey: rootNavigatorKey,
     debugLogDiagnostics: true,
     refreshListenable: GoRouterRefreshStream(authBloc.stream),
+    // redirect: (context, state) {
+    //   if (authBloc.state is! AuthAuthenticated) {
+    //     return '/login';
+    //   }
+    //   return null;
+    // },
     redirect: (context, state) {
-      if (authBloc.state is! AuthAuthenticated) {
+      final authState = authBloc.state;
+      debugPrint(
+          '🔄 Redirect check: ${authState.runtimeType}, Location: ${state.uri}');
+      if (authState is AuthUnauthenticated &&
+          state.uri.toString() != '/login') {
         return '/login';
+      }
+      if (authState is AuthAuthenticated && state.uri.toString() == '/login') {
+        return '/home';
       }
       return null;
     },
@@ -126,6 +144,12 @@ class AppRouter {
         path: '/ho-so-ung-vien',
         builder: (context, state) =>
             const HoSoUngVienPage(), // Replace with your page
+        routes: [
+          GoRoute(
+            path: '/create-hoso-ungvien',
+            builder: (context, state) => const CreateHoSoUngVienPage(),
+          )
+        ],
       ),
       GoRoute(
         path: '/ho-so-doanh-nghiep',
@@ -171,28 +195,50 @@ class AppRouter {
       GoRoute(
           path: '/ntv_home',
           builder: (BuildContext context, GoRouterState state) =>
-              const NTVHomePage(), // Create NtvHomePage widget
+              NTVHomePage(), // Create NtvHomePage widget
           routes: [
             GoRoute(
               path: '/update_ntv',
-              builder: (context, state) => const UpdateNTVPage(),
-            )
+              builder: (context, state) => UpdateNTVPage(
+                hoSoUngVien: state.extra as TblHoSoUngVienModel?,
+              ),
+            ),
           ]),
 
       GoRoute(
         path: '/ntd_home',
         builder: (BuildContext context, GoRouterState state) =>
             const NTDHomePage(),
+        routes: [
+          GoRoute(
+            path: '/update_ntd',
+            builder: (context, state) => const UpdateNTDPage(),
+          ),
+          GoRoute(
+            path: DangKySuDungLaoDong03PLI.routePath,
+            builder: (context, state) => DangKySuDungLaoDong03PLI(
+              ntd: state.extra as Ntd?,
+            ),
+          ),
+          GoRoute(
+              path: '/m01tt11',
+              builder: (context, state) => M01TT11Page(
+                    ntd: state.extra as Ntd?,
+                  ))
+        ],
       ),
       GoRoute(
         path: '/update_ntd',
         builder: (context, state) => const UpdateNTDPage(),
       ),
       GoRoute(
-        path: '/home',
-        builder: (BuildContext context, GoRouterState state) =>
-            const HomePage(),
-      ),
+          path: '/home',
+          builder: (BuildContext context, GoRouterState state) {
+            debugPrint('🏠 Navigating to Home with extra: ${state.extra}');
+
+            final userId = state.extra as String?;
+            return HomePage(userId: userId);
+          }),
       GoRoute(
         path: '/error', // Default home route
         builder: (BuildContext context, GoRouterState state) =>

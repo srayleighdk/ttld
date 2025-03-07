@@ -14,7 +14,7 @@ class CustomPickDateTimeGrok extends StatefulWidget {
 
   final String? labelText;
   final String? hintText;
-  final ValueChanged<String?>? onChanged;
+  final ValueChanged<String?>? onChanged; // Keep as String? for ISO 8601
   final DateTime? selectedDate;
   final String? Function(DateTime?)? validator;
   final dynamic initialValue;
@@ -34,67 +34,36 @@ class _CustomPickDateTimeGrokState extends State<CustomPickDateTimeGrok> {
         _parseInitialValue(widget.initialValue) ?? widget.selectedDate;
   }
 
-  // Parse initial value from backend with support for backend formats
   DateTime? _parseInitialValue(dynamic value) {
-    if (value == null) {
-      print("initialValue is null");
-      return null;
-    }
-    if (value is DateTime) {
-      print("initialValue is DateTime: $value");
-      return _validateDateRange(value);
-    }
+    if (value == null) return null;
+    if (value is DateTime) return _validateDateRange(value);
     if (value is String) {
-      print("Parsing initialValue: '$value'");
       try {
-        // Try full ISO 8601 first (e.g., "2025-02-27T19:55:42.000Z")
         final parsedIso = DateTime.parse(value);
-        print("Parsed ISO 8601: $parsedIso");
         return _validateDateRange(parsedIso);
       } catch (e) {
-        print("ISO 8601 parse failed: $e");
         try {
-          // Try YYYY-MM-DD (e.g., "2025-02-28")
           final ymdFormat = DateFormat('yyyy-MM-dd');
           final parsedYmd = ymdFormat.parse(value);
-          print("Parsed YYYY-MM-DD: $parsedYmd");
           return _validateDateRange(parsedYmd);
         } catch (e) {
-          print("YYYY-MM-DD parse failed: $e");
           try {
-            // Try DD-MM-YYYY (e.g., "28-02-2025")
             final dmyFormat = DateFormat('dd-MM-yyyy');
             final parsedDmy = dmyFormat.parse(value);
-            print("Parsed DD-MM-YYYY: $parsedDmy");
             return _validateDateRange(parsedDmy);
           } catch (e) {
-            print("DD-MM-YYYY parse failed: $e");
-            try {
-              // Try ISO without Z (e.g., "2010-02-27T00:00:00.000")
-              final isoNoZFormat = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-              final parsedIsoNoZ = isoNoZFormat.parse(value, true);
-              print("Parsed ISO without Z: $parsedIsoNoZ");
-              return _validateDateRange(parsedIsoNoZ);
-            } catch (e) {
-              print("ISO without Z parse failed: $e");
-              return null; // Fallback to null
-            }
+            return null;
           }
         }
       }
     }
-    print("Unsupported initialValue type: $value");
     return null;
   }
 
-  // Validate date is within picker range
   DateTime? _validateDateRange(DateTime parsed) {
     final firstDate = DateTime(1900);
     final lastDate = DateTime(2100);
-    if (parsed.isBefore(firstDate) || parsed.isAfter(lastDate)) {
-      print("Parsed date $parsed is out of range ($firstDate to $lastDate)");
-      return null; // Out of range, fallback to null
-    }
+    if (parsed.isBefore(firstDate) || parsed.isAfter(lastDate)) return null;
     return parsed;
   }
 
@@ -107,11 +76,13 @@ class _CustomPickDateTimeGrokState extends State<CustomPickDateTimeGrok> {
       initialDatePickerMode: DatePickerMode.year,
     );
     if (picked != null && picked != _selectedDate) {
+      final normalizedDate = DateTime.utc(picked.year, picked.month, picked.day);
       setState(() {
-        _selectedDate = picked;
+        _selectedDate = normalizedDate;
       });
-      final formattedDate = DateFormat('dd-MM-yyyy').format(picked);
-      widget.onChanged?.call(formattedDate);
+      final isoDate = normalizedDate.toIso8601String();
+      print("Sending ISO 8601: '$isoDate'");
+      widget.onChanged?.call(isoDate);
     }
   }
 
@@ -121,13 +92,7 @@ class _CustomPickDateTimeGrokState extends State<CustomPickDateTimeGrok> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (widget.labelText != null)
-          Text(
-            widget.labelText!,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          Text(widget.labelText!, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         InkWell(
           onTap: () => _selectYear(context),
@@ -142,7 +107,7 @@ class _CustomPickDateTimeGrokState extends State<CustomPickDateTimeGrok> {
               children: <Widget>[
                 Text(
                   _selectedDate != null
-                      ? DateFormat('dd-MM-yyyy').format(_selectedDate!)
+                      ? DateFormat('dd-MM-yyyy').format(_selectedDate!.toLocal())
                       : widget.hintText ?? 'Select Date',
                   style: TextStyle(
                     fontSize: 16,

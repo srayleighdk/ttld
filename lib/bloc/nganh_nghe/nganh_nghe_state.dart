@@ -7,7 +7,7 @@ class NganhNgheInitial extends NganhNgheState {}
 class NganhNgheLoading extends NganhNgheState {}
 
 class NganhNgheLoaded extends NganhNgheState {
-  final List<NganhNghe> nganhNghes;
+  final List<NganhNgheKT> nganhNghes;
 
   NganhNgheLoaded({required this.nganhNghes});
 }

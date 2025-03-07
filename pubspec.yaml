@@ -59,6 +59,8 @@ dependencies:
   data_table_2: ^2.5.18
   image_picker: ^1.1.2
   file_picker: ^9.0.2
+  http_parser: ^4.1.2
+  injectable: ^2.5.0
 
 dev_dependencies:
   flutter_test:
