@@ -2,6 +2,10 @@ import 'package:injectable/injectable.dart';
 import 'package:ttld/core/api_client.dart';
 import 'package:ttld/models/ngoai_ngu_model.dart';
 
+abstract class NgoaiNguRepository {
+  Future<List<NgoaiNgu>> getNgoaiNgu();
+}
+
 @Injectable(as: NgoaiNguRepository)
 class NgoaiNguRepositoryImpl implements NgoaiNguRepository {
   final ApiClient _client;

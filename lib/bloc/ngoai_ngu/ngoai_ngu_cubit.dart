@@ -23,7 +23,7 @@ class NgoaiNguCubit extends Cubit<NgoaiNguState> {
     } on ApiException catch (e) {
       emit(NgoaiNguError(e.message));
     } catch (e) {
-      emit(const NgoaiNguError('Có lỗi xảy ra'));
+      emit(NgoaiNguError('Có lỗi xảy ra'));
     }
   }
 }
