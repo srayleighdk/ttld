@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 
@@ -12,7 +12,7 @@ part 'ngoai_ngu_state.dart';
 @injectable
 class NgoaiNguCubit extends Cubit<NgoaiNguState> {
   final NgoaiNguRepository _repository;
-  
+
   NgoaiNguCubit(this._repository) : super(NgoaiNguInitial());
 
   Future<void> getNgoaiNgu() async {
