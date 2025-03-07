@@ -1,5 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:ttld/core/api_client.dart';
+import 'package:ttld/core/exceptions/api_exception.dart';
 import 'package:ttld/models/ngoai_ngu_model.dart';
 
 abstract class NgoaiNguRepository {
