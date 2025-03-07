@@ -127,6 +127,8 @@ Future<void> setupLocator() async {
       () => LdRepositoryImpl(locator<ApiClient>().dio));
   locator.registerLazySingleton<GroupRepository>(() => GroupRepository());
 
+  locator.registerLazySingleton<NgoaiNguRepository>(() => NgoaiNguRepositoryImpl(locator<ApiClient>()));
+
   //Register DanhMucRepository
   // locator.registerLazySingleton<DanhMucKcnRepository>(
   //     () => DanhMucRepositoryImpl(locator<ApiClient>().dio));
@@ -395,4 +397,5 @@ Future<void> setupLocator() async {
           nganhNgheCapDoApiService: locator<NganhNgheCapDoApiService>()));
   locator.registerLazySingleton(
       () => NganhNgheCapDoBloc(nganhNgheCapDoRepository: locator<NganhNgheCapDoRepository>()));
+  locator.registerFactory(() => NgoaiNguCubit(locator<NgoaiNguRepository>()));
 }
