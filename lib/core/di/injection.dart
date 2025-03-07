@@ -44,6 +44,7 @@ import 'package:ttld/core/services/tinh_api_service.dart';
 import 'package:ttld/core/services/tinh_trangvl_api_service.dart';
 import 'package:ttld/core/services/trinh_do_hoc_van_api_service.dart';
 import 'package:ttld/core/services/trinh_do_ngoai_ngu_api_service.dart';
+import 'package:ttld/core/services/kinh_nghiem_lam_viec_api_service.dart';
 import 'package:ttld/core/services/trinh_do_tin_hoc_api_service.dart';
 import 'package:ttld/core/services/trinh_do_van_hoa_api_service.dart';
 import 'package:ttld/core/services/tt_tantat_api_service.dart';
