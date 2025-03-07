@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ttld/bloc/chuc_danh/chuc_danh_bloc.dart';
 import 'package:ttld/bloc/loai_hinh/loai_hinh_bloc.dart';
+import 'package:ttld/bloc/ngoai_ngu/ngoai_ngu_cubit.dart';
 import 'package:ttld/bloc/nganh_nghe/nganh_nghe_capdo_bloc.dart';
 import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_bloc.dart';
 import 'package:ttld/bloc/tblNhaTuyenDung/ntd_bloc.dart';
