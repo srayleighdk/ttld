@@ -238,6 +238,12 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton<ThoiGianHoatDongApiService>(
       () => ThoiGianHoatDongApiService(locator<ApiClient>().dio));
 
+  // KinhNghiemLamViec
+  locator.registerLazySingleton<KinhNghiemLamViecApiService>(
+      () => KinhNghiemLamViecApiService(locator<ApiClient>()));
+  locator.registerLazySingleton<KinhNghiemLamViecRepository>(
+    () => KinhNghiemLamViecRepositoryImpl(locator<KinhNghiemLamViecApiService>()));
+
   //ThoiGianLamViec
   locator.registerLazySingleton<ThoiGianLamViecApiService>(
       () => ThoiGianLamViecApiService(locator<ApiClient>().dio));
@@ -400,4 +406,5 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(() => NganhNgheCapDoBloc(
       nganhNgheCapDoRepository: locator<NganhNgheCapDoRepository>()));
   locator.registerFactory(() => NgoaiNguCubit(locator<NgoaiNguRepository>()));
+  locator.registerFactory(() => KinhNghiemLamViecBloc(locator<KinhNghiemLamViecRepository>()));
 }
