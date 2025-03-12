@@ -2,7 +2,11 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ttld/bloc/chuc_danh/chuc_danh_bloc.dart';
+import 'package:ttld/bloc/hinh_thuc_tuyen_dung/hinh_thuc_tuyen_dung_bloc.dart';
+import 'package:ttld/bloc/kinh_nghiem_lam_viec/kinh_nghiem_lam_viec_bloc.dart';
 import 'package:ttld/bloc/loai_hinh/loai_hinh_bloc.dart';
+import 'package:ttld/bloc/muc_dich_lam_viec/muc_dich_lam_viec_bloc.dart';
+import 'package:ttld/bloc/nganh_nghe/nganh_nghe_chuyennganh_bloc.dart';
 import 'package:ttld/bloc/ngoai_ngu/ngoai_ngu_cubit.dart';
 import 'package:ttld/bloc/nganh_nghe/nganh_nghe_capdo_bloc.dart';
 import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_bloc.dart';
@@ -12,11 +16,14 @@ import 'package:ttld/core/services/dan_toc_api_service.dart';
 import 'package:ttld/core/services/hinh_thuc_dao_tao_api_service.dart';
 import 'package:ttld/core/services/hinh_thuc_dia_diem_api_service.dart';
 import 'package:ttld/core/services/hinh_thuc_loai_hinh_api_service.dart';
+import 'package:ttld/core/services/hinh_thuc_tuyen_dung_api_service.dart';
 import 'package:ttld/core/services/loai_hinh_api_service.dart';
 import 'package:ttld/core/services/loai_vl_api_service.dart';
+import 'package:ttld/core/services/muc_dich_lam_viec_api_service.dart';
 import 'package:ttld/core/services/muc_luong_api_service.dart';
 import 'package:ttld/core/services/nganh_nghe_bachoc_api_service.dart';
 import 'package:ttld/core/services/nganh_nghe_capdo_api_service.dart';
+import 'package:ttld/core/services/nganh_nghe_chuyennganh_api_service.dart';
 import 'package:ttld/core/services/nganh_nghe_td_api_service.dart';
 import 'package:ttld/core/services/nguon_thuthap_api_service.dart';
 import 'package:ttld/core/services/nguon_vieclam_api_service.dart';
@@ -68,13 +75,17 @@ import 'package:ttld/repositories/dan_toc/dan_toc_repository.dart';
 import 'package:ttld/repositories/hinh_thuc_dao_tao/hinh_thuc_dao_tao_repository.dart';
 import 'package:ttld/repositories/hinh_thuc_dia_diem/hinh_thuc_dia_diem_repository.dart';
 import 'package:ttld/repositories/hinh_thuc_loai_hinh/hinh_thuc_loai_hinh_repository.dart';
+import 'package:ttld/repositories/hinh_thuc_tuyen_dung_repository.dart';
 import 'package:ttld/repositories/hinhthuc_doanhnghiep/hinhthuc_doanhnghiep_repository.dart';
 import 'package:ttld/repositories/huyen/huyen_repository.dart';
+import 'package:ttld/repositories/kinh_nghiem_lam_viec_repository.dart';
 import 'package:ttld/repositories/loai_hinh/loai_hinh_repository.dart';
 import 'package:ttld/repositories/loai_vl/loai_vl_repository.dart';
+import 'package:ttld/repositories/muc_dich_lam_viec_repository.dart';
 import 'package:ttld/repositories/muc_luong/muc_luong_repository.dart';
 import 'package:ttld/repositories/nganh_nghe/nganh_nghe_bachoc_repository.dart';
 import 'package:ttld/repositories/nganh_nghe/nganh_nghe_capdo_repository.dart';
+import 'package:ttld/repositories/nganh_nghe/nganh_nghe_chuyennganh_repository.dart';
 import 'package:ttld/repositories/nganh_nghe/nganh_nghe_repository.dart';
 import 'package:ttld/repositories/nganh_nghe/nganh_nghe_td_repository.dart';
 import 'package:ttld/repositories/ngoai_ngu/ngoai_ngu_repository.dart';
@@ -408,4 +419,28 @@ Future<void> setupLocator() async {
       nganhNgheCapDoRepository: locator<NganhNgheCapDoRepository>()));
   locator.registerFactory(() => NgoaiNguCubit(locator<NgoaiNguRepository>()));
   locator.registerFactory(() => KinhNghiemLamViecBloc(locator<KinhNghiemLamViecRepository>()));
+
+  // NganhNgheChuyenNganh
+  locator.registerLazySingleton<NganhNgheChuyenNganhApiService>(
+      () => NganhNgheChuyenNganhApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<NganhNgheChuyenNganhRepository>(() =>
+      NganhNgheChuyenNganhRepositoryImpl(
+          nganhNgheChuyenNganhApiService: locator<NganhNgheChuyenNganhApiService>()));
+  locator.registerLazySingleton(() => NganhNgheChuyenNganhBloc(
+      nganhNgheChuyenNganhRepository: locator<NganhNgheChuyenNganhRepository>()));
+          
+  // Muc Dich Lam Viec
+  locator.registerLazySingleton<MucDichLamViecApiService>(
+      () => MucDichLamViecApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<MucDichLamViecRepository>(() =>
+      MucDichLamViecRepositoryImpl(locator<MucDichLamViecApiService>()));
+  locator.registerLazySingleton(() => MucDichLamViecBloc(locator<MucDichLamViecRepository>()));
+          
+  // Hinh Thuc Tuyen Dung
+  locator.registerLazySingleton<HinhThucTuyenDungApiService>(
+      () => HinhThucTuyenDungApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<HinhThucTuyenDungRepository>(() =>
+      HinhThucTuyenDungRepositoryImpl(locator<HinhThucTuyenDungApiService>()));
+  locator.registerLazySingleton(() => HinhThucTuyenDungBloc(locator<HinhThucTuyenDungRepository>()));
+          
 }

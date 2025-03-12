@@ -1,10 +1,9 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
+import 'package:dio/dio.dart';
+import 'package:ttld/models/ngoai_ngu_model.dart';
 
-import '../../../core/api_client.dart';
-import '../../../models/ngoai_ngu_model.dart';
 import '../../../repositories/ngoai_ngu/ngoai_ngu_repository.dart';
 
 part 'ngoai_ngu_state.dart';
@@ -18,10 +17,10 @@ class NgoaiNguCubit extends Cubit<NgoaiNguState> {
   Future<void> getNgoaiNgu() async {
     emit(NgoaiNguLoading());
     try {
-      final response = await _repository.getNgoaiNgu();
+      final response = await _repository.getNgoaiNgus();
       emit(NgoaiNguLoaded(response));
-    } on ApiException catch (e) {
-      emit(NgoaiNguError(e.message));
+    } on DioException catch (e) {
+      emit(NgoaiNguError(e.message ?? 'Có lỗi xảy ra'));
     } catch (e) {
       emit(NgoaiNguError('Có lỗi xảy ra'));
     }

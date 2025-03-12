@@ -6,18 +6,18 @@ class TonGiaoApiService {
   TonGiaoApiService(this._dio);
 
   Future<Response> getTonGiao() async {
-    return await _dio.get('/api/danhmuc/ton-giao');
+    return await _dio.get('/danhmuc/ton-giao');
   }
 
   Future<Response> postTonGiao(Map<String, dynamic> data) async {
-    return await _dio.post('/api/danhmuc/ton-giao', data: data);
+    return await _dio.post('/danhmuc/ton-giao', data: data);
   }
 
   Future<Response> putTonGiao(Map<String, dynamic> data) async {
-    return await _dio.put('/api/danhmuc/ton-giao', data: data);
+    return await _dio.put('/danhmuc/ton-giao', data: data);
   }
 
   Future<void> deleteTonGiao(String id) async {
-    await _dio.delete('/api/danhmuc/ton-giao', queryParameters: {'id': id});
+    await _dio.delete('/danhmuc/ton-giao', queryParameters: {'id': id});
   }
 }

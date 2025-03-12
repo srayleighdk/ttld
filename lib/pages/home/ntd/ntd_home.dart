@@ -41,9 +41,9 @@ class _NTDHomePageState extends State<NTDHomePage> {
             _buildQuickAccessSection(context),
             const SizedBox(height: 24.0),
 
-            // Section 3: NTD Information
-            _buildNTDInfoSection(context),
-            const SizedBox(height: 24.0),
+            // // Section 3: NTD Information
+            // _buildNTDInfoSection(context),
+            // const SizedBox(height: 24.0),
 
             // Section 4: Báo cáo thống kê
             _buildStatisticsSection(),

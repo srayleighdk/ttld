@@ -392,7 +392,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                       ntdChucvu = chucdanh?.id;
                     });
                   },
-                  displayItemBuilder: (ChucDanhModel? item) => item?.name ?? '',
+                  displayItemBuilder: (ChucDanhModel? item) => item?.displayName ?? '',
                 ),
                 const SizedBox(height: 16.0),
                 const Text("Thông tin của đơn vị, doanh nghiệp :"),

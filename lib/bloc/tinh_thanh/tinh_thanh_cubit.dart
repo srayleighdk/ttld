@@ -11,7 +11,7 @@ class TinhThanhCubit extends Cubit<TinhThanhState> {
   TinhThanhCubit({required this.tinhThanhApiService})
       : super(TinhThanhInitial());
 
-  Future<void> loadTinhThanhs() async {
+  Future<List<TinhThanhModel>> loadTinhThanhs() async {
     emit(TinhThanhLoading());
     try {
       final response = await tinhThanhApiService.getTinhThanh();
@@ -19,8 +19,10 @@ class TinhThanhCubit extends Cubit<TinhThanhState> {
           .map((json) => TinhThanhModel.fromJson(json))
           .toList();
       emit(TinhThanhLoaded(tinhThanhs: tinhThanhs));
+      return tinhThanhs;
     } catch (e) {
       emit(TinhThanhError(message: e.toString()));
+      return [];
     }
   }
 }

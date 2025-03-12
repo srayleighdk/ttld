@@ -11,6 +11,7 @@ import 'package:ttld/bloc/tinh/tinh_state.dart';
 import 'package:ttld/bloc/xa/xa_bloc.dart';
 import 'package:ttld/bloc/xa/xa_event.dart';
 import 'package:ttld/bloc/xa/xa_state.dart';
+import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/models/huyen/huyen.dart';
 import 'package:ttld/models/tinh/tinh.dart';
 import 'package:ttld/models/xa/xa.dart';
@@ -61,7 +62,7 @@ class _CascadeLocationPickerGrokState extends State<CascadeLocationPickerGrok> {
   @override
   void initState() {
     super.initState();
-    _kcnCubit = context.read<KcnCubit>(); // Initialize from BlocProvider
+    _kcnCubit = locator<KcnCubit>(); // Initialize from BlocProvider
     _initializeTinh();
   }
 
@@ -85,7 +86,7 @@ class _CascadeLocationPickerGrokState extends State<CascadeLocationPickerGrok> {
     }
 
     if (selectedTinh != null && widget.initialHuyen != null) {
-      final huyenBloc = context.read<HuyenBloc>();
+      final huyenBloc = locator<HuyenBloc>();
       huyenBloc.add(LoadHuyensByTinh(matinh: selectedTinh!.matinh));
 
       final huyenState = await huyenBloc.stream
@@ -103,7 +104,7 @@ class _CascadeLocationPickerGrokState extends State<CascadeLocationPickerGrok> {
     }
 
     if (selectedHuyen != null && widget.initialXa != null) {
-      final xaBloc = context.read<XaBloc>();
+      final xaBloc = locator<XaBloc>();
       xaBloc.add(LoadXasByHuyen(mahuyen: selectedHuyen!.mahuyen));
 
       final xaState =
@@ -143,13 +144,13 @@ class _CascadeLocationPickerGrokState extends State<CascadeLocationPickerGrok> {
   }
 
   void _loadInitialData(Tinh tinh) {
-    context.read<HuyenBloc>().add(LoadHuyensByTinh(matinh: tinh.matinh));
+    locator<HuyenBloc>().add(LoadHuyensByTinh(matinh: tinh.matinh));
     _kcnCubit.getKCN(tinh.matinh);
     widget.onTinhChanged?.call(tinh);
   }
 
   void _loadHuyenData(Huyen huyen) {
-    context.read<XaBloc>().add(LoadXasByHuyen(mahuyen: huyen.mahuyen));
+    locator<XaBloc>().add(LoadXasByHuyen(mahuyen: huyen.mahuyen));
     widget.onHuyenChanged?.call(huyen);
   }
 
@@ -162,6 +163,7 @@ class _CascadeLocationPickerGrokState extends State<CascadeLocationPickerGrok> {
     return Column(
       children: [
         BlocBuilder<TinhBloc, TinhState>(
+          bloc: locator<TinhBloc>(),
           builder: (context, state) {
             Widget child;
             if (state is TinhLoaded) {
@@ -182,8 +184,7 @@ class _CascadeLocationPickerGrokState extends State<CascadeLocationPickerGrok> {
                     _updateAddressDetail();
                   });
                   if (newValue != null) {
-                    context
-                        .read<HuyenBloc>()
+                    locator<HuyenBloc>()
                         .add(LoadHuyensByTinh(matinh: newValue.matinh));
                     _kcnCubit
                         .getKCN(newValue.matinh); // Use initialized _kcnCubit
@@ -203,6 +204,7 @@ class _CascadeLocationPickerGrokState extends State<CascadeLocationPickerGrok> {
         ),
         const SizedBox(height: 14),
         BlocBuilder<HuyenBloc, HuyenState>(
+          bloc: locator<HuyenBloc>(),
           builder: (context, state) {
             Widget child;
             if (state is HuyenLoadedByTinh) {
@@ -221,8 +223,7 @@ class _CascadeLocationPickerGrokState extends State<CascadeLocationPickerGrok> {
                     _updateAddressDetail();
                   });
                   if (newValue != null) {
-                    context
-                        .read<XaBloc>()
+                    locator<XaBloc>()
                         .add(LoadXasByHuyen(mahuyen: newValue.mahuyen));
                   }
                   widget.onHuyenChanged?.call(newValue);
@@ -247,6 +248,7 @@ class _CascadeLocationPickerGrokState extends State<CascadeLocationPickerGrok> {
         ),
         const SizedBox(height: 14),
         BlocBuilder<XaBloc, XaState>(
+          bloc: locator<XaBloc>(),
           builder: (context, state) {
             Widget child;
             if (state is XaLoadedByHuyen) {

@@ -72,8 +72,8 @@ class _NTVHomePageState extends State<NTVHomePage> {
               const SizedBox(height: 24.0),
 
               // Section 3: NTV Information
-              _buildNTVInfoSection(context),
-              const SizedBox(height: 24.0),
+              // _buildNTVInfoSection(context),
+              // const SizedBox(height: 24.0),
 
               // Section 4: Statistics
               _buildStatisticsSection(),

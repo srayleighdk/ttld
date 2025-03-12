@@ -7,7 +7,7 @@ class ThoiGianHoatDongApiService {
   ThoiGianHoatDongApiService(this._dio);
 
   Future<List<ThoiGianHoatDong>> getThoiGianHoatDongList() async {
-    const String apiUrl = '/api/common/tg-hd';
+    const String apiUrl = '/common/tg-hd';
     final response = await _dio.get(apiUrl);
 
     if (response.statusCode == 200) {

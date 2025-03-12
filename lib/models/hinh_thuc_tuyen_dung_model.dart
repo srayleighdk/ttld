@@ -1,20 +1,23 @@
 import 'package:ttld/widgets/reuseable_widgets/generic_picker.dart';
 
-class TrinhDoNgoaiNgu extends GenericPickerItem{
+class HinhThucTuyenDung extends GenericPickerItem {
+  final String idhinhthuclamviec;
   final int displayOrder;
   final bool status;
 
-  TrinhDoNgoaiNgu({
+  HinhThucTuyenDung({
     required super.id,
-    required String name,
+    required String ten,
+    required this.idhinhthuclamviec,
     required this.displayOrder,
     required this.status,
-  }): super(displayName: name);
+  }) : super(displayName: ten);
 
-  factory TrinhDoNgoaiNgu.fromJson(Map<String, dynamic> json) {
-    return TrinhDoNgoaiNgu(
+  factory HinhThucTuyenDung.fromJson(Map<String, dynamic> json) {
+    return HinhThucTuyenDung(
       id: json['id'],
-      name: json['name'],
+      ten: json['ten'],
+      idhinhthuclamviec: json['idhinhthuclamviec'],
       displayOrder: json['displayOrder'],
       status: json['status'],
     );
@@ -24,6 +27,7 @@ class TrinhDoNgoaiNgu extends GenericPickerItem{
     return {
       'id': id,
       'name': displayName,
+      'idhinhthuclamviec': idhinhthuclamviec,
       'displayOrder': displayOrder,
       'status': status,
     };

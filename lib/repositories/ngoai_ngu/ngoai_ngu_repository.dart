@@ -4,7 +4,7 @@ import 'package:ttld/core/api_client.dart';
 import 'package:ttld/models/ngoai_ngu_model.dart';
 
 abstract class NgoaiNguRepository {
-  Future<List<NgoaiNgu>> getNgoaiNgu();
+  Future<List<NgoaiNgu>> getNgoaiNgus();
 }
 
 @Injectable(as: NgoaiNguRepository)
@@ -14,10 +14,10 @@ class NgoaiNguRepositoryImpl implements NgoaiNguRepository {
   NgoaiNguRepositoryImpl(this._client);
 
   @override
-  Future<List<NgoaiNgu>> getNgoaiNgu() async {
+  Future<List<NgoaiNgu>> getNgoaiNgus() async {
     try {
       final response = await _client.get(
-        '/api/common/td-nn',
+        '/common/td-nn',
         queryParameters: {'pageSize': 1000},
       );
       return (response.data['result'] as List)

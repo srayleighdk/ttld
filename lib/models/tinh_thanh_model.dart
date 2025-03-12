@@ -1,17 +1,17 @@
-class TinhThanhModel {
-  int? tpId;
-  String? tpTen;
+import 'package:ttld/widgets/reuseable_widgets/generic_picker.dart';
+
+class TinhThanhModel  extends GenericPickerItem{
   int? displayOrder;
   bool? status;
   String? matinh;
 
   TinhThanhModel({
-    this.tpId,
-    this.tpTen,
+    required int tpId,
+    required String tpTen,
     this.displayOrder,
     this.status,
     this.matinh,
-  });
+  }) : super(id: tpId, displayName: tpTen);
 
   factory TinhThanhModel.fromJson(Map<String, dynamic> json) {
     return TinhThanhModel(
@@ -25,8 +25,8 @@ class TinhThanhModel {
 
   Map<String, dynamic> toJson() {
     return {
-      'tpId': tpId,
-      'tpTen': tpTen,
+      'tpId': id,
+      'tpTen': displayName,
       'displayOrder': displayOrder,
       'status': status,
       'matinh': matinh,

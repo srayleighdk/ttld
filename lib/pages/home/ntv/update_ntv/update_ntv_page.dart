@@ -533,7 +533,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
         });
         if (_idThanhPho != null) {
           TinhThanhModel? _tinhThanh =
-              _tinhThanhs.firstWhere((element) => element.tpId == _idThanhPho);
+              _tinhThanhs.firstWhere((element) => element.id == _idThanhPho);
           if (_tinhThanh != null) {
             setState(() {
               tinhThanh = _tinhThanh;
@@ -542,7 +542,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
         }
         if (_uvnvNoilamviecController.text.isNotEmpty) {
           TinhThanhModel? _tinhThanh = _tinhThanhs.firstWhere((element) =>
-              element.tpId == int.parse(_uvnvNoilamviecController.text));
+              element.id == int.parse(_uvnvNoilamviecController.text));
           if (_tinhThanh != null) {
             setState(() {
               tinhThanhmm = _tinhThanh;
@@ -1107,7 +1107,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                 _uvDoiTuongChingSachId = value?.id;
               });
             },
-            displayItemBuilder: (DoiTuong? item) => item?.name ?? '',
+            displayItemBuilder: (DoiTuong? item) => item?.displayName ?? '',
           ),
           const SizedBox(height: 12.0),
           CustomTextField(
@@ -1156,10 +1156,10 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
               selectedItem: tinhThanh,
               onChanged: (TinhThanhModel? value) {
                 setState(() {
-                  _idThanhPho = value?.tpId;
+                  _idThanhPho = value?.id;
                 });
               },
-              displayItemBuilder: (TinhThanhModel? item) => item?.tpTen ?? ''),
+              displayItemBuilder: (TinhThanhModel? item) => item?.displayName ?? ''),
           const SizedBox(height: 12.0),
           Text("Trình độ chuyên môn:"),
           const SizedBox(height: 12.0),
@@ -1184,7 +1184,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                 _uvnvNganhngheId = value?.id;
               });
             },
-            displayItemBuilder: (NganhNgheTD? item) => item?.name ?? '',
+            displayItemBuilder: (NganhNgheTD? item) => item?.displayName ?? '',
           ),
           const SizedBox(height: 12.0),
           CustomPicker(
@@ -1216,7 +1216,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                     value?.id.toString() ?? '';
               });
             },
-            displayItemBuilder: (TrinhDoNgoaiNgu? item) => item?.name ?? '',
+            displayItemBuilder: (TrinhDoNgoaiNgu? item) => item?.displayName ?? '',
           ),
           const SizedBox(height: 12.0),
           CustomPicker(
@@ -1228,7 +1228,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                 _uvcmTrinhdotinhocController.text = value?.id.toString() ?? '';
               });
             },
-            displayItemBuilder: (TrinhDoTinHoc? item) => item?.name ?? '',
+            displayItemBuilder: (TrinhDoTinHoc? item) => item?.displayName ?? '',
           ),
           const SizedBox(height: 12.0),
           CustomTextField(
@@ -1361,7 +1361,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                 _uvnvVitrimongmuonId = value?.id;
               });
             },
-            displayItemBuilder: (ChucDanhModel? item) => item?.name ?? '',
+            displayItemBuilder: (ChucDanhModel? item) => item?.displayName ?? '',
           ),
           const SizedBox(height: 12.0),
           CustomPicker(
@@ -1416,11 +1416,11 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
             selectedItem: tinhThanhmm,
             onChanged: (TinhThanhModel? value) {
               setState(() {
-                _uvnvNoilamviecController.text = value?.tpId.toString() ?? '';
+                _uvnvNoilamviecController.text = value?.id.toString() ?? '';
                 tinhThanhmm = value;
               });
             },
-            displayItemBuilder: (TinhThanhModel? item) => item?.tpTen ?? '',
+            displayItemBuilder: (TinhThanhModel? item) => item?.displayName ?? '',
           ),
           const SizedBox(height: 12.0),
           CustomTextField.textArea(
