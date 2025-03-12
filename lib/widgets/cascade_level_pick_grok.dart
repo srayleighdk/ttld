@@ -45,7 +45,7 @@ class _NganhNgheCapDoPickerState extends State<NganhNgheCapDoPicker> {
   NganhNgheCapDo? selectedNganhNgheCapDoLevel3;
 
   @override
-  void initState() async {
+  void initState() {
     super.initState();
     if (widget.initialNganhNgheCapDo1 != null ||
         widget.initialNganhNgheCapDo2 != null ||
