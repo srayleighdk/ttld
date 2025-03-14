@@ -94,49 +94,52 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
       appBar: AppBar(
         title: const Text('Thêm tuyển dụng mới'),
       ),
-      body: Theme(
-        data: Theme.of(context).copyWith(
-          colorScheme: const ColorScheme.light(primary: Colors.blue),
-        ),
-        child: Form(
-          key: _formKey,
-          child: Stepper(
-            currentStep: _currentStep,
-            controlsBuilder: (context, details) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: Row(
-                  children: [
-                    if (_currentStep != 0)
-                      TextButton(
-                        onPressed: details.onStepCancel,
-                        child: const Text('QUAY LẠI'),
-                      ),
-                    const SizedBox(width: 16),
-                    ElevatedButton(
-                      onPressed: details.onStepContinue,
-                      child:
-                          Text(_currentStep == 2 ? 'HOÀN THÀNH' : 'TIẾP TỤC'),
+      body: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            Expanded(
+              child: PageView(
+                physics: const NeverScrollableScrollPhysics(),
+                controller: PageController(),
+                onPageChanged: (index) => setState(() => _currentStep = index),
+                children: [
+                  _buildStep1(),
+                  _buildStep2(),
+                  _buildStep3(),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  if (_currentStep != 0)
+                    TextButton(
+                      onPressed: _cancel,
+                      child: const Text('QUAY LẠI'),
                     ),
-                  ],
-                ),
-              );
-            },
-            steps: [
-              _buildStep1(),
-              _buildStep2(),
-              _buildStep3(),
-            ],
-          ),
+                  const Spacer(),
+                  ElevatedButton(
+                    onPressed: _continue,
+                    child: Text(_currentStep == 2 ? 'HOÀN THÀNH' : 'TIẾP TỤC'),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Step _buildStep1() {
-    return Step(
-      title: const Text('Thông tin tuyển dụng'),
-      content: Column(
+  Widget _buildStep1() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _buildTextField(
             label: 'Tiêu đề tuyển dụng *',
@@ -180,10 +183,12 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
     );
   }
 
-  Step _buildStep2() {
-    return Step(
-      title: const Text('Yêu cầu tuyển dụng'),
-      content: Column(
+  Widget _buildStep2() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _buildNumberField(
             label: 'Yêu cầu chiều cao (cm)',
@@ -214,10 +219,12 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
     );
   }
 
-  Step _buildStep3() {
-    return Step(
-      title: const Text('Thông tin hồ sơ'),
-      content: Column(
+  Widget _buildStep3() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _buildTextField(
             label: 'Mã hồ sơ *',
