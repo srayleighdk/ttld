@@ -114,8 +114,8 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
                 ],
               ),
             ),
-            const SizedBox(height: 16),
-            _buildStepIndicator(),
+            // const SizedBox(height: 16),
+            // _buildStepIndicator(),
             const SizedBox(height: 16),
             Padding(
               padding: const EdgeInsets.all(16.0),
@@ -159,14 +159,17 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
     );
   }
 
-  Widget _buildStepCircle(int stepNumber, String label, {bool isActive = false}) {
+  Widget _buildStepCircle(int stepNumber, String label,
+      {bool isActive = false}) {
     return Column(
       children: [
         Container(
           width: 32,
           height: 32,
           decoration: BoxDecoration(
-            color: isActive ? Theme.of(context).colorScheme.primary : Colors.grey.shade300,
+            color: isActive
+                ? Theme.of(context).colorScheme.primary
+                : Colors.grey.shade300,
             shape: BoxShape.circle,
           ),
           child: Center(
@@ -183,7 +186,9 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
         Text(
           label,
           style: TextStyle(
-            color: isActive ? Theme.of(context).colorScheme.primary : Colors.grey.shade600,
+            color: isActive
+                ? Theme.of(context).colorScheme.primary
+                : Colors.grey.shade600,
             fontSize: 12,
           ),
         ),
@@ -197,7 +202,9 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
       height: 2,
       margin: const EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
-        color: isActive ? Theme.of(context).colorScheme.primary : Colors.grey.shade300,
+        color: isActive
+            ? Theme.of(context).colorScheme.primary
+            : Colors.grey.shade300,
         borderRadius: BorderRadius.circular(2),
       ),
     );
