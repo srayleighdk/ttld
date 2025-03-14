@@ -14,7 +14,8 @@ class CreateTuyenDungPage extends StatefulWidget {
 class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
   final _formKey = GlobalKey<FormState>();
   int _currentStep = 0;
-  final NTDTuyenDung _tuyenDungData = NTDTuyenDung(
+  late NTDTuyenDung _tuyenDungData = NTDTuyenDung(
+    idTuyenDung: '',
     tdTieude: '',
     tdChucDanh: 0,
     tdSoluong: 0,
@@ -114,7 +115,8 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
                     const SizedBox(width: 16),
                     ElevatedButton(
                       onPressed: details.onStepContinue,
-                      child: Text(_currentStep == 2 ? 'HOÀN THÀNH' : 'TIẾP TỤC'),
+                      child:
+                          Text(_currentStep == 2 ? 'HOÀN THÀNH' : 'TIẾP TỤC'),
                     ),
                   ],
                 ),
@@ -138,28 +140,39 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
         children: [
           _buildTextField(
             label: 'Tiêu đề tuyển dụng *',
-            onSaved: (value) => _tuyenDungData.tdTieude = value!,
-            validator: (value) => value!.isEmpty ? 'Vui lòng nhập tiêu đề' : null,
+            onSaved: (value) => _tuyenDungData = _tuyenDungData.copyWith(
+              tdTieude: value!,
+            ),
+            validator: (value) =>
+                value!.isEmpty ? 'Vui lòng nhập tiêu đề' : null,
           ),
           _buildNumberField(
             label: 'Số lượng cần tuyển *',
-            onSaved: (value) => _tuyenDungData.tdSoluong = int.parse(value!),
+            onSaved: (value) => _tuyenDungData = _tuyenDungData.copyWith(
+              tdSoluong: int.parse(value!),
+            ),
           ),
           _buildDatePicker(
             context,
             label: 'Ngày nhận hồ sơ',
             initialDate: _tuyenDungData.ngayNhanHoSo,
-            onDateChanged: (date) => _tuyenDungData.ngayNhanHoSo = date,
+            onDateChanged: (date) => _tuyenDungData = _tuyenDungData.copyWith(
+              ngayNhanHoSo: date,
+            ),
           ),
           _buildDatePicker(
             context,
             label: 'Ngày hết hạn',
             initialDate: _tuyenDungData.ngayHetNhanHoSo,
-            onDateChanged: (date) => _tuyenDungData.ngayHetNhanHoSo = date,
+            onDateChanged: (date) => _tuyenDungData = _tuyenDungData.copyWith(
+              ngayHetNhanHoSo: date,
+            ),
           ),
           _buildTextField(
             label: 'Ghi chú',
-            onSaved: (value) => _tuyenDungData.tdGhichu = value,
+            onSaved: (value) => _tuyenDungData = _tuyenDungData.copyWith(
+              tdGhichu: value,
+            ),
             maxLines: 3,
           ),
         ],
@@ -174,19 +187,27 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
         children: [
           _buildNumberField(
             label: 'Yêu cầu chiều cao (cm)',
-            onSaved: (value) => _tuyenDungData.tdYeuCauChieuCao = int.tryParse(value ?? '0') ?? 0,
+            onSaved: (value) => _tuyenDungData = _tuyenDungData.copyWith(
+              tdYeuCauChieuCao: int.tryParse(value ?? '0') ?? 0,
+            ),
           ),
           _buildNumberField(
             label: 'Kinh nghiệm (năm)',
-            onSaved: (value) => _tuyenDungData.tdYeucauKinhnghiem = int.tryParse(value ?? '0') ?? 0,
+            onSaved: (value) => _tuyenDungData = _tuyenDungData.copyWith(
+              tdYeucauKinhnghiem: int.tryParse(value ?? '0') ?? 0,
+            ),
           ),
           _buildNumberField(
             label: 'Tuổi tối thiểu',
-            onSaved: (value) => _tuyenDungData.tdYeucauTuoiMin = int.tryParse(value ?? '0') ?? 0,
+            onSaved: (value) => _tuyenDungData = _tuyenDungData.copyWith(
+              tdYeucauTuoiMin: int.tryParse(value ?? '0') ?? 0,
+            ),
           ),
           _buildNumberField(
             label: 'Tuổi tối đa',
-            onSaved: (value) => _tuyenDungData.tdYeucauTuoiMax = int.tryParse(value ?? '0') ?? 0,
+            onSaved: (value) => _tuyenDungData = _tuyenDungData.copyWith(
+              tdYeucauTuoiMax: int.tryParse(value ?? '0') ?? 0,
+            ),
           ),
         ],
       ),
@@ -200,21 +221,27 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
         children: [
           _buildTextField(
             label: 'Mã hồ sơ *',
-            onSaved: (value) => _tuyenDungData.maHoso = value!,
-            validator: (value) => value!.isEmpty ? 'Vui lòng nhập mã hồ sơ' : null,
+            onSaved: (value) => _tuyenDungData = _tuyenDungData.copyWith(
+              maHoso: value!,
+            ),
           ),
           _buildTextField(
             label: 'Loại hình làm việc',
-            onSaved: (value) => _tuyenDungData.idHinhthucLv = value ?? '',
+            onSaved: (value) => _tuyenDungData = _tuyenDungData.copyWith(
+              idHinhthucLv: value ?? '',
+            ),
           ),
           _buildTextField(
             label: 'Yêu cầu học vấn',
-            onSaved: (value) => _tuyenDungData.tdYeuCauHocVan = int.tryParse(value ?? '0') ?? 0,
+            onSaved: (value) => _tuyenDungData = _tuyenDungData.copyWith(
+              tdYeuCauHocVan: int.tryParse(value ?? '0') ?? 0,
+            ),
           ),
           _buildTextField(
             label: 'Mức lương *',
-            onSaved: (value) => _tuyenDungData.mucLuong = value!,
-            validator: (value) => value!.isEmpty ? 'Vui lòng nhập mức lương' : null,
+            onSaved: (value) => _tuyenDungData = _tuyenDungData.copyWith(
+              mucLuong: value!,
+            ),
           ),
         ],
       ),
