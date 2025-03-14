@@ -98,6 +98,10 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
         key: _formKey,
         child: Column(
           children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: _buildStepIndicator(),
+            ),
             Expanded(
               child: PageView(
                 physics: const NeverScrollableScrollPhysics(),
@@ -130,6 +134,68 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildStepIndicator() {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final double lineWidth = (constraints.maxWidth - 48) / 3;
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _buildStepCircle(0, "Thông tin", isActive: _currentStep >= 0),
+            _buildStepLine(lineWidth, isActive: _currentStep >= 1),
+            _buildStepCircle(1, "Yêu cầu", isActive: _currentStep >= 1),
+            _buildStepLine(lineWidth, isActive: _currentStep >= 2),
+            _buildStepCircle(2, "Hồ sơ", isActive: _currentStep >= 2),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildStepCircle(int stepNumber, String label, {bool isActive = false}) {
+    return Column(
+      children: [
+        Container(
+          width: 32,
+          height: 32,
+          decoration: BoxDecoration(
+            color: isActive ? Theme.of(context).colorScheme.primary : Colors.grey.shade300,
+            shape: BoxShape.circle,
+          ),
+          child: Center(
+            child: Text(
+              '${stepNumber + 1}',
+              style: TextStyle(
+                color: isActive ? Colors.white : Colors.grey.shade600,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: TextStyle(
+            color: isActive ? Theme.of(context).colorScheme.primary : Colors.grey.shade600,
+            fontSize: 12,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStepLine(double width, {bool isActive = false}) {
+    return Container(
+      width: width,
+      height: 2,
+      margin: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: BoxDecoration(
+        color: isActive ? Theme.of(context).colorScheme.primary : Colors.grey.shade300,
+        borderRadius: BorderRadius.circular(2),
       ),
     );
   }
