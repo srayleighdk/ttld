@@ -114,6 +114,9 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
                 ],
               ),
             ),
+            const SizedBox(height: 16),
+            _buildStepIndicator(),
+            const SizedBox(height: 16),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Row(
