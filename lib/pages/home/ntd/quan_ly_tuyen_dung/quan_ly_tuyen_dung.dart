@@ -75,9 +75,9 @@ class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
       ],
       rows: tuyenDungList
           .map((tuyenDung) => DataRow(cells: [
-                DataCell(Text(tuyenDung.ngayNhanHoSo)),
-                DataCell(Text(tuyenDung.tdTieude)),
-                DataCell(Text(tuyenDung.tenNganhnghe)),
+                DataCell(Text(tuyenDung.ngayNhanHoSo!)),
+                DataCell(Text(tuyenDung.tdTieude!)),
+                DataCell(Text(tuyenDung.tenNganhnghe!)),
                 DataCell(Checkbox(
                   value: tuyenDung.tdDuyet ?? false,
                   onChanged: null, // Disabled click as this is just for display

@@ -3,14 +3,14 @@ import 'package:ttld/models/ntd_tuyendung/ntd_tuyendung_model.dart';
 import 'package:ttld/services/tuyendung_service.dart';
 
 class TuyenDungRepository {
-  final TuyenDungService _tuyenDungService;
+  final TuyenDungApiService _tuyenDungService;
 
   TuyenDungRepository(this._tuyenDungService);
 
   Future<List<NTDTuyenDung>> getTuyenDungList() async {
     try {
       final response = await _tuyenDungService.getTuyenDungList();
-      return (response.data as List)
+      return (response.data['data'] as List)
           .map((json) => NTDTuyenDung.fromJson(json))
           .toList();
     } on DioException catch (e) {

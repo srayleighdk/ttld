@@ -1,9 +1,11 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ttld/models/ntd_tuyendung/ntd_tuyendung_model.dart';
 import 'package:ttld/repositories/tuyendung_repository.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'tuyendung_event.dart';
 part 'tuyendung_state.dart';
+part 'tuyendung_bloc.freezed.dart';
 
 class TuyenDungBloc extends Bloc<TuyenDungEvent, TuyenDungState> {
   final TuyenDungRepository _repository;
@@ -48,11 +50,14 @@ class TuyenDungBloc extends Bloc<TuyenDungEvent, TuyenDungState> {
   ) async {
     emit(TuyenDungLoading());
     try {
-      final updatedTuyenDung = await _repository.updateTuyenDung(event.tuyenDung);
+      final updatedTuyenDung =
+          await _repository.updateTuyenDung(event.tuyenDung);
       final currentState = state as TuyenDungLoaded;
-      final newList = currentState.tuyenDungList.map((td) =>
-          td.idTuyenDung == updatedTuyenDung.idTuyenDung ? updatedTuyenDung : td
-      ).toList();
+      final newList = currentState.tuyenDungList
+          .map((td) => td.idTuyenDung == updatedTuyenDung.idTuyenDung
+              ? updatedTuyenDung
+              : td)
+          .toList();
       emit(TuyenDungLoaded(newList));
     } catch (e) {
       emit(TuyenDungError(e.toString()));
