@@ -29,14 +29,22 @@ class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Quản lý tuyển dụng'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => _showCreateDialog(context),
-          ),
-        ],
       ),
       body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: ElevatedButton.icon(
+                icon: const Icon(Icons.add),
+                label: const Text('Thêm tuyển dụng mới'),
+                onPressed: () => Navigator.pushNamed(
+                    context, CreateTuyenDungPage.routePath),
+              ),
+            ),
+            Expanded(
+              child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: BlocBuilder<TuyenDungBloc, TuyenDungState>(
           bloc: _tuyenDungBloc,
