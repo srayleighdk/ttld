@@ -110,7 +110,7 @@ class _StepperPageState extends State<StepperPage> {
               foregroundColor: Colors.white,
             ),
             child: Text(
-              _currentStep < widget.steps.length - 1 ? 'Next' : 'Finish',
+              _currentStep < widget.steps.length - 1 ? 'Next' : widget.submitButtonText ?? 'Finish',
             ),
           ),
         ],
