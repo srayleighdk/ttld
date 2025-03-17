@@ -39,6 +39,21 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
   final TextEditingController _quyenLoiController = TextEditingController();
   final TextEditingController _moTaCongViecController =
       TextEditingController(text: 'Làm việc đúng chuyên môn kỹ thuật');
+
+  @override
+  void initState() {
+    super.initState();
+    _nganhKhacController.text = _tuyenDungData.tdNganhkhac ?? '';
+    _luongKhoiDiemController.text = _tuyenDungData.tdLuongkhoidiem?.toString() ?? '';
+    _soLuongTuyenController.text = _tuyenDungData.tdSoluong?.toString() ?? '';
+    _quyenLoiController.text = _tuyenDungData.tdQuyenloi ?? '';
+    _moTaCongViecController.text = _tuyenDungData.tdMotacongviec ?? '';
+    _tdYeuCauChieuCaoController.text = _tuyenDungData.tdYeuCauChieuCao?.toString() ?? '';
+    _tdMotayeucauController.text = _tuyenDungData.tdMotayeucau ?? '';
+    _tdNoiNopHoSoController.text = _tuyenDungData.tdNoinophoso ?? '';
+    _tdHoSoBaoGomController.text = _tuyenDungData.tdHosobaogom ?? '';
+    _tdGhiChuController.text = _tuyenDungData.tdGhichu ?? '';
+  }
   final TextEditingController _tdYeuCauChieuCaoController =
       TextEditingController();
   final TextEditingController _tdMotayeucauController = TextEditingController();
