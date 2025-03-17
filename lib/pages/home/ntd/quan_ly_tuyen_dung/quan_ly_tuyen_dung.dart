@@ -61,6 +61,13 @@ class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
   }
 
   Widget _buildDataTable(List<NTDTuyenDung> tuyenDungList) {
+    if (tuyenDungList.isEmpty) {
+      return const Center(
+        child: Text('Không có dữ liệu',
+            style: TextStyle(fontSize: 16, color: Colors.grey)),
+      );
+    }
+    
     return DataTable2(
       columnSpacing: 12,
       horizontalMargin: 12,
@@ -79,7 +86,7 @@ class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
                 DataCell(Text(tuyenDung.tenNganhnghe!)),
                 DataCell(Checkbox(
                   value: tuyenDung.tdDuyet ?? false,
-                  onChanged: null, // Disabled click as this is just for display
+                  onChanged: null,
                 )),
                 DataCell(Row(
                   children: [
