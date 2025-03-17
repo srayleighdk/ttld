@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
+import 'package:ttld/core/di/injection.dart';
+import 'package:ttld/models/ntd_tuyendung/ntd_tuyendung_model.dart';
 import 'package:ttld/models/tblNhaTuyenDung/tblNhaTuyenDung_model.dart';
 import 'package:ttld/bloc/tuyendung/tuyendung_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ttld/repositories/tuyendung_repository.dart';
 
 class QuanLyTuyenDungPage extends StatefulWidget {
   final Ntd? ntd;
@@ -14,12 +17,16 @@ class QuanLyTuyenDungPage extends StatefulWidget {
 
 class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
   late final TuyenDungBloc _tuyenDungBloc;
+  late final TuyenDungRepository tuyenDungRepository;
+  late List<NTDTuyenDung> tuyenDungList = [];
 
   @override
   void initState() {
     super.initState();
-    _tuyenDungBloc = context.read<TuyenDungBloc>();
-    _tuyenDungBloc.add(const TuyenDungEvent.fetchList());
+    tuyenDungRepository = locator<TuyenDungRepository>();
+    setState(() {
+      tuyenDungList = tuyenDungRepository.getTuyenDungList();
+    });
   }
 
   @override
@@ -42,7 +49,7 @@ class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
             if (state is TuyenDungLoading) {
               return const Center(child: CircularProgressIndicator());
             }
-            
+
             if (state is TuyenDungError) {
               return Center(child: Text(state.message));
             }
@@ -71,35 +78,36 @@ class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
         DataColumn2(label: Text('Trạng thái'), size: ColumnSize.S),
         DataColumn2(label: Text(''), size: ColumnSize.S),
       ],
-      rows: tuyenDungList.map((tuyenDung) => DataRow(
-        cells: [
-          DataCell(Text(tuyenDung.title ?? '')),
-          DataCell(Text(tuyenDung.quantity?.toString() ?? '0')),
-          DataCell(Text('${tuyenDung.salary ?? 0} VND')),
-          DataCell(Text(tuyenDung.location ?? '')),
-          DataCell(_buildStatusChip(tuyenDung.status)),
-          DataCell(Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.edit, size: 20),
-                onPressed: () => _showEditDialog(context, tuyenDung),
-              ),
-              IconButton(
-                icon: const Icon(Icons.delete, size: 20, color: Colors.red),
-                onPressed: () => _deleteTuyenDung(tuyenDung.idTuyenDung!),
-              ),
-            ],
-          )),
-        ]
-      )).toList(),
+      rows: tuyenDungList
+          .map((tuyenDung) => DataRow(cells: [
+                DataCell(Text(tuyenDung.title ?? '')),
+                DataCell(Text(tuyenDung.quantity?.toString() ?? '0')),
+                DataCell(Text('${tuyenDung.salary ?? 0} VND')),
+                DataCell(Text(tuyenDung.location ?? '')),
+                DataCell(_buildStatusChip(tuyenDung.status)),
+                DataCell(Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.edit, size: 20),
+                      onPressed: () => _showEditDialog(context, tuyenDung),
+                    ),
+                    IconButton(
+                      icon:
+                          const Icon(Icons.delete, size: 20, color: Colors.red),
+                      onPressed: () => _deleteTuyenDung(tuyenDung.idTuyenDung!),
+                    ),
+                  ],
+                )),
+              ]))
+          .toList(),
     );
   }
 
   Widget _buildStatusChip(String? status) {
     final color = status == 'active' ? Colors.green : Colors.red;
     return Chip(
-      label: Text(status ?? 'inactive', 
-        style: const TextStyle(color: Colors.white)),
+      label: Text(status ?? 'inactive',
+          style: const TextStyle(color: Colors.white)),
       backgroundColor: color,
       visualDensity: VisualDensity.compact,
     );
