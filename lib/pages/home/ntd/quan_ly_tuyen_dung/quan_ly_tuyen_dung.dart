@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/models/ntd_tuyendung/ntd_tuyendung_model.dart';
-import 'package:ttld/models/tblNhaTuyenDung/tblNhaTuyenDung_model.dart';
 import 'package:ttld/bloc/tuyendung/tuyendung_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class QuanLyTuyenDungPage extends StatefulWidget {
-  final Ntd? ntd;
-  QuanLyTuyenDungPage({super.key, this.ntd});
+  final String? userId;
+  QuanLyTuyenDungPage({super.key, this.userId});
 
   @override
   State<QuanLyTuyenDungPage> createState() => _QuanLyTuyenDungPageState();
@@ -22,7 +21,7 @@ class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
   void initState() {
     super.initState();
     _tuyenDungBloc = locator<TuyenDungBloc>();
-    _tuyenDungBloc.add(TuyenDungEvent.fetchList(widget.ntd?.ntdMadn));
+    _tuyenDungBloc.add(TuyenDungEvent.fetchList(widget.userId));
   }
 
   @override
@@ -70,7 +69,7 @@ class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
         DataColumn2(label: Text('Ngày đăng hồ sơ'), size: ColumnSize.L),
         DataColumn2(label: Text('Tiêu đề hồ sơ'), size: ColumnSize.S),
         DataColumn2(label: Text('Ngành nghề tuyển dụng'), size: ColumnSize.M),
-        DataColumn2(label: Text('Duyệt'), size: ColumnSize.L),
+        DataColumn2(label: Text('Duyệt'), size: ColumnSize.S),
         DataColumn2(label: Text('Hành động'), size: ColumnSize.S)
       ],
       rows: tuyenDungList
