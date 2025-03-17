@@ -65,14 +65,14 @@ class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
           },
         ),
       ),
-    );
-  }
+    ),
 
   Widget _buildDataTable(List<NTDTuyenDung> tuyenDungList) {
     if (tuyenDungList.isEmpty) {
       return const Center(
         child: Text('Không có dữ liệu',
-            style: TextStyle(fontSize: 16, color: Colors.grey)),
+            style: TextStyle(fontSize: 16, color: Colors.grey),
+          ),
       );
     }
 
