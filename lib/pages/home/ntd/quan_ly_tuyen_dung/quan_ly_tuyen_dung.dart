@@ -67,7 +67,7 @@ class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
             style: TextStyle(fontSize: 16, color: Colors.grey)),
       );
     }
-    
+
     return DataTable2(
       columnSpacing: 12,
       horizontalMargin: 12,
