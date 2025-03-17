@@ -23,10 +23,9 @@ class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
   @override
   void initState() {
     super.initState();
+    _tuyenDungBloc = locator<TuyenDungBloc>();
     tuyenDungRepository = locator<TuyenDungRepository>();
-    setState(() {
-      tuyenDungList = tuyenDungRepository.getTuyenDungList();
-    });
+    _tuyenDungBloc.add(const TuyenDungEvent.fetchList());
   }
 
   @override
