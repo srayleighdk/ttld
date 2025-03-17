@@ -128,16 +128,22 @@ class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
               children: [
                 TextFormField(
                   decoration: const InputDecoration(labelText: 'Tiêu đề'),
-                  onSaved: (value) => newTuyenDung = newTuyenDung.copyWith(tdTieude: value),
-                  validator: (value) => value?.isEmpty ?? true ? 'Vui lòng nhập tiêu đề' : null,
+                  onSaved: (value) =>
+                      newTuyenDung = newTuyenDung.copyWith(tdTieude: value),
+                  validator: (value) =>
+                      value?.isEmpty ?? true ? 'Vui lòng nhập tiêu đề' : null,
                 ),
                 TextFormField(
                   decoration: const InputDecoration(labelText: 'Ngành nghề'),
-                  onSaved: (value) => newTuyenDung = newTuyenDung.copyWith(tenNganhnghe: value),
-                  validator: (value) => value?.isEmpty ?? true ? 'Vui lòng nhập ngành nghề' : null,
+                  onSaved: (value) =>
+                      newTuyenDung = newTuyenDung.copyWith(tenNganhnghe: value),
+                  validator: (value) => value?.isEmpty ?? true
+                      ? 'Vui lòng nhập ngành nghề'
+                      : null,
                 ),
                 TextFormField(
-                  decoration: const InputDecoration(labelText: 'Ngày nhận hồ sơ'),
+                  decoration:
+                      const InputDecoration(labelText: 'Ngày nhận hồ sơ'),
                   readOnly: true,
                   onTap: () async {
                     final date = await showDatePicker(
@@ -152,13 +158,16 @@ class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
                       );
                     }
                   },
-                  controller: TextEditingController(text: newTuyenDung.ngayNhanHoSo),
-                  validator: (value) => value?.isEmpty ?? true ? 'Vui lòng chọn ngày' : null,
+                  controller:
+                      TextEditingController(text: newTuyenDung.ngayNhanHoSo),
+                  validator: (value) =>
+                      value?.isEmpty ?? true ? 'Vui lòng chọn ngày' : null,
                 ),
                 SwitchListTile(
                   title: const Text('Đã duyệt'),
                   value: newTuyenDung.tdDuyet ?? false,
-                  onChanged: (value) => newTuyenDung = newTuyenDung.copyWith(tdDuyet: value),
+                  onChanged: (value) =>
+                      newTuyenDung = newTuyenDung.copyWith(tdDuyet: value),
                 ),
               ],
             ),
