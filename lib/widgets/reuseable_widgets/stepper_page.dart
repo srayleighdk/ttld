@@ -6,7 +6,8 @@ class StepperPage extends StatefulWidget {
   final Color? backgroundColor;
   final EdgeInsetsGeometry contentPadding;
   final EdgeInsetsGeometry stepperPadding;
-  final VoidCallback? onComplete; // Callback when all steps are completed
+  final VoidCallback? onSubmit;
+  final String? submitButtonText;
 
   const StepperPage({
     super.key,
@@ -15,7 +16,8 @@ class StepperPage extends StatefulWidget {
     this.backgroundColor,
     this.contentPadding = const EdgeInsets.all(16),
     this.stepperPadding = const EdgeInsets.symmetric(vertical: 16),
-    this.onComplete,
+    this.onSubmit,
+    this.submitButtonText,
   }) : assert(steps.length == stepContents.length,
             'Steps and stepContents must have the same length');
 
@@ -99,7 +101,7 @@ class _StepperPageState extends State<StepperPage> {
                 if (_currentStep < widget.steps.length - 1) {
                   setState(() => _currentStep++);
                 } else {
-                  widget.onComplete?.call();
+                  widget.onSubmit?.call();
                 }
               }
             },
