@@ -47,36 +47,37 @@ class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
               child: Padding(
                 padding: EdgeInsets.zero,
                 child: BlocBuilder<TuyenDungBloc, TuyenDungState>(
-          bloc: _tuyenDungBloc,
-          builder: (context, state) {
-            if (state is TuyenDungLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
+                  bloc: _tuyenDungBloc,
+                  builder: (context, state) {
+                    if (state is TuyenDungLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
 
-            if (state is TuyenDungError) {
-              return Center(child: Text(state.message));
-            }
+                    if (state is TuyenDungError) {
+                      return Center(child: Text(state.message));
+                    }
 
-            if (state is TuyenDungLoaded) {
-              return _buildDataTable(state.tuyenDungList);
-            }
+                    if (state is TuyenDungLoaded) {
+                      return _buildDataTable(state.tuyenDungList);
+                    }
 
-            return const Center(child: Text('Không có dữ liệu'));
-          },
-        ),
-      ),
-    ),
+                    return const Center(child: Text('Không có dữ liệu'));
+                  },
+                ),
+              ),
+            ),
 
   Widget _buildDataTable(List<NTDTuyenDung> tuyenDungList) {
     if (tuyenDungList.isEmpty) {
       return const Center(
-        child: Text('Không có dữ liệu',
-            style: TextStyle(fontSize: 16, color: Colors.grey),
-          ),
+        child: Text(
+          'Không có dữ liệu',
+          style: TextStyle(fontSize: 16, color: Colors.grey),
+        ),
       );
     }
 
-    return DataTable2(
+    return DataTable2(  
       columnSpacing: 12,
       horizontalMargin: 12,
       minWidth: 600,
