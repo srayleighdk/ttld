@@ -7,9 +7,9 @@ class TuyenDungRepository {
 
   TuyenDungRepository(this._tuyenDungService);
 
-  Future<List<NTDTuyenDung>> getTuyenDungList() async {
+  Future<List<NTDTuyenDung>> getTuyenDungList(String? ntdId) async {
     try {
-      final response = await _tuyenDungService.getTuyenDungList();
+      final response = await _tuyenDungService.getTuyenDungList(ntdId);
       return (response.data['data'] as List)
           .map((json) => NTDTuyenDung.fromJson(json))
           .toList();

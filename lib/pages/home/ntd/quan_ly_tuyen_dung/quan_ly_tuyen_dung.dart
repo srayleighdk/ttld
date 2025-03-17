@@ -22,7 +22,7 @@ class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
   void initState() {
     super.initState();
     _tuyenDungBloc = locator<TuyenDungBloc>();
-    _tuyenDungBloc.add(const TuyenDungEvent.fetchList());
+    _tuyenDungBloc.add(TuyenDungEvent.fetchList(widget.ntd?.ntdMadn));
   }
 
   @override
