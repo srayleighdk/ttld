@@ -1,4 +1,6 @@
-part of 'tuyendung_bloc.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'tuyendung_event.freezed.dart';
 
 @freezed
 class TuyenDungEvent with _$TuyenDungEvent {
