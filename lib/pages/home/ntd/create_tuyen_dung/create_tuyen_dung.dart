@@ -1,7 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:ttld/core/di/injection.dart';
+import 'package:ttld/helppers/map_help.dart';
+import 'package:ttld/models/do_tuoi_model.dart';
+import 'package:ttld/models/doituong_chinhsach/doituong.dart';
+import 'package:ttld/models/kinh_nghiem_lam_viec.dart';
+import 'package:ttld/models/muc_luong_mm.dart';
+import 'package:ttld/models/nganh_nghe_bachoc.dart';
+import 'package:ttld/models/nganh_nghe_td_model.dart';
 import 'package:ttld/models/ntd_tuyendung/ntd_tuyendung_model.dart';
 import 'package:ttld/models/tblNhaTuyenDung/tblNhaTuyenDung_model.dart';
-import 'package:ttld/widgets/progress_indicator/step_indicator.dart';
+import 'package:ttld/models/thoigianlamviec_model.dart';
+import 'package:ttld/models/tinh_thanh_model.dart';
+import 'package:ttld/models/trinh_do_hoc_van_model.dart';
+import 'package:ttld/models/trinh_do_ngoai_ngu_model.dart';
+import 'package:ttld/models/trinh_do_tin_hoc_model.dart';
+import 'package:ttld/widgets/field/custom_checkbox.dart';
+import 'package:ttld/widgets/field/custom_pick_datetime_grok.dart';
+import 'package:ttld/widgets/field/custom_picker_grok.dart';
+import 'package:ttld/widgets/field/custom_picker_map.dart';
+import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
+import 'package:ttld/widgets/reuseable_widgets/stepper_page.dart';
 
 class CreateTuyenDungPage extends StatefulWidget {
   final Ntd? ntd;
@@ -13,17 +31,40 @@ class CreateTuyenDungPage extends StatefulWidget {
 }
 
 class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
-  final _formKey = GlobalKey<FormState>();
-  int _currentStep = 0;
+  final TextEditingController _nganhKhacController = TextEditingController();
+  final TextEditingController _luongKhoiDiemController =
+      TextEditingController();
+  final TextEditingController _soLuongTuyenController = TextEditingController();
+  final TextEditingController _quyenLoiController = TextEditingController();
+  final TextEditingController _moTaCongViecController =
+      TextEditingController(text: 'Làm việc đúng chuyên môn kỹ thuật');
+  final TextEditingController _tdYeuCauChieuCaoController =
+      TextEditingController();
+  final TextEditingController _tdMotayeucauController = TextEditingController();
+  final TextEditingController _tdNoiNopHoSoController =
+      TextEditingController(text: 'TRUNG TÂM DỊCH VỤ VIỆC LÀM BÌNH ĐỊNH');
+  final TextEditingController _tdHoSoBaoGomController = TextEditingController(
+      text:
+          'Đơn xin việc, sơ yếu lý lịch, bản photo giấy khám sức khỏe, hộ khẩu, CMND, bằng cấp có liên quan và 1 ảnh (3x4): ghi thông tin: Họ tên, ngày tháng năm sinh, nơi sinh, trình độ … mặt sau ảnh.');
+  final TextEditingController _tdGhiChuController = TextEditingController(
+      text:
+          'CHI TIẾT VUI LÒNG LIÊN HỆ Trung Tâm Dịch Vụ Việc Làm Bình Định - Số 215 Trần Hưng Đạo, TP. Quy Nhơn, tỉnh Bình Định. Điện Thoại: (0256) 3 646 509. Fax: (0256) 3 646 509. Email: pvl@vieclambinhdinh.gov.vn');
   late NTDTuyenDung _tuyenDungData = NTDTuyenDung(
     idTuyenDung: '',
     tdTieude: '',
     tdChucDanh: 0,
+    tdNganhkhac: '',
     tdSoluong: 0,
+    tdMotacongviec: '',
+    tdMotayeucau: '',
+    tdQuyenloi: '',
+    tdGhichu: '',
     tdLuongkhoidiem: 0,
-    ngayNhanHoSo: DateTime.now(),
-    ngayHetNhanHoSo: DateTime.now(),
-    isDenKhiTuyenXong: false,
+    ngayNhanHoSo: '',
+    ngayHetNhanHoSo: '',
+    isDenKhiTuyenXong: true,
+    tdNoinophoso: '',
+    tdHosobaogom: '',
     tdYeuCauChieuCao: 0,
     tdYeucauKinhnghiem: 0,
     tdYeucauTuoiMin: 0,
@@ -34,6 +75,7 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
     createdBy: '',
     modifiredDate: DateTime.now(),
     modifiredBy: '',
+    tdId: '',
     tdIdDoanhnghiep: '',
     nguonThuThap: '',
     soLuongDat: 0,
@@ -41,7 +83,9 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
     soLuongChoKetQua: 0,
     idMucLuong: 0,
     idDoTuoi: 0,
+    doanhNghiepYeuCau: '',
     idDoituongCs: 0,
+    idphieut11: '',
     idDoanhNghiep: '',
     tdNoilamviec: 0,
     tdNganhnghe: 0,
@@ -64,30 +108,11 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
     mucLuong: '',
   );
 
-  void _continue() {
-    if (_formKey.currentState!.validate()) {
-      if (_currentStep < 2) {
-        setState(() => _currentStep += 1);
-      } else {
-        // Submit logic here
-        _submitForm();
-      }
-    }
-  }
-
-  void _cancel() {
-    if (_currentStep > 0) {
-      setState(() => _currentStep -= 1);
-    } else {
-      Navigator.pop(context);
-    }
-  }
-
-  void _submitForm() {
-    // TODO: Implement submit logic
-    print(_tuyenDungData.toJson());
-    Navigator.pop(context);
-  }
+  List<String> steps = [
+    'Thông tin\ntuyển dụng',
+    'Yêu cầu\ntuyển dụng',
+    'Thông tin\nhồ sơ',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -95,72 +120,11 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
       appBar: AppBar(
         title: const Text('Thêm tuyển dụng mới'),
       ),
-      body: Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  buildStepIndicator(
-                    index: 0,
-                    currentStep: _currentStep,
-                    steps: const ["Thông tin", "Yêu cầu", "Hồ sơ"],
-                  ),
-                  buildStepIndicator(
-                    index: 1,
-                    currentStep: _currentStep,
-                    steps: const ["Thông tin", "Yêu cầu", "Hồ sơ"],
-                  ),
-                  buildStepIndicator(
-                    index: 2,
-                    currentStep: _currentStep,
-                    steps: const ["Thông tin", "Yêu cầu", "Hồ sơ"],
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: PageView(
-                physics: const NeverScrollableScrollPhysics(),
-                controller: PageController(),
-                onPageChanged: (index) => setState(() => _currentStep = index),
-                children: [
-                  _buildStep1(),
-                  _buildStep2(),
-                  _buildStep3(),
-                ],
-              ),
-            ),
-            // const SizedBox(height: 16),
-            // _buildStepIndicator(),
-            const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  if (_currentStep != 0)
-                    TextButton(
-                      onPressed: _cancel,
-                      child: const Text('QUAY LẠI'),
-                    ),
-                  const Spacer(),
-                  ElevatedButton(
-                    onPressed: _continue,
-                    child: Text(_currentStep == 2 ? 'HOÀN THÀNH' : 'TIẾP TỤC'),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+      body: StepperPage(
+          steps: steps,
+          stepContents: [_buildStep1(), _buildStep2(), _buildStep3()]),
     );
   }
-
 
   Widget _buildStep1() {
     return SingleChildScrollView(
@@ -169,42 +133,87 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _buildTextField(
-            label: 'Tiêu đề tuyển dụng *',
-            onSaved: (value) => _tuyenDungData = _tuyenDungData.copyWith(
-              tdTieude: value!,
-            ),
-            validator: (value) =>
-                value!.isEmpty ? 'Vui lòng nhập tiêu đề' : null,
+          CustomPickerGrok<NganhNgheTD>(
+            label: Text('Ngành nghề tuyển dụng'),
+            selectedItem: null,
+            items: locator<List<NganhNgheTD>>(),
+            onChanged: (NganhNgheTD? value) {
+              _tuyenDungData = _tuyenDungData.copyWith(
+                tdNganhnghe: value?.id,
+              );
+            },
+            displayItemBuilder: (NganhNgheTD? value) {
+              return '${value?.displayName}';
+            },
+            validator: (NganhNgheTD? value) {
+              if (value == null) {
+                return 'Chọn ngành nghề tuyển dụng';
+              }
+              return null;
+            },
           ),
-          _buildNumberField(
-            label: 'Số lượng cần tuyển *',
-            onSaved: (value) => _tuyenDungData = _tuyenDungData.copyWith(
-              tdSoluong: int.parse(value!),
-            ),
+          CustomTextField(
+            labelText: 'Ngành khác',
+            hintText: 'Ngành khác',
+            controller: _nganhKhacController,
           ),
-          _buildDatePicker(
-            context,
-            label: 'Ngày nhận hồ sơ',
-            initialDate: _tuyenDungData.ngayNhanHoSo,
-            onDateChanged: (date) => _tuyenDungData = _tuyenDungData.copyWith(
-              ngayNhanHoSo: date,
-            ),
+          CustomPickerGrok<TinhThanhModel>(
+            label: Text('Nơi làm việc'),
+            selectedItem: null,
+            items: locator<List<TinhThanhModel>>(),
+            onChanged: (TinhThanhModel? value) {
+              _tuyenDungData = _tuyenDungData.copyWith(
+                tdNoilamviec: value?.id,
+              );
+            },
+            displayItemBuilder: (TinhThanhModel? value) {
+              return '${value?.displayName}';
+            },
+            validator: (TinhThanhModel? value) {
+              if (value == null) {
+                return 'Chọn tinh thần hồ';
+              }
+              return null;
+            },
           ),
-          _buildDatePicker(
-            context,
-            label: 'Ngày hết hạn',
-            initialDate: _tuyenDungData.ngayHetNhanHoSo,
-            onDateChanged: (date) => _tuyenDungData = _tuyenDungData.copyWith(
-              ngayHetNhanHoSo: date,
-            ),
+          CustomPickerGrok<ThoiGianLamViec>(
+            label: Text('Thời gian làm việc'),
+            selectedItem: null,
+            items: locator<List<ThoiGianLamViec>>(),
+            onChanged: (ThoiGianLamViec? value) {
+              _tuyenDungData = _tuyenDungData.copyWith(
+                tdThoigianlamviec: value!.id,
+              );
+            },
+            displayItemBuilder: (ThoiGianLamViec? value) {
+              return '${value?.displayName}';
+            },
+            validator: (ThoiGianLamViec? value) {
+              if (value == null) {
+                return 'Chọn thời gian';
+              }
+              return null;
+            },
           ),
-          _buildTextField(
-            label: 'Ghi chú',
-            onSaved: (value) => _tuyenDungData = _tuyenDungData.copyWith(
-              tdGhichu: value,
-            ),
-            maxLines: 3,
+          CustomTextField.numberGrok(
+            labelText: 'Lương khởi điểm',
+            controller: _luongKhoiDiemController,
+            hintText: 'Lương khởi điểm',
+          ),
+          CustomTextField.numberGrok(
+            labelText: 'Số lượng tuyển',
+            controller: _soLuongTuyenController,
+            hintText: 'Số lượng tuyển',
+          ),
+          CustomTextField.textArea(
+            labelText: 'Quyền lợi',
+            hintText: 'Ví dụ: bảo hiểm, chế độ, phúc lợi',
+            controller: _quyenLoiController,
+          ),
+          CustomTextField.textArea(
+            labelText: 'Mô tả công việc',
+            hintText: 'Ví dụ: bảo hiểm, chế độ, phúc lợi',
+            controller: _moTaCongViecController,
           ),
         ],
       ),
@@ -218,30 +227,197 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _buildNumberField(
-            label: 'Yêu cầu chiều cao (cm)',
-            onSaved: (value) => _tuyenDungData = _tuyenDungData.copyWith(
-              tdYeuCauChieuCao: int.tryParse(value ?? '0') ?? 0,
-            ),
+          CustomPickerGrok<TrinhDoNgoaiNgu>(
+            label: Text('Yêu cầu ngoại ngữ'),
+            selectedItem: null,
+            items: locator<List<TrinhDoNgoaiNgu>>(),
+            onChanged: (TrinhDoNgoaiNgu? value) {
+              _tuyenDungData = _tuyenDungData.copyWith(
+                tdYeuCauNgoaiNgu: value?.id,
+              );
+            },
+            displayItemBuilder: (TrinhDoNgoaiNgu? value) {
+              return '${value?.displayName}';
+            },
+            validator: (TrinhDoNgoaiNgu? value) {
+              if (value == null) {
+                return 'Chọn ngoại ngữ';
+              }
+              return null;
+            },
           ),
-          _buildNumberField(
-            label: 'Kinh nghiệm (năm)',
-            onSaved: (value) => _tuyenDungData = _tuyenDungData.copyWith(
-              tdYeucauKinhnghiem: int.tryParse(value ?? '0') ?? 0,
-            ),
+          CustomPickerGrok<TrinhDoHocVan>(
+            label: Text('Yêu cầu trình độ văn hóa'),
+            selectedItem: null,
+            items: locator<List<TrinhDoHocVan>>(),
+            onChanged: (TrinhDoHocVan? value) {
+              _tuyenDungData = _tuyenDungData.copyWith(
+                tdYeuCauHocVan: value?.id,
+              );
+            },
+            displayItemBuilder: (TrinhDoHocVan? value) {
+              return '${value?.displayName}';
+            },
+            validator: (TrinhDoHocVan? value) {
+              if (value == null) {
+                return 'Chọn trình độ văn hóa';
+              }
+              return null;
+            },
           ),
-          _buildNumberField(
-            label: 'Tuổi tối thiểu',
-            onSaved: (value) => _tuyenDungData = _tuyenDungData.copyWith(
-              tdYeucauTuoiMin: int.tryParse(value ?? '0') ?? 0,
-            ),
+          CustomPickerMap(
+            label: Text('Giới tính'),
+            items: gioiTinhOptions,
+            selectedItem: -1,
+            onChanged: (gioiTinh) {
+              _tuyenDungData = _tuyenDungData.copyWith(
+                tdYeuCauGioiTinh: gioiTinh!,
+              );
+            },
           ),
-          _buildNumberField(
-            label: 'Tuổi tối đa',
-            onSaved: (value) => _tuyenDungData = _tuyenDungData.copyWith(
-              tdYeucauTuoiMax: int.tryParse(value ?? '0') ?? 0,
-            ),
+          CustomPickerGrok<TrinhDoTinHoc>(
+            label: Text('Yêu cầu trình độ tin học'),
+            selectedItem: null,
+            items: locator<List<TrinhDoTinHoc>>(),
+            onChanged: (TrinhDoTinHoc? value) {
+              _tuyenDungData = _tuyenDungData.copyWith(
+                tdYeuCauTinHoc: value?.id,
+              );
+            },
+            displayItemBuilder: (TrinhDoTinHoc? value) {
+              return '${value?.displayName}';
+            },
+            validator: (TrinhDoTinHoc? value) {
+              if (value == null) {
+                return 'Chọn trình độ tin học';
+              }
+              return null;
+            },
           ),
+          CustomPickerGrok<KinhNghiemLamViec>(
+            label: Text('Yêu cầu kinh nghiệm'),
+            selectedItem: null,
+            items: locator<List<KinhNghiemLamViec>>(),
+            onChanged: (KinhNghiemLamViec? value) {
+              _tuyenDungData = _tuyenDungData.copyWith(
+                idKinhnghiem: value?.id,
+              );
+            },
+            displayItemBuilder: (KinhNghiemLamViec? value) {
+              return '${value?.displayName}';
+            },
+            validator: (KinhNghiemLamViec? value) {
+              if (value == null) {
+                return 'Chọn kinh nghiệm';
+              }
+              return null;
+            },
+          ),
+          CustomTextField.numberGrok(
+            labelText: 'Chiều cao',
+            controller: _tdYeuCauChieuCaoController,
+            hintText: '(cm)',
+          ),
+          CustomPickerGrok<DoTuoi>(
+            label: Text('Độ tuổi'),
+            selectedItem: null,
+            items: locator<List<DoTuoi>>(),
+            onChanged: (DoTuoi? value) {
+              _tuyenDungData = _tuyenDungData.copyWith(
+                idDoTuoi: value?.id,
+              );
+            },
+            displayItemBuilder: (DoTuoi? value) {
+              return '${value?.displayName}';
+            },
+            validator: (DoTuoi? value) {
+              if (value == null) {
+                return 'Chọn độ tuổi';
+              }
+              return null;
+            },
+          ),
+          CustomPickerGrok<NganhNgheBacHoc>(
+            label: Text('Trình độ chuyên môn'),
+            selectedItem: null,
+            items: locator<List<NganhNgheBacHoc>>(),
+            onChanged: (NganhNgheBacHoc? value) {
+              _tuyenDungData = _tuyenDungData.copyWith(
+                idBacHoc: value?.id,
+              );
+            },
+            displayItemBuilder: (NganhNgheBacHoc? value) {
+              return '${value?.displayName}';
+            },
+            validator: (NganhNgheBacHoc? value) {
+              if (value == null) {
+                return 'Chọn bảo hiểm';
+              }
+              return null;
+            },
+          ),
+          CustomPickerGrok<KinhNghiemLamViec>(
+            label: Text('Yêu cầu kinh nghiệm'),
+            selectedItem: null,
+            items: locator<List<KinhNghiemLamViec>>(),
+            onChanged: (KinhNghiemLamViec? value) {
+              _tuyenDungData = _tuyenDungData.copyWith(
+                idKinhnghiem: value?.id,
+              );
+            },
+            displayItemBuilder: (KinhNghiemLamViec? value) {
+              return '${value?.displayName}';
+            },
+            validator: (KinhNghiemLamViec? value) {
+              if (value == null) {
+                return 'Chọn kinh nghiệm';
+              }
+              return null;
+            },
+          ),
+          CustomPickerGrok<DoiTuong>(
+            label: Text('Đối tượng chính sách'),
+            selectedItem: null,
+            items: locator<List<DoiTuong>>(),
+            onChanged: (DoiTuong? value) {
+              _tuyenDungData = _tuyenDungData.copyWith(
+                idDoituongCs: value?.id,
+              );
+            },
+            displayItemBuilder: (DoiTuong? value) {
+              return '${value?.displayName}';
+            },
+            validator: (DoiTuong? value) {
+              if (value == null) {
+                return 'Chọn đối tượng';
+              }
+              return null;
+            },
+          ),
+          CustomPickerGrok<MucLuongMM>(
+            label: Text('Mức lương'),
+            selectedItem: null,
+            items: locator<List<MucLuongMM>>(),
+            onChanged: (MucLuongMM? value) {
+              _tuyenDungData = _tuyenDungData.copyWith(
+                idMucLuong: value?.id,
+              );
+            },
+            displayItemBuilder: (MucLuongMM? value) {
+              return '${value?.displayName}';
+            },
+            validator: (MucLuongMM? value) {
+              if (value == null) {
+                return 'Chọn mức lương';
+              }
+              return null;
+            },
+          ),
+          CustomTextField.textArea(
+            labelText: 'Yêu cầu khác',
+            hintText: 'Yêu cầu khác',
+            controller: _tdMotayeucauController,
+          )
         ],
       ),
     );
@@ -254,110 +430,44 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _buildTextField(
-            label: 'Mã hồ sơ *',
-            onSaved: (value) => _tuyenDungData = _tuyenDungData.copyWith(
-              maHoso: value!,
+          CustomPickDateTimeGrok(
+            labelText: 'Ngày nhận hồ sơ',
+            onChanged: (value) => _tuyenDungData = _tuyenDungData.copyWith(
+              ngayNhanHoSo: value!,
             ),
           ),
-          _buildTextField(
-            label: 'Loại hình làm việc',
-            onSaved: (value) => _tuyenDungData = _tuyenDungData.copyWith(
-              idHinhthucLv: value ?? '',
+          CustomPickDateTimeGrok(
+            labelText: 'Ngày hết hạn nhận hồ sơ',
+            onChanged: (value) => _tuyenDungData = _tuyenDungData.copyWith(
+              ngayHetNhanHoSo: value!,
             ),
           ),
-          _buildTextField(
-            label: 'Yêu cầu học vấn',
-            onSaved: (value) => _tuyenDungData = _tuyenDungData.copyWith(
-              tdYeuCauHocVan: int.tryParse(value ?? '0') ?? 0,
-            ),
+          CustomCheckbox(
+            label: 'Đến khi tuyển xong',
+            onChanged: (bool? value) {
+              _tuyenDungData = _tuyenDungData.copyWith(
+                isDenKhiTuyenXong: value!,
+              );
+            },
+            value: _tuyenDungData.isDenKhiTuyenXong ?? true,
           ),
-          _buildTextField(
-            label: 'Mức lương *',
-            onSaved: (value) => _tuyenDungData = _tuyenDungData.copyWith(
-              mucLuong: value!,
-            ),
+          CustomTextField(
+            labelText: 'Nơi nộp hồ sơ',
+            hintText: '',
+            controller: _tdNoiNopHoSoController,
           ),
+          CustomTextField.textArea(
+            labelText: 'Hồ sơ bao gồm',
+            hintText: '',
+            controller: _tdHoSoBaoGomController,
+          ),
+          CustomTextField.textArea(
+            labelText: 'Ghi Chú',
+            controller: _tdGhiChuController,
+          ),
+          Text(
+              'Lưu ý : Nhà tuyển dụng sau khi đăng ký thông tin tuyển dụng lao động, tuyển sinh đào tạo; Vui lòng đến trực tiếp tại Trung tâm để đăng ký thông tin; Có thể gửi (theo đường bưu điện, Email), hoặc Fax thông tin, để Trung tâm xác nhận thông tin của Nhà tuyển dụng.')
         ],
-      ),
-    );
-  }
-
-  Widget _buildTextField({
-    required String label,
-    required FormFieldSetter<String?> onSaved,
-    FormFieldValidator<String>? validator,
-    int maxLines = 1,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextFormField(
-        decoration: InputDecoration(
-          labelText: label,
-          border: const OutlineInputBorder(),
-          filled: true,
-          isDense: true,
-        ),
-        maxLines: maxLines,
-        onSaved: onSaved,
-        validator: validator,
-      ),
-    );
-  }
-
-  Widget _buildNumberField({
-    required String label,
-    required FormFieldSetter<String?> onSaved,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextFormField(
-        decoration: InputDecoration(
-          labelText: label,
-          border: const OutlineInputBorder(),
-          filled: true,
-          isDense: true,
-        ),
-        keyboardType: TextInputType.number,
-        onSaved: onSaved,
-      ),
-    );
-  }
-
-  Widget _buildDatePicker(
-    BuildContext context, {
-    required String label,
-    required DateTime initialDate,
-    required ValueChanged<DateTime> onDateChanged,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: InkWell(
-        onTap: () async {
-          final pickedDate = await showDatePicker(
-            context: context,
-            initialDate: initialDate,
-            firstDate: DateTime(2000),
-            lastDate: DateTime(2100),
-          );
-          if (pickedDate != null) {
-            onDateChanged(pickedDate);
-            setState(() {});
-          }
-        },
-        child: InputDecorator(
-          decoration: InputDecoration(
-            labelText: label,
-            border: const OutlineInputBorder(),
-            filled: true,
-            isDense: true,
-            suffixIcon: const Icon(Icons.calendar_today),
-          ),
-          child: Text(
-            '${initialDate.day}/${initialDate.month}/${initialDate.year}',
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-        ),
       ),
     );
   }
