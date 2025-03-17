@@ -22,9 +22,10 @@ import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
 import 'package:ttld/widgets/reuseable_widgets/stepper_page.dart';
 
 class CreateTuyenDungPage extends StatefulWidget {
-  final Ntd? ntd;
+  final NTDTuyenDung? tuyenDung;
+  final bool isEdit;
   static const routePath = '/ntd_home/create_tuyen_dung';
-  const CreateTuyenDungPage({super.key, this.ntd});
+  const CreateTuyenDungPage({super.key, this.ntd, this.tuyenDung, this.isEdit = false});
 
   @override
   State<CreateTuyenDungPage> createState() => _CreateTuyenDungPageState();
@@ -49,7 +50,7 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
   final TextEditingController _tdGhiChuController = TextEditingController(
       text:
           'CHI TIẾT VUI LÒNG LIÊN HỆ Trung Tâm Dịch Vụ Việc Làm Bình Định - Số 215 Trần Hưng Đạo, TP. Quy Nhơn, tỉnh Bình Định. Điện Thoại: (0256) 3 646 509. Fax: (0256) 3 646 509. Email: pvl@vieclambinhdinh.gov.vn');
-  late NTDTuyenDung _tuyenDungData = NTDTuyenDung(
+  late NTDTuyenDung _tuyenDungData = widget.tuyenDung ?? NTDTuyenDung(
     idTuyenDung: '',
     tdTieude: '',
     tdChucDanh: 0,
@@ -118,11 +119,13 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Thêm tuyển dụng mới'),
+        title: Text(widget.isEdit ? 'Chỉnh sửa tuyển dụng' : 'Thêm tuyển dụng mới'),
       ),
       body: StepperPage(
           steps: steps,
-          stepContents: [_buildStep1(), _buildStep2(), _buildStep3()]),
+          stepContents: [_buildStep1(), _buildStep2(), _buildStep3()],
+          onSubmit: _submitForm,
+          submitButtonText: widget.isEdit ? 'Cập nhật' : 'Tạo mới'),
     );
   }
 
@@ -135,7 +138,9 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
         children: [
           CustomPickerGrok<NganhNgheTD>(
             label: Text('Ngành nghề tuyển dụng'),
-            selectedItem: null,
+            selectedItem: locator<List<NganhNgheTD>>().firstWhere(
+              (e) => e.id == _tuyenDungData.tdNganhnghe,
+              orElse: () => NganhNgheTD(id: 0, displayName: 'Chọn ngành nghề')),
             items: locator<List<NganhNgheTD>>(),
             onChanged: (NganhNgheTD? value) {
               _tuyenDungData = _tuyenDungData.copyWith(
@@ -159,7 +164,9 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
           ),
           CustomPickerGrok<TinhThanhModel>(
             label: Text('Nơi làm việc'),
-            selectedItem: null,
+            selectedItem: locator<List<TinhThanhModel>>().firstWhere(
+              (e) => e.id == _tuyenDungData.tdNoilamviec,
+              orElse: () => TinhThanhModel(id: 0, displayName: 'Chọn nơi làm việc')),
             items: locator<List<TinhThanhModel>>(),
             onChanged: (TinhThanhModel? value) {
               _tuyenDungData = _tuyenDungData.copyWith(
@@ -181,8 +188,9 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
             selectedItem: null,
             items: locator<List<ThoiGianLamViec>>(),
             onChanged: (ThoiGianLamViec? value) {
+              if (value == null) return;
               _tuyenDungData = _tuyenDungData.copyWith(
-                tdThoigianlamviec: value!.id,
+                tdThoigianlamviec: value.id,
               );
             },
             displayItemBuilder: (ThoiGianLamViec? value) {
@@ -472,3 +480,28 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
     );
   }
 }
+  void _submitForm() {
+    // Update all fields from controllers
+    _tuyenDungData = _tuyenDungData.copyWith(
+      tdTieude: _tuyenDungData.tdTieude,
+      tdNganhkhac: _nganhKhacController.text,
+      tdSoluong: int.tryParse(_soLuongTuyenController.text),
+      tdLuongkhoidiem: int.tryParse(_luongKhoiDiemController.text),
+      tdMotacongviec: _moTaCongViecController.text,
+      tdQuyenloi: _quyenLoiController.text,
+      tdGhichu: _tdGhiChuController.text,
+      tdMotayeucau: _tdMotayeucauController.text,
+      tdYeuCauChieuCao: int.tryParse(_tdYeuCauChieuCaoController.text),
+      tdNoinophoso: _tdNoiNopHoSoController.text,
+      tdHosobaogom: _tdHoSoBaoGomController.text,
+    );
+
+    final bloc = context.read<TuyenDungBloc>();
+    if (widget.isEdit) {
+      bloc.add(TuyenDungEvent.update(_tuyenDungData));
+    } else {
+      bloc.add(TuyenDungEvent.create(_tuyenDungData));
+    }
+    
+    Navigator.of(context).pop();
+  }
