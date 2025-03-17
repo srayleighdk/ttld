@@ -5,7 +5,6 @@ import 'package:ttld/models/ntd_tuyendung/ntd_tuyendung_model.dart';
 import 'package:ttld/models/tblNhaTuyenDung/tblNhaTuyenDung_model.dart';
 import 'package:ttld/bloc/tuyendung/tuyendung_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ttld/repositories/tuyendung_repository.dart';
 
 class QuanLyTuyenDungPage extends StatefulWidget {
   final Ntd? ntd;
@@ -17,14 +16,12 @@ class QuanLyTuyenDungPage extends StatefulWidget {
 
 class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
   late final TuyenDungBloc _tuyenDungBloc;
-  late final TuyenDungRepository tuyenDungRepository;
   late List<NTDTuyenDung> tuyenDungList = [];
 
   @override
   void initState() {
     super.initState();
     _tuyenDungBloc = locator<TuyenDungBloc>();
-    tuyenDungRepository = locator<TuyenDungRepository>();
     _tuyenDungBloc.add(const TuyenDungEvent.fetchList());
   }
 
@@ -70,20 +67,18 @@ class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
       horizontalMargin: 12,
       minWidth: 600,
       columns: const [
-        DataColumn2(label: Text('Vị trí'), size: ColumnSize.L),
-        DataColumn2(label: Text('Số lượng'), size: ColumnSize.S),
-        DataColumn2(label: Text('Lương'), size: ColumnSize.M),
-        DataColumn2(label: Text('Địa điểm'), size: ColumnSize.L),
-        DataColumn2(label: Text('Trạng thái'), size: ColumnSize.S),
-        DataColumn2(label: Text(''), size: ColumnSize.S),
+        DataColumn2(label: Text('Ngày đăng hồ sơ'), size: ColumnSize.L),
+        DataColumn2(label: Text('Tiêu đề hồ sơ'), size: ColumnSize.S),
+        DataColumn2(label: Text('Ngành nghề tuyển dụng'), size: ColumnSize.M),
+        DataColumn2(label: Text('Duyệt'), size: ColumnSize.L),
+        DataColumn2(label: Text('Hành động'), size: ColumnSize.S)
       ],
       rows: tuyenDungList
           .map((tuyenDung) => DataRow(cells: [
-                DataCell(Text(tuyenDung.title ?? '')),
-                DataCell(Text(tuyenDung.quantity?.toString() ?? '0')),
-                DataCell(Text('${tuyenDung.salary ?? 0} VND')),
-                DataCell(Text(tuyenDung.location ?? '')),
-                DataCell(_buildStatusChip(tuyenDung.status)),
+                DataCell(Text(tuyenDung.ngayNhanHoSo)),
+                DataCell(Text(tuyenDung.tdTieude)),
+                DataCell(Text(tuyenDung.tenNganhnghe)),
+                DataCell(Text(tuyenDung.tdDuyet)),
                 DataCell(Row(
                   children: [
                     IconButton(
@@ -99,16 +94,6 @@ class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
                 )),
               ]))
           .toList(),
-    );
-  }
-
-  Widget _buildStatusChip(String? status) {
-    final color = status == 'active' ? Colors.green : Colors.red;
-    return Chip(
-      label: Text(status ?? 'inactive',
-          style: const TextStyle(color: Colors.white)),
-      backgroundColor: color,
-      visualDensity: VisualDensity.compact,
     );
   }
 
