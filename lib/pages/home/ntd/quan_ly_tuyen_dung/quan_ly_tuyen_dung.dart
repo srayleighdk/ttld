@@ -45,8 +45,8 @@ class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
             ),
             Expanded(
               child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: BlocBuilder<TuyenDungBloc, TuyenDungState>(
+                padding: EdgeInsets.zero,
+                child: BlocBuilder<TuyenDungBloc, TuyenDungState>(
           bloc: _tuyenDungBloc,
           builder: (context, state) {
             if (state is TuyenDungLoading) {
