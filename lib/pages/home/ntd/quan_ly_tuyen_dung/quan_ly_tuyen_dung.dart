@@ -78,7 +78,10 @@ class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
                 DataCell(Text(tuyenDung.ngayNhanHoSo)),
                 DataCell(Text(tuyenDung.tdTieude)),
                 DataCell(Text(tuyenDung.tenNganhnghe)),
-                DataCell(Text(tuyenDung.tdDuyet)),
+                DataCell(Checkbox(
+                  value: tuyenDung.tdDuyet ?? false,
+                  onChanged: null, // Disabled click as this is just for display
+                )),
                 DataCell(Row(
                   children: [
                     IconButton(
