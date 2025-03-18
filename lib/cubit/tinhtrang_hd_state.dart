@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 part of 'tinhtrang_hd_cubit.dart';
 
 @immutable
