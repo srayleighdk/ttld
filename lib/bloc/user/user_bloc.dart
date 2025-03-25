@@ -4,27 +4,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ttld/models/user/user_model.dart';
 import 'package:ttld/repository/user/user_repository.dart';
 
+part 'user_event.dart';
+part 'user_state.dart';
 part 'user_bloc.freezed.dart';
-
-@freezed
-class UserEvent with _$UserEvent {
-  const factory UserEvent.fetchAllUsers() = FetchAllUsersEvent;
-  const factory UserEvent.fetchUserById(String userId) = FetchUserByIdEvent;
-  const factory UserEvent.createUser(UserModel user) = CreateUserEvent;
-  const factory UserEvent.updateUser(UserModel user) = UpdateUserEvent;
-  const factory UserEvent.deleteUser(String userId) = DeleteUserEvent;
-  const factory UserEvent.fetchUserByManv(String manv) = FetchUserByManvEvent;
-}
-
-@freezed
-class UserState with _$UserState {
-  const factory UserState.initial() = UserInitial;
-  const factory UserState.loadSuccess(List<UserModel> users) = UsersLoadSuccess;
-  const factory UserState.userLoaded(UserModel user) = UserLoadSuccess;
-  const factory UserState.operationSuccess() = UserOperationSuccess;
-  const factory UserState.failure(String message) = UserOperationFailure;
-  const factory UserState.loadInProgress() = UsersLoadInProgress;
-}
 
 class UserBloc extends Bloc<UserEvent, UserState> {
   final UserRepository _userRepository;

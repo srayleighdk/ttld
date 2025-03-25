@@ -1,6 +1,3 @@
-import 'package:your_app/core/api_client.dart';
-import 'package:your_app/models/user/user_model.dart';
-
 class UserRepository {
   final ApiClient _apiClient;
 
@@ -12,12 +9,14 @@ class UserRepository {
   }
 
   Future<UserModel> getUserById(String userId) async {
-    final response = await _apiClient.get('/api/user', queryParameters: {'id': userId});
+    final response =
+        await _apiClient.get('/api/user', queryParameters: {'id': userId});
     return UserModel.fromJson(response.data);
   }
 
   Future<UserModel> getUserByManv(String manv) async {
-    final response = await _apiClient.get('/api/user/manv', queryParameters: {'manv': manv});
+    final response =
+        await _apiClient.get('/api/user/manv', queryParameters: {'manv': manv});
     return UserModel.fromJson(response.data);
   }
 
