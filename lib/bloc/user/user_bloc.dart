@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:your_app/repository/user/user_repository.dart';
-import 'package:your_app/models/user/user_model.dart';
+import 'package:ttld/models/user/user_model.dart';
+import 'package:ttld/repository/user/user_repository.dart';
 
 part 'user_bloc.freezed.dart';
 
@@ -34,7 +34,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     }
   }
 
-  Future<void> _fetchUserById(FetchUserById event, Emitter<UserState> emit) async {
+  Future<void> _fetchUserById(
+      FetchUserById event, Emitter<UserState> emit) async {
     emit(const UserState.loadInProgress());
     try {
       final user = await _userRepository.getUserById(event.userId);
@@ -74,7 +75,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     }
   }
 
-  Future<void> _fetchUserByManv(FetchUserByManv event, Emitter<UserState> emit) async {
+  Future<void> _fetchUserByManv(
+      FetchUserByManv event, Emitter<UserState> emit) async {
     emit(const UserState.loadInProgress());
     try {
       final user = await _userRepository.getUserByManv(event.manv);
