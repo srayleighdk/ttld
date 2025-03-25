@@ -29,7 +29,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     try {
       final users = await _userRepository.getAllUsers();
       emit(UserState.loadSuccess(users));
-    } catch (e) {
+    } on Exception catch (e) {
       emit(UserState.failure(e.toString()));
     }
   }
@@ -39,7 +39,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     try {
       final user = await _userRepository.getUserById(event.userId);
       emit(UserState.userLoaded(user));
-    } catch (e) {
+    } on Exception catch (e) {
       emit(UserState.failure(e.toString()));
     }
   }

@@ -39,6 +39,4 @@ class AuthApiService {
   }
 }
 
-class BaseSignupResponse {
-}
 
