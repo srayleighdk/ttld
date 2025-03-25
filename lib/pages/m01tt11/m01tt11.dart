@@ -184,6 +184,10 @@ class _M01TT11PageState extends State<M01TT11Page> {
       email.text = widget.ntd!.ntdEmail ?? '';
       idLhdn.text = widget.ntd!.idLoaiHinhDoanhNghiep ?? '';
       idNkt.text = widget.ntd!.idNganhKinhTe ?? '';
+      matinh.text = widget.ntd!.ntdDiachithanhpho ?? '';
+      mahuyen.text = widget.ntd!.ntdDiachihuyen ?? '';
+      maxa.text = widget.ntd!.ntdDiachixaphuong ?? '';
+      idKhuCn = widget.ntd!.ntdThuockhucongnghiep;
     }
   }
 
@@ -564,10 +568,7 @@ class _M01TT11PageState extends State<M01TT11Page> {
           label: 'Chức vụ',
           items: locator<List<ChucDanhModel>>(),
         ),
-        NganhNgheCapDoPicker(
-
-        ),
-
+        NganhNgheCapDoPicker(),
       ],
     );
   }
@@ -584,10 +585,9 @@ class _M01TT11PageState extends State<M01TT11Page> {
           title: const Text('M01TT11'),
         ),
         body: StepperPage(
-            steps: steps,
-            currentStep: currentStep,
-            stepContent: stepContent,
-            bottomNavigation: bottomNavigation));
+          steps: steps,
+          stepContents: [],
+        ));
   }
 
   @override

@@ -8,18 +8,18 @@ class CustomCheckbox extends StatelessWidget {
   final Color checkColor;
 
   const CustomCheckbox({
-    Key? key,
+    super.key,
     required this.value,
     required this.onChanged,
     this.label = '',
     this.activeColor = Colors.blue,
     this.checkColor = Colors.white,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Checkbox(
           value: value,

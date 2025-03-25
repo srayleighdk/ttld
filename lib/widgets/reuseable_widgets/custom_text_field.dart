@@ -318,96 +318,100 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      controller: _controller,
-      focusNode: _focusNode,
-      obscureText: widget.obscureText,
-      keyboardType: widget.keyboardType,
-      maxLines: widget.maxLines,
-      minLines: widget.minLines,
-      maxLength: widget.maxLength,
-      expands: widget.expands,
-      inputFormatters: widget.inputFormatters,
-      validator: (value) {
-        final error = CustomTextField.handleValidation(value, widget.validator);
-        setState(() {
-          _errorText = error;
-          _isValid = error == null;
-        });
-        return error;
-      },
-      onChanged: (value) {
-        if (widget.autoValidate) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextFormField(
+        controller: _controller,
+        focusNode: _focusNode,
+        obscureText: widget.obscureText,
+        keyboardType: widget.keyboardType,
+        maxLines: widget.maxLines,
+        minLines: widget.minLines,
+        maxLength: widget.maxLength,
+        expands: widget.expands,
+        inputFormatters: widget.inputFormatters,
+        validator: (value) {
+          final error =
+              CustomTextField.handleValidation(value, widget.validator);
           setState(() {
-            _errorText =
-                CustomTextField.handleValidation(value, widget.validator);
-            _isValid = _errorText == null;
+            _errorText = error;
+            _isValid = error == null;
           });
-        } else {
-          setState(() {
-            _errorText = null;
-          });
-        }
-        if (widget.onChanged != null) {
-          widget.onChanged!(value);
-        }
-      },
-      decoration: InputDecoration(
-        labelText: widget.labelText,
-        hintText: widget.hintText,
-        alignLabelWithHint: true,
-        labelStyle: TextStyle(
-          color: _errorText != null ? Colors.red : Colors.grey[700],
-        ),
-        floatingLabelStyle: TextStyle(
-          color: _errorText != null
-              ? Colors.red
-              : _focusNode.hasFocus
-                  ? Colors.blue
-                  : Colors.grey[700],
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        prefixIcon: widget.prefixIcon,
-        suffixIcon: widget.suffixIcon,
-        errorText: _errorText,
-        errorStyle: const TextStyle(color: Colors.red),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
-          borderSide: const BorderSide(
-            color: Colors.red,
-            width: 1.0,
+          return error;
+        },
+        onChanged: (value) {
+          if (widget.autoValidate) {
+            setState(() {
+              _errorText =
+                  CustomTextField.handleValidation(value, widget.validator);
+              _isValid = _errorText == null;
+            });
+          } else {
+            setState(() {
+              _errorText = null;
+            });
+          }
+          if (widget.onChanged != null) {
+            widget.onChanged!(value);
+          }
+        },
+        decoration: InputDecoration(
+          labelText: widget.labelText,
+          hintText: widget.hintText,
+          alignLabelWithHint: true,
+          labelStyle: TextStyle(
+            color: _errorText != null ? Colors.red : Colors.grey[700],
           ),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
-          borderSide: const BorderSide(
-            color: Colors.red,
-            width: 2.0,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
-          borderSide: BorderSide(
-            color: _errorText != null ? Colors.red : Colors.blue,
-            width: 2.0,
-          ),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
-          borderSide: BorderSide(
+          floatingLabelStyle: TextStyle(
             color: _errorText != null
                 ? Colors.red
-                : _isValid
-                    ? Colors.green
-                    : Colors.grey,
-            width: 1.0,
+                : _focusNode.hasFocus
+                    ? Colors.blue
+                    : Colors.grey[700],
           ),
-        ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 16,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          prefixIcon: widget.prefixIcon,
+          suffixIcon: widget.suffixIcon,
+          errorText: _errorText,
+          errorStyle: const TextStyle(color: Colors.red),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+            borderSide: const BorderSide(
+              color: Colors.red,
+              width: 1.0,
+            ),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+            borderSide: const BorderSide(
+              color: Colors.red,
+              width: 2.0,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+            borderSide: BorderSide(
+              color: _errorText != null ? Colors.red : Colors.blue,
+              width: 2.0,
+            ),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+            borderSide: BorderSide(
+              color: _errorText != null
+                  ? Colors.red
+                  : _isValid
+                      ? Colors.green
+                      : Colors.grey,
+              width: 1.0,
+            ),
+          ),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 16,
+          ),
         ),
       ),
     );

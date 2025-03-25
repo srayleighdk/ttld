@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_bloc.dart';
+import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_event.dart';
+import 'package:ttld/bloc/tblNhaTuyenDung/ntd_bloc.dart';
+import 'package:ttld/core/di/app_init.dart' show initializeAppData;
 import 'package:ttld/core/di/injection.dart';
-import 'package:ttld/features/auth/repositories/auth_repository.dart';
+import 'package:ttld/features/auth/bloc/auth_bloc.dart';
+import 'package:ttld/features/auth/bloc/auth_state.dart';
 import 'package:ttld/pages/home/admin/admin_home.dart';
 import 'package:ttld/pages/home/custom_bottom_nav_bar.dart';
 import 'package:ttld/pages/home/notification_page.dart';
@@ -11,9 +17,12 @@ import 'package:ttld/pages/home/profile_page.dart';
 import 'package:ttld/pages/home/search_page.dart';
 import 'package:ttld/widgets/logout_button.dart';
 
+enum UserRole { admin, ntd, ntv }
+
 class HomePage extends StatefulWidget {
-  String? userId;
-  HomePage({super.key, this.userId});
+  final String userId;
+  final String userType;
+  const HomePage({super.key, required this.userId, required this.userType});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -21,45 +30,96 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
-  bool isAdmin = false;
-  bool isNTD = false;
-  bool isNTV = false;
-  String? userId;
+  UserRole? _role;
+  late final List<Widget> _pages;
 
   @override
   void initState() {
-    final authRepository = locator<AuthRepository>();
-    isAdmin = authRepository.isAdmin();
-    isNTD = authRepository.isNTD();
-    isNTV = authRepository.isNTV();
-    userId = authRepository.getUserId();
-
     super.initState();
+    _initializeUserData();
+    _initializeAppData();
   }
 
-  final List<Widget> _adminPages = [
-    const AdminHomePage(),
-    const SearchPage(),
-    const NotificationsPage(),
-    const ProfilePage(),
-  ];
+  void _initializeAppData() async {
+    await initializeAppData(); // Preload data
+  }
 
-  final List<Widget> _ntdPages = [
-    const NTDHomePage(),
-    const SearchPage(),
-    const NotificationsPage(),
-    const ProfilePage(),
-  ];
+  void _initializeUserData() {
+    _role = UserRole.values
+        .firstWhere((role) => role.name == widget.userType.toLowerCase());
 
-  final List<Widget> _ntvPages = [
-    const NTVHomePage(),
-    const SearchPage(),
-    const NotificationsPage(),
-    const ProfilePage(),
-  ];
+    // Fetch role-specific data
+    final authState = locator<AuthBloc>().state;
+    if (authState is AuthAuthenticated) {
+      if (_role == UserRole.ntv) {
+        locator<NTVBloc>().add(LoadTblHoSoUngVien(int.parse(widget.userId)));
+      } else if (_role == UserRole.ntd) {
+        locator<NTDBloc>().add(NTDFetchById(int.parse(widget.userId)));
+      }
+      // Admin could have its own Bloc if needed
+    }
+
+    _pages = _buildPages();
+  }
+
+  List<Widget> _buildPages() {
+    late final Widget homePage;
+    switch (_role) {
+      case UserRole.admin:
+        homePage = const AdminHomePage();
+        break;
+      case UserRole.ntd:
+        homePage = BlocProvider<NTDBloc>.value(
+          value: locator<NTDBloc>(),
+          child: const NTDHomePage(),
+        );
+        break;
+      case UserRole.ntv:
+        homePage = BlocProvider<NTVBloc>.value(
+          value: locator<NTVBloc>(),
+          child: const NTVHomePage(),
+        );
+        break;
+      case null:
+        homePage = const Center(child: Text('Role not determined'));
+        break;
+    }
+
+    late final Widget profilePage;
+    switch (_role) {
+      case UserRole.ntv:
+        profilePage = BlocProvider<NTVBloc>.value(
+          value: locator<NTVBloc>(),
+          child: ProfilePage(userId: widget.userId, userType: widget.userType),
+        );
+        break;
+      case UserRole.ntd:
+        profilePage = BlocProvider<NTDBloc>.value(
+          value: locator<NTDBloc>(),
+          child: ProfilePage(userId: widget.userId, userType: widget.userType),
+        );
+        break;
+      case UserRole.admin:
+      case null:
+        profilePage =
+            ProfilePage(userId: widget.userId, userType: widget.userType);
+        break;
+    }
+
+    return [
+      homePage,
+      const SearchPage(),
+      const NotificationsPage(),
+      profilePage,
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (_role == null || _pages.isEmpty) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
@@ -67,83 +127,15 @@ class _HomePageState extends State<HomePage> {
       ),
       body: IndexedStack(
         index: _currentIndex,
-        children: isAdmin
-            ? _adminPages
-            : isNTD
-                ? _ntdPages
-                : _ntvPages,
+        children: _pages,
       ),
       bottomNavigationBar: CustomNavigationBar(
         currentIndex: _currentIndex,
         onDestinationSelected: (index) {
-          // Handle post button separately if needed
           setState(() {
             _currentIndex = index;
           });
         },
-      ),
-    );
-  }
-
-  void _showPostDialog() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => const PostCreationSheet(),
-    );
-  }
-}
-
-class PostCreationSheet extends StatelessWidget {
-  const PostCreationSheet({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const SizedBox(height: 8),
-          Container(
-            width: 40,
-            height: 4,
-            decoration: BoxDecoration(
-              color: Colors.grey[300],
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-          const SizedBox(height: 20),
-          const Text(
-            'Create Post',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 20),
-          ListTile(
-            leading: const FaIcon(FontAwesomeIcons.briefcase),
-            title: const Text('Create Job Post'),
-            onTap: () {
-              Navigator.pop(context);
-              // Navigate to job post creation
-            },
-          ),
-          ListTile(
-            leading: const FaIcon(FontAwesomeIcons.newspaper),
-            title: const Text('Create Article'),
-            onTap: () {
-              Navigator.pop(context);
-              // Navigate to article creation
-            },
-          ),
-          const SizedBox(height: 20),
-        ],
       ),
     );
   }

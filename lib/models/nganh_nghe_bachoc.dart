@@ -1,17 +1,17 @@
-class NganhNgheBacHoc {
-  final String id;
-  final String name;
-  final String idNhom;
-  final int ordinalNumbers;
-  final bool status;
+import 'package:ttld/widgets/reuseable_widgets/generic_picker.dart';
+
+class NganhNgheBacHoc extends GenericPickerItem {
+  String? idNhom;
+  int? ordinalNumbers;
+  bool? status;
 
   NganhNgheBacHoc({
-    required this.id,
-    required this.name,
-    required this.idNhom,
-    required this.ordinalNumbers,
-    required this.status,
-  });
+    required super.id,
+    required String name,
+    this.idNhom,
+    this.ordinalNumbers,
+    this.status,
+  }) : super(displayName: name);
 
   factory NganhNgheBacHoc.fromJson(Map<String, dynamic> json) {
     return NganhNgheBacHoc(
@@ -26,7 +26,7 @@ class NganhNgheBacHoc {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'name': name,
+      'name': displayName,
       'idNhom': idNhom,
       'ordinalNumbers': ordinalNumbers,
       'status': status,

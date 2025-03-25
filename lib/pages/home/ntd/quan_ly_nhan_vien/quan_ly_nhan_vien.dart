@@ -1,28 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ttld/bloc/biendong/biendong_bloc.dart';
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/models/nhanvien/nhanvien_model.dart';
-import 'package:ttld/bloc/nhanvien/nhanvien_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class QuanLyNhanVienPage extends StatefulWidget {
   final String? userId;
-  QuanLyNhanVienPage({super.key, this.userId});
+  const QuanLyNhanVienPage({super.key, this.userId});
+  static const routePath = '/ntd_home/quan-ly-nhan-vien';
 
   @override
   State<QuanLyNhanVienPage> createState() => _QuanLyNhanVienPageState();
 }
 
 class _QuanLyNhanVienPageState extends State<QuanLyNhanVienPage> {
-  late final NhanVienBloc _nhanVienBloc;
+  late final BienDongBloc _bienDongBloc;
   late List<NhanVien> nhanVienList = [];
 
   @override
   void initState() {
     super.initState();
-    _nhanVienBloc = locator<NhanVienBloc>();
-    _nhanVienBloc.add(NhanVienEvent.fetchList(widget.userId));
+    _bienDongBloc = locator<BienDongBloc>();
+    _bienDongBloc.add(BienDongEvent.fetchList(widget.userId));
   }
 
   @override
@@ -40,24 +41,25 @@ class _QuanLyNhanVienPageState extends State<QuanLyNhanVienPage> {
               child: ElevatedButton.icon(
                 icon: const Icon(Icons.add),
                 label: const Text('Thêm nhân viên mới'),
-                onPressed: () => context.go('/them-nhan-vien'),
+                onPressed: () => context
+                    .push('/ntd_home/quan-ly-nhan-vien/create-nhan-vien'),
               ),
             ),
             Expanded(
               child: Padding(
                 padding: EdgeInsets.zero,
-                child: BlocBuilder<NhanVienBloc, NhanVienState>(
-                  bloc: _nhanVienBloc,
+                child: BlocBuilder<BienDongBloc, BienDongState>(
+                  bloc: _bienDongBloc,
                   builder: (context, state) {
-                    if (state is NhanVienLoading) {
+                    if (state is BienDongLoading) {
                       return const Center(child: CircularProgressIndicator());
                     }
 
-                    if (state is NhanVienError) {
+                    if (state is BienDongError) {
                       return Center(child: Text(state.message));
                     }
 
-                    if (state is NhanVienLoaded) {
+                    if (state is BienDongLoaded) {
                       return _buildDataTable(state.nhanVienList);
                     }
 
@@ -90,7 +92,7 @@ class _QuanLyNhanVienPageState extends State<QuanLyNhanVienPage> {
         DataColumn2(label: Text('Thứ tự'), size: ColumnSize.S),
         DataColumn2(label: Text('Họ và tên'), size: ColumnSize.L),
         DataColumn2(label: Text('Ngày sinh'), size: ColumnSize.M),
-        DataColumn2(label: Text('Giới tính'), size: ColumnSize.S),
+        // DataColumn2(label: Text('Giới tính'), size: ColumnSize.S),
         DataColumn2(label: Text('Dân tộc'), size: ColumnSize.S),
         DataColumn2(label: Text('CMND/CCCD'), size: ColumnSize.M),
         DataColumn2(label: Text('Vị trí'), size: ColumnSize.L),
@@ -104,18 +106,15 @@ class _QuanLyNhanVienPageState extends State<QuanLyNhanVienPage> {
         final nhanVien = entry.value;
         return DataRow(cells: [
           DataCell(Text(index.toString())),
-          DataCell(Text(nhanVien.hoTen ?? '')),
-          DataCell(Text(nhanVien.ngaySinh ?? '')),
-          DataCell(Text(nhanVien.gioiTinh ?? '')),
-          DataCell(Text(nhanVien.danToc ?? '')),
-          DataCell(Text(nhanVien.cmndCccd ?? '')),
-          DataCell(Text(nhanVien.viTri ?? '')),
-          DataCell(Text(nhanVien.loaiHdld ?? '')),
-          DataCell(Text(nhanVien.tinhTrangHd ?? '')),
-          DataCell(Checkbox(
-            value: nhanVien.trangThai ?? false,
-            onChanged: null,
-          )),
+          DataCell(Text(nhanVien.hoTenUv ?? '')),
+          DataCell(Text(nhanVien.ngaySinhUv ?? '')),
+          // DataCell(Text(nhanVien.uvGioitinh ?? '')),
+          DataCell(Text(nhanVien.danTocUv ?? '')),
+          DataCell(Text(nhanVien.soCmndUv ?? '')),
+          DataCell(Text(nhanVien.tenChucdanh ?? '')),
+          DataCell(Text(nhanVien.loaiHDLD ?? '')),
+          DataCell(Text(nhanVien.tinhtrangHd ?? '')),
+          DataCell(Text(nhanVien.tinhtrangHd ?? '')),
           DataCell(Row(
             children: [
               IconButton(
@@ -124,7 +123,7 @@ class _QuanLyNhanVienPageState extends State<QuanLyNhanVienPage> {
               ),
               IconButton(
                 icon: const Icon(Icons.delete, size: 20, color: Colors.red),
-                onPressed: () => _deleteNhanVien(nhanVien.id!),
+                onPressed: () => _deleteNhanVien(nhanVien.idphieu!),
               ),
             ],
           )),
@@ -138,6 +137,6 @@ class _QuanLyNhanVienPageState extends State<QuanLyNhanVienPage> {
   }
 
   void _deleteNhanVien(String id) {
-    _nhanVienBloc.add(NhanVienEvent.delete(id));
+    _bienDongBloc.add(BienDongEvent.delete(id));
   }
 }

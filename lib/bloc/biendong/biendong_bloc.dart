@@ -1,9 +1,11 @@
-import 'package:bloc/bloc.dart';
-import 'package:ttld/models/biendong_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ttld/models/nhanvien/nhanvien_model.dart';
 import 'package:ttld/repositories/biendong_repository.dart';
 
 part 'biendong_event.dart';
 part 'biendong_state.dart';
+part 'biendong_bloc.freezed.dart';
 
 class BienDongBloc extends Bloc<BienDongEvent, BienDongState> {
   final BienDongRepository _repository;
@@ -34,9 +36,9 @@ class BienDongBloc extends Bloc<BienDongEvent, BienDongState> {
   ) async {
     emit(BienDongLoading());
     try {
-      final newBienDong = await _repository.createBienDong(event.bienDong);
+      final newBienDong = await _repository.createBienDong(event.nhanVien);
       final currentState = state as BienDongLoaded;
-      emit(BienDongLoaded([...currentState.bienDongList, newBienDong]));
+      emit(BienDongLoaded([...currentState.nhanVienList, newBienDong]));
     } catch (e) {
       emit(BienDongError(e.toString()));
     }
@@ -48,11 +50,12 @@ class BienDongBloc extends Bloc<BienDongEvent, BienDongState> {
   ) async {
     emit(BienDongLoading());
     try {
-      final updatedBienDong = await _repository.updateBienDong(event.bienDong);
+      final updatedBienDong = await _repository.updateBienDong(event.nhanVien);
       final currentState = state as BienDongLoaded;
-      final newList = currentState.bienDongList.map((bd) =>
-          bd.id == updatedBienDong.id ? updatedBienDong : bd
-      ).toList();
+      final newList = currentState.nhanVienList
+          .map((bd) =>
+              bd.idphieu == updatedBienDong.idphieu ? updatedBienDong : bd)
+          .toList();
       emit(BienDongLoaded(newList));
     } catch (e) {
       emit(BienDongError(e.toString()));
@@ -67,8 +70,8 @@ class BienDongBloc extends Bloc<BienDongEvent, BienDongState> {
     try {
       await _repository.deleteBienDong(event.id);
       final currentState = state as BienDongLoaded;
-      final newList = currentState.bienDongList
-          .where((bd) => bd.id != event.id)
+      final newList = currentState.nhanVienList
+          .where((bd) => bd.idphieu != event.id)
           .toList();
       emit(BienDongLoaded(newList));
     } catch (e) {

@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:ttld/models/biendong_model.dart';
+import 'package:ttld/models/nhanvien/nhanvien_model.dart';
 import 'package:ttld/services/biendong_service.dart';
 
 class BienDongRepository {
@@ -7,30 +7,30 @@ class BienDongRepository {
 
   BienDongRepository(this._bienDongService);
 
-  Future<List<BienDong>> getBienDongList(String? userId) async {
+  Future<List<NhanVien>> getBienDongList(String? userId) async {
     try {
       final response = await _bienDongService.getBienDongList(userId);
-      return (response.data as List)
-          .map((json) => BienDong.fromJson(json))
+      return (response.data['data'] as List)
+          .map((json) => NhanVien.fromJson(json))
           .toList();
     } on DioException catch (e) {
       throw Exception('Failed to get bien dong list: ${e.message}');
     }
   }
 
-  Future<BienDong> createBienDong(BienDong bienDong) async {
+  Future<NhanVien> createBienDong(NhanVien bienDong) async {
     try {
       final response = await _bienDongService.createBienDong(bienDong);
-      return BienDong.fromJson(response.data);
+      return NhanVien.fromJson(response.data);
     } on DioException catch (e) {
       throw Exception('Failed to create bien dong: ${e.message}');
     }
   }
 
-  Future<BienDong> updateBienDong(BienDong bienDong) async {
+  Future<NhanVien> updateBienDong(NhanVien bienDong) async {
     try {
       final response = await _bienDongService.updateBienDong(bienDong);
-      return BienDong.fromJson(response.data);
+      return NhanVien.fromJson(response.data);
     } on DioException catch (e) {
       throw Exception('Failed to update bien dong: ${e.message}');
     }

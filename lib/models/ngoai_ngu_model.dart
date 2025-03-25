@@ -5,16 +5,16 @@ class NgoaiNgu extends GenericPickerItem {
   final bool status;
 
   NgoaiNgu({
-    required super.id,
-    required String name,
+    required int maNgoaingudaotao,
+    required String tenNgoaingudaotao,
     required this.displayOrder,
     required this.status,
-  }) : super(displayName: name);
+  }) : super(id: maNgoaingudaotao, displayName: tenNgoaingudaotao);
 
   factory NgoaiNgu.fromJson(Map<String, dynamic> json) {
     return NgoaiNgu(
-      id: json['id'],
-      name: json['name'],
+      maNgoaingudaotao: json['maNgoaingudaotao'],
+      tenNgoaingudaotao: json['tenNgoaingudaotao'],
       displayOrder: json['displayOrder'],
       status: json['status'],
     );
@@ -22,8 +22,8 @@ class NgoaiNgu extends GenericPickerItem {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'name': displayName,
+      'maNgoaingudaotao': id,
+      'tenNgoaingudaotao': displayName,
       'displayOrder': displayOrder,
       'status': status,
     };

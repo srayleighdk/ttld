@@ -63,7 +63,6 @@ class _GenericPickerState<T extends GenericPickerItem>
       displayItemBuilder: (T? item) => item?.displayName ?? '',
       hint: widget.hintText ?? 'Select an item',
       isLoading: widget.isLoading,
-      backgroundColor: Colors.white,
     );
   }
 }

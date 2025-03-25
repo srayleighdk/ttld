@@ -14,7 +14,11 @@ import 'package:ttld/pages/forgot_password/forgot_password.dart';
 import 'package:ttld/pages/giaiquyetvieclam/giaiquyetvieclam_page.dart';
 import 'package:ttld/pages/home/admin/admin_home.dart';
 import 'package:ttld/pages/home/home_page.dart';
+import 'package:ttld/pages/home/ntd/create_tuyen_dung/create_tuyen_dung.dart';
 import 'package:ttld/pages/home/ntd/ntd_home.dart';
+import 'package:ttld/pages/home/ntd/quan_ly_nhan_vien/create_nhan_vien.dart';
+import 'package:ttld/pages/home/ntd/quan_ly_nhan_vien/quan_ly_nhan_vien.dart';
+import 'package:ttld/pages/home/ntd/quan_ly_tuyen_dung/quan_ly_tuyen_dung.dart';
 import 'package:ttld/pages/home/ntd/update_ntd/update_ntd_page.dart';
 import 'package:ttld/pages/home/ntv/ntv_home.dart';
 import 'package:ttld/pages/home/ntv/update_ntv/update_ntv_page.dart';
@@ -50,31 +54,29 @@ class AppRouter {
     navigatorKey: rootNavigatorKey,
     debugLogDiagnostics: true,
     refreshListenable: GoRouterRefreshStream(authBloc.stream),
-    // redirect: (context, state) {
-    //   if (authBloc.state is! AuthAuthenticated) {
-    //     return '/login';
-    //   }
-    //   return null;
-    // },
     redirect: (context, state) {
       final authState = authBloc.state;
-      debugPrint(
-          '🔄 Redirect check: ${authState.runtimeType}, Location: ${state.uri}');
-      if (authState is AuthUnauthenticated &&
-          state.uri.toString() != '/login') {
+      debugPrint('🔄 Redirect check: $authState, Location: ${state.fullPath}');
+
+      // Redirect unauthenticated users from /home to /login
+      if (state.fullPath == '/home' && authState is! AuthAuthenticated) {
         return '/login';
       }
-      if (authState is AuthAuthenticated && state.uri.toString() == '/login') {
-        return '/home';
+
+      // Redirect authenticated users from /login to /home
+      if (state.fullPath == '/login' && authState is AuthAuthenticated) {
+        return '/home'; // Simply return the path
       }
-      return null;
+
+      return null; // No redirect
     },
+    initialLocation: '/login',
     routes: [
       // Root route with redirect
-      GoRoute(
-        path: '/',
-        redirect: (context, state) => '/login',
-      ),
+      // GoRoute(
+      //   path: '/',
+      //   redirect: (context, state) => '/login',
+      // ),
       GoRoute(
         path: '/log-he-thong',
         builder: (context, state) =>
@@ -224,7 +226,30 @@ class AppRouter {
               path: '/m01tt11',
               builder: (context, state) => M01TT11Page(
                     ntd: state.extra as Ntd?,
-                  ))
+                  )),
+          GoRoute(
+              path: '/create_tuyen_dung',
+              builder: (context, state) => CreateTuyenDungPage(
+                    ntd: state.extra as Ntd?,
+                  )),
+          GoRoute(
+            path: '/quan-ly-tuyen-dung',
+            builder: (context, state) => QuanLyTuyenDungPage(
+              userId: state.extra as String?,
+            ),
+          ),
+          GoRoute(
+            path: '/quan-ly-nhan-vien',
+            builder: (context, state) => QuanLyNhanVienPage(
+              userId: state.extra as String?,
+            ),
+            routes: [
+              GoRoute(
+                path: '/create-nhan-vien',
+                builder: (context, state) => const CreateNhanVien(),
+              )
+            ],
+          ),
         ],
       ),
       GoRoute(
@@ -235,9 +260,24 @@ class AppRouter {
           path: '/home',
           builder: (BuildContext context, GoRouterState state) {
             debugPrint('🏠 Navigating to Home with extra: ${state.extra}');
-
-            final userId = state.extra as String?;
-            return HomePage(userId: userId);
+            final extra = state.extra as Map<String, String>?;
+            final authState = authBloc.state;
+            String userId;
+            String userType;
+            if (extra != null) {
+              // Use extra if provided
+              userId = extra['userId'] ?? 'default_id';
+              userType = extra['userType'] ?? 'default_type';
+            } else if (authState is AuthAuthenticated) {
+              // Fallback to authState if extra is null
+              userId = authState.userId;
+              userType = authState.userType;
+            } else {
+              // Shouldn't reach here due to redirect, but provide fallback
+              userId = 'default_id';
+              userType = 'default_type';
+            }
+            return HomePage(userId: userId, userType: userType);
           }),
       GoRoute(
         path: '/error', // Default home route

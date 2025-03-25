@@ -20,7 +20,7 @@ class NgoaiNguRepositoryImpl implements NgoaiNguRepository {
         '/common/td-nn',
         queryParameters: {'pageSize': 1000},
       );
-      return (response.data['result'] as List)
+      return (response.data['data'] as List)
           .map((json) => NgoaiNgu.fromJson(json))
           .toList();
     } on DioException catch (e) {

@@ -1,12 +1,13 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:async';
-import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:ttld/models/tinh_trang_hd_model.dart';
-import 'package:ttld/repositories/common_repository.dart';
+import 'package:ttld/repositories/tinh_trang_hd_repository.dart';
 
 part 'tinhtrang_hd_state.dart';
 
 class TinhTrangHdCubit extends Cubit<TinhTrangHdState> {
-  final CommonRepository _repository;
+  final TinhTrangHdRepository _repository;
 
   TinhTrangHdCubit(this._repository) : super(TinhTrangHdInitial());
 

@@ -10,7 +10,7 @@ class KinhNghiemLamViecApiService {
 
   Future<List<KinhNghiemLamViec>> getKinhNghiem() async {
     final response = await _apiClient.dio.get('/bo-sung/kinh-nghiem');
-    return (response.data as List)
+    return (response.data['data'] as List)
         .map((json) => KinhNghiemLamViec.fromJson(json))
         .toList();
   }

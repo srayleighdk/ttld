@@ -7,9 +7,8 @@ class TuyenDungApiService {
   TuyenDungApiService(this._dio);
 
   Future<Response> getTuyenDungList(String? ntdId) async {
-    return _dio.get('/nghiep-vu/tuyendung',
-      queryParameters: {'ntdId': ntdId}
-    );
+    return _dio
+        .get('/nghiep-vu/tuyendung', queryParameters: {'idDoanhNghiep': ntdId});
   }
 
   Future<Response> createTuyenDung(NTDTuyenDung tuyenDung) async {

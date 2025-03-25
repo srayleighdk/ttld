@@ -1,16 +1,15 @@
+import 'package:ttld/widgets/reuseable_widgets/generic_picker.dart';
 
-class MucLuongMM {
-  final int idMucLuong;
-  final String tenMucLuong;
+class MucLuongMM extends GenericPickerItem {
   final int displayOrder;
   final bool status;
 
   MucLuongMM({
-    required this.idMucLuong,
-    required this.tenMucLuong,
+    required int idMucLuong,
+    required String tenMucLuong,
     required this.displayOrder,
     required this.status,
-  });
+  }) : super(id: idMucLuong, displayName: tenMucLuong);
 
   factory MucLuongMM.fromJson(Map<String, dynamic> json) {
     return MucLuongMM(
@@ -23,8 +22,8 @@ class MucLuongMM {
 
   Map<String, dynamic> toJson() {
     return {
-      'idMucLuong': idMucLuong,
-      'tenMucLuong': tenMucLuong,
+      'idMucLuong': id,
+      'tenMucLuong': displayName,
       'displayOrder': displayOrder,
       'status': status,
     };

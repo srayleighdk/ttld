@@ -3,14 +3,14 @@ import 'package:intl/intl.dart';
 
 class CustomPickDateTimeGrok extends StatefulWidget {
   const CustomPickDateTimeGrok({
-    Key? key,
+    super.key,
     this.labelText,
     this.hintText,
     this.onChanged,
     this.selectedDate,
     this.validator,
     this.initialValue,
-  }) : super(key: key);
+  });
 
   final String? labelText;
   final String? hintText;
@@ -76,7 +76,8 @@ class _CustomPickDateTimeGrokState extends State<CustomPickDateTimeGrok> {
       initialDatePickerMode: DatePickerMode.year,
     );
     if (picked != null && picked != _selectedDate) {
-      final normalizedDate = DateTime.utc(picked.year, picked.month, picked.day);
+      final normalizedDate =
+          DateTime.utc(picked.year, picked.month, picked.day);
       setState(() {
         _selectedDate = normalizedDate;
       });
@@ -88,38 +89,44 @@ class _CustomPickDateTimeGrokState extends State<CustomPickDateTimeGrok> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (widget.labelText != null)
-          Text(widget.labelText!, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 8),
-        InkWell(
-          onTap: () => _selectYear(context),
-          child: InputDecorator(
-            decoration: InputDecoration(
-              labelText: widget.hintText ?? 'Select Date',
-              border: const OutlineInputBorder(),
-              errorText: _errorText,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  _selectedDate != null
-                      ? DateFormat('dd-MM-yyyy').format(_selectedDate!.toLocal())
-                      : widget.hintText ?? 'Select Date',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: _selectedDate != null ? Colors.black : Colors.grey,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (widget.labelText != null)
+            Text(widget.labelText!,
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          InkWell(
+            onTap: () => _selectYear(context),
+            child: InputDecorator(
+              decoration: InputDecoration(
+                labelText: widget.hintText ?? 'Select Date',
+                border: const OutlineInputBorder(),
+                errorText: _errorText,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    _selectedDate != null
+                        ? DateFormat('dd-MM-yyyy')
+                            .format(_selectedDate!.toLocal())
+                        : widget.hintText ?? 'Select Date',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: _selectedDate != null ? Colors.black : Colors.grey,
+                    ),
                   ),
-                ),
-                const Icon(Icons.calendar_today),
-              ],
+                  const Icon(Icons.calendar_today),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

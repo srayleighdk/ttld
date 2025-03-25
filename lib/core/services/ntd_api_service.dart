@@ -10,7 +10,7 @@ class NTDApiService {
     try {
       final response = await _dio.get(ApiEndpoints.ntd);
       List<Ntd> ntdList =
-          (response.data as List).map((json) => Ntd.fromJson(json)).toList();
+          (response.data["data"] as List).map((json) => Ntd.fromJson(json)).toList();
       return ntdList;
     } catch (e) {
       throw Exception('Failed to fetch NTD list: $e');

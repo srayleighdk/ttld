@@ -6,6 +6,7 @@ import 'package:ttld/bloc/tblNhaTuyenDung/ntd_bloc.dart';
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
+import 'package:ttld/models/tblNhaTuyenDung/tblNhaTuyenDung_model.dart';
 
 class NTDHomePage extends StatefulWidget {
   static const routePath = '/ntd_home';
@@ -16,12 +17,15 @@ class NTDHomePage extends StatefulWidget {
 }
 
 class _NTDHomePageState extends State<NTDHomePage> {
+  Ntd? ntd;
+  String? userId;
   @override
   void initState() {
     super.initState();
     final authState = locator<AuthBloc>().state;
     if (authState is AuthAuthenticated && authState.userType == 'ntd') {
       locator<NTDBloc>().add(NTDFetchById(int.parse(authState.userId)));
+      userId = authState.userId;
     }
   }
 
@@ -134,14 +138,20 @@ class _NTDHomePageState extends State<NTDHomePage> {
           _buildQuickAccessButton(
             context: context,
             icon: FontAwesomeIcons.calendarPlus,
-            label: 'Đăng ký sử dụng lao động',
-            route: '/dang-ky-su-dung-lao-dong-03pli',
+            label: 'Thêm tuyển dụng mới',
+            route: '/ntd_home/create_tuyen_dung',
           ),
           _buildQuickAccessButton(
             context: context,
             icon: FontAwesomeIcons.calendarCheck,
-            label: 'Quản Lý Phiên GD',
-            route: '/quan-ly-phien-gd',
+            label: 'Quản Lý Tuyển Dụng',
+            route: '/ntd_home/quan-ly-tuyen-dung',
+          ),
+          _buildQuickAccessButton(
+            context: context,
+            icon: FontAwesomeIcons.calendarCheck,
+            label: 'Quản Lý Nhân Viên',
+            route: '/ntd_home/quan-ly-nhan-vien',
           ),
         ]),
       ],
@@ -179,11 +189,13 @@ class _NTDHomePageState extends State<NTDHomePage> {
         elevation: 4.0,
         child: InkWell(
           onTap: () {
-            print('Button tapped');
-            print('Current route: ${GoRouterState.of(context).uri.path}');
-            print('Attempting to navigate to: $route');
             try {
-              context.push(route); // Changed from context.go to context.push
+              if (route == '/ntd_home/quan-ly-tuyen-dung') {
+                context.push(route, extra: userId);
+                print('Pushing with userId: $userId');
+              } else {
+                context.push(route); // Changed from context.go to context.push
+              }
             } catch (e) {
               print('Navigation error: $e');
             }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ttld/bloc/tuyendung/tuyendung_bloc.dart';
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/helppers/map_help.dart';
 import 'package:ttld/models/do_tuoi_model.dart';
@@ -22,10 +23,12 @@ import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
 import 'package:ttld/widgets/reuseable_widgets/stepper_page.dart';
 
 class CreateTuyenDungPage extends StatefulWidget {
+  final Ntd? ntd;
   final NTDTuyenDung? tuyenDung;
   final bool isEdit;
   static const routePath = '/ntd_home/create_tuyen_dung';
-  const CreateTuyenDungPage({super.key, this.ntd, this.tuyenDung, this.isEdit = false});
+  const CreateTuyenDungPage(
+      {super.key, this.ntd, this.tuyenDung, this.isEdit = false});
 
   @override
   State<CreateTuyenDungPage> createState() => _CreateTuyenDungPageState();
@@ -44,16 +47,19 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
   void initState() {
     super.initState();
     _nganhKhacController.text = _tuyenDungData.tdNganhkhac ?? '';
-    _luongKhoiDiemController.text = _tuyenDungData.tdLuongkhoidiem?.toString() ?? '';
+    _luongKhoiDiemController.text =
+        _tuyenDungData.tdLuongkhoidiem?.toString() ?? '';
     _soLuongTuyenController.text = _tuyenDungData.tdSoluong?.toString() ?? '';
     _quyenLoiController.text = _tuyenDungData.tdQuyenloi ?? '';
     _moTaCongViecController.text = _tuyenDungData.tdMotacongviec ?? '';
-    _tdYeuCauChieuCaoController.text = _tuyenDungData.tdYeuCauChieuCao?.toString() ?? '';
+    _tdYeuCauChieuCaoController.text =
+        _tuyenDungData.tdYeuCauChieuCao?.toString() ?? '';
     _tdMotayeucauController.text = _tuyenDungData.tdMotayeucau ?? '';
     _tdNoiNopHoSoController.text = _tuyenDungData.tdNoinophoso ?? '';
     _tdHoSoBaoGomController.text = _tuyenDungData.tdHosobaogom ?? '';
     _tdGhiChuController.text = _tuyenDungData.tdGhichu ?? '';
   }
+
   final TextEditingController _tdYeuCauChieuCaoController =
       TextEditingController();
   final TextEditingController _tdMotayeucauController = TextEditingController();
@@ -65,64 +71,65 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
   final TextEditingController _tdGhiChuController = TextEditingController(
       text:
           'CHI TIẾT VUI LÒNG LIÊN HỆ Trung Tâm Dịch Vụ Việc Làm Bình Định - Số 215 Trần Hưng Đạo, TP. Quy Nhơn, tỉnh Bình Định. Điện Thoại: (0256) 3 646 509. Fax: (0256) 3 646 509. Email: pvl@vieclambinhdinh.gov.vn');
-  late NTDTuyenDung _tuyenDungData = widget.tuyenDung ?? NTDTuyenDung(
-    idTuyenDung: '',
-    tdTieude: '',
-    tdChucDanh: 0,
-    tdNganhkhac: '',
-    tdSoluong: 0,
-    tdMotacongviec: '',
-    tdMotayeucau: '',
-    tdQuyenloi: '',
-    tdGhichu: '',
-    tdLuongkhoidiem: 0,
-    ngayNhanHoSo: '',
-    ngayHetNhanHoSo: '',
-    isDenKhiTuyenXong: true,
-    tdNoinophoso: '',
-    tdHosobaogom: '',
-    tdYeuCauChieuCao: 0,
-    tdYeucauKinhnghiem: 0,
-    tdYeucauTuoiMin: 0,
-    tdYeucauTuoiMax: 0,
-    tdLanxem: 0,
-    tdDuyet: false,
-    createdDate: DateTime.now(),
-    createdBy: '',
-    modifiredDate: DateTime.now(),
-    modifiredBy: '',
-    tdId: '',
-    tdIdDoanhnghiep: '',
-    nguonThuThap: '',
-    soLuongDat: 0,
-    soLuongKhongDat: 0,
-    soLuongChoKetQua: 0,
-    idMucLuong: 0,
-    idDoTuoi: 0,
-    doanhNghiepYeuCau: '',
-    idDoituongCs: 0,
-    idphieut11: '',
-    idDoanhNghiep: '',
-    tdNoilamviec: 0,
-    tdNganhnghe: 0,
-    tdYeuCauHocVan: 0,
-    tdThoigianlamviec: 0,
-    idKinhnghiem: '',
-    idBacHoc: '',
-    idKynang: '',
-    idHinhthucLv: '',
-    tdYeuCauTinHoc: '',
-    tdYeuCauNgoaiNgu: '',
-    tdYeuCauGioiTinh: 0,
-    maHoso: '',
-    nguoiLienhe: '',
-    soDienthoai: '',
-    diaChiDn: '',
-    tenDoanhNghiep: '',
-    noiLamviec: '',
-    tenNganhnghe: '',
-    mucLuong: '',
-  );
+  late NTDTuyenDung _tuyenDungData = widget.tuyenDung ??
+      NTDTuyenDung(
+        idTuyenDung: '',
+        tdTieude: '',
+        tdChucDanh: 0,
+        tdNganhkhac: '',
+        tdSoluong: 0,
+        tdMotacongviec: '',
+        tdMotayeucau: '',
+        tdQuyenloi: '',
+        tdGhichu: '',
+        tdLuongkhoidiem: 0,
+        ngayNhanHoSo: '',
+        ngayHetNhanHoSo: '',
+        isDenKhiTuyenXong: true,
+        tdNoinophoso: '',
+        tdHosobaogom: '',
+        tdYeuCauChieuCao: 0,
+        tdYeucauKinhnghiem: 0,
+        tdYeucauTuoiMin: 0,
+        tdYeucauTuoiMax: 0,
+        tdLanxem: 0,
+        tdDuyet: false,
+        createdDate: DateTime.now(),
+        createdBy: '',
+        modifiredDate: DateTime.now(),
+        modifiredBy: '',
+        tdId: '',
+        tdIdDoanhnghiep: '',
+        nguonThuThap: '',
+        soLuongDat: 0,
+        soLuongKhongDat: 0,
+        soLuongChoKetQua: 0,
+        idMucLuong: 0,
+        idDoTuoi: 0,
+        doanhNghiepYeuCau: '',
+        idDoituongCs: 0,
+        idphieut11: '',
+        idDoanhNghiep: '',
+        tdNoilamviec: 0,
+        tdNganhnghe: 0,
+        tdYeuCauHocVan: 0,
+        tdThoigianlamviec: 0,
+        idKinhnghiem: '',
+        idBacHoc: '',
+        idKynang: '',
+        idHinhthucLv: '',
+        tdYeuCauTinHoc: '',
+        tdYeuCauNgoaiNgu: '',
+        tdYeuCauGioiTinh: 0,
+        maHoso: '',
+        nguoiLienhe: '',
+        soDienthoai: '',
+        diaChiDn: '',
+        tenDoanhNghiep: '',
+        noiLamviec: '',
+        tenNganhnghe: '',
+        mucLuong: '',
+      );
 
   List<String> steps = [
     'Thông tin\ntuyển dụng',
@@ -130,11 +137,38 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
     'Thông tin\nhồ sơ',
   ];
 
+  void _submitForm() {
+    // Update all fields from controllers
+    _tuyenDungData = _tuyenDungData.copyWith(
+      tdTieude: _tuyenDungData.tdTieude,
+      tdNganhkhac: _nganhKhacController.text,
+      tdSoluong: int.tryParse(_soLuongTuyenController.text),
+      tdLuongkhoidiem: int.tryParse(_luongKhoiDiemController.text),
+      tdMotacongviec: _moTaCongViecController.text,
+      tdQuyenloi: _quyenLoiController.text,
+      tdGhichu: _tdGhiChuController.text,
+      tdMotayeucau: _tdMotayeucauController.text,
+      tdYeuCauChieuCao: int.tryParse(_tdYeuCauChieuCaoController.text),
+      tdNoinophoso: _tdNoiNopHoSoController.text,
+      tdHosobaogom: _tdHoSoBaoGomController.text,
+    );
+
+    final bloc = locator<TuyenDungBloc>();
+    if (widget.isEdit) {
+      bloc.add(TuyenDungEvent.update(_tuyenDungData));
+    } else {
+      bloc.add(TuyenDungEvent.create(_tuyenDungData));
+    }
+
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.isEdit ? 'Chỉnh sửa tuyển dụng' : 'Thêm tuyển dụng mới'),
+        title: Text(
+            widget.isEdit ? 'Chỉnh sửa tuyển dụng' : 'Thêm tuyển dụng mới'),
       ),
       body: StepperPage(
           steps: steps,
@@ -154,8 +188,8 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
           CustomPickerGrok<NganhNgheTD>(
             label: Text('Ngành nghề tuyển dụng'),
             selectedItem: locator<List<NganhNgheTD>>().firstWhere(
-              (e) => e.id == _tuyenDungData.tdNganhnghe,
-              orElse: () => NganhNgheTD(id: 0, displayName: 'Chọn ngành nghề')),
+                (e) => e.id == _tuyenDungData.tdNganhnghe,
+                orElse: () => NganhNgheTD(id: 0, name: 'Chọn ngành nghề')),
             items: locator<List<NganhNgheTD>>(),
             onChanged: (NganhNgheTD? value) {
               _tuyenDungData = _tuyenDungData.copyWith(
@@ -180,8 +214,9 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
           CustomPickerGrok<TinhThanhModel>(
             label: Text('Nơi làm việc'),
             selectedItem: locator<List<TinhThanhModel>>().firstWhere(
-              (e) => e.id == _tuyenDungData.tdNoilamviec,
-              orElse: () => TinhThanhModel(id: 0, displayName: 'Chọn nơi làm việc')),
+                (e) => e.id == _tuyenDungData.tdNoilamviec,
+                orElse: () =>
+                    TinhThanhModel(tpId: 0, tpTen: 'Chọn nơi làm việc')),
             items: locator<List<TinhThanhModel>>(),
             onChanged: (TinhThanhModel? value) {
               _tuyenDungData = _tuyenDungData.copyWith(
@@ -247,8 +282,8 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        // mainAxisAlignment: MainAxisAlignment.start,
+        // crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           CustomPickerGrok<TrinhDoNgoaiNgu>(
             label: Text('Yêu cầu ngoại ngữ'),
@@ -495,28 +530,3 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
     );
   }
 }
-  void _submitForm() {
-    // Update all fields from controllers
-    _tuyenDungData = _tuyenDungData.copyWith(
-      tdTieude: _tuyenDungData.tdTieude,
-      tdNganhkhac: _nganhKhacController.text,
-      tdSoluong: int.tryParse(_soLuongTuyenController.text),
-      tdLuongkhoidiem: int.tryParse(_luongKhoiDiemController.text),
-      tdMotacongviec: _moTaCongViecController.text,
-      tdQuyenloi: _quyenLoiController.text,
-      tdGhichu: _tdGhiChuController.text,
-      tdMotayeucau: _tdMotayeucauController.text,
-      tdYeuCauChieuCao: int.tryParse(_tdYeuCauChieuCaoController.text),
-      tdNoinophoso: _tdNoiNopHoSoController.text,
-      tdHosobaogom: _tdHoSoBaoGomController.text,
-    );
-
-    final bloc = context.read<TuyenDungBloc>();
-    if (widget.isEdit) {
-      bloc.add(TuyenDungEvent.update(_tuyenDungData));
-    } else {
-      bloc.add(TuyenDungEvent.create(_tuyenDungData));
-    }
-    
-    Navigator.of(context).pop();
-  }

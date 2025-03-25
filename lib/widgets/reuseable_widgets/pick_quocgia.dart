@@ -55,7 +55,6 @@ class _PickerQuocGiaState extends State<PickerQuocGia> {
       hint: widget.hintText ?? 'Select a country',
       isLoading: widget.isLoading ||
           quocGias.isEmpty, // Show loading if list is empty or explicitly set
-      backgroundColor: Colors.white, // Example customization
     );
   }
 }

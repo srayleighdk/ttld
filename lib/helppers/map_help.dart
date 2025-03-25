@@ -21,7 +21,7 @@ final Map<int, String> loaiDoanhNgiepOptions = {
 final Map<int, String> gioiTinhOptions = {
   0: 'Nữ',
   1: 'Nam',
-  -1: 'Khác',
+  -1: 'Nam hoặc Nữ',
 };
 
 final Map<bool, String> hoNhanOptions = {
@@ -29,4 +29,8 @@ final Map<bool, String> hoNhanOptions = {
   false: 'Độc thân',
 };
 
-
+final Map<int, String> loaiBaoHiemOptions = {
+  0: 'Bắt buộc',
+  1: 'Không tham gia',
+  2: 'Tự nguyện',
+};

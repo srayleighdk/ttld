@@ -22,25 +22,23 @@ class CustomPickerMap<K> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: backgroundColor ?? Colors.grey.shade100,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      width: double.infinity,
-      child: DropdownMenu<K>(
-        label: label,
-        initialSelection: selectedItem,
-        onSelected: onChanged,
-        dropdownMenuEntries: items.entries.map((entry) => DropdownMenuEntry<K>(
-          value: entry.key,
-          label: displayItemBuilder != null ? displayItemBuilder!(entry.value) : entry.value,
-          style: MenuItemButton.styleFrom(foregroundColor: Colors.black),
-        )).toList(),
-        hintText: hint,
-        width: double.infinity,
-        textStyle: const TextStyle(color: Colors.black),
-      ),
+    return DropdownMenu<K>(
+      label: label,
+      initialSelection: selectedItem,
+      onSelected: onChanged,
+      dropdownMenuEntries: items.entries
+          .map((entry) => DropdownMenuEntry<K>(
+                value: entry.key,
+                label: displayItemBuilder != null
+                    ? displayItemBuilder!(entry.value)
+                    : entry.value,
+                style: MenuItemButton.styleFrom(foregroundColor: Colors.black),
+              ))
+          .toList(),
+      hintText: hint,
+      menuHeight: 500,
+      textStyle: const TextStyle(color: Colors.black),
+      expandedInsets: EdgeInsets.zero,
     );
   }
 }

@@ -2,11 +2,14 @@
 import 'package:flutter/material.dart';
 import 'package:ttld/bloc/tinh_thanh/tinh_thanh_cubit.dart';
 import 'package:ttld/core/di/injection.dart';
+import 'package:ttld/cubit/tinhtrang_hd_cubit.dart';
 import 'package:ttld/models/chuc_danh_model.dart';
+import 'package:ttld/models/do_tuoi_model.dart';
 import 'package:ttld/models/doituong_chinhsach/doituong.dart';
 import 'package:ttld/models/hinh_thuc_loai_hinh_model.dart';
 import 'package:ttld/models/hinh_thuc_tuyen_dung_model.dart';
 import 'package:ttld/models/kinh_nghiem_lam_viec.dart';
+import 'package:ttld/models/loai_hop_dong_lao_dong_model.dart';
 import 'package:ttld/models/muc_dich_lam_viec_model.dart';
 import 'package:ttld/models/muc_luong_mm.dart';
 import 'package:ttld/models/nganh_nghe_bachoc.dart';
@@ -18,13 +21,16 @@ import 'package:ttld/models/ngoai_ngu_model.dart';
 import 'package:ttld/models/quocgia/quocgia_model.dart';
 import 'package:ttld/models/thoigianlamviec_model.dart';
 import 'package:ttld/models/tinh_thanh_model.dart';
+import 'package:ttld/models/tinh_trang_hd_model.dart';
 import 'package:ttld/models/trinh_do_hoc_van_model.dart';
 import 'package:ttld/models/trinh_do_ngoai_ngu_model.dart';
 import 'package:ttld/models/trinh_do_tin_hoc_model.dart';
 import 'package:ttld/repositories/chuc_danh_repository.dart';
+import 'package:ttld/repositories/do_tuoi/do_tuoi_repository.dart';
 import 'package:ttld/repositories/hinh_thuc_loai_hinh/hinh_thuc_loai_hinh_repository.dart';
 import 'package:ttld/repositories/hinh_thuc_tuyen_dung_repository.dart';
 import 'package:ttld/repositories/kinh_nghiem_lam_viec_repository.dart';
+import 'package:ttld/repositories/loai_hop_dong_lao_dong_repository.dart';
 import 'package:ttld/repositories/muc_dich_lam_viec_repository.dart';
 import 'package:ttld/repositories/muc_luong/muc_luong_repository.dart';
 import 'package:ttld/repositories/nganh_nghe/nganh_nghe_bachoc_repository.dart';
@@ -36,6 +42,7 @@ import 'package:ttld/repositories/ngoai_ngu/ngoai_ngu_repository.dart';
 import 'package:ttld/repositories/quocgia/quocgia_repository.dart';
 import 'package:ttld/repositories/tblDmDoiTuongChinhSach/doituong_repository.dart';
 import 'package:ttld/repositories/thoigianlamviec/thoigianlamviec_repository.dart';
+import 'package:ttld/repositories/tinh_trang_hd_repository.dart';
 import 'package:ttld/repositories/trinh_do_hoc_van/trinh_do_hoc_van_repository.dart';
 import 'package:ttld/repositories/trinh_do_ngoai_ngu/trinh_do_ngoai_ngu_repository.dart';
 import 'package:ttld/repositories/trinh_do_tin_hoc/trinh_do_tin_hoc_repository.dart';
@@ -49,7 +56,8 @@ Future<void> initializeAppData() async {
   final nganhNgheCapDoRepository = locator<NganhNgheCapDoRepository>();
   final trinhDoRepository = locator<TrinhDoHocVanRepository>();
   final nganhNgheBacHocRepository = locator<NganhNgheBacHocRepository>();
-  final nganhNgheChuyenNganhRepository = locator<NganhNgheChuyenNganhRepository>();
+  final nganhNgheChuyenNganhRepository =
+      locator<NganhNgheChuyenNganhRepository>();
   final trinhDoTinHocRepository = locator<TrinhDoTinHocRepository>();
   final ngoaiNguRepository = locator<NgoaiNguRepository>();
   final trinhDoNgoaiNguRepository = locator<TrinhDoNgoaiNguRepository>();
@@ -65,6 +73,12 @@ Future<void> initializeAppData() async {
   final mucDichLamViecRepository = locator<MucDichLamViecRepository>();
   // Hinh Thuc TD
   final hinhThucTDRepository = locator<HinhThucTuyenDungRepository>();
+  // DoTuoi
+  final doTuoiRepository = locator<DoTuoiRepository>();
+  // Loai Hop Dong Lao Dong
+  final loaiHopDongLaoDongRepository = locator<LoaiHopDongLaoDongRepository>();
+  // Tinh Trang Hop Dong Cubit
+  final tinhTrangHDRepository = locator<TinhTrangHdRepository>();
   try {
     final quocGias = await quocGiaRepository.getQuocGias();
     locator.registerSingleton<List<QuocGia>>(quocGias);
@@ -125,7 +139,8 @@ Future<void> initializeAppData() async {
     debugPrint('Error preloading trinh do hoc van: $e');
   }
   try {
-    final nganhNgheBacHocs = await nganhNgheBacHocRepository.getNganhNgheBacHocs();
+    final nganhNgheBacHocs =
+        await nganhNgheBacHocRepository.getNganhNgheBacHocs();
     locator.registerSingleton<List<NganhNgheBacHoc>>(nganhNgheBacHocs);
     debugPrint(
         '🌍 Loaded ${nganhNgheBacHocs.length} NganhNgheBacHoc items at app start');
@@ -133,8 +148,10 @@ Future<void> initializeAppData() async {
     debugPrint('Error preloading nganh nghe bachoc: $e');
   }
   try {
-    final nganhNgheChuyenNganhs = await nganhNgheChuyenNganhRepository.getNganhNgheChuyenNganhs();
-    locator.registerSingleton<List<NganhNgheChuyenNganh>>(nganhNgheChuyenNganhs);
+    final nganhNgheChuyenNganhs =
+        await nganhNgheChuyenNganhRepository.getNganhNgheChuyenNganhs();
+    locator
+        .registerSingleton<List<NganhNgheChuyenNganh>>(nganhNgheChuyenNganhs);
     debugPrint(
         '🌍 Loaded ${nganhNgheChuyenNganhs.length} NganhNgheChuyenNganh items at app start');
   } catch (e) {
@@ -151,13 +168,13 @@ Future<void> initializeAppData() async {
   try {
     final ngoaiNgus = await ngoaiNguRepository.getNgoaiNgus();
     locator.registerSingleton<List<NgoaiNgu>>(ngoaiNgus);
-    debugPrint(
-        '🌍 Loaded ${ngoaiNgus.length} NgoaiNgu items at app start');
+    debugPrint('🌍 Loaded ${ngoaiNgus.length} NgoaiNgu items at app start');
   } catch (e) {
     debugPrint('Error preloading ngoai ngu: $e');
   }
   try {
-    final trinhDoNgoaiNgus = await trinhDoNgoaiNguRepository.getTrinhDoNgoaiNgus();
+    final trinhDoNgoaiNgus =
+        await trinhDoNgoaiNguRepository.getTrinhDoNgoaiNgus();
     locator.registerSingleton<List<TrinhDoNgoaiNgu>>(trinhDoNgoaiNgus);
     debugPrint(
         '🌍 Loaded ${trinhDoNgoaiNgus.length} TrinhDoNgoaiNgu items at app start');
@@ -165,7 +182,8 @@ Future<void> initializeAppData() async {
     debugPrint('Error preloading trinh do ngoai ngu: $e');
   }
   try {
-    final kinhNghiemLamViecs = await kinhNghiemLamViecRepository.getKinhNghiemLamViecs();
+    final kinhNghiemLamViecs =
+        await kinhNghiemLamViecRepository.getKinhNghiemLamViecs();
     locator.registerSingleton<List<KinhNghiemLamViec>>(kinhNghiemLamViecs);
     debugPrint(
         '🌍 Loaded ${kinhNghiemLamViecs.length} KinhNghiemLamViec items at app start');
@@ -175,14 +193,14 @@ Future<void> initializeAppData() async {
   try {
     final tinhThanhs = await tinhThanhRepository.loadTinhThanhs();
     locator.registerSingleton<List<TinhThanhModel>>(tinhThanhs);
-    debugPrint(
-        '🌍 Loaded ${tinhThanhs.length} TinhThanh items at app start');
+    debugPrint('🌍 Loaded ${tinhThanhs.length} TinhThanh items at app start');
   } catch (e) {
     debugPrint('Error preloading tinh thanh: $e');
   }
   // Thoi gian lam viec
   try {
-    final thoiGianLamViecs = await thoiGianLamViecRepository.getThoiGianLamViecs();
+    final thoiGianLamViecs =
+        await thoiGianLamViecRepository.getThoiGianLamViecs();
     locator.registerSingleton<List<ThoiGianLamViec>>(thoiGianLamViecs);
     debugPrint(
         '🌍 Loaded ${thoiGianLamViecs.length} ThoiGianLamViec items at app start');
@@ -199,9 +217,11 @@ Future<void> initializeAppData() async {
   }
   // Doi Tuong Chinh Sach
   try {
-    final doiTuongChinhSaches = await doiTuongChinhSachRepository.getDoiTuongs();
+    final doiTuongChinhSaches =
+        await doiTuongChinhSachRepository.getDoiTuongs();
     locator.registerSingleton<List<DoiTuong>>(doiTuongChinhSaches);
-    debugPrint('🌍 Loaded ${doiTuongChinhSaches.length} DoiTuongChinhSach items at app start');
+    debugPrint(
+        '🌍 Loaded ${doiTuongChinhSaches.length} DoiTuongChinhSach items at app start');
   } catch (e) {
     debugPrint('Error preloading doi tuong chinh sach: $e');
   }
@@ -209,16 +229,45 @@ Future<void> initializeAppData() async {
   try {
     final mucDichLamViecs = await mucDichLamViecRepository.getMucDichLamViec();
     locator.registerSingleton<List<MucDichLamViec>>(mucDichLamViecs);
-    debugPrint('🌍 Loaded ${mucDichLamViecs.length} MucDichLamViec items at app start');
-  } catch (e) { 
+    debugPrint(
+        '🌍 Loaded ${mucDichLamViecs.length} MucDichLamViec items at app start');
+  } catch (e) {
     debugPrint('Error preloading muc dich lam viec: $e');
   }
   // Hinh Thuc TD
   try {
     final hinhThucTDs = await hinhThucTDRepository.getHinhThucTuyenDung();
     locator.registerSingleton<List<HinhThucTuyenDung>>(hinhThucTDs);
-    debugPrint('🌍 Loaded ${hinhThucTDs.length} HinhThucTuyenDung items at app start');
+    debugPrint(
+        '🌍 Loaded ${hinhThucTDs.length} HinhThucTuyenDung items at app start');
   } catch (e) {
     debugPrint('Error preloading hinh thuc td: $e');
+  }
+  // DoTuoi
+  try {
+    final doTuois = await doTuoiRepository.getDoTuois();
+    locator.registerSingleton<List<DoTuoi>>(doTuois);
+    debugPrint('🌍 Loaded ${doTuois.length} DoTuoi items at app start');
+  } catch (e) {
+    debugPrint('Error preloading do tuoi: $e');
+  }
+  // Loai Hop Dong Lao Dong
+  try {
+    final loaiHopDongLaoDongs =
+        await loaiHopDongLaoDongRepository.getLoaiHopDong();
+    locator.registerSingleton<List<LoaiHopDongLaoDong>>(loaiHopDongLaoDongs);
+    debugPrint(
+        '🌍 Loaded ${loaiHopDongLaoDongs.length} LoaiHopDongLaoDong items at app start');
+  } catch (e) {
+    debugPrint('Error preloading loai hop dong lao dong: $e');
+  }
+  // Tinh Trang Hop Dong Cubit
+  try {
+    final tinhTrangHds = await tinhTrangHDRepository.fetchTinhTrangHd();
+    locator.registerSingleton<List<TinhTrangHdModel>>(tinhTrangHds);
+    debugPrint(
+        '🌍 Loaded ${tinhTrangHds.length} TinhTrangHd items at app start');
+  } catch (e) {
+    debugPrint('Error preloading tinh trang hop dong: $e');
   }
 }

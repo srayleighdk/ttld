@@ -98,7 +98,6 @@ class _GenericPickerState<T extends GenericPickerItem>
           ? 'No items available'
           : (widget.hintText ?? 'Select an item'),
       isLoading: widget.isLoading,
-      backgroundColor: Colors.white,
     );
   }
 }

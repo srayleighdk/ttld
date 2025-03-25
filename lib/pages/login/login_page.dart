@@ -4,8 +4,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/core/utils/toast_utils.dart';
-import 'package:ttld/features/auth/bloc/auth_bloc.dart';
-import 'package:ttld/features/auth/bloc/auth_state.dart';
 import 'package:ttld/features/auth/bloc/login_bloc.dart';
 import 'package:ttld/features/auth/bloc/login_event.dart';
 import 'package:ttld/features/auth/bloc/login_state.dart';
@@ -56,23 +54,6 @@ class _LoginPageState extends State<LoginPage> {
         BlocListener<LoginBloc, LoginState>(
           bloc: locator<LoginBloc>(),
           listener: (context, state) {
-            // debugPrint('👂 Login state changed: ${state.runtimeType}');
-            //
-            // if (state is LoginSuccess) {
-            //   debugPrint('🎉 Login successful in page');
-            //   ToastUtils.showToastSuccess(
-            //     context,
-            //     description: 'Welcome back!',
-            //     message: '',
-            //   );
-            //   context.go('/home', extra: state.userId);
-            // } else if (state is LoginFailure) {
-            //   debugPrint('❌ Login failed in page: ${state.error}');
-            //   ToastUtils.showToastOops(
-            //     context,
-            //     description: state.error,
-            //   );
-            // }
             debugPrint('👂 Login state changed: ${state.runtimeType}');
 
             if (state is LoginSuccess) {
@@ -84,7 +65,10 @@ class _LoginPageState extends State<LoginPage> {
                 message: '',
               );
               try {
-                context.go('/home', extra: state.userId);
+                context.go('/home', extra: {
+                  'userId': state.userId,
+                  'userType': state.userType
+                });
                 debugPrint('🚀 Navigation to /home triggered');
               } catch (e) {
                 debugPrint('❌ Navigation error: $e');
@@ -98,27 +82,6 @@ class _LoginPageState extends State<LoginPage> {
             }
           },
         ),
-        // BlocListener<AuthBloc, AuthState>(
-        //   bloc: locator<AuthBloc>(),
-        //   listener: (context, state) {
-        //     debugPrint('👂 Auth state changed: ${state.runtimeType}');
-        //
-        //     // if (state is AuthAuthenticated) {
-        //     //   debugPrint('🔐 Auth state is authenticated, navigating...');
-        //     //   if (state.isAdmin) {
-        //     //     context.go('/admin/home');
-        //     //   } else if (state.isAdmin == false &&
-        //     //       state.userType == UserType.ntv.name) {
-        //     //     context.go('/ntv_home');
-        //     //   } else if (state.isAdmin == false &&
-        //     //       state.userType == UserType.ntd.name) {
-        //     //     context.go('/ntd_home');
-        //     //   } else {
-        //     //     context.go('/error');
-        //     //   }
-        //     // }
-        //   },
-        // ),
       ],
       child: Scaffold(
         body: SingleChildScrollView(

@@ -6,7 +6,6 @@ class CustomPickerGrok<T> extends StatelessWidget {
   final T? selectedItem;
   final ValueChanged<T?> onChanged;
   final String hint;
-  final Color? backgroundColor;
   final String Function(T?)? displayItemBuilder;
   final Widget? label;
   final String? Function(T?)? validator;
@@ -18,7 +17,6 @@ class CustomPickerGrok<T> extends StatelessWidget {
     required this.selectedItem,
     required this.onChanged,
     this.hint = 'Select an option',
-    this.backgroundColor,
     this.displayItemBuilder,
     this.label,
     this.validator,
@@ -27,24 +25,17 @@ class CustomPickerGrok<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(
-        'CustomPickerGrok build: label=${(label as Text?)?.data}, items=${items.map((e) => (e as dynamic).id)}, selected=${(selectedItem as dynamic)?.id}');
     return FormField<T>(
       validator: validator,
       initialValue: selectedItem,
       builder: (FormFieldState<T> state) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: backgroundColor ?? Colors.grey.shade100,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              width: double.infinity,
-              child: DropdownMenu<T>(
-                key: ValueKey(
-                    '${items.length}_${selectedItem?.hashCode}'), // Force rebuild when items or selectedItem changes
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              DropdownMenu<T>(
+                key: ValueKey('${items.length}_${selectedItem?.hashCode}'),
                 label: label,
                 initialSelection: selectedItem,
                 onSelected: (T? value) {
@@ -60,7 +51,8 @@ class CustomPickerGrok<T> extends StatelessWidget {
                   );
                 }).toList(),
                 hintText: hint,
-                width: double.infinity,
+                expandedInsets: EdgeInsets.zero,
+                menuHeight: 500,
                 trailingIcon: isLoading
                     ? SizedBox(
                         width: 20.0,
@@ -73,16 +65,16 @@ class CustomPickerGrok<T> extends StatelessWidget {
                       )
                     : null,
               ),
-            ),
-            if (state.hasError)
-              Padding(
-                padding: const EdgeInsets.only(left: 16, top: 4),
-                child: Text(
-                  state.errorText ?? '',
-                  style: TextStyle(color: Colors.red.shade700, fontSize: 12),
+              if (state.hasError)
+                Padding(
+                  padding: const EdgeInsets.only(left: 16, top: 4),
+                  child: Text(
+                    state.errorText ?? '',
+                    style: TextStyle(color: Colors.red.shade700, fontSize: 12),
+                  ),
                 ),
-              ),
-          ],
+            ],
+          ),
         );
       },
     );
