@@ -54,7 +54,8 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
 
   void _initializeExpandedState(PermissionRole permission) {
     // Use idMenu or another unique identifier as key
-    _expandedState[permission.idMenu] = true; // Default to expanded
+    // Start with parent nodes collapsed
+    _expandedState[permission.idMenu] = permission.children?.isEmpty ?? true;
 
     if (permission.children != null) {
       for (var child in permission.children!) {
@@ -157,6 +158,20 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
     }).toList();
   }
 
+  void _updateChildrenPermissions(PermissionRole parent, bool value) {
+    final updatedChildren = parent.children?.map((child) {
+      return child.copyWith(
+        executeSelect: value,
+        executeInsert: value,
+        executeUpdate: value,
+        executeDelete: value,
+        executeDuyet: value,
+      );
+    }).toList();
+    
+    _updatePermissionInList(parent.copyWith(children: updatedChildren));
+  }
+
   Widget _buildPermissionItem(PermissionRole permission, int depth) {
     bool hasChildren =
         permission.children != null && permission.children!.isNotEmpty;
@@ -211,9 +226,10 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
                       permission.executeSelect ?? false,
                       (value) {
                         setState(() {
-                          _updatePermissionInList(
-                            permission.copyWith(executeSelect: value),
-                          );
+                          if (hasChildren) {
+                            _updateChildrenPermissions(permission, value);
+                          }
+                          _updatePermissionInList(permission.copyWith(executeSelect: value));
                         });
                       },
                     ),
@@ -222,9 +238,10 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
                       permission.executeInsert ?? false,
                       (value) {
                         setState(() {
-                          _updatePermissionInList(
-                            permission.copyWith(executeInsert: value),
-                          );
+                          if (hasChildren) {
+                            _updateChildrenPermissions(permission, value);
+                          }
+                          _updatePermissionInList(permission.copyWith(executeInsert: value));
                         });
                       },
                     ),
@@ -233,9 +250,10 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
                       permission.executeUpdate ?? false,
                       (value) {
                         setState(() {
-                          _updatePermissionInList(
-                            permission.copyWith(executeUpdate: value),
-                          );
+                          if (hasChildren) {
+                            _updateChildrenPermissions(permission, value);
+                          }
+                          _updatePermissionInList(permission.copyWith(executeUpdate: value));
                         });
                       },
                     ),
@@ -244,9 +262,10 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
                       permission.executeDelete ?? false,
                       (value) {
                         setState(() {
-                          _updatePermissionInList(
-                            permission.copyWith(executeDelete: value),
-                          );
+                          if (hasChildren) {
+                            _updateChildrenPermissions(permission, value);
+                          }
+                          _updatePermissionInList(permission.copyWith(executeDelete: value));
                         });
                       },
                     ),
@@ -255,9 +274,10 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
                       permission.executeDuyet ?? false,
                       (value) {
                         setState(() {
-                          _updatePermissionInList(
-                            permission.copyWith(executeDuyet: value),
-                          );
+                          if (hasChildren) {
+                            _updateChildrenPermissions(permission, value);
+                          }
+                          _updatePermissionInList(permission.copyWith(executeDuyet: value));
                         });
                       },
                     ),
