@@ -34,6 +34,7 @@ import 'package:ttld/pages/loghethong/loghethong_page.dart';
 import 'package:ttld/pages/login/login_page.dart';
 import 'package:ttld/pages/m01tt11/m01tt11.dart';
 import 'package:ttld/pages/phanquyen/phanquyen_page.dart';
+import 'package:ttld/pages/phanquyen/phanquyen_user.dart';
 import 'package:ttld/pages/quantridulieu/quantridulieu_page.dart';
 import 'package:ttld/pages/quantringuoidung/quantringuoidung_page.dart';
 import 'package:ttld/pages/signup/signup.dart';
@@ -86,6 +87,11 @@ class AppRouter {
         path: '/phan-quyen',
         builder: (context, state) =>
             const PhanQuyenPage(), // Replace with your page
+      ),
+      GoRoute(
+        path: '/phan-quyen-user',
+        builder: (context, state) =>
+            PhanQuyenUser(userName: state.extra as String),
       ),
       GoRoute(
         path: '/quan-tri-du-lieu',

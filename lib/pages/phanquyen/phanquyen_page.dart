@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
+import 'package:go_router/go_router.dart';
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/models/user/user_model.dart';
 import 'package:ttld/repositories/user/user_repository.dart';
@@ -48,7 +49,7 @@ class _PhanQuyenPageState extends State<PhanQuyenPage> {
   void _editUser(UserModel user) {
     context.push(
       '/phan-quyen-user',
-      extra: user.name,
+      extra: user.userName,
     );
   }
 

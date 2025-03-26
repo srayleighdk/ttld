@@ -16,6 +16,9 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
   List<PermissionRole> _permissions = [];
   final UserRoleRepository _userRepository = locator<UserRoleRepository>();
 
+  // Map to keep track of expanded state for each permission
+  final Map<String?, bool> _expandedState = {};
+
   @override
   void initState() {
     super.initState();
@@ -33,6 +36,10 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
 
       setState(() {
         _permissions = permissions;
+        // Initialize expanded state for all permissions
+        for (var permission in permissions) {
+          _initializeExpandedState(permission);
+        }
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -42,6 +49,17 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
       setState(() {
         _isLoading = false;
       });
+    }
+  }
+
+  void _initializeExpandedState(PermissionRole permission) {
+    // Use idMenu or another unique identifier as key
+    _expandedState[permission.idMenu] = true; // Default to expanded
+
+    if (permission.children != null) {
+      for (var child in permission.children!) {
+        _initializeExpandedState(child);
+      }
     }
   }
 
@@ -73,13 +91,6 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
     return Scaffold(
       appBar: AppBar(
         title: Text('User Permissions - ${widget.userName}'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.save),
-            onPressed: _isLoading ? null : _savePermissions,
-            tooltip: 'Save Permissions',
-          ),
-        ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -90,12 +101,26 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Permission Management',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Permission Management',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          ElevatedButton.icon(
+                            onPressed: _isLoading ? null : _savePermissions,
+                            icon: const Icon(Icons.save),
+                            label: const Text('Update Permissions'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue,
+                              foregroundColor: Colors.white,
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 16),
                       _buildPermissionTree(_permissions),
@@ -115,6 +140,10 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
   }
 
   Widget _buildPermissionItem(PermissionRole permission, int depth) {
+    bool hasChildren =
+        permission.children != null && permission.children!.isNotEmpty;
+    bool isExpanded = _expandedState[permission.idMenu] ?? true;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -125,12 +154,34 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  permission.description ?? 'No Description',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
+                Row(
+                  children: [
+                    if (hasChildren)
+                      IconButton(
+                        icon: Icon(
+                          isExpanded ? Icons.expand_more : Icons.chevron_right,
+                          size: 24,
+                        ),
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        onPressed: () {
+                          setState(() {
+                            _expandedState[permission.idMenu] = !isExpanded;
+                          });
+                        },
+                      )
+                    else
+                      const SizedBox(width: 24), // For alignment when no toggle
+                    Expanded(
+                      child: Text(
+                        permission.description ?? 'No Description',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 8),
                 Wrap(
@@ -142,7 +193,9 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
                       permission.executeSelect ?? false,
                       (value) {
                         setState(() {
-                          permission = permission.copyWith(executeSelect: value);
+                          permission = permission.copyWith(
+                            executeSelect: value,
+                          );
                         });
                       },
                     ),
@@ -151,7 +204,9 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
                       permission.executeInsert ?? false,
                       (value) {
                         setState(() {
-                          permission = permission.copyWith(executeInsert: value);
+                          permission = permission.copyWith(
+                            executeInsert: value,
+                          );
                         });
                       },
                     ),
@@ -160,7 +215,9 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
                       permission.executeUpdate ?? false,
                       (value) {
                         setState(() {
-                          permission = permission.copyWith(executeUpdate: value);
+                          permission = permission.copyWith(
+                            executeUpdate: value,
+                          );
                         });
                       },
                     ),
@@ -169,7 +226,9 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
                       permission.executeDelete ?? false,
                       (value) {
                         setState(() {
-                          permission = permission.copyWith(executeDelete: value);
+                          permission = permission.copyWith(
+                            executeDelete: value,
+                          );
                         });
                       },
                     ),
@@ -178,7 +237,9 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
                       permission.executeDuyet ?? false,
                       (value) {
                         setState(() {
-                          permission = permission.copyWith(executeDuyet: value);
+                          permission = permission.copyWith(
+                            executeDuyet: value,
+                          );
                         });
                       },
                     ),
@@ -188,7 +249,7 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
             ),
           ),
         ),
-        if (permission.children != null && permission.children!.isNotEmpty)
+        if (hasChildren && isExpanded)
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: permission.children!

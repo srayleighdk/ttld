@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ttld/models/user/user_model.dart';
-import 'package:ttld/repository/user/user_repository.dart';
+import 'package:ttld/repositories/user/user_repository.dart';
 
 part 'user_event.dart';
 part 'user_state.dart';

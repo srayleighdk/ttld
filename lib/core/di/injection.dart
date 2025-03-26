@@ -15,6 +15,8 @@ import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_bloc.dart';
 import 'package:ttld/bloc/tblNhaTuyenDung/ntd_bloc.dart';
 import 'package:ttld/bloc/tblViecLamUngVien/vieclam_ungvien_bloc.dart';
 import 'package:ttld/bloc/tuyendung/tuyendung_bloc.dart';
+import 'package:ttld/bloc/user/user_bloc.dart';
+import 'package:ttld/blocs/user_role_bloc/user_role_bloc.dart';
 import 'package:ttld/core/services/dan_toc_api_service.dart';
 import 'package:ttld/core/services/hinh_thuc_dao_tao_api_service.dart';
 import 'package:ttld/core/services/hinh_thuc_dia_diem_api_service.dart';
@@ -120,10 +122,14 @@ import 'package:ttld/repositories/trinh_do_tin_hoc/trinh_do_tin_hoc_repository.d
 import 'package:ttld/repositories/trinh_do_van_hoa/trinh_do_van_hoa_repository.dart';
 import 'package:ttld/repositories/tt_tantat/tt_tantat_repository.dart';
 import 'package:ttld/repositories/tuyendung_repository.dart';
+import 'package:ttld/repositories/user/user_repository.dart';
+import 'package:ttld/repositories/user_role_repository.dart';
 import 'package:ttld/repositories/xa/xa_repository.dart';
 import 'package:ttld/bloc/kcn/kcn_cubit.dart';
 import 'package:ttld/services/biendong_service.dart';
 import 'package:ttld/services/tuyendung_service.dart';
+import 'package:ttld/services/user_api_service.dart';
+import 'package:ttld/services/user_role_service.dart';
 
 final locator = GetIt.instance;
 
@@ -498,4 +504,20 @@ Future<void> setupLocator() async {
       () => TinhTrangHdRepositoryImpl(locator<TinhTrangHdApiService>()));
   locator.registerLazySingleton(
       () => TinhTrangHdCubit(locator<TinhTrangHdRepository>()));
+
+  // User
+  locator.registerLazySingleton<UserApiService>(
+      () => UserApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<UserRepository>(
+      () => UserRepository(userApiService: locator<UserApiService>()));
+  locator.registerLazySingleton(
+      () => UserBloc(userRepository: locator<UserRepository>()));
+
+  // Permission Role
+  locator.registerLazySingleton<UserRoleService>(
+      () => UserRoleService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<UserRoleRepository>(
+      () => UserRoleRepository(locator<UserRoleService>()));
+  locator
+      .registerLazySingleton(() => UserRoleBloc(locator<UserRoleRepository>()));
 }

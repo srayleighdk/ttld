@@ -1,20 +1,25 @@
 import 'package:dio/dio.dart';
-import 'package:tuyendungtrongnld/model/permission_role/permission_role.dart';
+import 'package:ttld/models/permission_role/permission_role.dart';
 
 class UserRoleService {
   final Dio _dio;
 
   UserRoleService(this._dio);
 
-  Future<List<PermissionRole>> getRoles() async {
-    final response = await _dio.get('/api/user/user-roles');
-    return (response.data as List)
+  Future<List<PermissionRole>> getRoles(String userName) async {
+    final response = await _dio.get('/user/user-roles', queryParameters: {
+      'user': userName,
+    });
+    return (response.data['data'] as List)
         .map((e) => PermissionRole.fromJson(e))
         .toList();
   }
 
-  Future<void> updateRoles(List<PermissionRole> roles) async {
-    await _dio.post('/api/user/user-roles', 
-      data: roles.map((e) => e.toJson()).toList());
+  Future<void> updateRoles(List<PermissionRole> roles, String userName) async {
+    final requestBody = {
+      'user': userName,
+      'roles': roles.map((e) => e.toJson()).toList(),
+    };
+    await _dio.post('/user/user-roles', data: requestBody);
   }
 }
