@@ -46,47 +46,10 @@ class _PhanQuyenPageState extends State<PhanQuyenPage> {
   }
 
   void _editUser(UserModel user) {
-    // Show dialog to edit user
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Edit User Permission'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('Edit permissions for ${user.name}'),
-            const SizedBox(height: 20),
-            DropdownButtonFormField<String>(
-              value: user.idUserGroup,
-              decoration: const InputDecoration(
-                labelText: 'Role',
-                border: OutlineInputBorder(),
-              ),
-              items: ['ADMIN', 'Editor', 'User', 'Viewer']
-                  .map((role) => DropdownMenuItem(
-                        value: role,
-                        child: Text(role),
-                      ))
-                  .toList(),
-              onChanged: (value) {
-                // Update role in real implementation
-              },
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              // Save changes in real implementation
-              Navigator.pop(context);
-            },
-            child: const Text('Save'),
-          ),
-        ],
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PhanQuyenUser(userName: user.name),
       ),
     );
   }
