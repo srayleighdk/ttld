@@ -46,11 +46,9 @@ class _PhanQuyenPageState extends State<PhanQuyenPage> {
   }
 
   void _editUser(UserModel user) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => PhanQuyenUser(userName: user.name),
-      ),
+    context.push(
+      '/phan-quyen-user',
+      extra: user.name,
     );
   }
 
