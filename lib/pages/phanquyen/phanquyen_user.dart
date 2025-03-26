@@ -142,7 +142,7 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
                       permission.executeSelect ?? false,
                       (value) {
                         setState(() {
-                          permission.executeSelect = value;
+                          permission = permission.copyWith(executeSelect: value);
                         });
                       },
                     ),
@@ -151,7 +151,7 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
                       permission.executeInsert ?? false,
                       (value) {
                         setState(() {
-                          permission.executeInsert = value;
+                          permission = permission.copyWith(executeInsert: value);
                         });
                       },
                     ),
@@ -160,7 +160,7 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
                       permission.executeUpdate ?? false,
                       (value) {
                         setState(() {
-                          permission.executeUpdate = value;
+                          permission = permission.copyWith(executeUpdate: value);
                         });
                       },
                     ),
@@ -169,7 +169,7 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
                       permission.executeDelete ?? false,
                       (value) {
                         setState(() {
-                          permission.executeDelete = value;
+                          permission = permission.copyWith(executeDelete: value);
                         });
                       },
                     ),
@@ -178,7 +178,7 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
                       permission.executeDuyet ?? false,
                       (value) {
                         setState(() {
-                          permission.executeDuyet = value;
+                          permission = permission.copyWith(executeDuyet: value);
                         });
                       },
                     ),
