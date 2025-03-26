@@ -139,6 +139,24 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
     );
   }
 
+  void _updatePermissionInList(PermissionRole newPermission) {
+    _permissions = _updatePermissionRecursive(_permissions, newPermission);
+  }
+
+  List<PermissionRole> _updatePermissionRecursive(
+      List<PermissionRole> permissions, PermissionRole newPermission) {
+    return permissions.map((perm) {
+      if (perm.idMenu == newPermission.idMenu) {
+        return newPermission;
+      } else if (perm.children != null) {
+        return perm.copyWith(
+          children: _updatePermissionRecursive(perm.children!, newPermission),
+        );
+      }
+      return perm;
+    }).toList();
+  }
+
   Widget _buildPermissionItem(PermissionRole permission, int depth) {
     bool hasChildren =
         permission.children != null && permission.children!.isNotEmpty;
@@ -193,8 +211,8 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
                       permission.executeSelect ?? false,
                       (value) {
                         setState(() {
-                          permission = permission.copyWith(
-                            executeSelect: value,
+                          _updatePermissionInList(
+                            permission.copyWith(executeSelect: value),
                           );
                         });
                       },
@@ -204,8 +222,8 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
                       permission.executeInsert ?? false,
                       (value) {
                         setState(() {
-                          permission = permission.copyWith(
-                            executeInsert: value,
+                          _updatePermissionInList(
+                            permission.copyWith(executeInsert: value),
                           );
                         });
                       },
@@ -215,8 +233,8 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
                       permission.executeUpdate ?? false,
                       (value) {
                         setState(() {
-                          permission = permission.copyWith(
-                            executeUpdate: value,
+                          _updatePermissionInList(
+                            permission.copyWith(executeUpdate: value),
                           );
                         });
                       },
@@ -226,8 +244,8 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
                       permission.executeDelete ?? false,
                       (value) {
                         setState(() {
-                          permission = permission.copyWith(
-                            executeDelete: value,
+                          _updatePermissionInList(
+                            permission.copyWith(executeDelete: value),
                           );
                         });
                       },
@@ -237,8 +255,8 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
                       permission.executeDuyet ?? false,
                       (value) {
                         setState(() {
-                          permission = permission.copyWith(
-                            executeDuyet: value,
+                          _updatePermissionInList(
+                            permission.copyWith(executeDuyet: value),
                           );
                         });
                       },
