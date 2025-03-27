@@ -1,17 +1,17 @@
+import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:datatable2/datatable2.dart';
 import '../../../blocs/chinhsachluong_bloc/chinhsachluong_bloc.dart';
 import '../../../models/chinhsachluong/chinhsachluong_model.dart';
 
-class ChinhsachluongPage extends StatefulWidget {
-  const ChinhsachluongPage({super.key});
+class ChinhSachLuongPage extends StatefulWidget {
+  const ChinhSachLuongPage({super.key});
 
   @override
-  State<ChinhsachluongPage> createState() => _ChinhsachluongPageState();
+  State<ChinhSachLuongPage> createState() => _ChinhSachLuongPageState();
 }
 
-class _ChinhsachluongPageState extends State<ChinhsachluongPage> {
+class _ChinhSachLuongPageState extends State<ChinhSachLuongPage> {
   @override
   void initState() {
     super.initState();
@@ -25,7 +25,9 @@ class _ChinhsachluongPageState extends State<ChinhsachluongPage> {
         title: const Text('Quản lý Chính sách lương'),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.read<ChinhSachLuongBloc>().add(CreateChinhSachLuong(ChinhSachLuong())),
+        onPressed: () => context
+            .read<ChinhSachLuongBloc>()
+            .add(CreateChinhSachLuong(ChinhSachLuong())),
         child: const Icon(Icons.add),
       ),
       body: BlocConsumer<ChinhSachLuongBloc, ChinhSachLuongState>(
@@ -78,34 +80,42 @@ class _ChinhsachluongPageState extends State<ChinhsachluongPage> {
           label: Text('Tình trạng'),
         ),
       ],
-      rows: cslList.map((csl) => DataRow(
-        cells: [
-          DataCell(
-            Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.edit),
-                  onPressed: () => context.read<ChinhSachLuongBloc>().add(UpdateChinhSachLuong(csl)),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () => context.read<ChinhSachLuongBloc>().add(DeleteChinhSachLuong(csl.id!)),
-                ),
-              ],
-            ),
-          ),
-          DataCell(Text(csl.id?.toString() ?? '')),
-          DataCell(Text(csl.ten ?? '')),
-          DataCell(Text(csl.vung?.toString() ?? '')),
-          DataCell(Text('${csl.salaryMin?.toString() ?? ''} VNĐ')),
-          DataCell(
-            Chip(
-              backgroundColor: csl.status == true ? Colors.green.shade100 : Colors.red.shade100,
-              label: Text(csl.status == true ? 'Kích hoạt' : 'Vô hiệu'),
-            ),
-          ),
-        ],
-      )).toList(),
+      rows: cslList
+          .map((csl) => DataRow(
+                cells: [
+                  DataCell(
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.edit),
+                          onPressed: () => context
+                              .read<ChinhSachLuongBloc>()
+                              .add(UpdateChinhSachLuong(csl)),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () => context
+                              .read<ChinhSachLuongBloc>()
+                              .add(DeleteChinhSachLuong(csl.id!)),
+                        ),
+                      ],
+                    ),
+                  ),
+                  DataCell(Text(csl.id?.toString() ?? '')),
+                  DataCell(Text(csl.ten ?? '')),
+                  DataCell(Text(csl.vung?.toString() ?? '')),
+                  DataCell(Text('${csl.salaryMin?.toString() ?? ''} VNĐ')),
+                  DataCell(
+                    Chip(
+                      backgroundColor: csl.status == true
+                          ? Colors.green.shade100
+                          : Colors.red.shade100,
+                      label: Text(csl.status == true ? 'Kích hoạt' : 'Vô hiệu'),
+                    ),
+                  ),
+                ],
+              ))
+          .toList(),
     );
   }
 }
