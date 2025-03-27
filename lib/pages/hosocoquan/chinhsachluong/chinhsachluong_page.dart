@@ -157,12 +157,20 @@ class _ChinhSachLuongPageState extends State<ChinhSachLuongPage> {
             ),
           ),
         ),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+        contentPadding: const EdgeInsets.all(16),
+        buttonPadding: EdgeInsets.zero,
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Hủy'),
+          ConstrainedBox(
+            constraints: const BoxConstraints(minWidth: 120),
+            child: TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Hủy'),
+            ),
           ),
-          ElevatedButton(
+          ConstrainedBox(
+            constraints: const BoxConstraints(minWidth: 120),
+            child: ElevatedButton(
             onPressed: () {
               if (formKey.currentState?.validate() ?? false) {
                 _bloc.add(CreateChinhSachLuong(ChinhSachLuong(
