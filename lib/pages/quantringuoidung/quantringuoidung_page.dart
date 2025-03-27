@@ -66,8 +66,71 @@ class _QuanTriNguoiDungPageState extends State<QuanTriNguoiDungPage> {
   void _showCreateGroupDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) {
-        return AlertDialog(
+      builder: (context) => CreateGroupDialog(
+        groups: groups,
+        onSubmit: (newGroup) async {
+          try {
+            final GroupRepository groupRepository = GroupRepository(
+              userRepository: locator<UserRepository>(),
+            );
+            await groupRepository.createGroup(newGroup);
+            Navigator.pop(context);
+            await _fetchGroups();
+            idUserGroupController.clear();
+            nameController.clear();
+            descriptionController.clear();
+            displayOrderController.clear();
+            groupLevelController.clear();
+            setState(() {
+              selectedParentId = null;
+            });
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Tạo nhóm thành công!'),
+                backgroundColor: Colors.green,
+              ),
+            );
+          } catch (e) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Lỗi tạo nhóm: ${e.toString()}'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        },
+      ),
+    );
+  }
+}
+
+class CreateGroupDialog extends StatefulWidget {
+  final List<Group> groups;
+  final Function(Group) onSubmit;
+
+  const CreateGroupDialog({
+    super.key,
+    required this.groups,
+    required this.onSubmit,
+  });
+
+  @override
+  State<CreateGroupDialog> createState() => _CreateGroupDialogState();
+}
+
+class _CreateGroupDialogState extends State<CreateGroupDialog> {
+  final TextEditingController idUserGroupController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController displayOrderController = TextEditingController();
+  final TextEditingController groupLevelController = TextEditingController();
+  String? selectedParentId;
+  bool statusValue = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
           title: Row(
             children: [
               Icon(Icons.group_add, color: Theme.of(context).primaryColor),
@@ -283,7 +346,7 @@ class _QuanTriNguoiDungPageState extends State<QuanTriNguoiDungPage> {
             ElevatedButton.icon(
               icon: const Icon(Icons.add),
               label: const Text('Tạo nhóm'),
-              onPressed: () async {
+              onPressed: () {
                 if (idUserGroupController.text.isEmpty ||
                     nameController.text.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -305,37 +368,7 @@ class _QuanTriNguoiDungPageState extends State<QuanTriNguoiDungPage> {
                   status: statusValue,
                 );
 
-                try {
-                  final GroupRepository groupRepository = GroupRepository(
-                    userRepository: locator<UserRepository>(),
-                  );
-                  await groupRepository.createGroup(newGroup);
-                  Navigator.pop(context);
-                  await _fetchGroups();
-                  idUserGroupController.clear();
-                  nameController.clear();
-                  descriptionController.clear();
-                  displayOrderController.clear();
-                  groupLevelController.clear();
-                  setState(() {
-                    selectedParentId = null;
-                    statusValue = true;
-                  });
-
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Tạo nhóm thành công!'),
-                      backgroundColor: Colors.green,
-                    ),
-                  );
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Lỗi tạo nhóm: ${e.toString()}'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                }
+                widget.onSubmit(newGroup);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).primaryColor,
