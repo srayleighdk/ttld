@@ -86,16 +86,16 @@ class _QuanTriNguoiDungPageState extends State<QuanTriNguoiDungPage> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            subtitle: Text('${group.users.length} người dùng'),
+                            subtitle: Text('${group.users.length} người dùng - Nhóm: ${group.idUserGroup}'),
                             trailing: IconButton(
                               icon: Icon(
                                 isExpanded
                                     ? Icons.keyboard_arrow_up
                                     : Icons.keyboard_arrow_down,
                               ),
-                              onPressed: () => _toggleGroupExpansion(group.id),
+                              onPressed: () => _toggleGroupExpansion(group.idUserGroup),
                             ),
-                            onTap: () => _toggleGroupExpansion(group.id),
+                            onTap: () => _toggleGroupExpansion(group.idUserGroup),
                           ),
 
                           // Users list - visible only when expanded

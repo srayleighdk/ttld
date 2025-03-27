@@ -10,6 +10,7 @@ class Group with _$Group {
     String? parentId,
     String? name,
     String? description,
+    @Default([]) List<UserModel> users,
     @Default(0) int displayOrder,
     @Default(1) int groupLevel,
     @Default(true) bool status,
