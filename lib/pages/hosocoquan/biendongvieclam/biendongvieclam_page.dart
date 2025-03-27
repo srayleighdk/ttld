@@ -47,7 +47,7 @@ class _BienDongViecLamPageState extends State<BienDongViecLamPage> {
     try {
       final result = await _bienDongRepository.getCompanies(
         yearTo: selectedYear,
-        status: selectedStatus != -1 ? selectedStatus : null,
+        status: selectedStatus == -1 ? null : selectedStatus,
       );
 
       setState(() {
@@ -124,19 +124,19 @@ class _BienDongViecLamPageState extends State<BienDongViecLamPage> {
       padding: const EdgeInsets.all(16.0),
       child: Column(
         children: [
-          TextField(
-            controller: _searchController,
-            decoration: InputDecoration(
-              labelText: 'Tìm kiếm',
-              prefixIcon: const Icon(Icons.search),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              contentPadding:
-                  const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-            ),
-          ),
-          const SizedBox(height: 16),
+          // TextField(
+          //   controller: _searchController,
+          //   decoration: InputDecoration(
+          //     labelText: 'Tìm kiếm',
+          //     prefixIcon: const Icon(Icons.search),
+          //     border: OutlineInputBorder(
+          //       borderRadius: BorderRadius.circular(8),
+          //     ),
+          //     contentPadding:
+          //         const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          //   ),
+          // ),
+          // const SizedBox(height: 16),
           Row(
             children: [
               Expanded(
