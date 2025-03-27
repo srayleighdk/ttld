@@ -251,9 +251,8 @@ class _ChinhSachLuongPageState extends State<ChinhSachLuongPage> {
                   Navigator.pop(context);
                 }
               },
-              child: const Text('Thêm'),
+              label: const Text('Thêm'),
             ),
-          )
         ],
       ),
     );
