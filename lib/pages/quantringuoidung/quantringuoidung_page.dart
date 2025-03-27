@@ -18,6 +18,15 @@ class _QuanTriNguoiDungPageState extends State<QuanTriNguoiDungPage> {
   // Map to track expanded state of each group
   Map<String, bool> expandedGroups = {};
 
+  // Controllers for create group form
+  final TextEditingController idUserGroupController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController displayOrderController = TextEditingController();
+  final TextEditingController groupLevelController = TextEditingController();
+  String? selectedParentId;
+  bool statusValue = true;
+
   @override
   void initState() {
     super.initState();
@@ -52,6 +61,166 @@ class _QuanTriNguoiDungPageState extends State<QuanTriNguoiDungPage> {
     setState(() {
       expandedGroups[groupId] = !(expandedGroups[groupId] ?? false);
     });
+  }
+
+  void _showCreateGroupDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Thêm nhóm người dùng'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: idUserGroupController,
+                  decoration: const InputDecoration(
+                    labelText: 'Mã nhóm *',
+                    hintText: 'Nhập mã nhóm',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Vui lòng nhập mã nhóm';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+                DropdownButtonFormField<String>(
+                  value: selectedParentId,
+                  decoration: const InputDecoration(
+                    labelText: 'Nhóm cha',
+                    hintText: 'Chọn nhóm cha',
+                  ),
+                  items: [
+                    const DropdownMenuItem(
+                      value: null,
+                      child: Text('Không có nhóm cha'),
+                    ),
+                    ...groups.map(
+                      (group) => DropdownMenuItem(
+                        value: group.idUserGroup,
+                        child: Text(group.idUserGroup),
+                      ),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      selectedParentId = value;
+                    });
+                  },
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: nameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Tên nhóm *',
+                    hintText: 'Nhập tên nhóm',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Vui lòng nhập tên nhóm';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: descriptionController,
+                  decoration: const InputDecoration(
+                    labelText: 'Mô tả',
+                    hintText: 'Nhập mô tả',
+                  ),
+                  maxLines: 2,
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: displayOrderController,
+                  decoration: const InputDecoration(
+                    labelText: 'STT',
+                    hintText: 'Nhập số thứ tự',
+                  ),
+                  keyboardType: TextInputType.number,
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: groupLevelController,
+                  decoration: const InputDecoration(
+                    labelText: 'Group-Level',
+                    hintText: 'Nhập cấp độ nhóm',
+                  ),
+                  keyboardType: TextInputType.number,
+                ),
+                const SizedBox(height: 16),
+                SwitchListTile(
+                  title: const Text('Duyệt'),
+                  value: statusValue,
+                  onChanged: (value) {
+                    setState(() {
+                      statusValue = value;
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Hủy'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                if (idUserGroupController.text.isEmpty || nameController.text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Vui lòng điền các trường bắt buộc (*)'),
+                    ),
+                  );
+                  return;
+                }
+
+                final newGroup = Group(
+                  idUserGroup: idUserGroupController.text,
+                  parentId: selectedParentId,
+                  name: nameController.text,
+                  description: descriptionController.text,
+                  displayOrder: int.tryParse(displayOrderController.text) ?? 0,
+                  groupLevel: int.tryParse(groupLevelController.text) ?? 1,
+                  status: statusValue,
+                );
+
+                try {
+                  final GroupRepository groupRepository = GroupRepository(
+                    userRepository: locator<UserRepository>(),
+                  );
+                  await groupRepository.createGroup(newGroup);
+                  Navigator.pop(context);
+                  await _fetchGroups();
+                  idUserGroupController.clear();
+                  nameController.clear();
+                  descriptionController.clear();
+                  displayOrderController.clear();
+                  groupLevelController.clear();
+                  setState(() {
+                    selectedParentId = null;
+                    statusValue = true;
+                  });
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Lỗi tạo nhóm: ${e.toString()}'),
+                    ),
+                  );
+                }
+              },
+              child: const Text('Tạo'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -121,9 +290,7 @@ class _QuanTriNguoiDungPageState extends State<QuanTriNguoiDungPage> {
                   },
                 ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Add action for creating new group or user
-        },
+        onPressed: () => _showCreateGroupDialog(context),
         child: const Icon(Icons.add),
       ),
     );
