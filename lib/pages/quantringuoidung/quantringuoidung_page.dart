@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/features/user_group/models/group.dart';
 import 'package:ttld/features/user_group/repository/group_repository.dart';
 import 'package:ttld/models/user/user_model.dart';
+import 'package:ttld/repositories/user/user_repository.dart';
 
 class QuanTriNguoiDungPage extends StatefulWidget {
   const QuanTriNguoiDungPage({super.key});
@@ -26,7 +28,8 @@ class _QuanTriNguoiDungPageState extends State<QuanTriNguoiDungPage> {
     setState(() {
       isLoading = true;
     });
-    final GroupRepository groupRepository = GroupRepository();
+    final GroupRepository groupRepository =
+        GroupRepository(userRepository: locator<UserRepository>());
     try {
       groups = await groupRepository.getGroups();
       // Initialize all groups as collapsed
@@ -86,16 +89,19 @@ class _QuanTriNguoiDungPageState extends State<QuanTriNguoiDungPage> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            subtitle: Text('${group.users.length} người dùng - Nhóm: ${group.idUserGroup}'),
+                            subtitle: Text(
+                                '${group.users.length} người dùng - Nhóm: ${group.idUserGroup}'),
                             trailing: IconButton(
                               icon: Icon(
                                 isExpanded
                                     ? Icons.keyboard_arrow_up
                                     : Icons.keyboard_arrow_down,
                               ),
-                              onPressed: () => _toggleGroupExpansion(group.idUserGroup),
+                              onPressed: () =>
+                                  _toggleGroupExpansion(group.idUserGroup),
                             ),
-                            onTap: () => _toggleGroupExpansion(group.idUserGroup),
+                            onTap: () =>
+                                _toggleGroupExpansion(group.idUserGroup),
                           ),
 
                           // Users list - visible only when expanded
