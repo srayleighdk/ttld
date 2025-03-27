@@ -137,25 +137,29 @@ class _ChinhSachLuongPageState extends State<ChinhSachLuongPage> {
                         ),
                         const SizedBox(height: 16),
                         _buildTextField('ID code *', idController, (v) {
-                  if (v?.isEmpty ?? true) return 'Vui lòng nhập ID';
-                  return null;
-                }),
+                          if (v?.isEmpty ?? true) return 'Vui lòng nhập ID';
+                          return null;
+                        }),
                         _buildTextField('Tên vùng mô tả *', tenController, (v) {
                           if (v?.isEmpty ?? true) return 'Vui lòng nhập tên';
                           return null;
                         }),
                         _buildTextField('Mã vùng (1-4) *', vungController, (v) {
-                  if (v?.isEmpty ?? true) return 'Vui lòng nhập mã vùng';
-                  if (int.tryParse(v!) == null ||
-                      int.parse(v) < 1 ||
-                      int.parse(v) > 4) {
-                    return 'Mã vùng phải từ 1-4';
-                  }
-                  return null;
-                }, keyboardType: TextInputType.number),
-                        _buildTextField('Mức lương vùng *', salaryMinController, (v) {
-                          if (v?.isEmpty ?? true) return 'Vui lòng nhập mức lương';
-                          if (double.tryParse(v!) == null) return 'Số không hợp lệ';
+                          if (v?.isEmpty ?? true)
+                            return 'Vui lòng nhập mã vùng';
+                          if (int.tryParse(v!) == null ||
+                              int.parse(v) < 1 ||
+                              int.parse(v) > 4) {
+                            return 'Mã vùng phải từ 1-4';
+                          }
+                          return null;
+                        }, keyboardType: TextInputType.number),
+                        _buildTextField('Mức lương vùng *', salaryMinController,
+                            (v) {
+                          if (v?.isEmpty ?? true)
+                            return 'Vui lòng nhập mức lương';
+                          if (double.tryParse(v!) == null)
+                            return 'Số không hợp lệ';
                           return null;
                         }, keyboardType: TextInputType.number),
                       ],
@@ -202,7 +206,8 @@ class _ChinhSachLuongPageState extends State<ChinhSachLuongPage> {
                         _buildPercentageField('BHXH (%) *', dnBhxhController),
                         _buildPercentageField('BHYT (%)', dnBhytController),
                         _buildPercentageField('BHTN (%)', dnBhtnController),
-                        _buildPercentageField('Thai sản (%)', dnThaisanController),
+                        _buildPercentageField(
+                            'Thai sản (%)', dnThaisanController),
                         _buildPercentageField('TNLĐ (%)', dnTnldController),
                       ],
                     ),
@@ -227,32 +232,31 @@ class _ChinhSachLuongPageState extends State<ChinhSachLuongPage> {
           ElevatedButton.icon(
             icon: const Icon(Icons.add),
             label: const Text('Thêm'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).primaryColor,
-                foregroundColor: Colors.white,
-              ),
-              onPressed: () {
-                if (formKey.currentState?.validate() ?? false) {
-                  _bloc.add(CreateChinhSachLuong(ChinhSachLuong(
-                    id: int.tryParse(idController.text),
-                    ten: tenController.text,
-                    vung: int.tryParse(vungController.text),
-                    salaryMin: int.tryParse(salaryMinController.text),
-                    nldBhxh: double.tryParse(nldBhxhController.text),
-                    nldBhyt: double.tryParse(nldBhytController.text),
-                    nldBhtn: double.tryParse(nldBhtnController.text),
-                    dnBhxh: double.tryParse(dnBhxhController.text),
-                    dnBhyt: double.tryParse(dnBhytController.text),
-                    dnBhtn: double.tryParse(dnBhtnController.text),
-                    dnThaisan: double.tryParse(dnThaisanController.text),
-                    dnTnld: double.tryParse(dnTnldController.text),
-                    status: true,
-                  )));
-                  Navigator.pop(context);
-                }
-              },
-              label: const Text('Thêm'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).primaryColor,
+              foregroundColor: Colors.white,
             ),
+            onPressed: () {
+              if (formKey.currentState?.validate() ?? false) {
+                _bloc.add(CreateChinhSachLuong(ChinhSachLuong(
+                  id: int.tryParse(idController.text),
+                  ten: tenController.text,
+                  vung: int.tryParse(vungController.text),
+                  salaryMin: int.tryParse(salaryMinController.text),
+                  nldBhxh: double.tryParse(nldBhxhController.text),
+                  nldBhyt: double.tryParse(nldBhytController.text),
+                  nldBhtn: double.tryParse(nldBhtnController.text),
+                  dnBhxh: double.tryParse(dnBhxhController.text),
+                  dnBhyt: double.tryParse(dnBhytController.text),
+                  dnBhtn: double.tryParse(dnBhtnController.text),
+                  dnThaisan: double.tryParse(dnThaisanController.text),
+                  dnTnld: double.tryParse(dnTnldController.text),
+                  status: true,
+                )));
+                Navigator.pop(context);
+              }
+            },
+          ),
         ],
       ),
     );
