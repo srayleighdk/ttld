@@ -32,9 +32,9 @@ class GroupRepository extends BaseRepository {
 
   Future<Group> createGroup(Group group) async {
     return await safeApiCall(() async {
-      final response =
-          await dio.post(ApiEndpoints.groups, data: group.toJson());
-      return Group.fromJson(response.data['data']); // Extract actual group data from response wrapper
+      await dio.post(ApiEndpoints.groups, data: group.toJson());
+      // API only returns status message, return the original group as confirmation
+      return group;
     });
   }
 
