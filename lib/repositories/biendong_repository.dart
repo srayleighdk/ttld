@@ -29,7 +29,9 @@ class BienDongRepository {
 
       // Fetch employees for each company
       for (final company in companies) {
-        final nhanVienResponse = await _bienDongService.getBienDongList(company.idDn);
+        print(company.idDn);
+        final nhanVienResponse =
+            await _bienDongService.getBienDongList(company.idDn);
         company.nhanVienList = (nhanVienResponse.data['data'] as List)
             .map((json) => NhanVien.fromJson(json))
             .toList();
