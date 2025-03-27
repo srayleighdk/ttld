@@ -115,6 +115,7 @@ class _ChinhSachLuongPageState extends State<ChinhSachLuongPage> {
           child: Form(
             key: formKey,
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 _buildTextField('ID code *', idController, (v) {
                   if (v?.isEmpty ?? true) return 'Vui lòng nhập ID';
@@ -126,7 +127,9 @@ class _ChinhSachLuongPageState extends State<ChinhSachLuongPage> {
                 }),
                 _buildTextField('Mã vùng (1-4) *', vungController, (v) {
                   if (v?.isEmpty ?? true) return 'Vui lòng nhập mã vùng';
-                  if (int.tryParse(v!) == null || int.parse(v) < 1 || int.parse(v) > 4) {
+                  if (int.tryParse(v!) == null ||
+                      int.parse(v) < 1 ||
+                      int.parse(v) > 4) {
                     return 'Mã vùng phải từ 1-4';
                   }
                   return null;
@@ -308,6 +311,7 @@ class _DataTableWidget extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: DataTable2(
+          fixedLeftColumns: 1,
           columnSpacing: 12,
           horizontalMargin: 12,
           minWidth: 800,
@@ -328,7 +332,7 @@ class _DataTableWidget extends StatelessWidget {
             ),
             DataColumn2(
               label: Text('Tên mô tả'),
-              size: ColumnSize.L,
+              size: ColumnSize.S,
             ),
             DataColumn2(
               label: Text('Vùng'),
