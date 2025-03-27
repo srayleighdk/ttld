@@ -1,6 +1,6 @@
 import 'package:ttld/core/constants/api_endpoints.dart';
 import 'package:ttld/core/repositories/base_repository.dart';
-import '../models/group.dart';
+import 'package:ttld/features/user_group/models/group.dart';
 
 class GroupRepository extends BaseRepository {
   Future<List<Group>> getGroups() async {
@@ -38,7 +38,7 @@ class GroupRepository extends BaseRepository {
 
   Future<void> deleteGroup(String id) async {
     await safeApiCall(() async {
-      await dio.delete('https://your-api.com/groups/$id');
+      await dio.delete('/user/group/$id');
     });
   }
 }
