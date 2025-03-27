@@ -1,15 +1,27 @@
 import 'package:ttld/core/constants/api_endpoints.dart';
 import 'package:ttld/core/repositories/base_repository.dart';
 import 'package:ttld/features/user_group/models/group.dart';
+import 'package:ttld/repositories/user/user_repository.dart';
 
 class GroupRepository extends BaseRepository {
+  final UserRepository userRepository;
+
+  GroupRepository({required this.userRepository});
   Future<List<Group>> getGroups() async {
     return await safeApiCall(() async {
       final response = await dio.get(ApiEndpoints.groups);
       if (response.data is Map<String, dynamic> &&
           response.data['data'] is List) {
         final List<dynamic> groupsJson = response.data['data'];
-        return groupsJson.map((json) => Group.fromJson(json)).toList();
+        List<Group> groups = groupsJson.map((json) => Group.fromJson(json)).toList();
+        
+        // Fetch users for each group
+        for (int i = 0; i < groups.length; i++) {
+          final users = await userRepository.getAllUsers(groups[i].idUserGroup);
+          groups[i] = groups[i].copyWith(users: users);
+        }
+        
+        return groups;
       } else {
         throw Exception("Unexpected API response format");
       }
