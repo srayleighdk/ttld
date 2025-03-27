@@ -117,15 +117,34 @@ class _ChinhSachLuongPageState extends State<ChinhSachLuongPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                _buildTextField('ID code *', idController, (v) {
+                Card(
+                  elevation: 0,
+                  color: Colors.grey[100],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Thông tin cơ bản',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        _buildTextField('ID code *', idController, (v) {
                   if (v?.isEmpty ?? true) return 'Vui lòng nhập ID';
                   return null;
                 }),
-                _buildTextField('Tên vùng mô tả *', tenController, (v) {
-                  if (v?.isEmpty ?? true) return 'Vui lòng nhập tên';
-                  return null;
-                }),
-                _buildTextField('Mã vùng (1-4) *', vungController, (v) {
+                        _buildTextField('Tên vùng mô tả *', tenController, (v) {
+                          if (v?.isEmpty ?? true) return 'Vui lòng nhập tên';
+                          return null;
+                        }),
+                        _buildTextField('Mã vùng (1-4) *', vungController, (v) {
                   if (v?.isEmpty ?? true) return 'Vui lòng nhập mã vùng';
                   if (int.tryParse(v!) == null ||
                       int.parse(v) < 1 ||
@@ -134,25 +153,61 @@ class _ChinhSachLuongPageState extends State<ChinhSachLuongPage> {
                   }
                   return null;
                 }, keyboardType: TextInputType.number),
-                _buildTextField('Mức lương vùng *', salaryMinController, (v) {
-                  if (v?.isEmpty ?? true) return 'Vui lòng nhập mức lương';
-                  if (double.tryParse(v!) == null) return 'Số không hợp lệ';
-                  return null;
-                }, keyboardType: TextInputType.number),
+                        _buildTextField('Mức lương vùng *', salaryMinController, (v) {
+                          if (v?.isEmpty ?? true) return 'Vui lòng nhập mức lương';
+                          if (double.tryParse(v!) == null) return 'Số không hợp lệ';
+                          return null;
+                        }, keyboardType: TextInputType.number),
+                      ],
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 16),
-                const Text('Bảo hiểm người lao động',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                _buildPercentageField('BHXH (%) *', nldBhxhController),
-                _buildPercentageField('BHYT (%)', nldBhytController),
-                _buildPercentageField('BHTN (%)', nldBhtnController),
+                Card(
+                  elevation: 0,
+                  color: Colors.grey[100],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('Bảo hiểm người lao động',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 16),
+                        _buildPercentageField('BHXH (%) *', nldBhxhController),
+                        _buildPercentageField('BHYT (%)', nldBhytController),
+                        _buildPercentageField('BHTN (%)', nldBhtnController),
+                      ],
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 16),
-                const Text('Bảo hiểm tổ chức doanh nghiệp',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                _buildPercentageField('BHXH (%) *', dnBhxhController),
-                _buildPercentageField('BHYT (%)', dnBhytController),
-                _buildPercentageField('BHTN (%)', dnBhtnController),
-                _buildPercentageField('Thai sản (%)', dnThaisanController),
-                _buildPercentageField('TNLĐ (%)', dnTnldController),
+                Card(
+                  elevation: 0,
+                  color: Colors.grey[100],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('Bảo hiểm tổ chức doanh nghiệp',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 16),
+                        _buildPercentageField('BHXH (%) *', dnBhxhController),
+                        _buildPercentageField('BHYT (%)', dnBhytController),
+                        _buildPercentageField('BHTN (%)', dnBhtnController),
+                        _buildPercentageField('Thai sản (%)', dnThaisanController),
+                        _buildPercentageField('TNLĐ (%)', dnTnldController),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -161,16 +216,21 @@ class _ChinhSachLuongPageState extends State<ChinhSachLuongPage> {
         contentPadding: const EdgeInsets.all(16),
         buttonPadding: EdgeInsets.zero,
         actions: [
-          ConstrainedBox(
-            constraints: const BoxConstraints(minWidth: 120),
-            child: TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Hủy'),
+          TextButton.icon(
+            icon: const Icon(Icons.cancel),
+            label: const Text('Hủy'),
+            onPressed: () => Navigator.pop(context),
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.grey[700],
             ),
           ),
-          ConstrainedBox(
-            constraints: const BoxConstraints(minWidth: 120),
-            child: ElevatedButton(
+          ElevatedButton.icon(
+            icon: const Icon(Icons.add),
+            label: const Text('Thêm'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).primaryColor,
+                foregroundColor: Colors.white,
+              ),
               onPressed: () {
                 if (formKey.currentState?.validate() ?? false) {
                   _bloc.add(CreateChinhSachLuong(ChinhSachLuong(
