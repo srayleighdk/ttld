@@ -34,7 +34,7 @@ class GroupRepository extends BaseRepository {
     return await safeApiCall(() async {
       final response =
           await dio.post(ApiEndpoints.groups, data: group.toJson());
-      return Group.fromJson(response.data);
+      return Group.fromJson(response.data['data']); // Extract actual group data from response wrapper
     });
   }
 
