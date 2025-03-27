@@ -1,6 +1,7 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import '../../../blocs/chinhsachluong_bloc/chinhsachluong_bloc.dart';
 import '../../../models/chinhsachluong/chinhsachluong_model.dart';
 
@@ -15,7 +16,7 @@ class _ChinhSachLuongPageState extends State<ChinhSachLuongPage> {
   @override
   void initState() {
     super.initState();
-    context.read<ChinhSachLuongBloc>().add(LoadChinhSachLuongs());
+    GetIt.I<ChinhSachLuongBloc>().add(LoadChinhSachLuongs());
   }
 
   @override
@@ -25,8 +26,7 @@ class _ChinhSachLuongPageState extends State<ChinhSachLuongPage> {
         title: const Text('Quản lý Chính sách lương'),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context
-            .read<ChinhSachLuongBloc>()
+        onPressed: () => GetIt.I<ChinhSachLuongBloc>()
             .add(CreateChinhSachLuong(ChinhSachLuong())),
         child: const Icon(Icons.add),
       ),
@@ -88,14 +88,12 @@ class _ChinhSachLuongPageState extends State<ChinhSachLuongPage> {
                       children: [
                         IconButton(
                           icon: const Icon(Icons.edit),
-                          onPressed: () => context
-                              .read<ChinhSachLuongBloc>()
+                          onPressed: () => GetIt.I<ChinhSachLuongBloc>()
                               .add(UpdateChinhSachLuong(csl)),
                         ),
                         IconButton(
                           icon: const Icon(Icons.delete),
-                          onPressed: () => context
-                              .read<ChinhSachLuongBloc>()
+                          onPressed: () => GetIt.I<ChinhSachLuongBloc>()
                               .add(DeleteChinhSachLuong(csl.id!)),
                         ),
                       ],
