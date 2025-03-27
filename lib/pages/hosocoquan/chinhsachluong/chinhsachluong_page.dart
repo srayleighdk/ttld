@@ -1,9 +1,9 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
-import '../../../blocs/chinhsachluong_bloc/chinhsachluong_bloc.dart';
-import '../../../models/chinhsachluong/chinhsachluong_model.dart';
+import 'package:ttld/core/di/injection.dart';
+import 'package:ttld/blocs/chinhsachluong_bloc/chinhsachluong_bloc.dart';
+import 'package:ttld/models/chinhsachluong/chinhsachluong_model.dart';
 
 class ChinhSachLuongPage extends StatefulWidget {
   const ChinhSachLuongPage({super.key});
@@ -13,107 +13,297 @@ class ChinhSachLuongPage extends StatefulWidget {
 }
 
 class _ChinhSachLuongPageState extends State<ChinhSachLuongPage> {
+  late final ChinhSachLuongBloc _bloc;
+
   @override
   void initState() {
     super.initState();
-    GetIt.I.get<ChinhSachLuongBloc>().add(LoadChinhSachLuongs());
+    _bloc = locator<ChinhSachLuongBloc>();
+    _bloc.add(LoadChinhSachLuongs());
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Quản lý Chính sách lương'),
+        title: const Text('Quản lý chính sách lương'),
+        elevation: 0,
+        centerTitle: false,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () => _bloc.add(LoadChinhSachLuongs()),
+            tooltip: 'Làm mới dữ liệu',
+          ),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => GetIt.I.get<ChinhSachLuongBloc>()
-            .add(CreateChinhSachLuong(ChinhSachLuong())),
-        child: const Icon(Icons.add),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => _bloc.add(CreateChinhSachLuong(ChinhSachLuong())),
+        label: const Text('Thêm mới'),
+        icon: const Icon(Icons.add),
       ),
       body: BlocConsumer<ChinhSachLuongBloc, ChinhSachLuongState>(
+        bloc: _bloc,
         listener: (context, state) {
           if (state is ChinhSachLuongOperationFailure) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.error)),
-            );
+            _showErrorSnackbar(context, state.error);
+          } else if (state is ChinhSachLuongOperationSuccess) {
+            _showSuccessSnackbar(
+                context, state.success ?? 'Thao tác thành công');
           }
         },
         builder: (context, state) {
           if (state is ChinhSachLuongLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const _LoadingWidget();
           }
+
           if (state is ChinhSachLuongLoadSuccess) {
-            return _buildDataTable(state.cslList);
+            return state.cslList.isEmpty
+                ? const _EmptyDataWidget()
+                : _DataTableWidget(cslList: state.cslList, bloc: _bloc);
           }
-          return const Center(child: Text('Không có dữ liệu'));
+
+          return const _ErrorWidget();
         },
       ),
     );
   }
 
-  Widget _buildDataTable(List<ChinhSachLuong> cslList) {
-    return DataTable2(
-      columnSpacing: 12,
-      horizontalMargin: 12,
-      minWidth: 800,
-      columns: const [
-        DataColumn2(
-          label: Text('Hành động'),
-          size: ColumnSize.S,
+  void _showErrorSnackbar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red.shade700,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  void _showSuccessSnackbar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.green.shade700,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+}
+
+class _LoadingWidget extends StatelessWidget {
+  const _LoadingWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(),
+          SizedBox(height: 16),
+          Text('Đang tải dữ liệu...'),
+        ],
+      ),
+    );
+  }
+}
+
+class _EmptyDataWidget extends StatelessWidget {
+  const _EmptyDataWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.folder_open,
+            size: 80,
+            color: Colors.grey.shade400,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Chưa có dữ liệu chính sách lương',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Nhấn nút "Thêm mới" để tạo chính sách lương',
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ErrorWidget extends StatelessWidget {
+  const _ErrorWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.error_outline,
+            size: 60,
+            color: Colors.red.shade400,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Không thể tải dữ liệu',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DataTableWidget extends StatelessWidget {
+  final List<ChinhSachLuong> cslList;
+  final ChinhSachLuongBloc bloc;
+
+  const _DataTableWidget({required this.cslList, required this.bloc});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.all(16),
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: DataTable2(
+          columnSpacing: 12,
+          horizontalMargin: 12,
+          minWidth: 800,
+          headingRowColor: MaterialStateProperty.all(Colors.grey.shade100),
+          border: TableBorder.all(
+            color: Colors.grey.shade200,
+            width: 1,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          columns: const [
+            DataColumn2(
+              label: Text('Hành động'),
+              size: ColumnSize.S,
+            ),
+            DataColumn2(
+              label: Text('Mã'),
+              size: ColumnSize.S,
+            ),
+            DataColumn2(
+              label: Text('Tên mô tả'),
+              size: ColumnSize.L,
+            ),
+            DataColumn2(
+              label: Text('Vùng'),
+              size: ColumnSize.S,
+            ),
+            DataColumn2(
+              label: Text('Mức lương tối thiểu'),
+              size: ColumnSize.M,
+            ),
+            DataColumn2(
+              label: Text('Tình trạng'),
+              size: ColumnSize.S,
+            ),
+          ],
+          rows: cslList.map((csl) => _buildDataRow(context, csl)).toList(),
         ),
-        DataColumn2(
-          label: Text('Mã'),
-          numeric: true,
+      ),
+    );
+  }
+
+  DataRow _buildDataRow(BuildContext context, ChinhSachLuong csl) {
+    return DataRow(
+      cells: [
+        DataCell(_buildActionButtons(context, csl)),
+        DataCell(Text(csl.id?.toString() ?? '-')),
+        DataCell(Text(csl.ten ?? '-')),
+        DataCell(Text(csl.vung?.toString() ?? '-')),
+        DataCell(csl.salaryMin != null
+            ? Text('${_formatCurrency(csl.salaryMin!)} VNĐ',
+                style: TextStyle(fontWeight: FontWeight.bold))
+            : const Text('-')),
+        DataCell(_buildStatusChip(csl.status)),
+      ],
+    );
+  }
+
+  Widget _buildActionButtons(BuildContext context, ChinhSachLuong csl) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        IconButton(
+          icon: const Icon(Icons.edit_outlined, color: Colors.blue),
+          tooltip: 'Chỉnh sửa',
+          onPressed: () => bloc.add(UpdateChinhSachLuong(csl)),
         ),
-        DataColumn2(
-          label: Text('Tên mô tả'),
-        ),
-        DataColumn2(
-          label: Text('Vùng'),
-          numeric: true,
-        ),
-        DataColumn2(
-          label: Text('Mức lương tối thiểu'),
-          numeric: true,
-        ),
-        DataColumn2(
-          label: Text('Tình trạng'),
+        IconButton(
+          icon: const Icon(Icons.delete_outline, color: Colors.red),
+          tooltip: 'Xóa',
+          onPressed: () => _showDeleteConfirmation(context, csl),
         ),
       ],
-      rows: cslList
-          .map((csl) => DataRow(
-                cells: [
-                  DataCell(
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.edit),
-                          onPressed: () => GetIt.I.get<ChinhSachLuongBloc>()
-                              .add(UpdateChinhSachLuong(csl)),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () => GetIt.I.get<ChinhSachLuongBloc>()
-                              .add(DeleteChinhSachLuong(csl.id!)),
-                        ),
-                      ],
-                    ),
-                  ),
-                  DataCell(Text(csl.id?.toString() ?? '')),
-                  DataCell(Text(csl.ten ?? '')),
-                  DataCell(Text(csl.vung?.toString() ?? '')),
-                  DataCell(Text('${csl.salaryMin?.toString() ?? ''} VNĐ')),
-                  DataCell(
-                    Chip(
-                      backgroundColor: csl.status == true
-                          ? Colors.green.shade100
-                          : Colors.red.shade100,
-                      label: Text(csl.status == true ? 'Kích hoạt' : 'Vô hiệu'),
-                    ),
-                  ),
-                ],
-              ))
-          .toList(),
     );
+  }
+
+  Widget _buildStatusChip(bool? status) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: status == true ? Colors.green.shade50 : Colors.red.shade50,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: status == true ? Colors.green.shade300 : Colors.red.shade300,
+        ),
+      ),
+      child: Text(
+        status == true ? 'Kích hoạt' : 'Vô hiệu',
+        style: TextStyle(
+          color: status == true ? Colors.green.shade700 : Colors.red.shade700,
+          fontWeight: FontWeight.w500,
+          fontSize: 13,
+        ),
+      ),
+    );
+  }
+
+  void _showDeleteConfirmation(BuildContext context, ChinhSachLuong csl) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Xác nhận xóa'),
+        content:
+            Text('Bạn có chắc chắn muốn xóa chính sách lương "${csl.ten}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Hủy'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              bloc.add(DeleteChinhSachLuong(csl.id!));
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text('Xóa'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatCurrency(num value) {
+    return value.toString().replaceAllMapped(
+        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+        (Match match) => '${match[1]},');
   }
 }
