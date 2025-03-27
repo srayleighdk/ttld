@@ -68,114 +68,228 @@ class _QuanTriNguoiDungPageState extends State<QuanTriNguoiDungPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Thêm nhóm người dùng'),
+          title: Row(
+            children: [
+              Icon(Icons.group_add, color: Theme.of(context).primaryColor),
+              const SizedBox(width: 10),
+              const Text('Thêm nhóm người dùng'),
+            ],
+          ),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                TextFormField(
-                  controller: idUserGroupController,
-                  decoration: const InputDecoration(
-                    labelText: 'Mã nhóm *',
-                    hintText: 'Nhập mã nhóm',
+                Card(
+                  elevation: 0,
+                  color: Colors.grey[100],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Vui lòng nhập mã nhóm';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-                DropdownButtonFormField<String>(
-                  value: selectedParentId,
-                  decoration: const InputDecoration(
-                    labelText: 'Nhóm cha',
-                    hintText: 'Chọn nhóm cha',
-                  ),
-                  items: [
-                    const DropdownMenuItem(
-                      value: null,
-                      child: Text('Không có nhóm cha'),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Thông tin cơ bản',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: idUserGroupController,
+                          decoration: InputDecoration(
+                            labelText: 'Mã nhóm *',
+                            hintText: 'Nhập mã nhóm',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            prefixIcon: const Icon(Icons.code),
+                            filled: true,
+                            fillColor: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: nameController,
+                          decoration: InputDecoration(
+                            labelText: 'Tên nhóm *',
+                            hintText: 'Nhập tên nhóm',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            prefixIcon: const Icon(Icons.group),
+                            filled: true,
+                            fillColor: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: descriptionController,
+                          decoration: InputDecoration(
+                            labelText: 'Mô tả',
+                            hintText: 'Nhập mô tả',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            prefixIcon: const Icon(Icons.description),
+                            filled: true,
+                            fillColor: Colors.white,
+                          ),
+                          maxLines: 2,
+                        ),
+                      ],
                     ),
-                    ...groups.map(
-                      (group) => DropdownMenuItem(
-                        value: group.idUserGroup,
-                        child: Text(group.idUserGroup),
-                      ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Card(
+                  elevation: 0,
+                  color: Colors.grey[100],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Cấu hình nhóm',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        DropdownButtonFormField<String>(
+                          value: selectedParentId,
+                          decoration: InputDecoration(
+                            labelText: 'Nhóm cha',
+                            hintText: 'Chọn nhóm cha',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            prefixIcon: const Icon(Icons.account_tree),
+                            filled: true,
+                            fillColor: Colors.white,
+                          ),
+                          items: [
+                            const DropdownMenuItem(
+                              value: null,
+                              child: Text('Không có nhóm cha'),
+                            ),
+                            ...groups.map(
+                              (group) => DropdownMenuItem(
+                                value: group.idUserGroup,
+                                child: Text(group.idUserGroup),
+                              ),
+                            ),
+                          ],
+                          onChanged: (value) {
+                            setState(() {
+                              selectedParentId = value;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                controller: displayOrderController,
+                                decoration: InputDecoration(
+                                  labelText: 'STT',
+                                  hintText: 'Nhập số thứ tự',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  prefixIcon: const Icon(Icons.reorder),
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                ),
+                                keyboardType: TextInputType.number,
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: TextFormField(
+                                controller: groupLevelController,
+                                decoration: InputDecoration(
+                                  labelText: 'Group-Level',
+                                  hintText: 'Nhập cấp độ nhóm',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  prefixIcon: const Icon(Icons.layers),
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                ),
+                                keyboardType: TextInputType.number,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        Card(
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: SwitchListTile(
+                              title: const Text('Trạng thái hoạt động'),
+                              subtitle: Text(
+                                statusValue ? 'Đã duyệt' : 'Chưa duyệt',
+                                style: TextStyle(
+                                  color:
+                                      statusValue ? Colors.green : Colors.red,
+                                ),
+                              ),
+                              secondary: Icon(
+                                statusValue ? Icons.check_circle : Icons.cancel,
+                                color: statusValue ? Colors.green : Colors.red,
+                              ),
+                              value: statusValue,
+                              onChanged: (value) {
+                                setState(() {
+                                  statusValue = value;
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      selectedParentId = value;
-                    });
-                  },
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: nameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Tên nhóm *',
-                    hintText: 'Nhập tên nhóm',
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Vui lòng nhập tên nhóm';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: descriptionController,
-                  decoration: const InputDecoration(
-                    labelText: 'Mô tả',
-                    hintText: 'Nhập mô tả',
-                  ),
-                  maxLines: 2,
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: displayOrderController,
-                  decoration: const InputDecoration(
-                    labelText: 'STT',
-                    hintText: 'Nhập số thứ tự',
-                  ),
-                  keyboardType: TextInputType.number,
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: groupLevelController,
-                  decoration: const InputDecoration(
-                    labelText: 'Group-Level',
-                    hintText: 'Nhập cấp độ nhóm',
-                  ),
-                  keyboardType: TextInputType.number,
-                ),
-                const SizedBox(height: 16),
-                SwitchListTile(
-                  title: const Text('Duyệt'),
-                  value: statusValue,
-                  onChanged: (value) {
-                    setState(() {
-                      statusValue = value;
-                    });
-                  },
                 ),
               ],
             ),
           ),
           actions: [
-            TextButton(
+            TextButton.icon(
+              icon: const Icon(Icons.cancel),
+              label: const Text('Hủy'),
               onPressed: () => Navigator.pop(context),
-              child: const Text('Hủy'),
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.grey[700],
+              ),
             ),
-            ElevatedButton(
+            ElevatedButton.icon(
+              icon: const Icon(Icons.add),
+              label: const Text('Tạo nhóm'),
               onPressed: () async {
-                if (idUserGroupController.text.isEmpty || nameController.text.isEmpty) {
+                if (idUserGroupController.text.isEmpty ||
+                    nameController.text.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('Vui lòng điền các trường bắt buộc (*)'),
+                      backgroundColor: Colors.red,
                     ),
                   );
                   return;
@@ -207,15 +321,26 @@ class _QuanTriNguoiDungPageState extends State<QuanTriNguoiDungPage> {
                     selectedParentId = null;
                     statusValue = true;
                   });
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Tạo nhóm thành công!'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('Lỗi tạo nhóm: ${e.toString()}'),
+                      backgroundColor: Colors.red,
                     ),
                   );
                 }
               },
-              child: const Text('Tạo'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).primaryColor,
+                foregroundColor: Colors.white,
+              ),
             ),
           ],
         );
