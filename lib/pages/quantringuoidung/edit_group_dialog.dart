@@ -35,7 +35,14 @@ class _EditGroupDialogState extends State<EditGroupDialog> {
     descriptionController.text = widget.group.description ?? '';
     displayOrderController.text = widget.group.displayOrder.toString();
     groupLevelController.text = widget.group.groupLevel.toString();
-    selectedParentId = widget.group.parentId;
+    // Validate parent ID exists in available groups
+    final validParentIds = widget.groups
+        .where((g) => g.idUserGroup != widget.group.idUserGroup)
+        .map((g) => g.idUserGroup)
+        .toList();
+    selectedParentId = validParentIds.contains(widget.group.parentId)
+        ? widget.group.parentId
+        : null;
     statusValue = widget.group.status;
   }
 
