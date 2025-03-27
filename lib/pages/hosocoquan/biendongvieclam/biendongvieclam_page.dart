@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/models/company_model.dart';
+import 'package:ttld/pages/home/ntd/quan_ly_nhan_vien/create_nhan_vien.dart';
 import 'package:ttld/repositories/biendong_repository.dart';
 
 class BienDongViecLamPage extends StatefulWidget {
@@ -268,7 +269,15 @@ class _BienDongViecLamPageState extends State<BienDongViecLamPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CreateNhanVien(
+                          nhanVien: employee,
+                          isEdit: true,
+                        ),
+                      ),
+                    ),
                     child: const Text('Sửa'),
                   ),
                   const SizedBox(width: 8),
