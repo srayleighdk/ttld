@@ -264,6 +264,25 @@ class _BienDongViecLamPageState extends State<BienDongViecLamPage> {
                     Text('Chức vụ: ${employee.tenChucdanh}'),
                 ],
               ),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextButton(
+                    onPressed: () {},
+                    child: const Text('Sửa'),
+                  ),
+                  const SizedBox(width: 8),
+                  TextButton(
+                    onPressed: () {},
+                    child: const Text('Xóa'),
+                  ),
+                  const SizedBox(width: 8),
+                  TextButton(
+                    onPressed: () {},
+                    child: const Text('Biến Động'),
+                  ),
+                ],
+              ),
               onTap: () {
                 // Handle employee tap
               },
