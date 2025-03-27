@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:ttld/models/company_model.dart';
 import 'package:ttld/models/nhanvien/nhanvien_model.dart';
 import 'package:ttld/services/biendong_service.dart';
 
@@ -15,6 +16,18 @@ class BienDongRepository {
           .toList();
     } on DioException catch (e) {
       throw Exception('Failed to get bien dong list: ${e.message}');
+    }
+  }
+
+  Future<List<Company>> getCompanies(
+      {int? yearTo, int? status, String? search}) async {
+    try {
+      final response = await _bienDongService.getBienDong();
+      return (response.data['data'] as List)
+          .map((json) => Company.fromJson(json))
+          .toList();
+    } on DioException catch (e) {
+      throw Exception('Failed to get companies: ${e.message}');
     }
   }
 
