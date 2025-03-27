@@ -171,28 +171,29 @@ class _ChinhSachLuongPageState extends State<ChinhSachLuongPage> {
           ConstrainedBox(
             constraints: const BoxConstraints(minWidth: 120),
             child: ElevatedButton(
-            onPressed: () {
-              if (formKey.currentState?.validate() ?? false) {
-                _bloc.add(CreateChinhSachLuong(ChinhSachLuong(
-                  id: int.tryParse(idController.text),
-                  ten: tenController.text,
-                  vung: int.tryParse(vungController.text),
-                  salaryMin: int.tryParse(salaryMinController.text),
-                  nldBhxh: double.tryParse(nldBhxhController.text),
-                  nldBhyt: double.tryParse(nldBhytController.text),
-                  nldBhtn: double.tryParse(nldBhtnController.text),
-                  dnBhxh: double.tryParse(dnBhxhController.text),
-                  dnBhyt: double.tryParse(dnBhytController.text),
-                  dnBhtn: double.tryParse(dnBhtnController.text),
-                  dnThaisan: double.tryParse(dnThaisanController.text),
-                  dnTnld: double.tryParse(dnTnldController.text),
-                  status: true,
-                )));
-                Navigator.pop(context);
-              }
-            },
-            child: const Text('Thêm'),
-          ),
+              onPressed: () {
+                if (formKey.currentState?.validate() ?? false) {
+                  _bloc.add(CreateChinhSachLuong(ChinhSachLuong(
+                    id: int.tryParse(idController.text),
+                    ten: tenController.text,
+                    vung: int.tryParse(vungController.text),
+                    salaryMin: int.tryParse(salaryMinController.text),
+                    nldBhxh: double.tryParse(nldBhxhController.text),
+                    nldBhyt: double.tryParse(nldBhytController.text),
+                    nldBhtn: double.tryParse(nldBhtnController.text),
+                    dnBhxh: double.tryParse(dnBhxhController.text),
+                    dnBhyt: double.tryParse(dnBhytController.text),
+                    dnBhtn: double.tryParse(dnBhtnController.text),
+                    dnThaisan: double.tryParse(dnThaisanController.text),
+                    dnTnld: double.tryParse(dnTnldController.text),
+                    status: true,
+                  )));
+                  Navigator.pop(context);
+                }
+              },
+              child: const Text('Thêm'),
+            ),
+          )
         ],
       ),
     );
