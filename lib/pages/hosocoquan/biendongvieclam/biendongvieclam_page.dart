@@ -282,7 +282,37 @@ class _BienDongViecLamPageState extends State<BienDongViecLamPage> {
                   ),
                   const SizedBox(width: 8),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      final confirmed = await showDialog<bool>(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('Xác nhận xóa'),
+                          content: const Text('Bạn có chắc chắn muốn xóa nhân viên này?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, false),
+                              child: const Text('Hủy'),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, true),
+                              child: const Text('Xóa'),
+                            ),
+                          ],
+                        ),
+                      );
+
+                      if (confirmed == true && employee.idphieu != null) {
+                        try {
+                          await _bienDongRepository.deleteBienDong(employee.idphieu!);
+                          // Refresh the list after deletion
+                          _loadCompanies();
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Lỗi khi xóa nhân viên: ${e.toString()}')),
+                          );
+                        }
+                      }
+                    },
                     child: const Text('Xóa'),
                   ),
                   const SizedBox(width: 8),
