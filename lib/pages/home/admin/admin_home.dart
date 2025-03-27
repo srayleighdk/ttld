@@ -107,7 +107,7 @@ class AdminHomePage extends StatelessWidget {
         _buildQuickAccessRow(context, [
           _buildQuickAccessButton(
             context: context,
-            icon: FontAwesomeIcons.cog,
+            icon: FontAwesomeIcons.gear,
             label: 'Log Hệ Thống',
             route: '/log-he-thong',
           ),

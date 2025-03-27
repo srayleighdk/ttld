@@ -8,13 +8,12 @@ abstract class GroupEvent extends Equatable {
 class LoadGroups extends GroupEvent {}
 
 class CreateGroup extends GroupEvent {
-  final String name;
-  final String? parentId;
+  final Group group;
 
-  CreateGroup(this.name, {this.parentId});
+  CreateGroup(this.group);
 
   @override
-  List<Object?> get props => [name, parentId];
+  List<Object?> get props => [group];
 }
 
 class UpdateGroup extends GroupEvent {

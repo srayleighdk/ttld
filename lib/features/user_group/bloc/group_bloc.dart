@@ -31,8 +31,7 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
     if (state is GroupLoaded) {
       final currentState = state as GroupLoaded;
       try {
-        final newGroup =
-            await groupRepository.createGroup(event.name, event.parentId);
+        final newGroup = await groupRepository.createGroup(event.group);
         emit(GroupLoaded([...currentState.groups, newGroup]));
       } catch (e) {
         emit(GroupError(e.toString()));

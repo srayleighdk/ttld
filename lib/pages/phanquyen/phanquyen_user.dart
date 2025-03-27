@@ -76,6 +76,7 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Permissions saved successfully')),
       );
+      Navigator.pop(context);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error saving permissions: $e')),
@@ -168,7 +169,7 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
         executeDuyet: value,
       );
     }).toList();
-    
+
     _updatePermissionInList(parent.copyWith(children: updatedChildren));
   }
 
@@ -222,62 +223,67 @@ class _PhanQuyenUserState extends State<PhanQuyenUser> {
                   runSpacing: 4,
                   children: [
                     _buildPermissionCheckbox(
-                      'View',
+                      'Xem',
                       permission.executeSelect ?? false,
                       (value) {
                         setState(() {
                           if (hasChildren) {
                             _updateChildrenPermissions(permission, value);
                           }
-                          _updatePermissionInList(permission.copyWith(executeSelect: value));
+                          _updatePermissionInList(
+                              permission.copyWith(executeSelect: value));
                         });
                       },
                     ),
                     _buildPermissionCheckbox(
-                      'Add',
+                      'Thêm',
                       permission.executeInsert ?? false,
                       (value) {
                         setState(() {
                           if (hasChildren) {
                             _updateChildrenPermissions(permission, value);
                           }
-                          _updatePermissionInList(permission.copyWith(executeInsert: value));
+                          _updatePermissionInList(
+                              permission.copyWith(executeInsert: value));
                         });
                       },
                     ),
                     _buildPermissionCheckbox(
-                      'Edit',
+                      'Sửa',
                       permission.executeUpdate ?? false,
                       (value) {
                         setState(() {
                           if (hasChildren) {
                             _updateChildrenPermissions(permission, value);
                           }
-                          _updatePermissionInList(permission.copyWith(executeUpdate: value));
+                          _updatePermissionInList(
+                              permission.copyWith(executeUpdate: value));
                         });
                       },
                     ),
                     _buildPermissionCheckbox(
-                      'Delete',
+                      'Xóa',
                       permission.executeDelete ?? false,
                       (value) {
                         setState(() {
                           if (hasChildren) {
                             _updateChildrenPermissions(permission, value);
                           }
-                          _updatePermissionInList(permission.copyWith(executeDelete: value));
+                          _updatePermissionInList(
+                              permission.copyWith(executeDelete: value));
                         });
                       },
                     ),
                     _buildPermissionCheckbox(
-                      'Approve',
+                      'Duyệt',
                       permission.executeDuyet ?? false,
                       (value) {
                         setState(() {
                           if (hasChildren) {
                             _updateChildrenPermissions(permission, value);
                           }
-                          _updatePermissionInList(permission.copyWith(executeDuyet: value));
+                          _updatePermissionInList(
+                              permission.copyWith(executeDuyet: value));
                         });
                       },
                     ),

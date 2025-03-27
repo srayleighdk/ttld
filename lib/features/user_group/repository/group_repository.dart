@@ -13,14 +13,16 @@ class GroupRepository extends BaseRepository {
       if (response.data is Map<String, dynamic> &&
           response.data['data'] is List) {
         final List<dynamic> groupsJson = response.data['data'];
-        List<Group> groups = groupsJson.map((json) => Group.fromJson(json)).toList();
-        
+        List<Group> groups =
+            groupsJson.map((json) => Group.fromJson(json)).toList();
+
         // Fetch users for each group
         for (int i = 0; i < groups.length; i++) {
-          final users = await userRepository.getAllUsers(groups[i].idUserGroup);
+          final users =
+              await userRepository.getAllUsers(groupId: groups[i].idUserGroup);
           groups[i] = groups[i].copyWith(users: users);
         }
-        
+
         return groups;
       } else {
         throw Exception("Unexpected API response format");
@@ -28,12 +30,10 @@ class GroupRepository extends BaseRepository {
     });
   }
 
-  Future<Group> createGroup(String name, String? parentId) async {
+  Future<Group> createGroup(Group group) async {
     return await safeApiCall(() async {
-      final response = await dio.post(ApiEndpoints.groups, data: {
-        "name": name,
-        "parentId": parentId,
-      });
+      final response =
+          await dio.post(ApiEndpoints.groups, data: group.toJson());
       return Group.fromJson(response.data);
     });
   }

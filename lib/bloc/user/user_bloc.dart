@@ -16,7 +16,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         super(const UserState.initial()) {
     on<UserEvent>((event, emit) async {
       await event.map(
-        fetchAllUsers: (e) => _fetchAllUsers(emit),
+        fetchAllUsers: (e) => _fetchAllUsers(e, emit),
         fetchUserById: (e) => _fetchUserById(e, emit),
         createUser: (e) => _createUser(e, emit),
         updateUser: (e) => _updateUser(e, emit),
@@ -26,10 +26,12 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     });
   }
 
-  Future<void> _fetchAllUsers(Emitter<UserState> emit) async {
+  Future<void> _fetchAllUsers(
+      FetchAllUsers event, Emitter<UserState> emit) async {
     emit(const UserState.loadInProgress());
     try {
-      final users = await _userRepository.getAllUsers();
+      final users =
+          await _userRepository.getAllUsers(groupId: event.idUserGroup);
       emit(UserState.loadSuccess(users));
     } on Exception catch (e) {
       emit(UserState.failure(e.toString()));

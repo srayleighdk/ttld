@@ -157,7 +157,8 @@ Future<void> setupLocator() async {
 
   locator.registerLazySingleton<LdRepository>(
       () => LdRepositoryImpl(locator<ApiClient>().dio));
-  locator.registerLazySingleton<GroupRepository>(() => GroupRepository());
+  locator.registerLazySingleton<GroupRepository>(
+      () => GroupRepository(userRepository: locator<UserRepository>()));
 
 // NgoaiNgu
   locator.registerLazySingleton<NgoaiNguRepository>(

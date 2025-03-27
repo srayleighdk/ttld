@@ -18,7 +18,7 @@ class UserRoleService {
   Future<void> updateRoles(List<PermissionRole> roles, String userName) async {
     final requestBody = {
       'user': userName,
-      'roles': roles.map((e) => e.toJson()).toList(),
+      'data': roles.map((e) => e.toJson()).toList(),
     };
     await _dio.post('/user/user-roles', data: requestBody);
   }

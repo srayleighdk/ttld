@@ -5,7 +5,10 @@ class UserApiService {
 
   UserApiService(this._dio);
 
-  Future<Response> getAllUsers() async {
+  Future<Response> getAllUsers(String? groupId) async {
+    if (groupId != null) {
+      return _dio.get('/user/all', queryParameters: {'groupId': groupId});
+    }
     return _dio.get('/user/all');
   }
 

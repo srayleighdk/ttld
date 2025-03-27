@@ -18,7 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$UserEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() fetchAllUsers,
+    required TResult Function(String? idUserGroup) fetchAllUsers,
     required TResult Function(String userId) fetchUserById,
     required TResult Function(UserModel user) createUser,
     required TResult Function(UserModel user) updateUser,
@@ -28,7 +28,7 @@ mixin _$UserEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? fetchAllUsers,
+    TResult? Function(String? idUserGroup)? fetchAllUsers,
     TResult? Function(String userId)? fetchUserById,
     TResult? Function(UserModel user)? createUser,
     TResult? Function(UserModel user)? updateUser,
@@ -38,7 +38,7 @@ mixin _$UserEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? fetchAllUsers,
+    TResult Function(String? idUserGroup)? fetchAllUsers,
     TResult Function(String userId)? fetchUserById,
     TResult Function(UserModel user)? createUser,
     TResult Function(UserModel user)? updateUser,
@@ -105,6 +105,8 @@ abstract class _$$FetchAllUsersImplCopyWith<$Res> {
   factory _$$FetchAllUsersImplCopyWith(
           _$FetchAllUsersImpl value, $Res Function(_$FetchAllUsersImpl) then) =
       __$$FetchAllUsersImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String? idUserGroup});
 }
 
 /// @nodoc
@@ -117,57 +119,83 @@ class __$$FetchAllUsersImplCopyWithImpl<$Res>
 
   /// Create a copy of UserEvent
   /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? idUserGroup = freezed,
+  }) {
+    return _then(_$FetchAllUsersImpl(
+      freezed == idUserGroup
+          ? _value.idUserGroup
+          : idUserGroup // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$FetchAllUsersImpl implements FetchAllUsers {
-  const _$FetchAllUsersImpl();
+  const _$FetchAllUsersImpl(this.idUserGroup);
+
+  @override
+  final String? idUserGroup;
 
   @override
   String toString() {
-    return 'UserEvent.fetchAllUsers()';
+    return 'UserEvent.fetchAllUsers(idUserGroup: $idUserGroup)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$FetchAllUsersImpl);
+        (other.runtimeType == runtimeType &&
+            other is _$FetchAllUsersImpl &&
+            (identical(other.idUserGroup, idUserGroup) ||
+                other.idUserGroup == idUserGroup));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode => Object.hash(runtimeType, idUserGroup);
+
+  /// Create a copy of UserEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$FetchAllUsersImplCopyWith<_$FetchAllUsersImpl> get copyWith =>
+      __$$FetchAllUsersImplCopyWithImpl<_$FetchAllUsersImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() fetchAllUsers,
+    required TResult Function(String? idUserGroup) fetchAllUsers,
     required TResult Function(String userId) fetchUserById,
     required TResult Function(UserModel user) createUser,
     required TResult Function(UserModel user) updateUser,
     required TResult Function(String userId) deleteUser,
     required TResult Function(String manv) fetchUserByManv,
   }) {
-    return fetchAllUsers();
+    return fetchAllUsers(idUserGroup);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? fetchAllUsers,
+    TResult? Function(String? idUserGroup)? fetchAllUsers,
     TResult? Function(String userId)? fetchUserById,
     TResult? Function(UserModel user)? createUser,
     TResult? Function(UserModel user)? updateUser,
     TResult? Function(String userId)? deleteUser,
     TResult? Function(String manv)? fetchUserByManv,
   }) {
-    return fetchAllUsers?.call();
+    return fetchAllUsers?.call(idUserGroup);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? fetchAllUsers,
+    TResult Function(String? idUserGroup)? fetchAllUsers,
     TResult Function(String userId)? fetchUserById,
     TResult Function(UserModel user)? createUser,
     TResult Function(UserModel user)? updateUser,
@@ -176,7 +204,7 @@ class _$FetchAllUsersImpl implements FetchAllUsers {
     required TResult orElse(),
   }) {
     if (fetchAllUsers != null) {
-      return fetchAllUsers();
+      return fetchAllUsers(idUserGroup);
     }
     return orElse();
   }
@@ -226,7 +254,15 @@ class _$FetchAllUsersImpl implements FetchAllUsers {
 }
 
 abstract class FetchAllUsers implements UserEvent {
-  const factory FetchAllUsers() = _$FetchAllUsersImpl;
+  const factory FetchAllUsers(final String? idUserGroup) = _$FetchAllUsersImpl;
+
+  String? get idUserGroup;
+
+  /// Create a copy of UserEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$FetchAllUsersImplCopyWith<_$FetchAllUsersImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -297,7 +333,7 @@ class _$FetchUserByIdImpl implements FetchUserById {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() fetchAllUsers,
+    required TResult Function(String? idUserGroup) fetchAllUsers,
     required TResult Function(String userId) fetchUserById,
     required TResult Function(UserModel user) createUser,
     required TResult Function(UserModel user) updateUser,
@@ -310,7 +346,7 @@ class _$FetchUserByIdImpl implements FetchUserById {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? fetchAllUsers,
+    TResult? Function(String? idUserGroup)? fetchAllUsers,
     TResult? Function(String userId)? fetchUserById,
     TResult? Function(UserModel user)? createUser,
     TResult? Function(UserModel user)? updateUser,
@@ -323,7 +359,7 @@ class _$FetchUserByIdImpl implements FetchUserById {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? fetchAllUsers,
+    TResult Function(String? idUserGroup)? fetchAllUsers,
     TResult Function(String userId)? fetchUserById,
     TResult Function(UserModel user)? createUser,
     TResult Function(UserModel user)? updateUser,
@@ -473,7 +509,7 @@ class _$CreateUserImpl implements CreateUser {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() fetchAllUsers,
+    required TResult Function(String? idUserGroup) fetchAllUsers,
     required TResult Function(String userId) fetchUserById,
     required TResult Function(UserModel user) createUser,
     required TResult Function(UserModel user) updateUser,
@@ -486,7 +522,7 @@ class _$CreateUserImpl implements CreateUser {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? fetchAllUsers,
+    TResult? Function(String? idUserGroup)? fetchAllUsers,
     TResult? Function(String userId)? fetchUserById,
     TResult? Function(UserModel user)? createUser,
     TResult? Function(UserModel user)? updateUser,
@@ -499,7 +535,7 @@ class _$CreateUserImpl implements CreateUser {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? fetchAllUsers,
+    TResult Function(String? idUserGroup)? fetchAllUsers,
     TResult Function(String userId)? fetchUserById,
     TResult Function(UserModel user)? createUser,
     TResult Function(UserModel user)? updateUser,
@@ -649,7 +685,7 @@ class _$UpdateUserImpl implements UpdateUser {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() fetchAllUsers,
+    required TResult Function(String? idUserGroup) fetchAllUsers,
     required TResult Function(String userId) fetchUserById,
     required TResult Function(UserModel user) createUser,
     required TResult Function(UserModel user) updateUser,
@@ -662,7 +698,7 @@ class _$UpdateUserImpl implements UpdateUser {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? fetchAllUsers,
+    TResult? Function(String? idUserGroup)? fetchAllUsers,
     TResult? Function(String userId)? fetchUserById,
     TResult? Function(UserModel user)? createUser,
     TResult? Function(UserModel user)? updateUser,
@@ -675,7 +711,7 @@ class _$UpdateUserImpl implements UpdateUser {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? fetchAllUsers,
+    TResult Function(String? idUserGroup)? fetchAllUsers,
     TResult Function(String userId)? fetchUserById,
     TResult Function(UserModel user)? createUser,
     TResult Function(UserModel user)? updateUser,
@@ -813,7 +849,7 @@ class _$DeleteUserImpl implements DeleteUser {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() fetchAllUsers,
+    required TResult Function(String? idUserGroup) fetchAllUsers,
     required TResult Function(String userId) fetchUserById,
     required TResult Function(UserModel user) createUser,
     required TResult Function(UserModel user) updateUser,
@@ -826,7 +862,7 @@ class _$DeleteUserImpl implements DeleteUser {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? fetchAllUsers,
+    TResult? Function(String? idUserGroup)? fetchAllUsers,
     TResult? Function(String userId)? fetchUserById,
     TResult? Function(UserModel user)? createUser,
     TResult? Function(UserModel user)? updateUser,
@@ -839,7 +875,7 @@ class _$DeleteUserImpl implements DeleteUser {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? fetchAllUsers,
+    TResult Function(String? idUserGroup)? fetchAllUsers,
     TResult Function(String userId)? fetchUserById,
     TResult Function(UserModel user)? createUser,
     TResult Function(UserModel user)? updateUser,
@@ -978,7 +1014,7 @@ class _$FetchUserByManvImpl implements FetchUserByManv {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() fetchAllUsers,
+    required TResult Function(String? idUserGroup) fetchAllUsers,
     required TResult Function(String userId) fetchUserById,
     required TResult Function(UserModel user) createUser,
     required TResult Function(UserModel user) updateUser,
@@ -991,7 +1027,7 @@ class _$FetchUserByManvImpl implements FetchUserByManv {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? fetchAllUsers,
+    TResult? Function(String? idUserGroup)? fetchAllUsers,
     TResult? Function(String userId)? fetchUserById,
     TResult? Function(UserModel user)? createUser,
     TResult? Function(UserModel user)? updateUser,
@@ -1004,7 +1040,7 @@ class _$FetchUserByManvImpl implements FetchUserByManv {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? fetchAllUsers,
+    TResult Function(String? idUserGroup)? fetchAllUsers,
     TResult Function(String userId)? fetchUserById,
     TResult Function(UserModel user)? createUser,
     TResult Function(UserModel user)? updateUser,

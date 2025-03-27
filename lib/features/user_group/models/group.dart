@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ttld/models/user/user_model.dart';
 
 part 'group.freezed.dart';
 part 'group.g.dart';

@@ -7,8 +7,8 @@ class UserRepository {
   UserRepository({required UserApiService userApiService})
       : _userApiService = userApiService;
 
-  Future<List<UserModel>> getAllUsers() async {
-    final response = await _userApiService.getAllUsers();
+  Future<List<UserModel>> getAllUsers({String? groupId}) async {
+    final response = await _userApiService.getAllUsers(groupId);
     return (response.data['data'] as List)
         .map((e) => UserModel.fromJson(e))
         .toList();
