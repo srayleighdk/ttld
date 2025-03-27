@@ -40,7 +40,7 @@ class _ChinhSachLuongPageState extends State<ChinhSachLuongPage> {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _bloc.add(CreateChinhSachLuong(ChinhSachLuong())),
+        onPressed: _showCreateDialog,
         label: const Text('Thêm mới'),
         icon: const Icon(Icons.add),
       ),
@@ -88,6 +88,134 @@ class _ChinhSachLuongPageState extends State<ChinhSachLuongPage> {
         backgroundColor: Colors.green.shade700,
         behavior: SnackBarBehavior.floating,
       ),
+    );
+  }
+
+  void _showCreateDialog() {
+    final formKey = GlobalKey<FormState>();
+    final csl = ChinhSachLuong();
+    final TextEditingController idController = TextEditingController();
+    final TextEditingController tenController = TextEditingController();
+    final TextEditingController vungController = TextEditingController();
+    final TextEditingController salaryMinController = TextEditingController();
+    final TextEditingController nldBhxhController = TextEditingController();
+    final TextEditingController nldBhytController = TextEditingController();
+    final TextEditingController nldBhtnController = TextEditingController();
+    final TextEditingController dnBhxhController = TextEditingController();
+    final TextEditingController dnBhytController = TextEditingController();
+    final TextEditingController dnBhtnController = TextEditingController();
+    final TextEditingController dnThaisanController = TextEditingController();
+    final TextEditingController dnTnldController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Thêm chính sách lương mới'),
+        content: SingleChildScrollView(
+          child: Form(
+            key: formKey,
+            child: Column(
+              children: [
+                _buildTextField('ID code *', idController, (v) {
+                  if (v?.isEmpty ?? true) return 'Vui lòng nhập ID';
+                  return null;
+                }),
+                _buildTextField('Tên vùng mô tả *', tenController, (v) {
+                  if (v?.isEmpty ?? true) return 'Vui lòng nhập tên';
+                  return null;
+                }),
+                _buildTextField('Mã vùng (1-4) *', vungController, (v) {
+                  if (v?.isEmpty ?? true) return 'Vui lòng nhập mã vùng';
+                  if (int.tryParse(v!) == null || int.parse(v) < 1 || int.parse(v) > 4) {
+                    return 'Mã vùng phải từ 1-4';
+                  }
+                  return null;
+                }, keyboardType: TextInputType.number),
+                _buildTextField('Mức lương vùng *', salaryMinController, (v) {
+                  if (v?.isEmpty ?? true) return 'Vui lòng nhập mức lương';
+                  if (double.tryParse(v!) == null) return 'Số không hợp lệ';
+                  return null;
+                }, keyboardType: TextInputType.number),
+                const SizedBox(height: 16),
+                const Text('Bảo hiểm người lao động',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                _buildPercentageField('BHXH (%) *', nldBhxhController),
+                _buildPercentageField('BHYT (%)', nldBhytController),
+                _buildPercentageField('BHTN (%)', nldBhtnController),
+                const SizedBox(height: 16),
+                const Text('Bảo hiểm tổ chức doanh nghiệp',
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                _buildPercentageField('BHXH (%) *', dnBhxhController),
+                _buildPercentageField('BHYT (%)', dnBhytController),
+                _buildPercentageField('BHTN (%)', dnBhtnController),
+                _buildPercentageField('Thai sản (%)', dnThaisanController),
+                _buildPercentageField('TNLĐ (%)', dnTnldController),
+              ],
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Hủy'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (formKey.currentState?.validate() ?? false) {
+                _bloc.add(CreateChinhSachLuong(ChinhSachLuong(
+                  id: int.tryParse(idController.text),
+                  ten: tenController.text,
+                  vung: int.tryParse(vungController.text),
+                  salaryMin: int.tryParse(salaryMinController.text),
+                  nldBhxh: double.tryParse(nldBhxhController.text),
+                  nldBhyt: double.tryParse(nldBhytController.text),
+                  nldBhtn: double.tryParse(nldBhtnController.text),
+                  dnBhxh: double.tryParse(dnBhxhController.text),
+                  dnBhyt: double.tryParse(dnBhytController.text),
+                  dnBhtn: double.tryParse(dnBhtnController.text),
+                  dnThaisan: double.tryParse(dnThaisanController.text),
+                  dnTnld: double.tryParse(dnTnldController.text),
+                  status: true,
+                )));
+                Navigator.pop(context);
+              }
+            },
+            child: const Text('Thêm'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTextField(String label, TextEditingController controller,
+      FormFieldValidator<String?> validator,
+      {TextInputType? keyboardType}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          border: const OutlineInputBorder(),
+          isDense: true,
+        ),
+        keyboardType: keyboardType,
+        validator: validator,
+      ),
+    );
+  }
+
+  Widget _buildPercentageField(String label, TextEditingController controller) {
+    return _buildTextField(
+      label,
+      controller,
+      (v) {
+        if (v?.isNotEmpty == true && double.tryParse(v!) == null) {
+          return 'Số không hợp lệ';
+        }
+        return null;
+      },
+      keyboardType: TextInputType.number,
     );
   }
 }
