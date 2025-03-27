@@ -111,6 +111,7 @@ class _ChinhSachLuongPageState extends State<ChinhSachLuongPage> {
         title: const Text('Thêm chính sách lương mới'),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         content: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Form(
             key: formKey,
             child: Column(
@@ -216,9 +217,9 @@ class _ChinhSachLuongPageState extends State<ChinhSachLuongPage> {
             ),
           ),
         ),
-        // insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-        // contentPadding: const EdgeInsets.all(16),
-        // buttonPadding: EdgeInsets.zero,
+        insetPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 24),
+        contentPadding: const EdgeInsets.all(24),
+        buttonPadding: EdgeInsets.zero,
         actions: [
           TextButton.icon(
             icon: const Icon(Icons.cancel),
