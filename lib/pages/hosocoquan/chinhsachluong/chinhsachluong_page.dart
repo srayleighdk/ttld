@@ -24,8 +24,6 @@ class _ChinhSachLuongPageState extends State<ChinhSachLuongPage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Quản lý chính sách lương'),
@@ -38,11 +36,6 @@ class _ChinhSachLuongPageState extends State<ChinhSachLuongPage> {
             tooltip: 'Làm mới dữ liệu',
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _showCreateDialog,
-        label: const Text('Thêm mới'),
-        icon: const Icon(Icons.add),
       ),
       body: BlocConsumer<ChinhSachLuongBloc, ChinhSachLuongState>(
         bloc: _bloc,
@@ -67,6 +60,11 @@ class _ChinhSachLuongPageState extends State<ChinhSachLuongPage> {
 
           return const _ErrorWidget();
         },
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _showCreateDialog,
+        label: const Text('Thêm mới'),
+        icon: const Icon(Icons.add),
       ),
     );
   }
@@ -111,6 +109,7 @@ class _ChinhSachLuongPageState extends State<ChinhSachLuongPage> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Thêm chính sách lương mới'),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         content: SingleChildScrollView(
           child: Form(
             key: formKey,
@@ -217,9 +216,9 @@ class _ChinhSachLuongPageState extends State<ChinhSachLuongPage> {
             ),
           ),
         ),
-        insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-        contentPadding: const EdgeInsets.all(16),
-        buttonPadding: EdgeInsets.zero,
+        // insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+        // contentPadding: const EdgeInsets.all(16),
+        // buttonPadding: EdgeInsets.zero,
         actions: [
           TextButton.icon(
             icon: const Icon(Icons.cancel),
@@ -386,7 +385,7 @@ class _DataTableWidget extends StatelessWidget {
           fixedLeftColumns: 1,
           columnSpacing: 12,
           horizontalMargin: 12,
-          minWidth: 800,
+          minWidth: 600,
           headingRowColor: MaterialStateProperty.all(Colors.grey.shade100),
           border: TableBorder.all(
             color: Colors.grey.shade200,
