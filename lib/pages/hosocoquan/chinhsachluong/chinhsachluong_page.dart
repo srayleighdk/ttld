@@ -16,7 +16,7 @@ class _ChinhSachLuongPageState extends State<ChinhSachLuongPage> {
   @override
   void initState() {
     super.initState();
-    GetIt.I<ChinhSachLuongBloc>().add(LoadChinhSachLuongs());
+    GetIt.I.get<ChinhSachLuongBloc>().add(LoadChinhSachLuongs());
   }
 
   @override
@@ -26,7 +26,7 @@ class _ChinhSachLuongPageState extends State<ChinhSachLuongPage> {
         title: const Text('Quản lý Chính sách lương'),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => GetIt.I<ChinhSachLuongBloc>()
+        onPressed: () => GetIt.I.get<ChinhSachLuongBloc>()
             .add(CreateChinhSachLuong(ChinhSachLuong())),
         child: const Icon(Icons.add),
       ),
@@ -88,12 +88,12 @@ class _ChinhSachLuongPageState extends State<ChinhSachLuongPage> {
                       children: [
                         IconButton(
                           icon: const Icon(Icons.edit),
-                          onPressed: () => GetIt.I<ChinhSachLuongBloc>()
+                          onPressed: () => GetIt.I.get<ChinhSachLuongBloc>()
                               .add(UpdateChinhSachLuong(csl)),
                         ),
                         IconButton(
                           icon: const Icon(Icons.delete),
-                          onPressed: () => GetIt.I<ChinhSachLuongBloc>()
+                          onPressed: () => GetIt.I.get<ChinhSachLuongBloc>()
                               .add(DeleteChinhSachLuong(csl.id!)),
                         ),
                       ],

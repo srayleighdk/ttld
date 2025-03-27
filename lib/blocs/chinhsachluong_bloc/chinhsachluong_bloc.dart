@@ -11,7 +11,9 @@ part 'chinhsachluong_state.dart';
 class ChinhSachLuongBloc extends Bloc<ChinhSachLuongEvent, ChinhSachLuongState> {
   final ChinhSachLuongRepository _repository;
 
-  ChinhSachLuongBloc() : _repository = GetIt.I<ChinhSachLuongRepository>(), super(ChinhSachLuongInitial()) {
+  ChinhSachLuongBloc() 
+      : _repository = GetIt.I<ChinhSachLuongRepository>(), 
+        super(ChinhSachLuongInitial()) {
     on<LoadChinhSachLuongs>(_onLoadChinhSachLuongs);
     on<CreateChinhSachLuong>(_onCreateChinhSachLuong);
     on<UpdateChinhSachLuong>(_onUpdateChinhSachLuong);
