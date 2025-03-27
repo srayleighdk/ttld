@@ -67,17 +67,14 @@ class _QuanTriNguoiDungPageState extends State<QuanTriNguoiDungPage> {
     showDialog(
       context: context,
       builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setInnerState) {
-            bool localStatus = statusValue;
-            return AlertDialog(
-              title: Row(
-                children: [
-                  Icon(Icons.group_add, color: Theme.of(context).primaryColor),
-                  const SizedBox(width: 10),
-                  const Text('Thêm nhóm người dùng'),
-                ],
-              ),
+        return AlertDialog(
+          title: Row(
+            children: [
+              Icon(Icons.group_add, color: Theme.of(context).primaryColor),
+              const SizedBox(width: 10),
+              const Text('Thêm nhóm người dùng'),
+            ],
+          ),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           content: SingleChildScrollView(
@@ -258,10 +255,10 @@ class _QuanTriNguoiDungPageState extends State<QuanTriNguoiDungPage> {
                                 statusValue ? Icons.check_circle : Icons.cancel,
                                 color: statusValue ? Colors.green : Colors.red,
                               ),
-                              value: localStatus,
+                              value: statusValue,
                               onChanged: (value) {
-                                setInnerState(() {
-                                  localStatus = value;
+                                setState(() {
+                                  statusValue = value;
                                 });
                               },
                             ),
@@ -305,7 +302,7 @@ class _QuanTriNguoiDungPageState extends State<QuanTriNguoiDungPage> {
                   description: descriptionController.text,
                   displayOrder: int.tryParse(displayOrderController.text) ?? 0,
                   groupLevel: int.tryParse(groupLevelController.text) ?? 1,
-                  status: localStatus,
+                  status: statusValue,
                 );
 
                 try {
