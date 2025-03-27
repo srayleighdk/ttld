@@ -23,9 +23,19 @@ class BienDongRepository {
       {int? yearTo, int? status, String? search}) async {
     try {
       final response = await _bienDongService.getBienDong();
-      return (response.data['data'] as List)
+      final companies = (response.data['data'] as List)
           .map((json) => Company.fromJson(json))
           .toList();
+
+      // Fetch employees for each company
+      for (final company in companies) {
+        final nhanVienResponse = await _bienDongService.getBienDongList(company.idDn);
+        company.nhanVienList = (nhanVienResponse.data['data'] as List)
+            .map((json) => NhanVien.fromJson(json))
+            .toList();
+      }
+
+      return companies;
     } on DioException catch (e) {
       throw Exception('Failed to get companies: ${e.message}');
     }
