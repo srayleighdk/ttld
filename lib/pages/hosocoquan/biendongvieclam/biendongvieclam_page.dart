@@ -21,7 +21,7 @@ class _BienDongViecLamPageState extends State<BienDongViecLamPage> {
   int selectedYear = DateTime.now().year;
   int selectedStatus = -1; // -1 means all, 0 and 1 are specific statuses
 
-  List<int> expandedCompanyIds = [];
+  List<String> expandedCompanyIds = [];
 
   @override
   void initState() {
@@ -82,7 +82,7 @@ class _BienDongViecLamPageState extends State<BienDongViecLamPage> {
     });
   }
 
-  void _toggleExpanded(int companyId) {
+  void _toggleExpanded(String companyId) {
     setState(() {
       if (expandedCompanyIds.contains(companyId)) {
         expandedCompanyIds.remove(companyId);
@@ -200,7 +200,7 @@ class _BienDongViecLamPageState extends State<BienDongViecLamPage> {
   }
 
   Widget _buildCompanyCard(Company company) {
-    final isExpanded = expandedCompanyIds.contains(int.tryParse(company.idDn!));
+    final isExpanded = expandedCompanyIds.contains(company.idDn ?? '');
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -216,10 +216,9 @@ class _BienDongViecLamPageState extends State<BienDongViecLamPage> {
             subtitle: Text('Mã số: ${company.idDn ?? "N/A"}'),
             trailing: IconButton(
               icon: Icon(isExpanded ? Icons.expand_less : Icons.expand_more),
-              onPressed: () =>
-                  _toggleExpanded(int.tryParse(company.idDn!) ?? 0),
+              onPressed: () => _toggleExpanded(company.idDn ?? ''),
             ),
-            onTap: () => _toggleExpanded(int.tryParse(company.idDn!) ?? 0),
+            onTap: () => _toggleExpanded(company.idDn ?? ''),
           ),
           if (isExpanded) _buildEmployeeList(company),
         ],
