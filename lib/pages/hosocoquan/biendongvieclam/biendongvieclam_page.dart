@@ -200,7 +200,7 @@ class _BienDongViecLamPageState extends State<BienDongViecLamPage> {
   }
 
   Widget _buildCompanyCard(Company company) {
-    final isExpanded = expandedCompanyIds.contains(company.idDn);
+    final isExpanded = expandedCompanyIds.contains(int.tryParse(company.idDn!));
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -216,9 +216,10 @@ class _BienDongViecLamPageState extends State<BienDongViecLamPage> {
             subtitle: Text('Mã số: ${company.idDn ?? "N/A"}'),
             trailing: IconButton(
               icon: Icon(isExpanded ? Icons.expand_less : Icons.expand_more),
-              onPressed: () => _toggleExpanded(company.idDn),
+              onPressed: () =>
+                  _toggleExpanded(int.tryParse(company.idDn!) ?? 0),
             ),
-            onTap: () => _toggleExpanded(company.idDn),
+            onTap: () => _toggleExpanded(int.tryParse(company.idDn!) ?? 0),
           ),
           if (isExpanded) _buildEmployeeList(company),
         ],
@@ -227,7 +228,7 @@ class _BienDongViecLamPageState extends State<BienDongViecLamPage> {
   }
 
   Widget _buildEmployeeList(Company company) {
-    if (company.employees == null || company.employees!.isEmpty) {
+    if (company.nhanVienList == null || company.nhanVienList!.isEmpty) {
       return const Padding(
         padding: EdgeInsets.all(16.0),
         child: Text('Không có nhân viên'),
@@ -248,20 +249,20 @@ class _BienDongViecLamPageState extends State<BienDongViecLamPage> {
         ListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: company.employees!.length,
+          itemCount: company.nhanVienList!.length,
           itemBuilder: (context, index) {
-            final employee = company.employees![index];
+            final employee = company.nhanVienList![index];
             return ListTile(
-              leading: CircleAvatar(
-                child: Text(employee.name.isNotEmpty ? employee.name[0] : 'N'),
-              ),
-              title: Text(employee.name),
+              // leading: CircleAvatar(
+              //   child: Text(employee.name.isNotEmpty ? employee.name[0] : 'N'),
+              // ),
+              title: Text(employee.hoTenUv ?? 'N/A'),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('CMND/CCCD: ${employee.identityCard ?? "N/A"}'),
-                  if (employee.position != null)
-                    Text('Chức vụ: ${employee.position}'),
+                  Text('CMND/CCCD: ${employee.soCmndUv ?? "N/A"}'),
+                  if (employee.tenChucdanh != null)
+                    Text('Chức vụ: ${employee.tenChucdanh}'),
                 ],
               ),
               onTap: () {
