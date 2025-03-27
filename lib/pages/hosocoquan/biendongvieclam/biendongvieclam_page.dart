@@ -200,7 +200,7 @@ class _BienDongViecLamPageState extends State<BienDongViecLamPage> {
   }
 
   Widget _buildCompanyCard(Company company) {
-    final isExpanded = expandedCompanyIds.contains(company.id);
+    final isExpanded = expandedCompanyIds.contains(company.idDn);
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -210,40 +210,15 @@ class _BienDongViecLamPageState extends State<BienDongViecLamPage> {
         children: [
           ListTile(
             title: Text(
-              company.name,
+              company.tenDoanhnghiep ?? 'N/A',
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
-            subtitle: Text('Mã số: ${company.code ?? "N/A"}'),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: company.status == 1
-                        ? Colors.green[100]
-                        : Colors.orange[100],
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    company.status == 1 ? 'Đã duyệt' : 'Chưa duyệt',
-                    style: TextStyle(
-                      color: company.status == 1
-                          ? Colors.green[800]
-                          : Colors.orange[800],
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
-                IconButton(
-                  icon:
-                      Icon(isExpanded ? Icons.expand_less : Icons.expand_more),
-                  onPressed: () => _toggleExpanded(company.id),
-                ),
-              ],
+            subtitle: Text('Mã số: ${company.idDn ?? "N/A"}'),
+            trailing: IconButton(
+              icon: Icon(isExpanded ? Icons.expand_less : Icons.expand_more),
+              onPressed: () => _toggleExpanded(company.idDn),
             ),
-            onTap: () => _toggleExpanded(company.id),
+            onTap: () => _toggleExpanded(company.idDn),
           ),
           if (isExpanded) _buildEmployeeList(company),
         ],
