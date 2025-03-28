@@ -164,12 +164,12 @@ class _PhieudknldM01pliState extends State<PhieudknldM01pli> {
                 rowsPerPage: _rowsPerPage,
                 availableRowsPerPage: const [10, 20, 50, 100],
                 onPageChanged: (value) {
-                  print('onPageChanged: $value');
+                  _dataSource.handlePageChange(value + 1); // Pages are 0-indexed in DataTable
                 },
                 onRowsPerPageChanged: (value) {
-                  print('onRowsPerPageChanged: $value');
                   setState(() {
                     _rowsPerPage = value!;
+                    _dataSource.updateItemsPerPage(value);
                   });
                 },
                 sortColumnIndex: _sortColumnIndex,
@@ -568,6 +568,17 @@ class M01PliDataSource extends DataTableSource {
     _fetchData();
   }
 
+  void handlePageChange(int newPage) {
+    _currentPage = newPage;
+    refresh();
+  }
+
+  void updateItemsPerPage(int newItemsPerPage) {
+    _itemsPerPage = newItemsPerPage;
+    _currentPage = 1;
+    refresh();
+  }
+
   void refresh() {
     _fetchData();
   }
@@ -575,7 +586,7 @@ class M01PliDataSource extends DataTableSource {
   Future<void> _fetchData() async {
     if (_isLoading) return;
     _isLoading = true;
-    notifyListeners();
+    notifyListeners(); // Notify listeners when loading starts
     try {
       final response = await _repository.fetchM01Plis(
           page: _currentPage, limit: _itemsPerPage);
