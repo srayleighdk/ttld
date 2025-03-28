@@ -164,8 +164,7 @@ class _PhieudknldM01pliState extends State<PhieudknldM01pli> {
                 rowsPerPage: _rowsPerPage,
                 availableRowsPerPage: const [10, 20, 50, 100],
                 onPageChanged: (value) {
-                  _dataSource
-                      .handlePageChange(); // Convert 0-based to 1-based page index
+                  _dataSource.handlePageChange(value + 1); // Convert 0-based to 1-based page index
                 },
                 onRowsPerPageChanged: (value) {
                   setState(() {
@@ -569,8 +568,8 @@ class M01PliDataSource extends DataTableSource {
     _fetchData();
   }
 
-  void handlePageChange() {
-    _currentPage = _currentPage + 1;
+  void handlePageChange(int newPage) {
+    _currentPage = newPage;
     refresh();
   }
 
