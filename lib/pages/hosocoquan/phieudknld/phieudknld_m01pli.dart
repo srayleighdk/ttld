@@ -164,7 +164,8 @@ class _PhieudknldM01pliState extends State<PhieudknldM01pli> {
                 rowsPerPage: _rowsPerPage,
                 availableRowsPerPage: const [10, 20, 50, 100],
                 onPageChanged: (value) {
-                  _dataSource.handlePageChange(value + 1); // Pages are 0-indexed in DataTable
+                  _dataSource.handlePageChange(
+                      value + 1); // Pages are 0-indexed in DataTable
                 },
                 onRowsPerPageChanged: (value) {
                   setState(() {
@@ -550,7 +551,7 @@ class M01PliDataSource extends DataTableSource {
   List<M01Pli> _pliList = [];
   String _searchQuery = '';
   int _currentPage = 1;
-  final int _itemsPerPage = 10;
+  int _itemsPerPage = 10;
   int _totalItems = 0;
   bool _isLoading = false;
 
