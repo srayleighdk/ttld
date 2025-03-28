@@ -12,43 +12,38 @@ class PhieudknldM01pli extends StatefulWidget {
 
 class _PhieudknldM01pliState extends State<PhieudknldM01pli> {
   final M01PliRepository _repository = locator<M01PliRepository>();
-  late Future<Map<String, dynamic>> _pliFuture;
-  int _currentPage = 1;
-  int _totalPages = 1;
-  final int _itemsPerPage = 10;
-  String _searchQuery = '';
+  late M01PliDataSource _dataSource;
   final _searchController = TextEditingController();
+  String _searchQuery = '';
+  int _rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
+  int? _sortColumnIndex;
+  bool _sortAscending = true;
 
   @override
   void initState() {
     super.initState();
-    _pliFuture = _repository.fetchM01Plis();
-    _pliFuture.then((pliList) {
-      print('Length of data: ${pliList.length}');
-    });
+    _dataSource = M01PliDataSource(_repository);
   }
 
   @override
   void dispose() {
     _searchController.dispose();
+    _dataSource.dispose();
     super.dispose();
   }
 
   void _refreshData() {
     setState(() {
-      _pliFuture =
-          _repository.fetchM01Plis(page: _currentPage, limit: _itemsPerPage);
+      _dataSource.refresh();
     });
   }
 
-  void _handlePageChange(int newPage) {
-    if (newPage >= 1 && newPage <= _totalPages) {
-      setState(() {
-        _currentPage = newPage;
-        _pliFuture =
-            _repository.fetchM01Plis(page: _currentPage, limit: _itemsPerPage);
-      });
-    }
+  void _sort<T>(Comparable<T> Function(M01Pli pli) getField, int columnIndex, bool ascending) {
+    _dataSource.sort<T>(getField, ascending);
+    setState(() {
+      _sortColumnIndex = columnIndex;
+      _sortAscending = ascending;
+    });
   }
 
   Widget _buildPaginationControls() {
@@ -113,11 +108,33 @@ class _PhieudknldM01pliState extends State<PhieudknldM01pli> {
             _buildSearchAndActions(),
             const SizedBox(height: 16),
             Expanded(
-              child: Column(
-                children: [
-                  Expanded(child: _buildDataTable()),
-                  if (_totalPages > 1) _buildPaginationControls(),
-                ],
+              child: PaginatedDataTable2(
+                horizontalMargin: 20,
+                columnSpacing: 0,
+                wrapInCard: false,
+                headingRowColor: MaterialStateColor.resolveWith((states) => Colors.grey.shade100),
+                rowsPerPage: _rowsPerPage,
+                availableRowsPerPage: const [10, 20, 50, 100],
+                onRowsPerPageChanged: (value) {
+                  setState(() {
+                    _rowsPerPage = value!;
+                  });
+                },
+                sortColumnIndex: _sortColumnIndex,
+                sortAscending: _sortAscending,
+                columns: _columns,
+                source: _dataSource,
+                empty: const Center(child: Text('Không có dữ liệu nào được tìm thấy')),
+                minWidth: 1200,
+                fit: FlexFit.tight,
+                border: TableBorder(
+                  top: const BorderSide(color: Colors.black),
+                  bottom: BorderSide(color: Colors.grey[300]!),
+                  left: BorderSide(color: Colors.grey[300]!),
+                  right: BorderSide(color: Colors.grey[300]!),
+                  verticalInside: BorderSide(color: Colors.grey[300]!),
+                  horizontalInside: const BorderSide(color: Colors.grey, width: 1),
+                ),
               ),
             ),
           ],
@@ -468,4 +485,173 @@ class _PhieudknldM01pliState extends State<PhieudknldM01pli> {
       ),
     );
   }
+}
+// Custom DataSource for M01Pli
+class M01PliDataSource extends DataTableSource {
+  final M01PliRepository _repository;
+  List<M01Pli> _pliList = [];
+  String _searchQuery = '';
+  int _currentPage = 1;
+  final int _itemsPerPage = 10;
+  int _totalItems = 0;
+  bool _isLoading = false;
+
+  M01PliDataSource(this._repository) {
+    _fetchData();
+  }
+
+  void setSearchQuery(String query) {
+    _searchQuery = query;
+    _fetchData();
+  }
+
+  void refresh() {
+    _fetchData();
+  }
+
+  Future<void> _fetchData() async {
+    if (_isLoading) return;
+    _isLoading = true;
+    notifyListeners();
+    try {
+      final response = await _repository.fetchM01Plis(page: _currentPage, limit: _itemsPerPage);
+      _pliList = (response['data'] as List<M01Pli>?) ?? [];
+      _totalItems = (response['total'] as int?) ?? 0;
+    } catch (e) {
+      _pliList = [];
+      _totalItems = 0;
+    }
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  void sort<T>(Comparable<T> Function(M01Pli pli) getField, bool ascending) {
+    _pliList.sort((a, b) {
+      final aValue = getField(a);
+      final bValue = getField(b);
+      return ascending ? Comparable.compare(aValue, bValue) : Comparable.compare(bValue, aValue);
+    });
+    notifyListeners();
+  }
+
+  @override
+  DataRow? getRow(int index) {
+    if (index >= _pliList.length) return null;
+    final pli = _pliList[index];
+    return DataRow(cells: [
+      DataCell(Text('${index + 1}')),
+      DataCell(_buildActions(pli)),
+      DataCell(Text(pli.maphieu ?? '')),
+      DataCell(Text(pli.ngaylap ?? '')),
+      DataCell(Text(pli.hoten ?? '')),
+      DataCell(Text(pli.soCmnd ?? '')),
+      DataCell(Text(pli.diachiTt ?? '')),
+      DataCell(Text(pli.tenLienhe ?? '')),
+      DataCell(Text(pli.ngaysinh ?? '')),
+      DataCell(_buildGenderChip(pli.idGioitinh)),
+      DataCell(Text(pli.dienthoai ?? '')),
+      DataCell(Text(pli.email ?? '')),
+      DataCell(_buildStatusChip(pli.status)),
+    ]);
+  }
+
+  @override
+  bool get isRowCountApproximate => false;
+
+  @override
+  int get rowCount => _totalItems;
+
+  @override
+  int get selectedRowCount => 0;
+
+  Widget _buildActions(M01Pli pli) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        IconButton(
+          icon: const Icon(Icons.visibility, color: Colors.blue),
+          tooltip: 'Xem chi tiết',
+          onPressed: () => _viewPliDetails(pli),
+        ),
+        IconButton(
+          icon: const Icon(Icons.edit, color: Colors.orange),
+          tooltip: 'Chỉnh sửa',
+          onPressed: () => _editPli(pli),
+        ),
+        IconButton(
+          icon: const Icon(Icons.delete, color: Colors.red),
+          tooltip: 'Xóa',
+          onPressed: () => _confirmDeletePli(pli.idphieu ?? ''),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGenderChip(int? idGioitinh) {
+    // Keep existing _buildGenderChip implementation
+    Color chipColor;
+    String label;
+    IconData icon;
+
+    if (idGioitinh == 1) {
+      chipColor = Colors.blue.shade100;
+      label = 'Nam';
+      icon = Icons.male;
+    } else if (idGioitinh == 0) {
+      chipColor = Colors.pink.shade100;
+      label = 'Nữ';
+      icon = Icons.female;
+    } else {
+      chipColor = Colors.grey.shade200;
+      label = 'Không xác định';
+      icon = Icons.person;
+    }
+
+    return Chip(
+      backgroundColor: chipColor,
+      label: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 16),
+          const SizedBox(width: 4),
+          Text(label),
+        ],
+      ),
+      visualDensity: VisualDensity.compact,
+      padding: EdgeInsets.zero,
+    );
+  }
+
+  Widget _buildStatusChip(bool? status) {
+    // Keep existing _buildStatusChip implementation
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: status == true ? Colors.green.shade100 : Colors.red.shade100,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            status == true ? Icons.check_circle : Icons.cancel,
+            size: 16,
+            color: status == true ? Colors.green : Colors.red,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            status == true ? 'Kích hoạt' : 'Vô hiệu',
+            style: TextStyle(
+              color: status == true ? Colors.green : Colors.red,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _viewPliDetails(M01Pli pli) => context.findAncestorStateOfType<_PhieudknldM01pliState>()?._viewPliDetails(pli);
+  void _editPli(M01Pli pli) => context.findAncestorStateOfType<_PhieudknldM01pliState>()?._editPli(pli);
+  void _confirmDeletePli(String idphieu) => context.findAncestorStateOfType<_PhieudknldM01pliState>()?._confirmDeletePli(idphieu);
 }
