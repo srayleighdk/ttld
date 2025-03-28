@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/models/m01pli/m01pli_model.dart';
 import 'package:ttld/repositories/m01pli_repository.dart';
-import 'package:intl/intl.dart';
 
 class PhieudknldM01pli extends StatefulWidget {
   const PhieudknldM01pli({super.key});
@@ -37,8 +36,68 @@ class _PhieudknldM01pliState extends State<PhieudknldM01pli> {
 
   void _refreshData() {
     setState(() {
-      _pliFuture = _repository.fetchM01Plis(page: _currentPage, limit: _itemsPerPage);
+      _pliFuture =
+          _repository.fetchM01Plis(page: _currentPage, limit: _itemsPerPage);
     });
+  }
+
+  void _handlePageChange(int newPage) {
+    if (newPage >= 1 && newPage <= _totalPages) {
+      setState(() {
+        _currentPage = newPage;
+        _pliFuture =
+            _repository.fetchM01Plis(page: _currentPage, limit: _itemsPerPage);
+      });
+    }
+  }
+
+  Widget _buildPaginationControls() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          IconButton(
+            icon: const Icon(Icons.chevron_left),
+            onPressed: _currentPage > 1
+                ? () => _handlePageChange(_currentPage - 1)
+                : null,
+          ),
+          ...List.generate(_totalPages, (index) {
+            final pageNumber = index + 1;
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+              child: InkWell(
+                onTap: () => _handlePageChange(pageNumber),
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: _currentPage == pageNumber
+                        ? Theme.of(context).primaryColor
+                        : Colors.transparent,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                    '$pageNumber',
+                    style: TextStyle(
+                      color: _currentPage == pageNumber
+                          ? Colors.white
+                          : Colors.black,
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }),
+          IconButton(
+            icon: const Icon(Icons.chevron_right),
+            onPressed: _currentPage < _totalPages
+                ? () => _handlePageChange(_currentPage + 1)
+                : null,
+          ),
+        ],
+      ),
+    );
   }
 
   @override
