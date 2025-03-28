@@ -34,7 +34,7 @@ class _PhieudknldM01pliState extends State<PhieudknldM01pli> {
 
   void _refreshData() {
     setState(() {
-      _pliFuture = _repository.fetchM01Plis();
+      _pliFuture = _repository.fetchM01Plis(page: _currentPage, limit: _itemsPerPage);
     });
   }
 
@@ -129,7 +129,7 @@ class _PhieudknldM01pliState extends State<PhieudknldM01pli> {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
-        child: FutureBuilder<List<M01Pli>>(
+        child: FutureBuilder<Map<String, dynamic>>(
           future: _pliFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
