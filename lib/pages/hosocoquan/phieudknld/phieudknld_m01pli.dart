@@ -19,6 +19,7 @@ class _PhieudknldM01pliState extends State<PhieudknldM01pli> {
   int _rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
   int? _sortColumnIndex;
   bool _sortAscending = true;
+  PaginatorController? _dataTableController;
 
   @override
   void initState() {
@@ -154,6 +155,7 @@ class _PhieudknldM01pliState extends State<PhieudknldM01pli> {
             const SizedBox(height: 16),
             Expanded(
               child: PaginatedDataTable2(
+                controller: _dataTableController,
                 horizontalMargin: 20,
                 columnSpacing: 0,
                 wrapInCard: false,
@@ -161,7 +163,11 @@ class _PhieudknldM01pliState extends State<PhieudknldM01pli> {
                     (states) => Colors.grey.shade100),
                 rowsPerPage: _rowsPerPage,
                 availableRowsPerPage: const [10, 20, 50, 100],
+                onPageChanged: (value) {
+                  print('onPageChanged: $value');
+                },
                 onRowsPerPageChanged: (value) {
+                  print('onRowsPerPageChanged: $value');
                   setState(() {
                     _rowsPerPage = value!;
                   });
@@ -548,7 +554,8 @@ class M01PliDataSource extends DataTableSource {
   int _totalItems = 0;
   bool _isLoading = false;
 
-  M01PliDataSource(this._repository, {
+  M01PliDataSource(
+    this._repository, {
     required this.viewDetailsCallback,
     required this.editCallback,
     required this.deleteCallback,
@@ -710,7 +717,7 @@ class M01PliDataSource extends DataTableSource {
     );
   }
 
-  void _viewPliDetails(M01Pli pli) => widget.viewDetailsCallback(pli);
-  void _editPli(M01Pli pli) => widget.editCallback(pli);
-  void _confirmDeletePli(String idphieu) => widget.deleteCallback(idphieu);
+  void _viewPliDetails(M01Pli pli) => viewDetailsCallback(pli);
+  void _editPli(M01Pli pli) => editCallback(pli);
+  void _confirmDeletePli(String idphieu) => deleteCallback(idphieu);
 }
