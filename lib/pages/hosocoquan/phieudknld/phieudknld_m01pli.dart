@@ -23,7 +23,12 @@ class _PhieudknldM01pliState extends State<PhieudknldM01pli> {
   @override
   void initState() {
     super.initState();
-    _dataSource = M01PliDataSource(_repository);
+    _dataSource = M01PliDataSource(
+      _repository,
+      viewDetailsCallback: _viewPliDetails,
+      editCallback: _editPli,
+      deleteCallback: _confirmDeletePli,
+    );
   }
 
   @override
@@ -533,6 +538,9 @@ class _PhieudknldM01pliState extends State<PhieudknldM01pli> {
 // Custom DataSource for M01Pli
 class M01PliDataSource extends DataTableSource {
   final M01PliRepository _repository;
+  final Function(M01Pli) viewDetailsCallback;
+  final Function(M01Pli) editCallback;
+  final Function(String) deleteCallback;
   List<M01Pli> _pliList = [];
   String _searchQuery = '';
   int _currentPage = 1;
@@ -540,7 +548,11 @@ class M01PliDataSource extends DataTableSource {
   int _totalItems = 0;
   bool _isLoading = false;
 
-  M01PliDataSource(this._repository) {
+  M01PliDataSource(this._repository, {
+    required this.viewDetailsCallback,
+    required this.editCallback,
+    required this.deleteCallback,
+  }) {
     _fetchData();
   }
 
@@ -698,7 +710,7 @@ class M01PliDataSource extends DataTableSource {
     );
   }
 
-  // void _viewPliDetails(M01Pli pli) => context.findAncestorStateOfType<_PhieudknldM01pliState>()?._viewPliDetails(pli);
-  // void _editPli(M01Pli pli) => context.findAncestorStateOfType<_PhieudknldM01pliState>()?._editPli(pli);
-  // void _confirmDeletePli(String idphieu) => context.findAncestorStateOfType<_PhieudknldM01pliState>()?._confirmDeletePli(idphieu);
+  void _viewPliDetails(M01Pli pli) => widget.viewDetailsCallback(pli);
+  void _editPli(M01Pli pli) => widget.editCallback(pli);
+  void _confirmDeletePli(String idphieu) => widget.deleteCallback(idphieu);
 }
