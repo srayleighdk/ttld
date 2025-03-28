@@ -13,7 +13,10 @@ class PhieudknldM01pli extends StatefulWidget {
 
 class _PhieudknldM01pliState extends State<PhieudknldM01pli> {
   final M01PliRepository _repository = locator<M01PliRepository>();
-  late Future<List<M01Pli>> _pliFuture;
+  late Future<Map<String, dynamic>> _pliFuture;
+  int _currentPage = 1;
+  int _totalPages = 1;
+  final int _itemsPerPage = 10;
   String _searchQuery = '';
   final _searchController = TextEditingController();
 
