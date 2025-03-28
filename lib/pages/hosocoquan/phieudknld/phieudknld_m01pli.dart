@@ -587,18 +587,33 @@ class M01PliDataSource extends DataTableSource {
   Future<void> _fetchData() async {
     if (_isLoading) return;
     _isLoading = true;
-    notifyListeners(); // Notify listeners when loading starts
+    notifyListeners();
+
     try {
       final response = await _repository.fetchM01Plis(
-          page: _currentPage, limit: _itemsPerPage);
+        page: _currentPage,
+        limit: _itemsPerPage,
+      );
+      
       _pliList = (response['data'] as List<M01Pli>?) ?? [];
-      _totalItems = (response['total'] as int?) ?? 0;
+      final newTotal = (response['total'] as int?) ?? 0;
+      
+      // Validate page number against new total
+      final totalPages = (newTotal / _itemsPerPage).ceil();
+      if (_currentPage > totalPages && totalPages > 0) {
+        _currentPage = totalPages;
+        return await _fetchData(); // Recursively fetch correct page
+      }
+      
+      _totalItems = newTotal;
     } catch (e) {
       _pliList = [];
       _totalItems = 0;
+      // Optionally store error for display
+    } finally {
+      _isLoading = false;
+      notifyListeners();
     }
-    _isLoading = false;
-    notifyListeners();
   }
 
   void sort<T>(Comparable<T> Function(M01Pli pli) getField, bool ascending) {
