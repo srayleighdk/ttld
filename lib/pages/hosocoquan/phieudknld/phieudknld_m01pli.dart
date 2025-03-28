@@ -23,7 +23,7 @@ class _PhieudknldM01pliState extends State<PhieudknldM01pli> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return Padding(
       padding: const EdgeInsets.all(16),
       child: Card(
         elevation: 4,
