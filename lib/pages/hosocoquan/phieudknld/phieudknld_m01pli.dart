@@ -51,7 +51,12 @@ class _PhieudknldM01pliState extends State<PhieudknldM01pli> {
             _buildSearchAndActions(),
             const SizedBox(height: 16),
             Expanded(
-              child: _buildDataTable(),
+              child: Column(
+                children: [
+                  Expanded(child: _buildDataTable()),
+                  if (_totalPages > 1) _buildPaginationControls(),
+                ],
+              ),
             ),
           ],
         ),
