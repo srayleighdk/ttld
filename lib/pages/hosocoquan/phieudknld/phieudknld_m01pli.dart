@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
-import '../../../models/m01pli/m01pli_model.dart';
-import '../../../repositories/m01pli_repository.dart';
+import 'package:ttld/core/di/injection.dart';
+import 'package:ttld/models/m01pli/m01pli_model.dart';
+import 'package:ttld/repositories/m01pli_repository.dart';
 
 class PhieudknldM01pli extends StatefulWidget {
   const PhieudknldM01pli({super.key});
@@ -11,7 +12,7 @@ class PhieudknldM01pli extends StatefulWidget {
 }
 
 class _PhieudknldM01pliState extends State<PhieudknldM01pli> {
-  final M01PliRepository _repository = M01PliRepository(M01PliApiService(Dio()));
+  final M01PliRepository _repository = locator<M01PliRepository>();
   late Future<List<M01Pli>> _pliFuture;
 
   @override
@@ -34,7 +35,7 @@ class _PhieudknldM01pliState extends State<PhieudknldM01pli> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               }
-              
+
               if (snapshot.hasError) {
                 return Center(child: Text('Error: ${snapshot.error}'));
               }
@@ -88,13 +89,13 @@ class _PhieudknldM01pliState extends State<PhieudknldM01pli> {
                         DataCell(Text(pli.ngaylap?.toString() ?? '')),
                         DataCell(Text(pli.hoten ?? '')),
                         DataCell(Text(pli.soCmnd ?? '')),
-                        DataCell(Text(pli.diachi ?? '')),
-                        DataCell(Text(pli.nguoilienhe ?? '')),
+                        DataCell(Text(pli.diachiTt ?? '')),
+                        DataCell(Text(pli.tenLienhe ?? '')),
                         DataCell(Text(pli.ngaysinh?.toString() ?? '')),
-                        DataCell(Text(_getGenderText(pli.uvGioitinh))),
+                        DataCell(Text(_getGenderText(pli.idGioitinh))),
                         DataCell(Text(pli.dienthoai ?? '')),
                         DataCell(Text(pli.email ?? '')),
-                        DataCell(Text(_getStatusText(pli.trangthai))),
+                        DataCell(Text(_getStatusText(pli.status))),
                       ],
                     );
                   }),
@@ -108,11 +109,15 @@ class _PhieudknldM01pliState extends State<PhieudknldM01pli> {
   }
 
   String _getGenderText(int? genderCode) {
-    return genderCode == 1 ? 'Nam' : genderCode == 0 ? 'Nữ' : '';
+    return genderCode == 1
+        ? 'Nam'
+        : genderCode == 0
+            ? 'Nữ'
+            : '';
   }
 
-  String _getStatusText(int? statusCode) {
-    return statusCode == 1 ? 'Kích hoạt' : 'Vô hiệu';
+  String _getStatusText(bool? statusCode) {
+    return statusCode == true ? 'Kích hoạt' : 'Vô hiệu';
   }
 
   void _editPli(M01Pli pli) {
