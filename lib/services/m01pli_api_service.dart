@@ -8,8 +8,10 @@ class M01PliApiService {
 
   Future<List<M01Pli>> getM01Plis() async {
     try {
-      final response = await _dio.get('/api/tttt/m01-pli');
-      return (response.data as List).map((e) => M01Pli.fromJson(e)).toList();
+      final response = await _dio.get('/tttt/m01-pli');
+      return (response.data['data'] as List)
+          .map((e) => M01Pli.fromJson(e))
+          .toList();
     } on DioException catch (e) {
       throw Exception('Failed to load M01Pli: ${e.message}');
     }
@@ -18,7 +20,7 @@ class M01PliApiService {
   Future<M01Pli> createM01Pli(M01Pli pli) async {
     try {
       final response = await _dio.post(
-        '/api/tttt/m01-pli',
+        '/tttt/m01-pli',
         data: pli.toJson(),
       );
       return M01Pli.fromJson(response.data);
@@ -30,7 +32,7 @@ class M01PliApiService {
   Future<M01Pli> updateM01Pli(M01Pli pli) async {
     try {
       final response = await _dio.put(
-        '/api/tttt/m01-pli',
+        '/tttt/m01-pli',
         data: pli.toJson(),
       );
       return M01Pli.fromJson(response.data);
@@ -42,7 +44,7 @@ class M01PliApiService {
   Future<void> deleteM01Pli(String idphieu) async {
     try {
       await _dio.delete(
-        '/api/tttt/m01-pli',
+        '/tttt/m01-pli',
         data: {'idphieu': idphieu},
       );
     } on DioException catch (e) {
