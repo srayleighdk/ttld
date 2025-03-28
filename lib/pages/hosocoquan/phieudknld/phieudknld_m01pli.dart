@@ -164,8 +164,9 @@ class _PhieudknldM01pliState extends State<PhieudknldM01pli> {
                 rowsPerPage: _rowsPerPage,
                 availableRowsPerPage: const [10, 20, 50, 100],
                 onPageChanged: (value) {
-                  _dataSource.handlePageChange(
-                      value + 1); // Pages are 0-indexed in DataTable
+                  print('onPageChanged: $value');
+                  _dataSource
+                      .handlePageChange(); // Pages are 0-indexed in DataTable
                 },
                 onRowsPerPageChanged: (value) {
                   setState(() {
@@ -569,8 +570,8 @@ class M01PliDataSource extends DataTableSource {
     _fetchData();
   }
 
-  void handlePageChange(int newPage) {
-    _currentPage = newPage;
+  void handlePageChange() {
+    _currentPage = _currentPage + 1;
     refresh();
   }
 
@@ -594,17 +595,17 @@ class M01PliDataSource extends DataTableSource {
         page: _currentPage,
         limit: _itemsPerPage,
       );
-      
+
       _pliList = (response['data'] as List<M01Pli>?) ?? [];
       final newTotal = (response['total'] as int?) ?? 0;
-      
+
       // Validate page number against new total
       final totalPages = (newTotal / _itemsPerPage).ceil();
       if (_currentPage > totalPages && totalPages > 0) {
         _currentPage = totalPages;
         return await _fetchData(); // Recursively fetch correct page
       }
-      
+
       _totalItems = newTotal;
     } catch (e) {
       _pliList = [];
