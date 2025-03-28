@@ -153,7 +153,10 @@ class _PhieudknldM01pliState extends State<PhieudknldM01pli> {
               );
             }
 
-            final pliList = snapshot.data ?? [];
+            final response = snapshot.data ?? {};
+            final pliList = (response['data'] as List<M01Pli>?) ?? [];
+            final totalItems = (response['total'] as int?) ?? 0;
+            _totalPages = (totalItems / _itemsPerPage).ceil();
 
             if (pliList.isEmpty) {
               return const Center(

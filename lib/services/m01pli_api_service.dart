@@ -6,12 +6,18 @@ class M01PliApiService {
 
   M01PliApiService(this._dio);
 
-  Future<List<M01Pli>> getM01Plis() async {
+  Future<Map<String, dynamic>> getM01Plis({int page = 1, int limit = 10}) async {
     try {
-      final response = await _dio.get('/tttt/m01-pli');
-      return (response.data['data'] as List)
-          .map((e) => M01Pli.fromJson(e))
-          .toList();
+      final response = await _dio.get('/tttt/m01-pli', queryParameters: {
+        'page': page,
+        'limit': limit,
+      });
+      return {
+        'data': (response.data['data'] as List)
+            .map((e) => M01Pli.fromJson(e))
+            .toList(),
+        'total': response.data['total'],
+      };
     } on DioException catch (e) {
       throw Exception('Failed to load M01Pli: ${e.message}');
     }

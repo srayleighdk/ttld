@@ -6,8 +6,8 @@ class M01PliRepository {
 
   M01PliRepository(this._apiService);
 
-  Future<List<M01Pli>> fetchM01Plis() async {
-    return await _apiService.getM01Plis();
+  Future<Map<String, dynamic>> fetchM01Plis({int page = 1, int limit = 10}) async {
+    return await _apiService.getM01Plis(page: page, limit: limit);
   }
 
   Future<M01Pli> createM01Pli(M01Pli pli) async {
