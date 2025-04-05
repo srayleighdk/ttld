@@ -78,7 +78,7 @@ class _M01TT11PageState extends State<M01TT11Page> {
   int? idChucvu;
   int? idhocvan;
   int? idngheDt;
-  int? bacNghe;
+  TextEditingController? bacNghe;
   int? idNndt1;
   int? mucNn1;
   int? idNndt2;
@@ -619,10 +619,10 @@ class _M01TT11PageState extends State<M01TT11Page> {
           hintText: 'Ngành nghề tuyển dụng',
           controller: trinhdoNghe,
         ),
-        CustomTextField.number(
+        CustomTextField.numberGrok(
           labelText: 'Bậc',
           hintText: 'Ngành nghề',
-          controller: bacNghe.toString() ?? '',
+          controller: bacNghe,
         ),
         GenericPicker<NgoaiNgu>(
           label: 'Ngoại ngữ 1',
@@ -724,7 +724,8 @@ class _M01TT11PageState extends State<M01TT11Page> {
         const Text('Điều kiện việc làm:',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
-        const Text('Nơi làm việc:', style: TextStyle(fontWeight: FontWeight.w500)),
+        const Text('Nơi làm việc:',
+            style: TextStyle(fontWeight: FontWeight.w500)),
         CustomCheckbox(
             label: 'Trong nhà',
             value: chkNl1,
@@ -750,7 +751,8 @@ class _M01TT11PageState extends State<M01TT11Page> {
               });
             }),
         const SizedBox(height: 8),
-        const Text('Trọng lượng nâng:', style: TextStyle(fontWeight: FontWeight.w500)),
+        const Text('Trọng lượng nâng:',
+            style: TextStyle(fontWeight: FontWeight.w500)),
         CustomCheckbox(
             label: 'Dưới 5kg',
             value: chkTl1,
@@ -776,7 +778,8 @@ class _M01TT11PageState extends State<M01TT11Page> {
               });
             }),
         const SizedBox(height: 8),
-        const Text('Đứng/đi lại:', style: TextStyle(fontWeight: FontWeight.w500)),
+        const Text('Đứng/đi lại:',
+            style: TextStyle(fontWeight: FontWeight.w500)),
         CustomCheckbox(
             label: 'Không có',
             value: chkDl1,
@@ -839,15 +842,17 @@ class _M01TT11PageState extends State<M01TT11Page> {
             }),
         CustomCheckbox(
             label: 'Nhìn được vật chi tiết nhỏ',
-            value: chkY02, // Assuming chkY02 corresponds to 'Nhìn được vật chi tiết nhỏ'
+            value:
+                chkY02, // Assuming chkY02 corresponds to 'Nhìn được vật chi tiết nhỏ'
             onChanged: (bool? value) {
               setState(() {
                 chkY02 = value ?? false;
               });
             }),
         const SizedBox(height: 8),
-        const Text('Thao tác bằng tay:', style: TextStyle(fontWeight: FontWeight.w500)),
-         CustomCheckbox(
+        const Text('Thao tác bằng tay:',
+            style: TextStyle(fontWeight: FontWeight.w500)),
+        CustomCheckbox(
             label: 'Lắp ráp đồ vật lớn',
             value: chkTy1,
             onChanged: (bool? value) {
@@ -872,7 +877,8 @@ class _M01TT11PageState extends State<M01TT11Page> {
               });
             }),
         const SizedBox(height: 8),
-        const Text('Dùng 2 tay:', style: TextStyle(fontWeight: FontWeight.w500)),
+        const Text('Dùng 2 tay:',
+            style: TextStyle(fontWeight: FontWeight.w500)),
         CustomCheckbox(
             label: 'Cần 2 tay',
             value: chk2T1,
