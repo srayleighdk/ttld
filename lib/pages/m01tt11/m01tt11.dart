@@ -21,6 +21,18 @@ import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
 import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
 import 'package:ttld/widgets/reuseable_widgets/stepper_page.dart';
 
+// Helper class for GenericPicker items
+class SoftSkillItem implements GenericPickerItem {
+  final int id;
+  @override
+  final String displayName;
+
+  SoftSkillItem({required this.id, required this.displayName});
+
+  @override
+  String get idValue => id.toString(); // Or however ID is represented
+}
+
 class M01TT11Page extends StatefulWidget {
   final M01TT11? m01tt11;
   final Ntd? ntd;
@@ -919,6 +931,143 @@ class _M01TT11PageState extends State<M01TT11Page> {
                 chk2T5 = value ?? false;
               });
             }),
+        const SizedBox(height: 16),
+        const Text('Kỹ năng mềm khác:',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
+        GenericPicker<SoftSkillItem>(
+          label: 'Kỹ năng mềm tốt nhất',
+          items: [
+            SoftSkillItem(id: 1, displayName: 'Giao tiếp'),
+            SoftSkillItem(id: 2, displayName: 'Thuyết trình'),
+            SoftSkillItem(id: 3, displayName: 'Quản lý thời gian'),
+            SoftSkillItem(id: 4, displayName: 'Quản lý nhân sự'),
+            SoftSkillItem(id: 5, displayName: 'Tổng hợp báo cáo'),
+            SoftSkillItem(id: 6, displayName: 'Thích ứng'),
+            SoftSkillItem(id: 7, displayName: 'Làm việc nhóm'),
+            SoftSkillItem(id: 8, displayName: 'Làm việc độc lập'),
+            SoftSkillItem(id: 9, displayName: 'Chịu được áp lực công việc'),
+            SoftSkillItem(id: 10, displayName: 'Theo dõi giám sát'),
+            SoftSkillItem(id: 11, displayName: 'Tư duy phản biện'),
+          ],
+          onChanged: (SoftSkillItem? value) {
+            setState(() {
+              // Storing the display name in the controller as requested
+              idKynang.text = value?.displayName ?? '';
+            });
+          },
+          // Consider setting initialValue if needed based on idKynang.text
+        ),
+        const SizedBox(height: 8),
+        CustomCheckbox(
+            label: 'Giao tiếp',
+            value: chkGt,
+            onChanged: (bool? value) {
+              setState(() {
+                chkGt = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Thuyết trình',
+            value: chkTtr,
+            onChanged: (bool? value) {
+              setState(() {
+                chkTtr = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Quản lý thời gian',
+            value: chkQltg,
+            onChanged: (bool? value) {
+              setState(() {
+                chkQltg = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Quản lý nhân sự',
+            value: chkNs, // Assuming chkNs is for Quản lý nhân sự
+            onChanged: (bool? value) {
+              setState(() {
+                chkNs = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Tổng hợp báo cáo',
+            value: chkTh, // Assuming chkTh is for Tổng hợp báo cáo
+            onChanged: (bool? value) {
+              setState(() {
+                chkTh = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Thích ứng',
+            value: chkTu, // Assuming chkTu is for Thích ứng
+            onChanged: (bool? value) {
+              setState(() {
+                chkTu = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Làm việc nhóm',
+            value: chkNhom,
+            onChanged: (bool? value) {
+              setState(() {
+                chkNhom = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Làm việc độc lập',
+            value: chkDl, // Assuming chkDl is for Làm việc độc lập
+            onChanged: (bool? value) {
+              setState(() {
+                chkDl = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Chịu được áp lực công việc',
+            value: chkApl, // Assuming chkApl is for Áp lực
+            onChanged: (bool? value) {
+              setState(() {
+                chkApl = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Theo dõi giám sát',
+            value: chkGs, // Assuming chkGs is for Giám sát
+            onChanged: (bool? value) {
+              setState(() {
+                chkGs = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Tư duy phản biện',
+            value: chkPb, // Assuming chkPb is for Phản biện
+            onChanged: (bool? value) {
+              setState(() {
+                chkPb = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Kỹ năng khác',
+            value: chkKhac,
+            onChanged: (bool? value) {
+              setState(() {
+                chkKhac = value ?? false;
+                if (!chkKhac) {
+                  // Clear the text field if checkbox is unchecked
+                  kynangkhac.clear();
+                }
+              });
+            }),
+        if (chkKhac) // Conditionally show the text field
+          Padding(
+            padding: const EdgeInsets.only(left: 30.0, top: 8.0), // Indent
+            child: CustomTextField(
+              controller: kynangkhac,
+              labelText: 'Nhập kỹ năng khác',
+              hintText: 'Mô tả kỹ năng khác...',
+            ),
+          ),
       ],
     );
   }
