@@ -720,6 +720,199 @@ class _M01TT11PageState extends State<M01TT11Page> {
             });
           },
         ),
+        const SizedBox(height: 16),
+        const Text('Điều kiện việc làm:',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
+        const Text('Nơi làm việc:', style: TextStyle(fontWeight: FontWeight.w500)),
+        CustomCheckbox(
+            label: 'Trong nhà',
+            value: chkNl1,
+            onChanged: (bool? value) {
+              setState(() {
+                chkNl1 = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Ngoài trời',
+            value: chkNl2,
+            onChanged: (bool? value) {
+              setState(() {
+                chkNl2 = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Hỗn hợp',
+            value: chkNl3,
+            onChanged: (bool? value) {
+              setState(() {
+                chkNl3 = value ?? false;
+              });
+            }),
+        const SizedBox(height: 8),
+        const Text('Trọng lượng nâng:', style: TextStyle(fontWeight: FontWeight.w500)),
+        CustomCheckbox(
+            label: 'Dưới 5kg',
+            value: chkTl1,
+            onChanged: (bool? value) {
+              setState(() {
+                chkTl1 = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: '5-20kg',
+            value: chkTl2,
+            onChanged: (bool? value) {
+              setState(() {
+                chkTl2 = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Trên 20kg',
+            value: chkTl3,
+            onChanged: (bool? value) {
+              setState(() {
+                chkTl3 = value ?? false;
+              });
+            }),
+        const SizedBox(height: 8),
+        const Text('Đứng/đi lại:', style: TextStyle(fontWeight: FontWeight.w500)),
+        CustomCheckbox(
+            label: 'Không có',
+            value: chkDl1,
+            onChanged: (bool? value) {
+              setState(() {
+                chkDl1 = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Trung bình',
+            value: chkDl2,
+            onChanged: (bool? value) {
+              setState(() {
+                chkDl2 = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Cần đứng đi lại nhiều',
+            value: chkDl3,
+            onChanged: (bool? value) {
+              setState(() {
+                chkDl3 = value ?? false;
+              });
+            }),
+        const SizedBox(height: 8),
+        const Text('Nghe/nói:', style: TextStyle(fontWeight: FontWeight.w500)),
+        CustomCheckbox(
+            label: 'Không cần thiết',
+            value: chkNn1,
+            onChanged: (bool? value) {
+              setState(() {
+                chkNn1 = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Cơ bản',
+            value: chkNn2,
+            onChanged: (bool? value) {
+              setState(() {
+                chkNn2 = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Quan trọng',
+            value: chkNn3,
+            onChanged: (bool? value) {
+              setState(() {
+                chkNn3 = value ?? false;
+              });
+            }),
+        const SizedBox(height: 8),
+        const Text('Thị lực:', style: TextStyle(fontWeight: FontWeight.w500)),
+        CustomCheckbox(
+            label: 'Mức bình thường',
+            value: chkY01, // Assuming chkY01 corresponds to 'Mức bình thường'
+            onChanged: (bool? value) {
+              setState(() {
+                chkY01 = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Nhìn được vật chi tiết nhỏ',
+            value: chkY02, // Assuming chkY02 corresponds to 'Nhìn được vật chi tiết nhỏ'
+            onChanged: (bool? value) {
+              setState(() {
+                chkY02 = value ?? false;
+              });
+            }),
+        const SizedBox(height: 8),
+        const Text('Thao tác bằng tay:', style: TextStyle(fontWeight: FontWeight.w500)),
+         CustomCheckbox(
+            label: 'Lắp ráp đồ vật lớn',
+            value: chkTy1,
+            onChanged: (bool? value) {
+              setState(() {
+                chkTy1 = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Lắp ráp đồ vật nhỏ',
+            value: chkTy2,
+            onChanged: (bool? value) {
+              setState(() {
+                chkTy2 = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Lắp ráp đồ vật rất nhỏ',
+            value: chkTy3,
+            onChanged: (bool? value) {
+              setState(() {
+                chkTy3 = value ?? false;
+              });
+            }),
+        const SizedBox(height: 8),
+        const Text('Dùng 2 tay:', style: TextStyle(fontWeight: FontWeight.w500)),
+        CustomCheckbox(
+            label: 'Cần 2 tay',
+            value: chk2T1,
+            onChanged: (bool? value) {
+              setState(() {
+                chk2T1 = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Đôi khi cần 2 tay',
+            value: chk2T2,
+            onChanged: (bool? value) {
+              setState(() {
+                chk2T2 = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Chỉ cần 1 tay',
+            value: chk2T3,
+            onChanged: (bool? value) {
+              setState(() {
+                chk2T3 = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Tay trái',
+            value: chk2T4,
+            onChanged: (bool? value) {
+              setState(() {
+                chk2T4 = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Tay phải',
+            value: chk2T5,
+            onChanged: (bool? value) {
+              setState(() {
+                chk2T5 = value ?? false;
+              });
+            }),
       ],
     );
   }
