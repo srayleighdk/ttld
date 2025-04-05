@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:ttld/core/di/injection.dart';
+import 'package:ttld/helppers/map_help.dart';
 import 'package:ttld/models/chuc_danh_model.dart';
 import 'package:ttld/models/hinh_thuc_loai_hinh_model.dart';
 import 'package:ttld/models/m01tt11_model.dart';
+import 'package:ttld/models/nganh_nghe_bachoc.dart';
+import 'package:ttld/models/nganh_nghe_chuyennganh.dart';
 import 'package:ttld/models/nganh_nghe_model.dart';
 import 'package:ttld/models/nganh_nghe_td_model.dart';
+import 'package:ttld/models/ngoai_ngu_model.dart';
 import 'package:ttld/models/tblNhaTuyenDung/tblNhaTuyenDung_model.dart';
+import 'package:ttld/models/trinh_do_hoc_van_model.dart';
+import 'package:ttld/models/trinh_do_ngoai_ngu_model.dart';
+import 'package:ttld/models/trinh_do_tin_hoc_model.dart';
 import 'package:ttld/widgets/cascade_level_pick_grok.dart';
 import 'package:ttld/widgets/cascade_location_picker_grok.dart';
 import 'package:ttld/widgets/field/custom_checkbox.dart';
+import 'package:ttld/widgets/field/custom_picker_map.dart';
 import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
 import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
 import 'package:ttld/widgets/reuseable_widgets/stepper_page.dart';
@@ -569,6 +577,149 @@ class _M01TT11PageState extends State<M01TT11Page> {
           items: locator<List<ChucDanhModel>>(),
         ),
         NganhNgheCapDoPicker(),
+        GenericPicker<TrinhDoHocVan>(
+          onChanged: (TrinhDoHocVan? value) {
+            setState(() {
+              idTdnn1 = value?.id;
+            });
+          },
+          label: 'Trình độ học vấn',
+          items: locator<List<TrinhDoHocVan>>(),
+        ),
+        GenericPicker<TrinhDoChuyenMon>(
+          onChanged: (TrinhDoChuyenMon? value) {
+            setState(() {
+              idTdnn2 = value?.id;
+            });
+          },
+          label: 'Trình độ CMKT',
+          items: locator<List<TrinhDoChuyenMon>>(),
+        ),
+        GenericPicker<NganhNgheChuyenNganh>(
+          onChanged: (NganhNgheChuyenNganh? value) {
+            setState(() {
+              idTdth = value?.id;
+            });
+          },
+          label: 'Chuyên ngành đào tạo',
+          items: locator<List<NganhNgheChuyenNganh>>(),
+        ),
+        CustomTextField(
+          labelText: 'Trình độ khác 1',
+          hintText: '',
+          controller: trinhdok1,
+        ),
+        CustomTextField(
+          labelText: 'Trình độ khác 2',
+          hintText: 'Ngành nghề',
+          controller: trinhdok2,
+        ),
+        CustomTextField(
+          labelText: 'Trình độ kỹ năng nghề',
+          hintText: 'Ngành nghề tuyển dụng',
+          controller: trinhdoNghe,
+        ),
+        CustomTextField.number(
+          labelText: 'Bậc',
+          hintText: 'Ngành nghề',
+          controller: bacNghe.toString() ?? '',
+        ),
+        GenericPicker<NgoaiNgu>(
+          label: 'Ngoại ngữ 1',
+          items: locator<List<NgoaiNgu>>(),
+          onChanged: (NgoaiNgu? value) {
+            setState(() {
+              idNndt1 = value?.id;
+            });
+          },
+        ),
+        GenericPicker<TrinhDoNgoaiNgu>(
+          label: 'Ngoại ngữ 2',
+          items: locator<List<TrinhDoNgoaiNgu>>(),
+          onChanged: (TrinhDoNgoaiNgu? value) {
+            setState(() {
+              idTdnn1 = value?.id;
+            });
+          },
+        ),
+        CustomPickerMap(
+          label: Text('Mức độ 1'),
+          items: mucDoOptions,
+          selectedItem: -1,
+          onChanged: (mucDo) {
+            setState(() {
+              mucNn1 = mucDo;
+            });
+          },
+        ),
+
+        GenericPicker<NgoaiNgu>(
+          label: 'Ngoại ngữ 2',
+          items: locator<List<NgoaiNgu>>(),
+          onChanged: (NgoaiNgu? value) {
+            setState(() {
+              idNndt2 = value?.id;
+            });
+          },
+        ),
+        GenericPicker<TrinhDoNgoaiNgu>(
+          label: 'Ngoại ngữ 2',
+          items: locator<List<TrinhDoNgoaiNgu>>(),
+          onChanged: (TrinhDoNgoaiNgu? value) {
+            setState(() {
+              idTdnn2 = value?.id;
+            });
+          },
+        ),
+        CustomPickerMap(
+          label: Text('Mức độ 1'),
+          items: mucDoOptions,
+          selectedItem: -1,
+          onChanged: (mucDo) {
+            setState(() {
+              mucNn2 = mucDo;
+            });
+          },
+        ),
+        GenericPicker<TrinhDoTinHoc>(
+          label: 'Trình độ tin học',
+          items: locator<List<TrinhDoTinHoc>>(),
+          onChanged: (TrinhDoTinHoc? value) {
+            setState(() {
+              idTdth = value?.id;
+            });
+          },
+        ),
+        CustomPickerMap(
+          label: Text('Mức độ 1'),
+          items: mucDoOptions,
+          selectedItem: -1,
+          onChanged: (mucDo) {
+            setState(() {
+              mucTh = mucDo;
+            });
+          },
+        ),
+
+        GenericPicker<TrinhDoTinHoc>(
+          label: 'Trình độ tin học',
+          items: locator<List<TrinhDoTinHoc>>(),
+          onChanged: (TrinhDoTinHoc? value) {
+            setState(() {
+              idTinhockhac = value?.id;
+            });
+          },
+        ),
+        CustomPickerMap(
+          label: Text('Mức độ 1'),
+          items: mucDoOptions,
+          selectedItem: -1,
+          onChanged: (mucDo) {
+            setState(() {
+              mucThKhac = mucDo;
+            });
+          },
+        ),
       ],
     );
   }
