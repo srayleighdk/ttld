@@ -196,8 +196,8 @@ class _M01TT11PageState extends State<M01TT11Page> {
   final List<String> steps = [
     'Thông tin\nDoanh nghiệp',
     'Thông tin\ntuyển dụng',
-    'Thông tin\nliên hệ',
-    'Nhật ký\ntuyển dụng',
+    // 'Thông tin\nliên hệ',
+    // 'Nhật ký\ntuyển dụng',
   ];
 
   Widget get stepContent {
@@ -586,7 +586,7 @@ class _M01TT11PageState extends State<M01TT11Page> {
         ),
         body: StepperPage(
           steps: steps,
-          stepContents: [],
+          stepContents: [_buildStep1(), _buildStep2()],
         ));
   }
 
