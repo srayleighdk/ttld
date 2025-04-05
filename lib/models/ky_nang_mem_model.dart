@@ -21,11 +21,16 @@ class KyNangMemModel extends GenericPickerItem {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'idkn': id,
+    final Map<String, dynamic> data = {
+      'id': id,
       'ten': displayName,
-      'displayOrder': displayOrder,
-      'status': status,
     };
+    if (displayOrder != null) {
+      data['displayOrder'] = displayOrder;
+    }
+    if (status != null) {
+      data['status'] = status;
+    }
+    return data;
   }
 }
