@@ -69,6 +69,7 @@ class _M01TT11PageState extends State<M01TT11Page> {
   TextEditingController maxa = TextEditingController();
   TextEditingController idTuyenDung = TextEditingController();
   TextEditingController quyenloi = TextEditingController();
+  TextEditingController tienPhucloiController = TextEditingController(); // Controller for meal support amount
 
   // Number fields
   TextEditingController? soluong;
@@ -1044,6 +1045,180 @@ class _M01TT11PageState extends State<M01TT11Page> {
               hintText: 'Mô tả kỹ năng khác...',
             ),
           ),
+        const SizedBox(height: 16),
+        const Text('Chế độ phúc lợi:',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
+        const Text('Hỗ trợ ăn:', style: TextStyle(fontWeight: FontWeight.w500)),
+        CustomCheckbox(
+            label: '1 bữa',
+            value: chkPl01,
+            onChanged: (bool? value) {
+              setState(() {
+                chkPl01 = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: '2 bữa',
+            value: chkPl02,
+            onChanged: (bool? value) {
+              setState(() {
+                chkPl02 = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: '3 bữa',
+            value: chkPl03,
+            onChanged: (bool? value) {
+              setState(() {
+                chkPl03 = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Tiền',
+            value: chkPl04,
+            onChanged: (bool? value) {
+              setState(() {
+                chkPl04 = value ?? false;
+                 if (!chkPl04) {
+                  // Clear the text field if checkbox is unchecked
+                  tienPhucloiController.clear();
+                  // Optionally reset the BigInt value too
+                  // tienPhucloi = BigInt.zero;
+                }
+              });
+            }),
+        if (chkPl04) // Conditionally show the text field for money amount
+          Padding(
+            padding: const EdgeInsets.only(left: 30.0, top: 8.0), // Indent
+            child: CustomTextField.number( // Use number variant if appropriate
+              controller: tienPhucloiController,
+              labelText: 'Nhập số tiền hỗ trợ',
+              hintText: 'Số tiền...',
+              // Add onChanged to update the BigInt if needed immediately
+              // onChanged: (value) {
+              //   tienPhucloi = BigInt.tryParse(value) ?? BigInt.zero;
+              // },
+            ),
+          ),
+        CustomCheckbox(
+            label: 'Không hỗ trợ',
+            value: chkPl05,
+            onChanged: (bool? value) {
+              setState(() {
+                chkPl05 = value ?? false;
+              });
+            }),
+        const SizedBox(height: 8),
+        CustomCheckbox(
+            label: 'BHXH/BHTN/BHYT',
+            value: chkPl06,
+            onChanged: (bool? value) {
+              setState(() {
+                chkPl06 = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'BH Nhân thọ',
+            value: chkPl07,
+            onChanged: (bool? value) {
+              setState(() {
+                chkPl07 = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Trợ cấp thôi việc',
+            value: chkPl08,
+            onChanged: (bool? value) {
+              setState(() {
+                chkPl08 = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Nhà trẻ',
+            value: chkPl09,
+            onChanged: (bool? value) {
+              setState(() {
+                chkPl09 = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Xe đưa đón',
+            value: chkPl10,
+            onChanged: (bool? value) {
+              setState(() {
+                chkPl10 = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Hỗ trợ đi lại',
+            value: chkPl11,
+            onChanged: (bool? value) {
+              setState(() {
+                chkPl11 = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Kí túc xá',
+            value: chkPl12,
+            onChanged: (bool? value) {
+              setState(() {
+                chkPl12 = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Hỗ trợ nhà ở',
+            value: chkPl13,
+            onChanged: (bool? value) {
+              setState(() {
+                chkPl13 = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Đào tạo',
+            value: chkPl14,
+            onChanged: (bool? value) {
+              setState(() {
+                chkPl14 = value ?? false;
+              });
+            }),
+         CustomCheckbox(
+            label: 'Thiết bị hỗ trợ người khuyết tật',
+            value: chkPl15,
+            onChanged: (bool? value) {
+              setState(() {
+                chkPl15 = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Cơ hội thăng tiến',
+            value: chkPl16,
+            onChanged: (bool? value) {
+              setState(() {
+                chkPl16 = value ?? false;
+              });
+            }),
+        CustomCheckbox(
+            label: 'Phúc lợi khác',
+            value: chkPl17,
+            onChanged: (bool? value) {
+              setState(() {
+                chkPl17 = value ?? false;
+                 if (!chkPl17) {
+                  // Clear the text field if checkbox is unchecked
+                  phucloikhac.clear();
+                }
+              });
+            }),
+        if (chkPl17) // Conditionally show the text field for other benefits
+          Padding(
+            padding: const EdgeInsets.only(left: 30.0, top: 8.0), // Indent
+            child: CustomTextField(
+              controller: phucloikhac,
+              labelText: 'Nhập phúc lợi khác',
+              hintText: 'Mô tả phúc lợi khác...',
+            ),
+          ),
       ],
     );
   }
@@ -1103,5 +1278,6 @@ class _M01TT11PageState extends State<M01TT11Page> {
     maxa.dispose();
     idTuyenDung.dispose();
     quyenloi.dispose();
+    tienPhucloiController.dispose(); // Dispose the new controller
   }
 }
