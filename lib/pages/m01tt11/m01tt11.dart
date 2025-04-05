@@ -3,6 +3,7 @@ import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/helppers/map_help.dart';
 import 'package:ttld/models/chuc_danh_model.dart';
 import 'package:ttld/models/hinh_thuc_loai_hinh_model.dart';
+import 'package:ttld/models/ky_nang_mem_model.dart';
 import 'package:ttld/models/m01tt11_model.dart';
 import 'package:ttld/models/nganh_nghe_bachoc.dart';
 import 'package:ttld/models/nganh_nghe_chuyennganh.dart';
@@ -21,17 +22,6 @@ import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
 import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
 import 'package:ttld/widgets/reuseable_widgets/stepper_page.dart';
 
-// Helper class for GenericPicker items
-class SoftSkillItem implements GenericPickerItem {
-  final int id;
-  @override
-  final String displayName;
-
-  SoftSkillItem({required this.id, required this.displayName});
-
-  @override
-  String get idValue => id.toString(); // Or however ID is represented
-}
 
 class M01TT11Page extends StatefulWidget {
   final M01TT11? m01tt11;
@@ -935,28 +925,14 @@ class _M01TT11PageState extends State<M01TT11Page> {
         const Text('Kỹ năng mềm khác:',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
-        GenericPicker<SoftSkillItem>(
-          label: 'Kỹ năng mềm tốt nhất',
-          items: [
-            SoftSkillItem(id: 1, displayName: 'Giao tiếp'),
-            SoftSkillItem(id: 2, displayName: 'Thuyết trình'),
-            SoftSkillItem(id: 3, displayName: 'Quản lý thời gian'),
-            SoftSkillItem(id: 4, displayName: 'Quản lý nhân sự'),
-            SoftSkillItem(id: 5, displayName: 'Tổng hợp báo cáo'),
-            SoftSkillItem(id: 6, displayName: 'Thích ứng'),
-            SoftSkillItem(id: 7, displayName: 'Làm việc nhóm'),
-            SoftSkillItem(id: 8, displayName: 'Làm việc độc lập'),
-            SoftSkillItem(id: 9, displayName: 'Chịu được áp lực công việc'),
-            SoftSkillItem(id: 10, displayName: 'Theo dõi giám sát'),
-            SoftSkillItem(id: 11, displayName: 'Tư duy phản biện'),
-          ],
-          onChanged: (SoftSkillItem? value) {
+        GenericPicker<KyNangMemModel>(
+          label: 'Kỹ năng mềm',
+          items: locator<List<KyNangMemModel>>(),
+          onChanged: (KyNangMemModel? value) {
             setState(() {
-              // Storing the display name in the controller as requested
-              idKynang.text = value?.displayName ?? '';
+              idKynang.text = value?.id.toString() ?? '';
             });
           },
-          // Consider setting initialValue if needed based on idKynang.text
         ),
         const SizedBox(height: 8),
         CustomCheckbox(
