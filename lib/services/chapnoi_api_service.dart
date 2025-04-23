@@ -1,30 +1,18 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:flutter_dotenv/flutter_dotenv.dart'; // Removed
+// import 'package:shared_preferences/shared_preferences.dart'; // Removed
 import '../models/chapnoi/chapnoi_model.dart';
 import '../models/api_response_list.dart'; // Assuming you have a generic list response model
 import '../models/api_response_object.dart'; // Assuming you have a generic object response model
+import '../helppers/ny_logger.dart'; // Assuming NyLogger is used for logging errors
 
 class ChapNoiApiService {
   final Dio _dio;
-  final String? _baseUrl = dotenv.env['BASE_URL'];
+  // final String? _baseUrl = dotenv.env['BASE_URL']; // Removed
 
-  ChapNoiApiService(this._dio) {
-    _dio.options.headers['content-Type'] = 'application/json';
-    _dio.options.headers['Accept'] = 'application/json';
-    _dio.options.connectTimeout = const Duration(milliseconds: 10000); // 10 seconds
-    _dio.options.receiveTimeout = const Duration(milliseconds: 10000); // 10 seconds
-  }
+  ChapNoiApiService(this._dio); // Simplified constructor
 
-  Future<void> _setAuthorizationHeader() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('auth_token');
-    if (token != null) {
-      _dio.options.headers['Authorization'] = 'Bearer $token';
-    } else {
-      _dio.options.headers.remove('Authorization');
-    }
-  }
+  // Removed _setAuthorizationHeader method
 
   Future<ApiResponseList<ChapNoiModel>> getChapNoiList({
     required int limit,
