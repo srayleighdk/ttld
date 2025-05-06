@@ -81,14 +81,15 @@ class _NotificationsPageState extends State<NotificationsPage> {
       appBar: AppBar(
         title: const Text('Notifications'),
         centerTitle: true,
-        backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+        backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
       ),
       body: _notifications.isEmpty
           ? Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.notifications_off_outlined, size: 80, color: Colors.grey[400]),
+                  Icon(Icons.notifications_off_outlined,
+                      size: 80, color: Colors.grey[400]),
                   const SizedBox(height: 16),
                   Text(
                     'No Notifications',
@@ -109,7 +110,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 final notification = _notifications[index];
                 return Card(
                   elevation: 2.0,
-                  margin: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 8.0),
+                  margin: const EdgeInsets.symmetric(
+                      vertical: 6.0, horizontal: 8.0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.0),
                   ),
@@ -128,7 +130,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     title: Text(
                       notification.title,
                       style: TextStyle(
-                        fontWeight: notification.isRead ? FontWeight.normal : FontWeight.bold,
+                        fontWeight: notification.isRead
+                            ? FontWeight.normal
+                            : FontWeight.bold,
                       ),
                     ),
                     subtitle: Text(notification.subtitle),
@@ -137,8 +141,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          DateFormat('MMM d, hh:mm a').format(notification.timestamp),
-                          style: TextStyle(fontSize: 10, color: Colors.grey[600]),
+                          DateFormat('MMM d, hh:mm a')
+                              .format(notification.timestamp),
+                          style:
+                              TextStyle(fontSize: 10, color: Colors.grey[600]),
                         ),
                         if (!notification.isRead)
                           Container(
@@ -166,7 +172,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
                               children: <Widget>[
                                 if (!notification.isRead)
                                   ListTile(
-                                    leading: const Icon(Icons.mark_chat_read_outlined),
+                                    leading: const Icon(
+                                        Icons.mark_chat_read_outlined),
                                     title: const Text('Mark as read'),
                                     onTap: () {
                                       Navigator.of(context).pop();
