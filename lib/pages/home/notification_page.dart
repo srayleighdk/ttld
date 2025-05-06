@@ -81,7 +81,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
       appBar: AppBar(
         title: const Text('Notifications'),
         centerTitle: true,
-        backgroundColor: Theme.of(context).colorScheme.surfaceVariant ?? Colors.grey.shade100,
+        backgroundColor: Theme.of(context).colorScheme?.surfaceVariant ?? Colors.grey.shade100,
       ),
       body: _notifications.isEmpty
           ? Center(
@@ -119,12 +119,12 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     leading: CircleAvatar(
                       backgroundColor: notification.isRead
                           ? Colors.grey.shade300
-                          : Theme.of(context).colorScheme.primaryContainer ?? Colors.blue.shade100,
+                          : Theme.of(context).colorScheme?.primaryContainer ?? Colors.blue.shade100,
                       child: Icon(
                         notification.icon,
                         color: notification.isRead
                             ? Colors.grey.shade600
-                            : Theme.of(context).colorScheme.onPrimaryContainer ?? Colors.blue.shade900,
+                            : Theme.of(context).colorScheme?.onPrimaryContainer ?? Colors.blue.shade900,
                       ),
                     ),
                     title: Text(
@@ -151,7 +151,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                             margin: const EdgeInsets.only(top: 4.0),
                             padding: const EdgeInsets.all(3.0),
                             decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primary ?? Colors.blue,
+                              color: Theme.of(context).colorScheme?.primary ?? Colors.blue,
                               shape: BoxShape.circle,
                             ),
                           ),
