@@ -30,13 +30,17 @@ class GroupRepository extends BaseRepository {
     });
   }
 
-  Future<bool> createGroup(Group group) async {
+  Future<Group> createGroup(Group group) async {
+    
     return await safeApiCall(() async {
-      await dio.post(ApiEndpoints.groups, data: group.toJson());
-      // Return true on success (no exception thrown)
-      return true;
+      final response = await dio.post(ApiEndpoints.groups, data: group.toJson());
+      if(response.statusCode == 201){
+        return group;
+      }
+      throw Exception("Failed to create group");
     });
   }
+  
 
   Future<Group> updateGroup(String id, String name, String? description) async {
     return await safeApiCall(() async {

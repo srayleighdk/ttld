@@ -85,7 +85,6 @@ class CustomTextField extends StatefulWidget {
       labelText: labelText,
       hintText: hintText,
       keyboardType: TextInputType.number,
-      prefixIcon: const Icon(Icons.numbers),
       controller: controller,
       validator: validator,
       onChanged: onChanged,
@@ -360,51 +359,51 @@ class _CustomTextFieldState extends State<CustomTextField> {
           hintText: widget.hintText,
           alignLabelWithHint: true,
           labelStyle: TextStyle(
-            color: _errorText != null ? Colors.red : Colors.grey[700],
+            color: _errorText != null ? Colors.red : Colors.black,
           ),
           floatingLabelStyle: TextStyle(
             color: _errorText != null
                 ? Colors.red
                 : _focusNode.hasFocus
                     ? Colors.blue
-                    : Colors.grey[700],
+                    : Colors.black,
           ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
+          // border: OutlineInputBorder(
+          //   borderRadius: BorderRadius.circular(10.0),
+          // ),
           prefixIcon: widget.prefixIcon,
           suffixIcon: widget.suffixIcon,
           errorText: _errorText,
           errorStyle: const TextStyle(color: Colors.red),
           errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
+            // borderRadius: BorderRadius.circular(10.0),
             borderSide: const BorderSide(
               color: Colors.red,
               width: 1.0,
             ),
           ),
           focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
+            // borderRadius: BorderRadius.circular(10.0),
             borderSide: const BorderSide(
               color: Colors.red,
               width: 2.0,
             ),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
+            // borderRadius: BorderRadius.circular(10.0),
             borderSide: BorderSide(
               color: _errorText != null ? Colors.red : Colors.blue,
               width: 2.0,
             ),
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
+            // borderRadius: BorderRadius.circular(10.0),
             borderSide: BorderSide(
               color: _errorText != null
                   ? Colors.red
                   : _isValid
                       ? Colors.green
-                      : Colors.grey,
+                      : Colors.black,
               width: 1.0,
             ),
           ),

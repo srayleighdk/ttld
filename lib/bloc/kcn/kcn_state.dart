@@ -7,7 +7,7 @@ final class KcnInitial extends KcnState {}
 final class KcnLoading extends KcnState {}
 
 final class KcnLoaded extends KcnState {
-  final List<KCN> kcnList;
+  final List<KCNModel> kcnList;
 
   KcnLoaded(this.kcnList);
 }

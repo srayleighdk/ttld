@@ -7,7 +7,23 @@ abstract class NTDEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class NTDFetchList extends NTDEvent {}
+class NTDFetchList extends NTDEvent {
+  final int? limit;
+  final int? page;
+  final int? ntdLoai;
+  final int? idStatus;
+  final String? search;
+  final int? idUv;
+
+  const NTDFetchList({
+    this.limit,
+    this.page,
+    this.ntdLoai,
+    this.idStatus,
+    this.search,
+    this.idUv,
+  });
+}
 
 class NTDFetchById extends NTDEvent {
   final int id;

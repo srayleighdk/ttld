@@ -5,13 +5,13 @@ sealed class NganhNgheBacHocEvent {}
 class LoadNganhNgheBacHocs extends NganhNgheBacHocEvent {}
 
 class AddNganhNgheBacHoc extends NganhNgheBacHocEvent {
-  final NganhNgheBacHoc nganhNgheBacHoc;
+  final TrinhDoChuyenMon nganhNgheBacHoc;
 
   AddNganhNgheBacHoc({required this.nganhNgheBacHoc});
 }
 
 class UpdateNganhNgheBacHoc extends NganhNgheBacHocEvent {
-  final NganhNgheBacHoc nganhNgheBacHoc;
+  final TrinhDoChuyenMon nganhNgheBacHoc;
 
   UpdateNganhNgheBacHoc({required this.nganhNgheBacHoc});
 }

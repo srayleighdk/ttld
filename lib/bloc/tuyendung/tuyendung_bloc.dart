@@ -37,8 +37,10 @@ class TuyenDungBloc extends Bloc<TuyenDungEvent, TuyenDungState> {
     emit(TuyenDungLoading());
     try {
       final newTuyenDung = await _repository.createTuyenDung(event.tuyenDung);
-      final currentState = state as TuyenDungLoaded;
-      emit(TuyenDungLoaded([...currentState.tuyenDungList, newTuyenDung]));
+      // After creating, fetch the complete list to ensure we have all data
+      final tuyenDungList =
+          await _repository.getTuyenDungList(event.tuyenDung.idDoanhNghiep);
+      emit(TuyenDungLoaded(tuyenDungList));
     } catch (e) {
       emit(TuyenDungError(e.toString()));
     }
@@ -53,12 +55,12 @@ class TuyenDungBloc extends Bloc<TuyenDungEvent, TuyenDungState> {
       final updatedTuyenDung =
           await _repository.updateTuyenDung(event.tuyenDung);
       final currentState = state as TuyenDungLoaded;
-      final newList = currentState.tuyenDungList
-          .map((td) => td.idTuyenDung == updatedTuyenDung.idTuyenDung
-              ? updatedTuyenDung
-              : td)
-          .toList();
-      emit(TuyenDungLoaded(newList));
+      final updatedList = currentState.tuyenDungList.map((td) {
+        return td.idTuyenDung == updatedTuyenDung.idTuyenDung
+            ? updatedTuyenDung
+            : td;
+      }).toList();
+      emit(TuyenDungLoaded(updatedList));
     } catch (e) {
       emit(TuyenDungError(e.toString()));
     }
@@ -71,11 +73,9 @@ class TuyenDungBloc extends Bloc<TuyenDungEvent, TuyenDungState> {
     emit(TuyenDungLoading());
     try {
       await _repository.deleteTuyenDung(event.idTuyenDung);
-      final currentState = state as TuyenDungLoaded;
-      final newList = currentState.tuyenDungList
-          .where((td) => td.idTuyenDung != event.idTuyenDung)
-          .toList();
-      emit(TuyenDungLoaded(newList));
+      // After deleting, fetch the complete list to ensure we have all data
+      final tuyenDungList = await _repository.getTuyenDungList(event.userId);
+      emit(TuyenDungLoaded(tuyenDungList));
     } catch (e) {
       emit(TuyenDungError(e.toString()));
     }

@@ -7,7 +7,7 @@ class NganhNgheBacHocInitial extends NganhNgheBacHocState {}
 class NganhNgheBacHocLoading extends NganhNgheBacHocState {}
 
 class NganhNgheBacHocLoaded extends NganhNgheBacHocState {
-  final List<NganhNgheBacHoc> nganhNgheBacHocs;
+  final List<TrinhDoChuyenMon> nganhNgheBacHocs;
 
   NganhNgheBacHocLoaded({required this.nganhNgheBacHocs});
 }

@@ -9,6 +9,7 @@ import 'package:ttld/features/auth/bloc/login_event.dart';
 import 'package:ttld/features/auth/bloc/login_state.dart';
 import 'package:ttld/features/auth/enums/user_type.dart';
 import 'package:ttld/pages/signup/signup.dart';
+import 'package:ttld/core/api_client.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -22,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
   final _userNameController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
-  UserType _selectedUserType = UserType.admin; // Default value
+  UserType _selectedUserType = UserType.ntd;
 
   @override
   void dispose() {
@@ -42,6 +43,155 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
     }
+  }
+
+  Future<void> _forgotPassword(String userNameOrEmail) async {
+    try {
+      final response = await locator<ApiClient>().post(
+        '/auth/forgot-password',
+        data: {
+          'userNameOrEmail': userNameOrEmail,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                  'Yêu cầu đặt lại mật khẩu đã được gửi. Vui lòng kiểm tra email của bạn.'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+      } else {
+        throw Exception('Không thể gửi yêu cầu đặt lại mật khẩu');
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Lỗi: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  void _showForgotPasswordDialog() {
+    final TextEditingController emailController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.9,
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                'Quên Mật Khẩu',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Nhập tên đăng nhập hoặc email của bạn để nhận hướng dẫn đặt lại mật khẩu',
+                style: Theme.of(context).textTheme.bodyMedium,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              TextField(
+                controller: emailController,
+                decoration: InputDecoration(
+                  labelText: 'Tên đăng nhập hoặc Email',
+                  prefixIcon: const Icon(Icons.email_outlined),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Hủy'),
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.grey[700],
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (emailController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content:
+                                Text('Vui lòng nhập tên đăng nhập hoặc email'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                        return;
+                      }
+
+                      // Close dialog first
+                      Navigator.pop(context);
+
+                      // Show loading indicator
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Row(
+                              children: [
+                                SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white),
+                                  ),
+                                ),
+                                SizedBox(width: 12),
+                                Text('Đang gửi yêu cầu...'),
+                              ],
+                            ),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                      }
+
+                      // Call forgot password
+                      await _forgotPassword(emailController.text);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 12,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text('Gửi Yêu Cầu'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -84,181 +234,419 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ],
       child: Scaffold(
-        body: SingleChildScrollView(
-          child: Container(
-            height: size.height,
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  'Welcome Back',
-                  style: theme.textTheme.headlineMedium,
-                  textAlign: TextAlign.center,
+        body: Container(
+          height: size.height,
+          width: size.width,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                theme.colorScheme.primary.withAlpha(25),
+                theme.colorScheme.surface,
+              ],
+            ),
+          ),
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: size.height -
+                      MediaQuery.of(context).padding.top -
+                      MediaQuery.of(context).padding.bottom,
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  'Sign in to continue',
-                  style: theme.textTheme.bodyLarge,
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 10),
-                SegmentedButton<UserType>(
-                  segments: UserType.values.map((type) {
-                    return ButtonSegment<UserType>(
-                      value: type,
-                      label: Text(type.displayName),
-                      // icon: _getUserTypeIcon(type),
-                    );
-                  }).toList(),
-                  selected: {_selectedUserType},
-                  onSelectionChanged: (Set<UserType> newSelection) {
-                    setState(() {
-                      _selectedUserType = newSelection.first;
-                    });
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.resolveWith<Color>(
-                      (Set<WidgetState> states) {
-                        if (states.contains(WidgetState.selected)) {
-                          return theme.colorScheme.primary;
-                        }
-                        return theme.colorScheme.surface;
-                      },
-                    ),
-                    foregroundColor: WidgetStateProperty.resolveWith<Color>(
-                      (Set<WidgetState> states) {
-                        if (states.contains(WidgetState.selected)) {
-                          return theme.colorScheme.onPrimary;
-                        }
-                        return theme.colorScheme.onSurface;
-                      },
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 48),
-                Form(
-                  key: _formKey,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      TextFormField(
-                        controller: _userNameController,
-                        decoration: InputDecoration(
-                          labelText: 'Username',
-                          prefixIcon: Icon(FontAwesomeIcons.user),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
+                      // Welcome Section
+                      Container(
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.primary.withAlpha(25),
+                          borderRadius: BorderRadius.circular(24),
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your username';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        controller: _passwordController,
-                        obscureText: !_isPasswordVisible,
-                        decoration: InputDecoration(
-                          labelText: 'Password',
-                          prefixIcon: Icon(FontAwesomeIcons.lock),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _isPasswordVisible
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              'assets/icon/icon.png',
+                              width: 48,
+                              height: 48,
                             ),
-                            onPressed: () {
-                              setState(() {
-                                _isPasswordVisible = !_isPasswordVisible;
-                              });
-                            },
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your password';
-                          }
-                          if (value.length < 6) {
-                            return 'Password must be at least 6 characters';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 8),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: () {
-                            context.push('/forgot_password');
-                            // Add forgot password navigation
-                          },
-                          child: const Text('Forgot Password?'),
+                            const SizedBox(height: 16),
+                            Text(
+                              'Chào Mừng Trở Lại',
+                              style: theme.textTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: theme.colorScheme.primary,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Đăng nhập để tiếp tục hành trình của bạn',
+                              style: theme.textTheme.bodyLarge?.copyWith(
+                                color:
+                                    theme.colorScheme.onSurface.withAlpha(179),
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
                         ),
                       ),
-                      const SizedBox(height: 24),
-                      BlocBuilder<LoginBloc, LoginState>(
-                        bloc: locator<LoginBloc>(),
-                        builder: (context, state) {
-                          return ElevatedButton(
-                            onPressed:
-                                state is LoginLoading ? null : _handleLogin,
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
+                      const SizedBox(height: 32),
+
+                      // User Type Selection
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.surface,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: theme.colorScheme.shadow.withAlpha(13),
+                              blurRadius: 10,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Chọn Loại Người Dùng',
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 12),
+                            Center(
+                              child: SizedBox(
+                                width: 300, // Fixed width for the button
+                                child: SegmentedButton<UserType>(
+                                  segments: UserType.values
+                                      .where((type) => type != UserType.admin)
+                                      .map((type) {
+                                    return ButtonSegment<UserType>(
+                                      value: type,
+                                      label: Text(
+                                        type.displayName,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                  selected: {_selectedUserType},
+                                  onSelectionChanged:
+                                      (Set<UserType> newSelection) {
+                                    setState(() {
+                                      _selectedUserType = newSelection.first;
+                                    });
+                                  },
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty
+                                        .resolveWith<Color>(
+                                      (Set<MaterialState> states) {
+                                        if (states
+                                            .contains(MaterialState.selected)) {
+                                          return theme.colorScheme.primary;
+                                        }
+                                        return theme.colorScheme.surface;
+                                      },
+                                    ),
+                                    foregroundColor: MaterialStateProperty
+                                        .resolveWith<Color>(
+                                      (Set<MaterialState> states) {
+                                        if (states
+                                            .contains(MaterialState.selected)) {
+                                          return theme.colorScheme.onPrimary;
+                                        }
+                                        return theme.colorScheme.onSurface;
+                                      },
+                                    ),
+                                    padding: MaterialStateProperty.all(
+                                      const EdgeInsets.symmetric(vertical: 12),
+                                    ),
+                                    shape: MaterialStateProperty.all(
+                                      RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
-                            child: state is LoginLoading
-                                ? const SizedBox(
-                                    height: 20,
-                                    width: 20,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                    ),
-                                  )
-                                : const Text(
-                                    'Login',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                          );
-                        },
+                          ],
+                        ),
                       ),
-                      const SizedBox(height: 24),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Don't have an account? ",
-                            style: theme.textTheme.bodyMedium,
-                          ),
-                          TextButton(
-                            onPressed: () async {
-                              try {
-                                await Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => const SignupPage(),
+                      const SizedBox(height: 32),
+
+                      // Login Form
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            // Username Field
+                            Container(
+                              decoration: BoxDecoration(
+                                color: theme.colorScheme.surface,
+                                borderRadius: BorderRadius.circular(16),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color:
+                                        theme.colorScheme.shadow.withAlpha(13),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: TextFormField(
+                                controller: _userNameController,
+                                decoration: InputDecoration(
+                                  labelText: 'Tên đăng nhập',
+                                  prefixIcon: Icon(
+                                    FontAwesomeIcons.user,
+                                    color: theme.colorScheme.primary,
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                    borderSide: BorderSide(
+                                      color: theme.colorScheme.primary,
+                                      width: 2,
+                                    ),
+                                  ),
+                                  filled: true,
+                                  fillColor: theme.colorScheme.surface,
+                                  labelStyle: TextStyle(
+                                    color: theme.colorScheme.onSurface
+                                        .withAlpha(179),
+                                  ),
+                                  floatingLabelBehavior:
+                                      FloatingLabelBehavior.never,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 16,
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter your username';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+
+                            // Password Field
+                            Container(
+                              decoration: BoxDecoration(
+                                color: theme.colorScheme.surface,
+                                borderRadius: BorderRadius.circular(16),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color:
+                                        theme.colorScheme.shadow.withAlpha(13),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: TextFormField(
+                                controller: _passwordController,
+                                obscureText: !_isPasswordVisible,
+                                decoration: InputDecoration(
+                                  labelText: 'Mật khẩu',
+                                  prefixIcon: Icon(
+                                    FontAwesomeIcons.lock,
+                                    color: theme.colorScheme.primary,
+                                  ),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      _isPasswordVisible
+                                          ? Icons.visibility_off
+                                          : Icons.visibility,
+                                      color: theme.colorScheme.primary,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _isPasswordVisible =
+                                            !_isPasswordVisible;
+                                      });
+                                    },
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                    borderSide: BorderSide(
+                                      color: theme.colorScheme.primary,
+                                      width: 2,
+                                    ),
+                                  ),
+                                  filled: true,
+                                  fillColor: theme.colorScheme.surface,
+                                  labelStyle: TextStyle(
+                                    color: theme.colorScheme.onSurface
+                                        .withAlpha(179),
+                                  ),
+                                  floatingLabelBehavior:
+                                      FloatingLabelBehavior.never,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 16,
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter your password';
+                                  }
+                                  if (value.length < 6) {
+                                    return 'Password must be at least 6 characters';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+
+                            // Forgot Password
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: TextButton(
+                                onPressed: _showForgotPasswordDialog,
+                                child: Text(
+                                  'Quên mật khẩu?',
+                                  style: TextStyle(
+                                    color: theme.colorScheme.primary,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 24),
+
+                            // Login Button
+                            BlocBuilder<LoginBloc, LoginState>(
+                              bloc: locator<LoginBloc>(),
+                              builder: (context, state) {
+                                return Container(
+                                  height: 56,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(16),
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        theme.colorScheme.primary,
+                                        theme.colorScheme.primary
+                                            .withAlpha(204),
+                                      ],
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: theme.colorScheme.primary
+                                            .withAlpha(33),
+                                        blurRadius: 12,
+                                        offset: const Offset(0, 6),
+                                      ),
+                                    ],
+                                  ),
+                                  child: ElevatedButton(
+                                    onPressed: state is LoginLoading
+                                        ? null
+                                        : _handleLogin,
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.transparent,
+                                      shadowColor: Colors.transparent,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                    ),
+                                    child: state is LoginLoading
+                                        ? const SizedBox(
+                                            height: 24,
+                                            width: 24,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                      Colors.white),
+                                            ),
+                                          )
+                                        : const Text(
+                                            'Đăng nhập',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
+                                          ),
                                   ),
                                 );
-                              } catch (e) {
-                                print('Navigation error: $e');
-                              }
-                            },
-                            child: const Text('Sign Up'),
-                          ),
-                        ],
+                              },
+                            ),
+                            const SizedBox(height: 24),
+
+                            // Sign Up Link
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Bạn chưa có tài khoản? ",
+                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                    color: theme.colorScheme.onSurface
+                                        .withAlpha(179),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () async {
+                                    try {
+                                      await Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const SignupPage(),
+                                        ),
+                                      );
+                                    } catch (e) {
+                                      print('Navigation error: $e');
+                                    }
+                                  },
+                                  child: Text(
+                                    'Đăng ký',
+                                    style: TextStyle(
+                                      color: theme.colorScheme.primary,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
                 ),
-              ],
+              ),
             ),
           ),
         ),

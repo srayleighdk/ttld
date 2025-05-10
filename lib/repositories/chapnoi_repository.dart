@@ -9,11 +9,12 @@ class ChapNoiRepository {
   ChapNoiRepository(this._apiService);
 
   Future<ApiResponseList<ChapNoiModel>> getChapNoiList({
-    required int limit,
-    required int page,
+    int? limit,
+    int? page,
     int? status,
     String? idTuyenDung,
     String? idDoanhNghiep,
+    String? idUv,
   }) async {
     try {
       return await _apiService.getChapNoiList(
@@ -22,6 +23,7 @@ class ChapNoiRepository {
         status: status,
         idTuyenDung: idTuyenDung,
         idDoanhNghiep: idDoanhNghiep,
+        idUv: idUv,
       );
     } catch (e) {
       // Log error or handle specific exceptions if needed
@@ -31,12 +33,22 @@ class ChapNoiRepository {
     }
   }
 
-   Future<ApiResponseObject<ChapNoiModel>> createChapNoi(ChapNoiModel chapNoi) async {
+  Future<ApiResponseObject<ChapNoiModel>> createChapNoi(
+      ChapNoiModel chapNoi) async {
     try {
       return await _apiService.createChapNoi(chapNoi);
     } catch (e) {
       print('Error in ChapNoiRepository createChapNoi: $e');
       throw Exception('Failed to create ChapNoi: ${e.toString()}');
+    }
+  }
+
+  Future<ApiResponseObject<bool>> deleteChapNoi(String id) async {
+    try {
+      return await _apiService.deleteChapNoi(id);
+    } catch (e) {
+      print('Error in ChapNoiRepository deleteChapNoi: $e');
+      throw Exception('Failed to delete ChapNoi: ${e.toString()}');
     }
   }
 }

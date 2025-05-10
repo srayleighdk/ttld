@@ -8,7 +8,7 @@ class KCNPicker extends StatefulWidget {
   final String? initialTinhThanhId;
   final int? initialKCNId;
   final Function(TinhThanhModel?)? onTinhThanhChanged;
-  final Function(KCN?)? onKCNChanged;
+  final Function(KCNModel?)? onKCNChanged;
 
   const KCNPicker({
     super.key,
@@ -24,9 +24,9 @@ class KCNPicker extends StatefulWidget {
 
 class _KCNPickerState extends State<KCNPicker> {
   TinhThanhModel? selectedTinhThanh;
-  KCN? selectedKCN;
+  KCNModel? selectedKCN;
 
-  List<KCN>? _kcns;
+  List<KCNModel>? _kcns;
 
   @override
   void initState() {
@@ -66,13 +66,13 @@ class _KCNPickerState extends State<KCNPicker> {
           },
         ),
         const SizedBox(height: 14),
-        GenericPicker<KCN>(
+        GenericPicker<KCNModel>(
           label: 'Khu công nghiệp',
           items: _kcns ?? [],
           initialValue: widget.initialKCNId,
-          hintText: 'Chọn khu công nghiệp', 
+          hintText: 'Chọn khu công nghiệp',
           isLoading: false, // Set based on BLoC state
-          onChanged: (KCN? value) {
+          onChanged: (KCNModel? value) {
             if (value != null) {
               setState(() {
                 selectedKCN = value;

@@ -1,20 +1,20 @@
-class KCN {
-  final int kcnId;
-  final String kcnTen;
+import 'package:ttld/widgets/reuseable_widgets/generic_picker.dart';
+
+class KCNModel extends GenericPickerItem {
   final int displayOrder;
   final bool status;
   final String matinh;
 
-  KCN({
-    required this.kcnId,
-    required this.kcnTen,
+  KCNModel({
+    required int kcnId,
+    required String kcnTen,
     required this.displayOrder,
     required this.status,
     required this.matinh,
-  });
+  }) : super(id: kcnId, displayName: kcnTen);
 
-  factory KCN.fromJson(Map<String, dynamic> json) {
-    return KCN(
+  factory KCNModel.fromJson(Map<String, dynamic> json) {
+    return KCNModel(
       kcnId: json['kcnId'],
       kcnTen: json['kcnTen'],
       displayOrder: json['displayOrder'],
@@ -25,8 +25,8 @@ class KCN {
 
   Map<String, dynamic> toJson() {
     return {
-      'kcnId': kcnId,
-      'kcnTen': kcnTen,
+      'kcnId': id,
+      'kcnTen': displayName,
       'displayOrder': displayOrder,
       'status': status,
       'matinh': matinh,

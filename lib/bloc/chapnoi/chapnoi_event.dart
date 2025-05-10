@@ -9,6 +9,7 @@ class ChapNoiFetchList extends ChapNoiEvent {
   final int? status;
   final String? idTuyenDung;
   final String? idDoanhNghiep;
+  final String? idUv;
 
   ChapNoiFetchList({
     required this.limit,
@@ -16,6 +17,7 @@ class ChapNoiFetchList extends ChapNoiEvent {
     this.status,
     this.idTuyenDung,
     this.idDoanhNghiep,
+    this.idUv,
   });
 }
 
@@ -23,4 +25,10 @@ class ChapNoiCreate extends ChapNoiEvent {
   final ChapNoiModel chapNoi;
 
   ChapNoiCreate(this.chapNoi);
+}
+
+class ChapNoiDelete extends ChapNoiEvent {
+  final String id;
+
+  ChapNoiDelete(this.id);
 }

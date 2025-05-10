@@ -8,7 +8,10 @@ class KyNangMemRepository {
 
   Future<List<KyNangMemModel>> getKyNangMems() async {
     try {
-      return await _apiService.getKyNangMems();
+      final response = await _apiService.getKyNangMem();
+      return (response.data['data'] as List)
+          .map((json) => KyNangMemModel.fromJson(json))
+          .toList();
     } catch (e) {
       // Handle or rethrow the error appropriately
       print('Error fetching KyNangMems: $e');
@@ -18,7 +21,8 @@ class KyNangMemRepository {
 
   Future<KyNangMemModel> addKyNangMem(KyNangMemModel kyNangMem) async {
     try {
-      return await _apiService.addKyNangMem(kyNangMem);
+      final response = await _apiService.postKyNangMem(kyNangMem);
+      return response.data['data'] as KyNangMemModel;
     } catch (e) {
       print('Error adding KyNangMem: $e');
       rethrow;
@@ -31,7 +35,8 @@ class KyNangMemRepository {
       if (kyNangMem.id == null) {
         throw ArgumentError('KyNangMemModel must have an ID to be updated.');
       }
-      return await _apiService.updateKyNangMem(kyNangMem);
+      final response = await _apiService.putKyNangMem(kyNangMem);
+      return response.data['data'] as KyNangMemModel;
     } catch (e) {
       print('Error updating KyNangMem: $e');
       rethrow;
@@ -41,7 +46,7 @@ class KyNangMemRepository {
   Future<void> deleteKyNangMem(int id) async {
     try {
       // Using Option 3 (ID in body) as per the ApiService definition
-      await _apiService.deleteKyNangMem({'id': id});
+      await _apiService.deleteKyNangMem(id.toString());
     } catch (e) {
       print('Error deleting KyNangMem: $e');
       rethrow;

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ttld/bloc/kcn/kcn_cubit.dart';
-import 'package:ttld/models/kcn/kcn_model.dart';
 
 class KcnPage extends StatefulWidget {
   const KcnPage({Key? key}) : super(key: key);
@@ -34,7 +33,7 @@ class _KcnPageState extends State<KcnPage> {
               itemBuilder: (context, index) {
                 final kcn = state.kcnList[index];
                 return ListTile(
-                  title: Text(kcn.kcnTen),
+                  title: Text(kcn.displayName),
                   subtitle: Text('Mã tỉnh: ${kcn.matinh}, Thứ tự hiển thị: ${kcn.displayOrder}, Trạng thái: ${kcn.status}'),
                 );
               },

@@ -33,52 +33,37 @@ mixin _$Ntd {
   int? get ntdSolaodong => throw _privateConstructorUsedError;
   String? get ntdGioithieu =>
       throw _privateConstructorUsedError; // required int ntdThuockhucongnghiep,
-  int? get ntdThuockhucongnghiep => throw _privateConstructorUsedError;
-  String? get ntdDiachithanhpho => throw _privateConstructorUsedError;
+  dynamic get ntdThuockhucongnghiep => throw _privateConstructorUsedError;
+  dynamic get ntdDiachithanhpho => throw _privateConstructorUsedError;
   String? get ntdDiachihuyen => throw _privateConstructorUsedError;
   String? get ntdDiachixaphuong => throw _privateConstructorUsedError;
   String? get ntdDiachichitiet => throw _privateConstructorUsedError;
   String? get ntdNguoilienhe =>
       throw _privateConstructorUsedError; // required int ntdChucvu,
-  int? get ntdChucvu => throw _privateConstructorUsedError;
+  dynamic get ntdChucvu => throw _privateConstructorUsedError;
   String? get ntdDienthoai => throw _privateConstructorUsedError;
   String? get ntdFax =>
       throw _privateConstructorUsedError; // required String ntdEmail,
   String? get ntdEmail => throw _privateConstructorUsedError;
-  String? get ntdWebsite =>
-      throw _privateConstructorUsedError; // required bool ntdDuyet,
-// required bool ntdTopblock,
+  String? get ntdWebsite => throw _privateConstructorUsedError;
   bool? get ntdDuyet => throw _privateConstructorUsedError;
   bool? get ntdTopblock => throw _privateConstructorUsedError;
   String? get ntdQuocgia => throw _privateConstructorUsedError;
   int? get ntdNamthanhlap => throw _privateConstructorUsedError;
-  String? get ntdLinhvuchoatdong =>
-      throw _privateConstructorUsedError; // required bool ntdhtNlh,
-// required bool ntdhtTelephone,
-// required bool ntdhtWeb,
-// required bool ntdhtFax,
-// required bool ntdhtEmail,
-// required bool ntdhtAddress,
-// required DateTime createdDate,
+  String? get ntdLinhvuchoatdong => throw _privateConstructorUsedError;
   bool? get ntdhtNlh => throw _privateConstructorUsedError;
   bool? get ntdhtTelephone => throw _privateConstructorUsedError;
   bool? get ntdhtWeb => throw _privateConstructorUsedError;
   bool? get ntdhtFax => throw _privateConstructorUsedError;
   bool? get ntdhtEmail => throw _privateConstructorUsedError;
   bool? get ntdhtAddress => throw _privateConstructorUsedError;
-  DateTime? get createdDate =>
-      throw _privateConstructorUsedError; // required String createdBy,
-  String? get createdBy =>
-      throw _privateConstructorUsedError; // required DateTime modifiredDate,
-  DateTime? get modifiredDate =>
-      throw _privateConstructorUsedError; // required String modifiredBy,
+  DateTime? get createdDate => throw _privateConstructorUsedError;
+  String? get createdBy => throw _privateConstructorUsedError;
+  DateTime? get modifiredDate => throw _privateConstructorUsedError;
   String? get modifiredBy => throw _privateConstructorUsedError;
-  String? get ntdId =>
-      throw _privateConstructorUsedError; // required bool newsletterSubscription,
-// required bool jobsletterSubscription,
+  String? get ntdId => throw _privateConstructorUsedError;
   bool? get newsletterSubscription => throw _privateConstructorUsedError;
-  bool? get jobsletterSubscription =>
-      throw _privateConstructorUsedError; // required int ntdLoai,
+  bool? get jobsletterSubscription => throw _privateConstructorUsedError;
   int? get ntdLoai => throw _privateConstructorUsedError;
   String? get nongThonThanhThi => throw _privateConstructorUsedError;
   String? get idLoaiHinhDoanhNghiep => throw _privateConstructorUsedError;
@@ -121,13 +106,13 @@ abstract class $NtdCopyWith<$Res> {
       String? mst,
       int? ntdSolaodong,
       String? ntdGioithieu,
-      int? ntdThuockhucongnghiep,
-      String? ntdDiachithanhpho,
+      dynamic ntdThuockhucongnghiep,
+      dynamic ntdDiachithanhpho,
       String? ntdDiachihuyen,
       String? ntdDiachixaphuong,
       String? ntdDiachichitiet,
       String? ntdNguoilienhe,
-      int? ntdChucvu,
+      dynamic ntdChucvu,
       String? ntdDienthoai,
       String? ntdFax,
       String? ntdEmail,
@@ -276,11 +261,11 @@ class _$NtdCopyWithImpl<$Res, $Val extends Ntd> implements $NtdCopyWith<$Res> {
       ntdThuockhucongnghiep: freezed == ntdThuockhucongnghiep
           ? _value.ntdThuockhucongnghiep
           : ntdThuockhucongnghiep // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as dynamic,
       ntdDiachithanhpho: freezed == ntdDiachithanhpho
           ? _value.ntdDiachithanhpho
           : ntdDiachithanhpho // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as dynamic,
       ntdDiachihuyen: freezed == ntdDiachihuyen
           ? _value.ntdDiachihuyen
           : ntdDiachihuyen // ignore: cast_nullable_to_non_nullable
@@ -300,7 +285,7 @@ class _$NtdCopyWithImpl<$Res, $Val extends Ntd> implements $NtdCopyWith<$Res> {
       ntdChucvu: freezed == ntdChucvu
           ? _value.ntdChucvu
           : ntdChucvu // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as dynamic,
       ntdDienthoai: freezed == ntdDienthoai
           ? _value.ntdDienthoai
           : ntdDienthoai // ignore: cast_nullable_to_non_nullable
@@ -462,13 +447,13 @@ abstract class _$$NtdImplCopyWith<$Res> implements $NtdCopyWith<$Res> {
       String? mst,
       int? ntdSolaodong,
       String? ntdGioithieu,
-      int? ntdThuockhucongnghiep,
-      String? ntdDiachithanhpho,
+      dynamic ntdThuockhucongnghiep,
+      dynamic ntdDiachithanhpho,
       String? ntdDiachihuyen,
       String? ntdDiachixaphuong,
       String? ntdDiachichitiet,
       String? ntdNguoilienhe,
-      int? ntdChucvu,
+      dynamic ntdChucvu,
       String? ntdDienthoai,
       String? ntdFax,
       String? ntdEmail,
@@ -614,11 +599,11 @@ class __$$NtdImplCopyWithImpl<$Res> extends _$NtdCopyWithImpl<$Res, _$NtdImpl>
       ntdThuockhucongnghiep: freezed == ntdThuockhucongnghiep
           ? _value.ntdThuockhucongnghiep
           : ntdThuockhucongnghiep // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as dynamic,
       ntdDiachithanhpho: freezed == ntdDiachithanhpho
           ? _value.ntdDiachithanhpho
           : ntdDiachithanhpho // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as dynamic,
       ntdDiachihuyen: freezed == ntdDiachihuyen
           ? _value.ntdDiachihuyen
           : ntdDiachihuyen // ignore: cast_nullable_to_non_nullable
@@ -638,7 +623,7 @@ class __$$NtdImplCopyWithImpl<$Res> extends _$NtdCopyWithImpl<$Res, _$NtdImpl>
       ntdChucvu: freezed == ntdChucvu
           ? _value.ntdChucvu
           : ntdChucvu // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as dynamic,
       ntdDienthoai: freezed == ntdDienthoai
           ? _value.ntdDienthoai
           : ntdDienthoai // ignore: cast_nullable_to_non_nullable
@@ -867,9 +852,9 @@ class _$NtdImpl implements _Ntd {
   final String? ntdGioithieu;
 // required int ntdThuockhucongnghiep,
   @override
-  final int? ntdThuockhucongnghiep;
+  final dynamic ntdThuockhucongnghiep;
   @override
-  final String? ntdDiachithanhpho;
+  final dynamic ntdDiachithanhpho;
   @override
   final String? ntdDiachihuyen;
   @override
@@ -880,7 +865,7 @@ class _$NtdImpl implements _Ntd {
   final String? ntdNguoilienhe;
 // required int ntdChucvu,
   @override
-  final int? ntdChucvu;
+  final dynamic ntdChucvu;
   @override
   final String? ntdDienthoai;
   @override
@@ -890,8 +875,6 @@ class _$NtdImpl implements _Ntd {
   final String? ntdEmail;
   @override
   final String? ntdWebsite;
-// required bool ntdDuyet,
-// required bool ntdTopblock,
   @override
   final bool? ntdDuyet;
   @override
@@ -902,13 +885,6 @@ class _$NtdImpl implements _Ntd {
   final int? ntdNamthanhlap;
   @override
   final String? ntdLinhvuchoatdong;
-// required bool ntdhtNlh,
-// required bool ntdhtTelephone,
-// required bool ntdhtWeb,
-// required bool ntdhtFax,
-// required bool ntdhtEmail,
-// required bool ntdhtAddress,
-// required DateTime createdDate,
   @override
   final bool? ntdhtNlh;
   @override
@@ -923,24 +899,18 @@ class _$NtdImpl implements _Ntd {
   final bool? ntdhtAddress;
   @override
   final DateTime? createdDate;
-// required String createdBy,
   @override
   final String? createdBy;
-// required DateTime modifiredDate,
   @override
   final DateTime? modifiredDate;
-// required String modifiredBy,
   @override
   final String? modifiredBy;
   @override
   final String? ntdId;
-// required bool newsletterSubscription,
-// required bool jobsletterSubscription,
   @override
   final bool? newsletterSubscription;
   @override
   final bool? jobsletterSubscription;
-// required int ntdLoai,
   @override
   final int? ntdLoai;
   @override
@@ -998,10 +968,10 @@ class _$NtdImpl implements _Ntd {
                 other.ntdSolaodong == ntdSolaodong) &&
             (identical(other.ntdGioithieu, ntdGioithieu) ||
                 other.ntdGioithieu == ntdGioithieu) &&
-            (identical(other.ntdThuockhucongnghiep, ntdThuockhucongnghiep) ||
-                other.ntdThuockhucongnghiep == ntdThuockhucongnghiep) &&
-            (identical(other.ntdDiachithanhpho, ntdDiachithanhpho) ||
-                other.ntdDiachithanhpho == ntdDiachithanhpho) &&
+            const DeepCollectionEquality()
+                .equals(other.ntdThuockhucongnghiep, ntdThuockhucongnghiep) &&
+            const DeepCollectionEquality()
+                .equals(other.ntdDiachithanhpho, ntdDiachithanhpho) &&
             (identical(other.ntdDiachihuyen, ntdDiachihuyen) ||
                 other.ntdDiachihuyen == ntdDiachihuyen) &&
             (identical(other.ntdDiachixaphuong, ntdDiachixaphuong) ||
@@ -1010,8 +980,7 @@ class _$NtdImpl implements _Ntd {
                 other.ntdDiachichitiet == ntdDiachichitiet) &&
             (identical(other.ntdNguoilienhe, ntdNguoilienhe) ||
                 other.ntdNguoilienhe == ntdNguoilienhe) &&
-            (identical(other.ntdChucvu, ntdChucvu) ||
-                other.ntdChucvu == ntdChucvu) &&
+            const DeepCollectionEquality().equals(other.ntdChucvu, ntdChucvu) &&
             (identical(other.ntdDienthoai, ntdDienthoai) ||
                 other.ntdDienthoai == ntdDienthoai) &&
             (identical(other.ntdFax, ntdFax) || other.ntdFax == ntdFax) &&
@@ -1073,7 +1042,8 @@ class _$NtdImpl implements _Ntd {
                 other.ntdTenTinh == ntdTenTinh) &&
             (identical(other.ntdTenHuyen, ntdTenHuyen) ||
                 other.ntdTenHuyen == ntdTenHuyen) &&
-            (identical(other.ntdTenXa, ntdTenXa) || other.ntdTenXa == ntdTenXa) &&
+            (identical(other.ntdTenXa, ntdTenXa) ||
+                other.ntdTenXa == ntdTenXa) &&
             (identical(other.idnongThonThanhThi, idnongThonThanhThi) || other.idnongThonThanhThi == idnongThonThanhThi) &&
             (identical(other.idQuocGia, idQuocGia) || other.idQuocGia == idQuocGia));
   }
@@ -1092,13 +1062,13 @@ class _$NtdImpl implements _Ntd {
         mst,
         ntdSolaodong,
         ntdGioithieu,
-        ntdThuockhucongnghiep,
-        ntdDiachithanhpho,
+        const DeepCollectionEquality().hash(ntdThuockhucongnghiep),
+        const DeepCollectionEquality().hash(ntdDiachithanhpho),
         ntdDiachihuyen,
         ntdDiachixaphuong,
         ntdDiachichitiet,
         ntdNguoilienhe,
-        ntdChucvu,
+        const DeepCollectionEquality().hash(ntdChucvu),
         ntdDienthoai,
         ntdFax,
         ntdEmail,
@@ -1164,13 +1134,13 @@ abstract class _Ntd implements Ntd {
       final String? mst,
       final int? ntdSolaodong,
       final String? ntdGioithieu,
-      final int? ntdThuockhucongnghiep,
-      final String? ntdDiachithanhpho,
+      final dynamic ntdThuockhucongnghiep,
+      final dynamic ntdDiachithanhpho,
       final String? ntdDiachihuyen,
       final String? ntdDiachixaphuong,
       final String? ntdDiachichitiet,
       final String? ntdNguoilienhe,
-      final int? ntdChucvu,
+      final dynamic ntdChucvu,
       final String? ntdDienthoai,
       final String? ntdFax,
       final String? ntdEmail,
@@ -1230,9 +1200,9 @@ abstract class _Ntd implements Ntd {
   @override
   String? get ntdGioithieu; // required int ntdThuockhucongnghiep,
   @override
-  int? get ntdThuockhucongnghiep;
+  dynamic get ntdThuockhucongnghiep;
   @override
-  String? get ntdDiachithanhpho;
+  dynamic get ntdDiachithanhpho;
   @override
   String? get ntdDiachihuyen;
   @override
@@ -1242,7 +1212,7 @@ abstract class _Ntd implements Ntd {
   @override
   String? get ntdNguoilienhe; // required int ntdChucvu,
   @override
-  int? get ntdChucvu;
+  dynamic get ntdChucvu;
   @override
   String? get ntdDienthoai;
   @override
@@ -1250,8 +1220,7 @@ abstract class _Ntd implements Ntd {
   @override
   String? get ntdEmail;
   @override
-  String? get ntdWebsite; // required bool ntdDuyet,
-// required bool ntdTopblock,
+  String? get ntdWebsite;
   @override
   bool? get ntdDuyet;
   @override
@@ -1261,13 +1230,7 @@ abstract class _Ntd implements Ntd {
   @override
   int? get ntdNamthanhlap;
   @override
-  String? get ntdLinhvuchoatdong; // required bool ntdhtNlh,
-// required bool ntdhtTelephone,
-// required bool ntdhtWeb,
-// required bool ntdhtFax,
-// required bool ntdhtEmail,
-// required bool ntdhtAddress,
-// required DateTime createdDate,
+  String? get ntdLinhvuchoatdong;
   @override
   bool? get ntdhtNlh;
   @override
@@ -1281,20 +1244,19 @@ abstract class _Ntd implements Ntd {
   @override
   bool? get ntdhtAddress;
   @override
-  DateTime? get createdDate; // required String createdBy,
+  DateTime? get createdDate;
   @override
-  String? get createdBy; // required DateTime modifiredDate,
+  String? get createdBy;
   @override
-  DateTime? get modifiredDate; // required String modifiredBy,
+  DateTime? get modifiredDate;
   @override
   String? get modifiredBy;
   @override
-  String? get ntdId; // required bool newsletterSubscription,
-// required bool jobsletterSubscription,
+  String? get ntdId;
   @override
   bool? get newsletterSubscription;
   @override
-  bool? get jobsletterSubscription; // required int ntdLoai,
+  bool? get jobsletterSubscription;
   @override
   int? get ntdLoai;
   @override

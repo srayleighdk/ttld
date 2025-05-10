@@ -26,3 +26,12 @@ class AuthLoginSuccess extends AuthEvent {
 }
 
 class AuthLogout extends AuthEvent {}
+
+class AuthUpdateAvatar extends AuthEvent {
+  final String avatarUrl;
+
+  AuthUpdateAvatar(this.avatarUrl);
+
+  @override
+  List<Object?> get props => [avatarUrl];
+}

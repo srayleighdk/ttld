@@ -1,11 +1,11 @@
 import 'package:ttld/widgets/reuseable_widgets/generic_picker.dart';
 
-class NganhNgheBacHoc extends GenericPickerItem {
+class TrinhDoChuyenMon extends GenericPickerItem {
   String? idNhom;
   int? ordinalNumbers;
   bool? status;
 
-  NganhNgheBacHoc({
+  TrinhDoChuyenMon({
     required super.id,
     required String name,
     this.idNhom,
@@ -13,8 +13,8 @@ class NganhNgheBacHoc extends GenericPickerItem {
     this.status,
   }) : super(displayName: name);
 
-  factory NganhNgheBacHoc.fromJson(Map<String, dynamic> json) {
-    return NganhNgheBacHoc(
+  factory TrinhDoChuyenMon.fromJson(Map<String, dynamic> json) {
+    return TrinhDoChuyenMon(
       id: json['id'],
       name: json['name'],
       idNhom: json['idNhom'],

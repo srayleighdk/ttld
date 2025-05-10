@@ -25,9 +25,12 @@ class StepperPage extends StatefulWidget {
   State<StepperPage> createState() => _StepperPageState();
 }
 
-class _StepperPageState extends State<StepperPage> {
+class _StepperPageState extends State<StepperPage> with SingleTickerProviderStateMixin {
   late int _currentStep;
   final Map<int, GlobalKey<FormState>> _formKeys = {};
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
 
   @override
   void initState() {
@@ -37,80 +40,164 @@ class _StepperPageState extends State<StepperPage> {
     for (int i = 0; i < widget.steps.length; i++) {
       _formKeys[i] = GlobalKey<FormState>();
     }
+
+    // Initialize animations
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
+
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0.2, 0.0),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
+
+    _animationController.forward();
   }
 
-  Widget _buildStepIndicator(int index) {
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  Widget _buildStepIndicator(int index, ThemeData theme) {
     final isCompleted = index < _currentStep;
     final isCurrent = index == _currentStep;
+    final primaryColor = theme.colorScheme.primary;
+    final backgroundColor = theme.colorScheme.surface;
 
     return Expanded(
-      child: Row(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            width: 30,
-            height: 30,
+            width: 36,
+            height: 36,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: isCompleted || isCurrent ? Colors.blue : Colors.grey[300],
+              color: isCompleted || isCurrent ? primaryColor : backgroundColor,
+              border: Border.all(
+                color: isCompleted || isCurrent ? primaryColor : theme.colorScheme.outline,
+                width: 2,
+              ),
+              boxShadow: [
+                if (isCurrent)
+                  BoxShadow(
+                    color: primaryColor.withOpacity(0.3),
+                    blurRadius: 8,
+                    spreadRadius: 2,
+                  ),
+              ],
             ),
             child: Center(
-              child: isCompleted
-                  ? const Icon(Icons.check, color: Colors.white, size: 16)
-                  : Text(
-                      '${index + 1}',
-                      style: TextStyle(
-                        color: isCurrent ? Colors.white : Colors.grey[600],
-                        fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal,
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 200),
+                child: isCompleted
+                    ? Icon(
+                        Icons.check_rounded,
+                        color: theme.colorScheme.onPrimary,
+                        size: 20,
+                      )
+                    : Text(
+                        '${index + 1}',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          color: isCurrent
+                              ? theme.colorScheme.onPrimary
+                              : theme.colorScheme.onSurface,
+                          fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal,
+                        ),
                       ),
-                    ),
-            ),
-          ),
-          if (index < widget.steps.length - 1)
-            Expanded(
-              child: Container(
-                height: 2,
-                color: isCompleted ? Colors.blue : Colors.grey[300],
               ),
             ),
+          ),
+          const SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Text(
+              widget.steps[index],
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              style: theme.textTheme.bodyMedium!.copyWith(
+                color: isCurrent ? theme.colorScheme.primary : theme.colorScheme.onSurfaceVariant,
+                fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal,
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildBottomNavigation() {
+  Widget _buildBottomNavigation(ThemeData theme) {
     return Container(
-      padding: const EdgeInsets.all(16),
-      color: Colors.grey[100],
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        boxShadow: [
+          BoxShadow(
+            color: theme.colorScheme.shadow.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, -5),
+          ),
+        ],
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          ElevatedButton(
-            onPressed: _currentStep > 0
-                ? () => setState(() => _currentStep--)
-                : null,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.grey[300],
-              foregroundColor: Colors.black,
-            ),
-            child: const Text('Previous'),
-          ),
-          ElevatedButton(
+          if (_currentStep > 0)
+            TextButton.icon(
+              onPressed: () {
+                _animationController.reverse().then((_) {
+                  setState(() => _currentStep--);
+                  _animationController.forward();
+                });
+              },
+              icon: const Icon(Icons.arrow_back_rounded),
+              label: const Text('Quay lại'),
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              ),
+            )
+          else
+            const SizedBox.shrink(),
+          FilledButton.icon(
             onPressed: () {
-              // Validate current form
               if (_formKeys[_currentStep]!.currentState!.validate()) {
                 if (_currentStep < widget.steps.length - 1) {
-                  setState(() => _currentStep++);
+                  _animationController.reverse().then((_) {
+                    setState(() => _currentStep++);
+                    _animationController.forward();
+                  });
                 } else {
                   widget.onSubmit?.call();
                 }
               }
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
-              foregroundColor: Colors.white,
+            icon: Icon(
+              _currentStep < widget.steps.length - 1
+                  ? Icons.arrow_forward_rounded
+                  : Icons.check_rounded,
             ),
-            child: Text(
-              _currentStep < widget.steps.length - 1 ? 'Next' : widget.submitButtonText ?? 'Finish',
+            label: Text(
+              _currentStep < widget.steps.length - 1
+                  ? 'Tiếp tục'
+                  : (widget.submitButtonText ?? 'Hoàn thành'),
+            ),
+            style: FilledButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             ),
           ),
         ],
@@ -120,34 +207,42 @@ class _StepperPageState extends State<StepperPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    
     return Scaffold(
       body: Column(
         children: [
           // Step Indicator
           Container(
             padding: widget.stepperPadding,
-            color: widget.backgroundColor ?? Colors.grey[100],
+            color: widget.backgroundColor ?? theme.colorScheme.surface,
             child: Row(
               children: List.generate(
                 widget.steps.length,
-                (index) => _buildStepIndicator(index),
+                (index) => _buildStepIndicator(index, theme),
               ),
             ),
           ),
 
           // Content
           Expanded(
-            child: SingleChildScrollView(
-              padding: widget.contentPadding,
-              child: Form(
-                key: _formKeys[_currentStep],
-                child: widget.stepContents[_currentStep],
+            child: SlideTransition(
+              position: _slideAnimation,
+              child: FadeTransition(
+                opacity: _fadeAnimation,
+                child: SingleChildScrollView(
+                  padding: widget.contentPadding,
+                  child: Form(
+                    key: _formKeys[_currentStep],
+                    child: widget.stepContents[_currentStep],
+                  ),
+                ),
               ),
             ),
           ),
 
           // Bottom Navigation
-          _buildBottomNavigation(),
+          _buildBottomNavigation(theme),
         ],
       ),
     );

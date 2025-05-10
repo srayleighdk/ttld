@@ -178,8 +178,8 @@ class _CreateHoSoUngVienPageState extends State<CreateHoSoUngVienPage> {
   List<NganhNgheKT> _nganhNghes = [];
   NganhNgheKT? nganhNghe;
 
-  List<NganhNgheBacHoc> _nganhNgheBacHocs = [];
-  NganhNgheBacHoc? nganhNgheBacHoc;
+  List<TrinhDoChuyenMon> _nganhNgheBacHocs = [];
+  TrinhDoChuyenMon? nganhNgheBacHoc;
 
   List<NganhNgheTD> _nganhNgheTDs = [];
   NganhNgheTD? nganhNgheTD;
@@ -583,7 +583,7 @@ class _CreateHoSoUngVienPageState extends State<CreateHoSoUngVienPage> {
           _nganhNgheBacHocs = nganhNgheBacHocs;
         });
         if (_idBacHocController.text.isNotEmpty) {
-          NganhNgheBacHoc? _nganhNgheBacHoc = _nganhNgheBacHocs
+          TrinhDoChuyenMon? _nganhNgheBacHoc = _nganhNgheBacHocs
               .firstWhere((element) => element.id == _idBacHocController.text);
           setState(() {
             nganhNgheBacHoc = _nganhNgheBacHoc;
@@ -1085,12 +1085,12 @@ class _CreateHoSoUngVienPageState extends State<CreateHoSoUngVienPage> {
             label: Text('Trình độ chyên môn'),
             items: _nganhNgheBacHocs,
             selectedItem: nganhNgheBacHoc,
-            onChanged: (NganhNgheBacHoc? value) {
+            onChanged: (TrinhDoChuyenMon? value) {
               setState(() {
                 _idBacHocController.text = value?.id.toString() ?? '';
               });
             },
-            displayItemBuilder: (NganhNgheBacHoc? item) =>
+            displayItemBuilder: (TrinhDoChuyenMon? item) =>
                 item?.displayName ?? '',
           ),
           const SizedBox(height: 12.0),

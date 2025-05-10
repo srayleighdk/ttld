@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:theme_provider/theme_provider.dart';
-import 'package:ttld/core/di/injection.dart'; // Import GetIt setup
+import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/core/router/app_router.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/ds-ld/repositories/ld_repository.dart';

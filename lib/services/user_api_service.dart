@@ -16,8 +16,8 @@ class UserApiService {
     return _dio.get('/user', queryParameters: {'id': userId});
   }
 
-  Future<Response> getUserByManv(String manv) async {
-    return _dio.get('/user/manv', queryParameters: {'manv': manv});
+  Future<Response> getUserByManv() async {
+    return _dio.get('/user/manv');
   }
 
   Future<Response> createUser(Map<String, dynamic> userData) async {

@@ -1,32 +1,10 @@
 part of 'kinh_nghiem_lam_viec_bloc.dart';
 
-abstract class KinhNghiemLamViecState extends Equatable {
-  const KinhNghiemLamViecState();
-
-  @override
-  List<Object> get props => [];
+@freezed
+class KinhNghiemLamViecState with _$KinhNghiemLamViecState {
+  const factory KinhNghiemLamViecState.initial() = KinhNghiemLamViecInitial;
+  const factory KinhNghiemLamViecState.loading() = KinhNghiemLamViecLoading;
+  const factory KinhNghiemLamViecState.loaded(List<KinhNghiemLamViec> kinhNghiemList) = KinhNghiemLamViecLoaded;
+  const factory KinhNghiemLamViecState.error(String message) = KinhNghiemLamViecError;
+  const factory KinhNghiemLamViecState.deleted() = KinhNghiemLamViecDeleted;
 }
-
-class KinhNghiemLamViecInitial extends KinhNghiemLamViecState {}
-
-class KinhNghiemLamViecLoading extends KinhNghiemLamViecState {}
-
-class KinhNghiemLamViecLoaded extends KinhNghiemLamViecState {
-  final List<KinhNghiemLamViec> kinhNghiemList;
-
-  const KinhNghiemLamViecLoaded(this.kinhNghiemList);
-
-  @override
-  List<Object> get props => [kinhNghiemList];
-}
-
-class KinhNghiemLamViecError extends KinhNghiemLamViecState {
-  final String message;
-
-  const KinhNghiemLamViecError(this.message);
-
-  @override
-  List<Object> get props => [message];
-}
-
-class KinhNghiemLamViecDeleted extends KinhNghiemLamViecState {}

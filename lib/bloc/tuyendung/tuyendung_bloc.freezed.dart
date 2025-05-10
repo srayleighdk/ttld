@@ -21,7 +21,7 @@ mixin _$TuyenDungEvent {
     required TResult Function(String? ntdId) fetchList,
     required TResult Function(NTDTuyenDung tuyenDung) create,
     required TResult Function(NTDTuyenDung tuyenDung) update,
-    required TResult Function(String idTuyenDung) delete,
+    required TResult Function(String idTuyenDung, String? userId) delete,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -29,7 +29,7 @@ mixin _$TuyenDungEvent {
     TResult? Function(String? ntdId)? fetchList,
     TResult? Function(NTDTuyenDung tuyenDung)? create,
     TResult? Function(NTDTuyenDung tuyenDung)? update,
-    TResult? Function(String idTuyenDung)? delete,
+    TResult? Function(String idTuyenDung, String? userId)? delete,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -37,7 +37,7 @@ mixin _$TuyenDungEvent {
     TResult Function(String? ntdId)? fetchList,
     TResult Function(NTDTuyenDung tuyenDung)? create,
     TResult Function(NTDTuyenDung tuyenDung)? update,
-    TResult Function(String idTuyenDung)? delete,
+    TResult Function(String idTuyenDung, String? userId)? delete,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -161,7 +161,7 @@ class _$FetchTuyenDungListImpl implements FetchTuyenDungList {
     required TResult Function(String? ntdId) fetchList,
     required TResult Function(NTDTuyenDung tuyenDung) create,
     required TResult Function(NTDTuyenDung tuyenDung) update,
-    required TResult Function(String idTuyenDung) delete,
+    required TResult Function(String idTuyenDung, String? userId) delete,
   }) {
     return fetchList(ntdId);
   }
@@ -172,7 +172,7 @@ class _$FetchTuyenDungListImpl implements FetchTuyenDungList {
     TResult? Function(String? ntdId)? fetchList,
     TResult? Function(NTDTuyenDung tuyenDung)? create,
     TResult? Function(NTDTuyenDung tuyenDung)? update,
-    TResult? Function(String idTuyenDung)? delete,
+    TResult? Function(String idTuyenDung, String? userId)? delete,
   }) {
     return fetchList?.call(ntdId);
   }
@@ -183,7 +183,7 @@ class _$FetchTuyenDungListImpl implements FetchTuyenDungList {
     TResult Function(String? ntdId)? fetchList,
     TResult Function(NTDTuyenDung tuyenDung)? create,
     TResult Function(NTDTuyenDung tuyenDung)? update,
-    TResult Function(String idTuyenDung)? delete,
+    TResult Function(String idTuyenDung, String? userId)? delete,
     required TResult orElse(),
   }) {
     if (fetchList != null) {
@@ -328,7 +328,7 @@ class _$CreateTuyenDungImpl implements CreateTuyenDung {
     required TResult Function(String? ntdId) fetchList,
     required TResult Function(NTDTuyenDung tuyenDung) create,
     required TResult Function(NTDTuyenDung tuyenDung) update,
-    required TResult Function(String idTuyenDung) delete,
+    required TResult Function(String idTuyenDung, String? userId) delete,
   }) {
     return create(tuyenDung);
   }
@@ -339,7 +339,7 @@ class _$CreateTuyenDungImpl implements CreateTuyenDung {
     TResult? Function(String? ntdId)? fetchList,
     TResult? Function(NTDTuyenDung tuyenDung)? create,
     TResult? Function(NTDTuyenDung tuyenDung)? update,
-    TResult? Function(String idTuyenDung)? delete,
+    TResult? Function(String idTuyenDung, String? userId)? delete,
   }) {
     return create?.call(tuyenDung);
   }
@@ -350,7 +350,7 @@ class _$CreateTuyenDungImpl implements CreateTuyenDung {
     TResult Function(String? ntdId)? fetchList,
     TResult Function(NTDTuyenDung tuyenDung)? create,
     TResult Function(NTDTuyenDung tuyenDung)? update,
-    TResult Function(String idTuyenDung)? delete,
+    TResult Function(String idTuyenDung, String? userId)? delete,
     required TResult orElse(),
   }) {
     if (create != null) {
@@ -495,7 +495,7 @@ class _$UpdateTuyenDungImpl implements UpdateTuyenDung {
     required TResult Function(String? ntdId) fetchList,
     required TResult Function(NTDTuyenDung tuyenDung) create,
     required TResult Function(NTDTuyenDung tuyenDung) update,
-    required TResult Function(String idTuyenDung) delete,
+    required TResult Function(String idTuyenDung, String? userId) delete,
   }) {
     return update(tuyenDung);
   }
@@ -506,7 +506,7 @@ class _$UpdateTuyenDungImpl implements UpdateTuyenDung {
     TResult? Function(String? ntdId)? fetchList,
     TResult? Function(NTDTuyenDung tuyenDung)? create,
     TResult? Function(NTDTuyenDung tuyenDung)? update,
-    TResult? Function(String idTuyenDung)? delete,
+    TResult? Function(String idTuyenDung, String? userId)? delete,
   }) {
     return update?.call(tuyenDung);
   }
@@ -517,7 +517,7 @@ class _$UpdateTuyenDungImpl implements UpdateTuyenDung {
     TResult Function(String? ntdId)? fetchList,
     TResult Function(NTDTuyenDung tuyenDung)? create,
     TResult Function(NTDTuyenDung tuyenDung)? update,
-    TResult Function(String idTuyenDung)? delete,
+    TResult Function(String idTuyenDung, String? userId)? delete,
     required TResult orElse(),
   }) {
     if (update != null) {
@@ -583,7 +583,7 @@ abstract class _$$DeleteTuyenDungImplCopyWith<$Res> {
           $Res Function(_$DeleteTuyenDungImpl) then) =
       __$$DeleteTuyenDungImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String idTuyenDung});
+  $Res call({String idTuyenDung, String? userId});
 }
 
 /// @nodoc
@@ -600,12 +600,17 @@ class __$$DeleteTuyenDungImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? idTuyenDung = null,
+    Object? userId = freezed,
   }) {
     return _then(_$DeleteTuyenDungImpl(
       null == idTuyenDung
           ? _value.idTuyenDung
           : idTuyenDung // ignore: cast_nullable_to_non_nullable
               as String,
+      freezed == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -613,14 +618,16 @@ class __$$DeleteTuyenDungImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$DeleteTuyenDungImpl implements DeleteTuyenDung {
-  const _$DeleteTuyenDungImpl(this.idTuyenDung);
+  const _$DeleteTuyenDungImpl(this.idTuyenDung, this.userId);
 
   @override
   final String idTuyenDung;
+  @override
+  final String? userId;
 
   @override
   String toString() {
-    return 'TuyenDungEvent.delete(idTuyenDung: $idTuyenDung)';
+    return 'TuyenDungEvent.delete(idTuyenDung: $idTuyenDung, userId: $userId)';
   }
 
   @override
@@ -629,11 +636,12 @@ class _$DeleteTuyenDungImpl implements DeleteTuyenDung {
         (other.runtimeType == runtimeType &&
             other is _$DeleteTuyenDungImpl &&
             (identical(other.idTuyenDung, idTuyenDung) ||
-                other.idTuyenDung == idTuyenDung));
+                other.idTuyenDung == idTuyenDung) &&
+            (identical(other.userId, userId) || other.userId == userId));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, idTuyenDung);
+  int get hashCode => Object.hash(runtimeType, idTuyenDung, userId);
 
   /// Create a copy of TuyenDungEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -650,9 +658,9 @@ class _$DeleteTuyenDungImpl implements DeleteTuyenDung {
     required TResult Function(String? ntdId) fetchList,
     required TResult Function(NTDTuyenDung tuyenDung) create,
     required TResult Function(NTDTuyenDung tuyenDung) update,
-    required TResult Function(String idTuyenDung) delete,
+    required TResult Function(String idTuyenDung, String? userId) delete,
   }) {
-    return delete(idTuyenDung);
+    return delete(idTuyenDung, userId);
   }
 
   @override
@@ -661,9 +669,9 @@ class _$DeleteTuyenDungImpl implements DeleteTuyenDung {
     TResult? Function(String? ntdId)? fetchList,
     TResult? Function(NTDTuyenDung tuyenDung)? create,
     TResult? Function(NTDTuyenDung tuyenDung)? update,
-    TResult? Function(String idTuyenDung)? delete,
+    TResult? Function(String idTuyenDung, String? userId)? delete,
   }) {
-    return delete?.call(idTuyenDung);
+    return delete?.call(idTuyenDung, userId);
   }
 
   @override
@@ -672,11 +680,11 @@ class _$DeleteTuyenDungImpl implements DeleteTuyenDung {
     TResult Function(String? ntdId)? fetchList,
     TResult Function(NTDTuyenDung tuyenDung)? create,
     TResult Function(NTDTuyenDung tuyenDung)? update,
-    TResult Function(String idTuyenDung)? delete,
+    TResult Function(String idTuyenDung, String? userId)? delete,
     required TResult orElse(),
   }) {
     if (delete != null) {
-      return delete(idTuyenDung);
+      return delete(idTuyenDung, userId);
     }
     return orElse();
   }
@@ -720,10 +728,11 @@ class _$DeleteTuyenDungImpl implements DeleteTuyenDung {
 }
 
 abstract class DeleteTuyenDung implements TuyenDungEvent {
-  const factory DeleteTuyenDung(final String idTuyenDung) =
-      _$DeleteTuyenDungImpl;
+  const factory DeleteTuyenDung(
+      final String idTuyenDung, final String? userId) = _$DeleteTuyenDungImpl;
 
   String get idTuyenDung;
+  String? get userId;
 
   /// Create a copy of TuyenDungEvent
   /// with the given fields replaced by the non-null parameter values.

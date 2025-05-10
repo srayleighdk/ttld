@@ -3,9 +3,11 @@ import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 import 'package:ttld/models/kinh_nghiem_lam_viec.dart';
 import 'package:ttld/repositories/kinh_nghiem_lam_viec_repository.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'kinh_nghiem_lam_viec_event.dart';
 part 'kinh_nghiem_lam_viec_state.dart';
+part 'kinh_nghiem_lam_viec_bloc.freezed.dart';
 
 @injectable
 class KinhNghiemLamViecBloc
@@ -13,20 +15,20 @@ class KinhNghiemLamViecBloc
   final KinhNghiemLamViecRepository _repository;
 
   KinhNghiemLamViecBloc(this._repository) : super(KinhNghiemLamViecInitial()) {
-    on<LoadKinhNghiem>(_onLoadKinhNghiem);
+    on<FetchKinhNghiemLamViecList>(_onFetchKinhNghiemLamViecList);
     on<AddKinhNghiem>(_onAddKinhNghiem);
     on<UpdateKinhNghiem>(_onUpdateKinhNghiem);
     on<DeleteKinhNghiem>(_onDeleteKinhNghiem);
   }
 
-  Future<void> _onLoadKinhNghiem(
-    LoadKinhNghiem event,
+  Future<void> _onFetchKinhNghiemLamViecList(
+    FetchKinhNghiemLamViecList event,
     Emitter<KinhNghiemLamViecState> emit,
   ) async {
     emit(KinhNghiemLamViecLoading());
     try {
-      final kinhNghiem = await _repository.getKinhNghiemLamViecs();
-      emit(KinhNghiemLamViecLoaded(kinhNghiem));
+      final kinhNghiemList = await _repository.getKinhNghiemLamViecList();
+      emit(KinhNghiemLamViecLoaded(kinhNghiemList));
     } catch (e) {
       emit(KinhNghiemLamViecError(e.toString()));
     }
@@ -38,7 +40,7 @@ class KinhNghiemLamViecBloc
   ) async {
     try {
       await _repository.createKinhNghiem(event.kinhNghiem);
-      final updatedList = await _repository.getKinhNghiemLamViecs();
+      final updatedList = await _repository.getKinhNghiemLamViecList();
       emit(KinhNghiemLamViecLoaded(updatedList));
     } catch (e) {
       emit(KinhNghiemLamViecError(e.toString()));
@@ -51,7 +53,7 @@ class KinhNghiemLamViecBloc
   ) async {
     try {
       await _repository.updateKinhNghiem(event.kinhNghiem);
-      final updatedList = await _repository.getKinhNghiemLamViecs();
+      final updatedList = await _repository.getKinhNghiemLamViecList();
       emit(KinhNghiemLamViecLoaded(updatedList));
     } catch (e) {
       emit(KinhNghiemLamViecError(e.toString()));
@@ -64,7 +66,6 @@ class KinhNghiemLamViecBloc
   ) async {
     try {
       await _repository.deleteKinhNghiem(event.id);
-      // final updatedList = await _repository.deleteKinhNghiem(event.id);
       emit(KinhNghiemLamViecDeleted());
     } catch (e) {
       emit(KinhNghiemLamViecError(e.toString()));

@@ -14,7 +14,8 @@ class KcnCubit extends Cubit<KcnState> {
     try {
       final response = await _danhmucApiService.getKCN(matinh);
       final List<dynamic> data = response.data['data'];
-      final List<KCN> kcnList = data.map((json) => KCN.fromJson(json)).toList();
+      final List<KCNModel> kcnList =
+          data.map((json) => KCNModel.fromJson(json)).toList();
       emit(KcnLoaded(kcnList));
     } catch (e) {
       emit(KcnError(e.toString()));

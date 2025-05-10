@@ -30,11 +30,10 @@ class GenericPicker<T extends GenericPickerItem> extends StatefulWidget {
   });
 
   @override
-  _GenericPickerState<T> createState() => _GenericPickerState<T>();
+  GenericPickerState<T> createState() => GenericPickerState<T>();
 }
 
-class _GenericPickerState<T extends GenericPickerItem>
-    extends State<GenericPicker<T>> {
+class GenericPickerState<T extends GenericPickerItem> extends State<GenericPicker<T>> {
   T? _selectedItem;
 
   @override

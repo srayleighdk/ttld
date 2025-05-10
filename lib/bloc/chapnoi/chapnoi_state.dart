@@ -21,6 +21,12 @@ final class ChapNoiCreated extends ChapNoiState {
    ChapNoiCreated(this.createdChapNoi, this.message);
 }
 
+final class ChapNoiDeleted extends ChapNoiState {
+   final String message;
+
+   ChapNoiDeleted(this.message);
+}
+
 final class ChapNoiError extends ChapNoiState {
   final String message;
 

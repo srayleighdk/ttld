@@ -4,14 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_bloc.dart';
 import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_state.dart';
 import 'package:ttld/bloc/tblNhaTuyenDung/ntd_bloc.dart';
+import 'package:ttld/core/api_client.dart';
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/core/utils/toast_utils.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_event.dart';
+import 'package:ttld/features/auth/bloc/auth_state.dart';
 import 'package:ttld/features/auth/repositories/auth_repository.dart';
+import 'package:ttld/helppers/help.dart';
+import 'package:dio/dio.dart';
 
 class ProfilePage extends StatefulWidget {
   final String userId;
@@ -52,12 +57,82 @@ class _ProfilePageState extends State<ProfilePage> {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
-      final directory = await getApplicationDocumentsDirectory();
-      final avatarPath = '${directory.path}/avatar_${widget.userId}.jpg';
-      final savedImage = await File(pickedFile.path).copy(avatarPath);
-      setState(() {
-        _avatarImage = savedImage;
-      });
+      try {
+        // Create form data for upload
+        final formData = FormData.fromMap({
+          'file': await MultipartFile.fromFile(
+            pickedFile.path,
+            filename: pickedFile.name,
+            contentType:
+                MediaType.parse('image/${pickedFile.path.split('.').last}'),
+          ),
+        });
+
+        // Get the current user ID from AuthBloc
+        final authState = locator<AuthBloc>().state;
+        if (authState is! AuthAuthenticated) {
+          throw Exception('User not authenticated');
+        }
+
+        // Determine the API endpoint based on user type
+        String endpoint;
+        if (widget.userType.toLowerCase() == 'ntv') {
+          endpoint = '/nghiep-vu/hoso-uv-img/${authState.userId}';
+        } else if (widget.userType.toLowerCase() == 'ntd') {
+          endpoint = '/tttt/nha-td-img/${authState.userId}';
+        } else {
+          throw Exception('Invalid user type');
+        }
+
+        // Upload the image using the appropriate endpoint
+        final response = await locator<ApiClient>().put(
+          endpoint,
+          data: formData,
+        );
+
+        if (response.statusCode == 200) {
+          final data = response.data;
+          final imagePath = data['imagePath']; // The path returned from backend
+
+          // Update the avatar URL in AuthBloc state
+          if (mounted) {
+            locator<AuthBloc>().add(AuthUpdateAvatar(imagePath));
+
+            // Verify the state was updated
+            final currentState = locator<AuthBloc>().state;
+            if (currentState is AuthAuthenticated) {
+              debugPrint(
+                  'Current auth state avatar URL: ${currentState.avatarUrl}');
+            }
+          }
+
+          // Save locally for immediate display
+          final directory = await getApplicationDocumentsDirectory();
+          final avatarPath = '${directory.path}/avatar_${widget.userId}.jpg';
+          final savedImage = await File(pickedFile.path).copy(avatarPath);
+          setState(() {
+            _avatarImage = savedImage;
+          });
+
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Avatar updated successfully'),
+                backgroundColor: Colors.green,
+              ),
+            );
+          }
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to upload avatar: ${e.toString()}'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
     }
   }
 
@@ -76,19 +151,29 @@ class _ProfilePageState extends State<ProfilePage> {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setStateDialog) {
-          return AlertDialog(
+          return Dialog(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),
-            title: const Text('Change Password'),
-            content: SingleChildScrollView(
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.9,
+              padding: const EdgeInsets.all(24),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  Text(
+                    'Đổi Mật Khẩu',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 24),
                   TextField(
                     controller: _oldPasswordController,
                     decoration: InputDecoration(
-                      labelText: 'Current Password',
+                      labelText: 'Mật Khẩu Hiện Tại',
                       prefixIcon: const Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -112,7 +197,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   TextField(
                     controller: _newPasswordController,
                     decoration: InputDecoration(
-                      labelText: 'New Password',
+                      labelText: 'Mật Khẩu Mới',
                       prefixIcon: const Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -136,7 +221,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   TextField(
                     controller: _confirmPasswordController,
                     decoration: InputDecoration(
-                      labelText: 'Confirm New Password',
+                      labelText: 'Xác Nhận Mật Khẩu Mới',
                       prefixIcon: const Icon(Icons.lock_outline),
                       suffixIcon: IconButton(
                         icon: Icon(
@@ -156,59 +241,118 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     obscureText: _obscureConfirmPassword,
                   ),
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Hủy'),
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.grey[700],
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      ElevatedButton(
+                        onPressed: () async {
+                          if (_newPasswordController.text.isEmpty ||
+                              _oldPasswordController.text.isEmpty ||
+                              _confirmPasswordController.text.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Vui lòng điền đầy đủ thông tin'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                            return;
+                          }
+                          if (_newPasswordController.text !=
+                              _confirmPasswordController.text) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Mật khẩu mới không khớp'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                            return;
+                          }
+                          if (_newPasswordController.text.length < 6) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                    'Mật khẩu mới phải có ít nhất 6 ký tự'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                            return;
+                          }
+
+                          // Verify old password first
+                          try {
+                            final authState = locator<AuthBloc>().state;
+                            if (authState is! AuthAuthenticated) {
+                              throw Exception('Người dùng chưa đăng nhập');
+                            }
+
+                            // Close dialog first
+                            Navigator.pop(context);
+
+                            // Show loading indicator
+                            if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 20,
+                                        height: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                  Colors.white),
+                                        ),
+                                      ),
+                                      SizedBox(width: 12),
+                                      Text('Đang đổi mật khẩu...'),
+                                    ],
+                                  ),
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
+                            }
+
+                            // Call change password
+                            await _changePassword(
+                              widget.userId,
+                              _oldPasswordController.text,
+                              _newPasswordController.text,
+                            );
+                          } catch (e) {
+                            if (mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Lỗi: ${e.toString()}'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: const Text('Xác Nhận'),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel'),
-                style: TextButton.styleFrom(
-                  foregroundColor: Colors.grey[700],
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  if (_newPasswordController.text.isEmpty ||
-                      _oldPasswordController.text.isEmpty ||
-                      _confirmPasswordController.text.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Please fill all fields')),
-                    );
-                    return;
-                  }
-
-                  if (_newPasswordController.text ==
-                      _confirmPasswordController.text) {
-                    _changePassword(
-                      widget.userId,
-                      _oldPasswordController.text,
-                      _newPasswordController.text,
-                    );
-                    Navigator.pop(context);
-                    _showSuccessSnackbar('Password changed successfully');
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Passwords do not match'),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  foregroundColor: Colors.white,
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                ),
-                child: const Text('Save Changes'),
-              ),
-            ],
           );
         },
       ),
@@ -237,8 +381,46 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _changePassword(
       String userId, String oldPassword, String newPassword) async {
-    // Replace with your actual API call
-    await Future.delayed(const Duration(seconds: 1));
+    try {
+      // Get the current user's token from AuthBloc
+      final authState = locator<AuthBloc>().state;
+      if (authState is! AuthAuthenticated) {
+        throw Exception('Người dùng chưa đăng nhập');
+      }
+
+      // Make the API call with increased timeout
+      final response = await locator<ApiClient>().post(
+        '/auth/reset-password',
+        data: {
+          'token': authState.token,
+          'newPassword': newPassword,
+          'userId': userId, // Add userId to help backend identify the user
+        },
+      );
+
+      if (response.statusCode == 200) {
+        if (mounted) {
+          _showSuccessSnackbar('Đổi mật khẩu thành công');
+        }
+      } else {
+        throw Exception('Đổi mật khẩu thất bại');
+      }
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.receiveTimeout) {
+        throw Exception(
+            'Yêu cầu đổi mật khẩu đã hết thời gian chờ. Vui lòng thử lại.');
+      }
+      throw Exception('Lỗi: ${e.message}');
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Lỗi: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   @override
@@ -270,67 +452,57 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: Colors.grey[50],
-      appBar: AppBar(
-        title: const Text('My Profile',
-            style: TextStyle(fontWeight: FontWeight.bold)),
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black87,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings_outlined),
-            onPressed: () {
-              // Navigate to settings
-            },
+      backgroundColor: Colors.transparent,
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              theme.colorScheme.primary.withAlpha(25),
+              theme.colorScheme.surface,
+            ],
           ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _buildProfileHeader(),
-            const SizedBox(height: 16),
-            _buildUserInfoSection(),
-            const SizedBox(height: 16),
-            _buildSettingsCards(),
-          ],
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                _buildProfileHeader(),
+                const SizedBox(height: 16),
+                _buildUserInfoSection(),
+                const SizedBox(height: 16),
+                _buildSettingsCards(),
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
 
   Widget _buildProfileHeader() {
+    final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 32),
-      // decoration: BoxDecoration(
-      //   // color: Colors.white,
-      //   boxShadow: [
-      //     BoxShadow(
-      //       color: Colors.grey.withOpacity(0.1),
-      //       spreadRadius: 1,
-      //       blurRadius: 10,
-      //       offset: const Offset(0, 2),
-      //     ),
-      //   ],
-      // ),
       child: Column(
         children: [
-          // Avatar with edit button
           Stack(
             children: [
               Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: Theme.of(context).colorScheme.primary,
+                    color: theme.colorScheme.primary,
                     width: 4,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.1),
+                      color: theme.colorScheme.shadow.withAlpha(26),
                       spreadRadius: 1,
                       blurRadius: 10,
                       offset: const Offset(0, 4),
@@ -339,11 +511,17 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 child: CircleAvatar(
                   radius: 65,
-                  backgroundColor: Colors.grey[200],
+                  backgroundColor: theme.colorScheme.surface,
                   backgroundImage: _avatarImage != null
                       ? FileImage(_avatarImage!)
-                      : const AssetImage('assets/default_avatar.png')
-                          as ImageProvider,
+                      : (locator<AuthBloc>().state is AuthAuthenticated &&
+                              (locator<AuthBloc>().state as AuthAuthenticated)
+                                      .avatarUrl !=
+                                  null
+                          ? NetworkImage(
+                              '${getEnv('URL_AVATAR')}${(locator<AuthBloc>().state as AuthAuthenticated).avatarUrl}')
+                          : const AssetImage(
+                              'assets/default_avatar.png')) as ImageProvider,
                 ),
               ),
               Positioned(
@@ -351,11 +529,11 @@ class _ProfilePageState extends State<ProfilePage> {
                 right: 0,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary,
+                    color: theme.colorScheme.primary,
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.2),
+                        color: theme.colorScheme.shadow.withAlpha(51),
                         spreadRadius: 1,
                         blurRadius: 5,
                         offset: const Offset(0, 2),
@@ -363,8 +541,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     ],
                   ),
                   child: IconButton(
-                    icon: const Icon(Icons.camera_alt,
-                        color: Colors.white, size: 20),
+                    icon: Icon(Icons.camera_alt,
+                        color: theme.colorScheme.onPrimary, size: 20),
                     onPressed: _pickAvatar,
                     constraints:
                         const BoxConstraints.tightFor(width: 40, height: 40),
@@ -387,9 +565,9 @@ class _ProfilePageState extends State<ProfilePage> {
           if (state is NTVLoadedById && state.tblHoSoUngVien != null) {
             final candidate = state.tblHoSoUngVien!;
             return _buildUserInfoCard(
-              name: candidate.uvHoten ?? 'Unknown Candidate',
-              email: candidate.uvEmail ?? 'No email',
-              type: 'Candidate',
+              name: candidate.uvHoten ?? 'Ứng Viên Chưa Biết',
+              email: candidate.uvEmail ?? 'Không có email',
+              type: 'Ứng Viên',
               id: widget.userId,
             );
           }
@@ -403,9 +581,9 @@ class _ProfilePageState extends State<ProfilePage> {
           if (state is NTDLoadedById) {
             final employer = state.ntd;
             return _buildUserInfoCard(
-              name: employer.ntdTen ?? 'Unknown Employer',
-              email: employer.ntdEmail ?? 'No email',
-              type: 'Employer',
+              name: employer.ntdTen ?? 'Nhà Tuyển Dụng Chưa Biết',
+              email: employer.ntdEmail ?? 'Không có email',
+              type: 'Nhà Tuyển Dụng',
               id: widget.userId,
             );
           }
@@ -414,9 +592,9 @@ class _ProfilePageState extends State<ProfilePage> {
       );
     } else {
       return _buildUserInfoCard(
-        name: 'Admin User',
+        name: 'Quản Trị Viên',
         email: 'admin@example.com',
-        type: 'Administrator',
+        type: 'Quản Trị',
         id: widget.userId,
       );
     }
@@ -428,14 +606,15 @@ class _ProfilePageState extends State<ProfilePage> {
     required String type,
     required String id,
   }) {
+    final theme = Theme.of(context);
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withValues(alpha: 0.1),
+            color: theme.colorScheme.shadow.withAlpha(26),
             spreadRadius: 1,
             blurRadius: 10,
             offset: const Offset(0, 2),
@@ -448,10 +627,9 @@ class _ProfilePageState extends State<ProfilePage> {
           const SizedBox(height: 16),
           Text(
             name,
-            style: const TextStyle(
-              fontSize: 24,
+            style: theme.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
+              color: theme.colorScheme.onSurface,
             ),
             textAlign: TextAlign.center,
           ),
@@ -459,15 +637,13 @@ class _ProfilePageState extends State<ProfilePage> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color:
-                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+              color: theme.colorScheme.primary.withAlpha(25),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
               type,
-              style: TextStyle(
-                fontSize: 14,
-                color: Theme.of(context).colorScheme.primary,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.primary,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -483,6 +659,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildInfoRow(IconData icon, String text) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
@@ -490,15 +667,14 @@ class _ProfilePageState extends State<ProfilePage> {
           Icon(
             icon,
             size: 22,
-            color: Colors.grey[600],
+            color: theme.colorScheme.onSurface.withAlpha(179),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               text,
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey[800],
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurface.withAlpha(179),
               ),
             ),
           ),
@@ -515,7 +691,7 @@ class _ProfilePageState extends State<ProfilePage> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withValues(alpha: 0.1),
+            color: Colors.grey.withOpacity(0.1),
             spreadRadius: 1,
             blurRadius: 10,
             offset: const Offset(0, 2),
@@ -526,13 +702,13 @@ class _ProfilePageState extends State<ProfilePage> {
         children: [
           _buildSettingItem(
             icon: Icons.lock_outline,
-            title: 'Change Password',
+            title: 'Đổi Mật Khẩu',
             onTap: _showChangePasswordDialog,
           ),
           const Divider(height: 1, indent: 56),
           _buildSettingItem(
             icon: Icons.notifications_outlined,
-            title: 'Notification Settings',
+            title: 'Cài Đặt Thông Báo',
             onTap: () {
               // Navigate to notification settings
             },
@@ -540,7 +716,7 @@ class _ProfilePageState extends State<ProfilePage> {
           const Divider(height: 1, indent: 56),
           _buildSettingItem(
             icon: Icons.help_outline,
-            title: 'Help & Support',
+            title: 'Trợ Giúp & Hỗ Trợ',
             onTap: () {
               // Navigate to help & support
             },
@@ -548,11 +724,10 @@ class _ProfilePageState extends State<ProfilePage> {
           const Divider(height: 1, indent: 56),
           _buildSettingItem(
             icon: Icons.logout,
-            title: 'Log Out',
+            title: 'Đăng Xuất',
             color: Colors.red,
             onTap: () {
               _handleLogout(context);
-              // Handle logout
             },
           ),
         ],

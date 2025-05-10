@@ -9,7 +9,10 @@ class NTVApiService {
   Future<List<TblHoSoUngVienModel>> getHoSoUngVienList() async {
     try {
       final response = await _dio.get(ApiEndpoints.hosoUngVien);
-      List<TblHoSoUngVienModel> hoSoUngVienList = (response.data as List)
+      if (response.data == null || response.data['data'] == null) {
+        throw Exception('Invalid API response format');
+      }
+      List<TblHoSoUngVienModel> hoSoUngVienList = (response.data['data'] as List)
           .map((json) => TblHoSoUngVienModel.fromJson(json))
           .toList();
       return hoSoUngVienList;

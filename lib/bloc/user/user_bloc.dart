@@ -83,8 +83,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       FetchUserByManv event, Emitter<UserState> emit) async {
     emit(const UserState.loadInProgress());
     try {
-      final user = await _userRepository.getUserByManv(event.manv);
-      emit(UserState.userLoaded(user));
+      final user = await _userRepository.getManvName();
+      // emit(UserState.userLoaded(user));
     } catch (e) {
       emit(UserState.failure(e.toString()));
     }

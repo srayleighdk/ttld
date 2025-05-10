@@ -178,8 +178,8 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
   List<NganhNgheKT> _nganhNghes = [];
   NganhNgheKT? nganhNghe;
 
-  List<NganhNgheBacHoc> _nganhNgheBacHocs = [];
-  NganhNgheBacHoc? nganhNgheBacHoc;
+  List<TrinhDoChuyenMon> _nganhNgheBacHocs = [];
+  TrinhDoChuyenMon? nganhNgheBacHoc;
 
   List<NganhNgheTD> _nganhNgheTDs = [];
   NganhNgheTD? nganhNgheTD;
@@ -689,7 +689,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
           _nganhNgheBacHocs = nganhNgheBacHocs;
         });
         if (_idBacHocController.text.isNotEmpty) {
-          NganhNgheBacHoc? _nganhNgheBacHoc = _nganhNgheBacHocs
+          TrinhDoChuyenMon? _nganhNgheBacHoc = _nganhNgheBacHocs
               .firstWhere((element) => element.id == _idBacHocController.text);
           setState(() {
             nganhNgheBacHoc = _nganhNgheBacHoc;
@@ -753,110 +753,177 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
-        title: const Text('Update NTV'),
+        title: Text(
+          'Cập nhật thông tin',
+          style: theme.textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: theme.colorScheme.onSurface,
+          ),
+        ),
+        centerTitle: true,
+        elevation: 2,
+        backgroundColor: theme.colorScheme.surface,
+        scrolledUnderElevation: 1.0,
+        iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
       ),
-      body: BlocListener<NTVBloc, NTVState>(
-        bloc: locator<NTVBloc>(),
-        listener: (context, state) {
-          if (state is NTVLoaded) {
-            Navigator.pop(context);
-          }
-          if (state is NTVError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
-          }
-          if (state is NTVUpdated) {
-            ToastUtils.showToastSuccess(
-              context,
-              message: 'Cập nhật thành công',
-              description: 'Test',
-            );
-            context.go('/ntv_home');
-          }
-        },
-        child: Column(
-          children: [
-            // Custom Progress Indicator
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 16),
-              color: Colors.grey[100],
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: List.generate(_steps.length, (index) {
-                  return _buildStepIndicator(index);
-                }),
-              ),
-            ),
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              theme.colorScheme.primary.withAlpha(25),
+              theme.colorScheme.surface,
+            ],
+          ),
+        ),
+        child: BlocListener<NTVBloc, NTVState>(
+          bloc: locator<NTVBloc>(),
+          listener: (context, state) {
+            if (state is NTVLoaded) {
+              Navigator.pop(context);
+            }
+            if (state is NTVError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.message)),
+              );
+            }
+            if (state is NTVUpdated) {
+              ToastUtils.showToastSuccess(
+                context,
+                message: 'Cập nhật thành công',
+                description: 'Test',
+              );
+              context.go('/ntv_home');
+            }
+          },
+          child: SafeArea(
+            child: Column(
+              children: [
+                // Progress Indicator
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.surface,
+                    boxShadow: [
+                      BoxShadow(
+                        color: theme.colorScheme.shadow.withAlpha(13),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: List.generate(_steps.length, (index) {
+                      return _buildStepIndicator(index);
+                    }),
+                  ),
+                ),
 
-            // Form Content
-            Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.all(16),
-                child: _buildCurrentStep(),
-              ),
-            ),
+                // Form Content
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(24),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.surface,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: theme.colorScheme.shadow.withAlpha(13),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      padding: const EdgeInsets.all(24),
+                      child: _buildCurrentStep(),
+                    ),
+                  ),
+                ),
 
-            // Bottom Navigation
-            _buildBottomNavigation(),
-          ],
+                // Bottom Navigation
+                _buildBottomNavigation(),
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
 
   Widget _buildStepIndicator(int index) {
+    final theme = Theme.of(context);
     bool isActive = index <= _currentStep;
     bool isCurrent = index == _currentStep;
 
     return Expanded(
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           // Step number circle
           Container(
-            width: 32,
-            height: 32,
+            width: 36,
+            height: 36,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: isCurrent
-                  ? Colors.blue
-                  : isActive
-                      ? Colors.green
-                      : Colors.grey[300],
+              gradient: isCurrent
+                  ? LinearGradient(
+                      colors: [
+                        theme.colorScheme.primary,
+                        theme.colorScheme.primary.withAlpha(204),
+                      ],
+                    )
+                  : null,
+              color: isActive && !isCurrent
+                  ? theme.colorScheme.primary.withAlpha(25)
+                  : theme.colorScheme.surfaceVariant,
+              boxShadow: isCurrent
+                  ? [
+                      BoxShadow(
+                        color: theme.colorScheme.primary.withAlpha(33),
+                        blurRadius: 12,
+                        offset: const Offset(0, 6),
+                      ),
+                    ]
+                  : null,
             ),
             child: Center(
               child: Text(
                 '${index + 1}',
-                style: TextStyle(
-                  color: isActive ? Colors.white : Colors.grey[600],
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: isCurrent
+                      ? theme.colorScheme.onPrimary
+                      : isActive
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
           ),
-          SizedBox(height: 4),
+          const SizedBox(height: 8),
           // Step title
           Text(
             _steps[index],
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: theme.textTheme.bodySmall?.copyWith(
               color: isCurrent
-                  ? Colors.blue
+                  ? theme.colorScheme.primary
                   : isActive
-                      ? Colors.black
-                      : Colors.grey[600],
-              fontSize: 12,
+                      ? theme.colorScheme.onSurface
+                      : theme.colorScheme.onSurfaceVariant,
               fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal,
             ),
           ),
-          // Progress line
-          if (index < _steps.length - 1)
-            Container(
-              height: 2,
-              color: isActive ? Colors.green : Colors.grey[300],
-            ),
         ],
       ),
     );
@@ -878,15 +945,16 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
   }
 
   Widget _buildBottomNavigation() {
+    final theme = Theme.of(context);
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.colorScheme.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black12,
-            blurRadius: 4,
-            offset: Offset(0, -2),
+            color: theme.colorScheme.shadow.withAlpha(13),
+            blurRadius: 10,
+            offset: const Offset(0, -4),
           ),
         ],
       ),
@@ -894,35 +962,30 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           if (_currentStep > 0)
-            ElevatedButton(
+            OutlinedButton.icon(
               onPressed: () {
                 setState(() {
                   _currentStep--;
                 });
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.grey[200],
-                foregroundColor: Colors.black,
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.arrow_back, size: 16),
-                  SizedBox(width: 8),
-                  Text('Quay lại'),
-                ],
+              icon: Icon(Icons.arrow_back, size: 18),
+              label: Text('Quay lại'),
+              style: OutlinedButton.styleFrom(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                side: BorderSide(color: theme.colorScheme.outline),
               ),
             )
           else
-            SizedBox(width: 100),
-          ElevatedButton(
+            const SizedBox(width: 120),
+          ElevatedButton.icon(
             onPressed: () {
-              // Validate current form
               final currentFormKey = _formKeys[_currentStep];
               if (currentFormKey?.currentState?.validate() ?? false) {
-                // Save form data
                 currentFormKey?.currentState?.save();
-
-                // Check if this is the last step
                 if (_currentStep < _steps.length - 1) {
                   setState(() {
                     _currentStep++;
@@ -931,27 +994,30 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                   _submitForm();
                 }
               } else {
-                // Show error message
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text('Vui lòng điền đầy đủ thông tin bắt buộc'),
-                    backgroundColor: Colors.red,
+                    backgroundColor: theme.colorScheme.error,
                   ),
                 );
               }
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
-              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            icon: Icon(
+              _currentStep == _steps.length - 1
+                  ? Icons.check
+                  : Icons.arrow_forward,
+              size: 18,
             ),
-            child: Row(
-              children: [
-                Text(_currentStep == _steps.length - 1
-                    ? 'Hoàn thành'
-                    : 'Tiếp tục'),
-                SizedBox(width: 8),
-                Icon(Icons.arrow_forward, size: 16),
-              ],
+            label: Text(
+              _currentStep == _steps.length - 1 ? 'Hoàn thành' : 'Tiếp tục',
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: theme.colorScheme.primary,
+              foregroundColor: theme.colorScheme.onPrimary,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
           ),
         ],
@@ -959,296 +1025,423 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
     );
   }
 
+  Widget _buildSectionHeader(ThemeData theme, String title) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: theme.colorScheme.shadow.withAlpha(26),
+            spreadRadius: 1,
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 4,
+            height: 24,
+            decoration: BoxDecoration(
+              color: theme.colorScheme.primary,
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Text(
+            title,
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: theme.colorScheme.onSurface,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFormSection(
+      ThemeData theme, String title, List<Widget> children) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _buildSectionHeader(theme, title),
+        const SizedBox(height: 16),
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.shadow.withAlpha(13),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: children,
+          ),
+        ),
+        const SizedBox(height: 24),
+      ],
+    );
+  }
+
   Widget buildStep1() {
+    final theme = Theme.of(context);
     return Form(
       key: _formKeys[0],
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(height: 10.0),
-          Text("Thông tin tài khoản"),
-          const SizedBox(height: 12.0),
-          CustomTextField.email(
-            controller: _emailController,
-            validator: 'email',
+          _buildFormSection(
+            theme,
+            'Thông tin tài khoản',
+            [
+              CustomTextField.email(
+                controller: _emailController,
+                validator: 'email',
+              ),
+              const SizedBox(height: 16),
+              CustomTextField(
+                labelText: 'Tên đăng nhập',
+                hintText: 'Tên đăng nhập',
+                controller: _usernameController,
+                validator: 'not_empty',
+              ),
+              const SizedBox(height: 16),
+              CustomTextField.password(
+                controller: _passwordController,
+                validator: 'not_empty',
+              ),
+            ],
           ),
-          const SizedBox(height: 12.0),
-          CustomTextField(
-            labelText: 'Tên đăng nhập',
-            hintText: 'Tên đăng nhập',
-            controller: _usernameController,
-            validator: 'not_empty',
+          _buildFormSection(
+            theme,
+            'Thông tin cá nhân',
+            [
+              CustomTextField(
+                labelText: 'Họ và tên',
+                hintText: 'Họ và tên',
+                controller: _hotenController,
+                validator: 'not_empty',
+              ),
+              const SizedBox(height: 16),
+              CustomPickDateTimeGrok(
+                hintText: 'Ngày sinh',
+                initialValue: _uvngaysinhController,
+                validator: (DateTime? value) {
+                  if (value == null) {
+                    return 'Ngày sinh không được để trống';
+                  }
+                  return null;
+                },
+                onChanged: (String? value) {
+                  setState(() {
+                    _uvngaysinhController = value;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              CustomPicker(
+                label: Text('Nguồn thu thập'),
+                items: _nguonThuThaps,
+                selectedItem: nguonThuThap,
+                onChanged: (NguonThuThap? value) {
+                  setState(() {
+                    _idNguonThuThap = value?.id;
+                    nguonThuThap = value;
+                  });
+                },
+                displayItemBuilder: (NguonThuThap? item) => item?.name ?? '',
+              ),
+            ],
           ),
-          const SizedBox(height: 12.0),
-          CustomTextField.password(
-            controller: _passwordController,
-            validator: 'not_empty',
+          _buildFormSection(
+            theme,
+            'Thông tin chi tiết',
+            [
+              Row(
+                children: [
+                  Expanded(
+                    child: CustomPickerMap(
+                      label: Text('Giới tính'),
+                      items: gioiTinhOptions,
+                      selectedItem: _uvGioitinh,
+                      onChanged: (gioiTinh) {
+                        setState(() {
+                          this._uvGioitinh = gioiTinh;
+                        });
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: CustomPickerMap(
+                      label: Text('Hôn nhân'),
+                      items: hoNhanOptions,
+                      selectedItem: _uvHonnhanId,
+                      onChanged: (hoNhan) {
+                        setState(() {
+                          this._uvHonnhanId = hoNhan;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              CustomTextField(
+                labelText: 'Số CCCD',
+                controller: _cmndController,
+                validator: 'not_empty',
+                hintText: 'Số CCCD',
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: CustomPickDateTimeGrok(
+                      initialValue: _uvNgaycap,
+                      onChanged: (value) {
+                        setState(() {
+                          _uvNgaycap = value;
+                        });
+                      },
+                      hintText: 'Ngày cấp',
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: CustomTextField(
+                      labelText: 'Nơi cấp',
+                      hintText: 'Nơi cấp',
+                      controller: _uvnoicapController,
+                      validator: 'not_empty',
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              CustomTextField(
+                labelText: 'Số điện thoại',
+                hintText: 'Số điện thoại',
+                controller: _dienthoaiController,
+                validator: 'not_empty',
+              ),
+            ],
           ),
-          const SizedBox(height: 12.0),
-          CustomTextField(
-            labelText: 'Họ và tên',
-            hintText: 'Họ và tên',
-            controller: _hotenController,
-            validator: 'not_empty',
+          _buildFormSection(
+            theme,
+            'Thông tin bổ sung',
+            [
+              CustomPicker(
+                label: Text('Dân Tộc'),
+                items: _danTocs,
+                selectedItem: danToc,
+                onChanged: (DanToc? value) {
+                  setState(() {
+                    _idDanToc = value?.id;
+                  });
+                },
+                displayItemBuilder: (DanToc? item) => item?.name ?? '',
+              ),
+              const SizedBox(height: 16),
+              CustomPicker(
+                label: Text('Tình trạng tàn tật'),
+                items: _tinhTrangTanTats,
+                selectedItem: tinhTrangTanTat,
+                onChanged: (TtTantat? value) {
+                  setState(() {
+                    _uvTinhtrangtantatId = value?.id;
+                  });
+                },
+                displayItemBuilder: (TtTantat? item) => item?.name ?? '',
+              ),
+              const SizedBox(height: 16),
+              CustomPicker(
+                label: Text('Đối tượng chính sách'),
+                items: _doiTuongChinhSachs,
+                selectedItem: doiTuongChinhSach,
+                onChanged: (DoiTuong? value) {
+                  setState(() {
+                    _uvDoiTuongChingSachId = value?.id;
+                  });
+                },
+                displayItemBuilder: (DoiTuong? item) => item?.displayName ?? '',
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: CustomTextField(
+                      labelText: 'Chiều cao (cm)',
+                      hintText: 'Chiều cao (cm)',
+                      controller: _uvchieucaoController,
+                      validator: 'not_empty',
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: CustomTextField(
+                      labelText: 'Cân nặng (kg)',
+                      hintText: 'Cân nặng (kg)',
+                      controller: _uvcannangController,
+                      validator: 'not_empty',
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
-          const SizedBox(height: 12.0),
-          CustomPickDateTimeGrok(
-            hintText: 'Ngày sinh',
-            initialValue: _uvngaysinhController,
-            validator: (DateTime? value) {
-              if (value == null) {
-                return 'Ngày sinh không được để trống';
-              }
-              return null;
-            },
-            onChanged: (String? value) {
-              print("Sending to backend: $value");
-              setState(() {
-                _uvngaysinhController = value;
-              });
-            },
+          _buildFormSection(
+            theme,
+            'Địa chỉ',
+            [
+              CascadeLocationPicker(
+                initialTinh: _idTinhController.text,
+                initialHuyen: _idHuyenController.text,
+                initialXa: _idXaController.text,
+                onTinhChanged: (tinh) {
+                  setState(() {
+                    _selectedTinh = tinh?.tentinh;
+                    _idTinhController.text = tinh?.matinh ?? '';
+                  });
+                },
+                onHuyenChanged: (huyen) {
+                  setState(() {
+                    _selectedHuyen = huyen?.tenhuyen;
+                    _idHuyenController.text = huyen?.mahuyen ?? '';
+                  });
+                },
+                onXaChanged: (xa) {
+                  setState(() {
+                    _selectedXa = xa?.tenxa;
+                    _idXaController.text = xa?.maxa ?? '';
+                  });
+                },
+                isNTD: false,
+                addressDetailController: _diachichitietController,
+              ),
+              const SizedBox(height: 16),
+              CustomPicker(
+                label: Text('Thành phố nơi làm việc'),
+                items: _tinhThanhs,
+                selectedItem: tinhThanh,
+                onChanged: (TinhThanhModel? value) {
+                  setState(() {
+                    _idThanhPho = value?.id;
+                  });
+                },
+                displayItemBuilder: (TinhThanhModel? item) =>
+                    item?.displayName ?? '',
+              ),
+            ],
           ),
-          const SizedBox(height: 12.0),
-          CustomPicker(
-            label: Text('Nguồn thu thập'),
-            items: _nguonThuThaps,
-            selectedItem: nguonThuThap,
-            onChanged: (NguonThuThap? value) {
-              setState(() {
-                _idNguonThuThap = value?.id;
-                nguonThuThap = value;
-              });
-            },
-            displayItemBuilder: (NguonThuThap? item) => item?.name ?? '',
+          _buildFormSection(
+            theme,
+            'Trình độ chuyên môn',
+            [
+              CustomPicker(
+                label: Text('Trình độ văn hóa'),
+                items: _trinhDoVanHoas,
+                selectedItem: trinhDoVanHoa,
+                onChanged: (TrinhDoVanHoa? value) {
+                  setState(() {
+                    _uvcmTrinhdoId = value?.id;
+                  });
+                },
+                displayItemBuilder: (TrinhDoVanHoa? item) => item?.name ?? '',
+              ),
+              const SizedBox(height: 16),
+              CustomPicker(
+                label: Text('Ngành nghề'),
+                items: _nganhNgheTDs,
+                selectedItem: nganhNgheTD,
+                onChanged: (NganhNgheTD? value) {
+                  setState(() {
+                    _uvnvNganhngheId = value?.id;
+                  });
+                },
+                displayItemBuilder: (NganhNgheTD? item) =>
+                    item?.displayName ?? '',
+              ),
+              const SizedBox(height: 16),
+              CustomPicker(
+                label: Text('Trình độ chuyên môn'),
+                items: _nganhNgheBacHocs,
+                selectedItem: nganhNgheBacHoc,
+                onChanged: (TrinhDoChuyenMon? value) {
+                  setState(() {
+                    _idBacHocController.text = value?.id.toString() ?? '';
+                  });
+                },
+                displayItemBuilder: (TrinhDoChuyenMon? item) =>
+                    item?.displayName ?? '',
+              ),
+              const SizedBox(height: 16),
+              CustomTextField.number(
+                labelText: 'Kinh nghiệm',
+                hintText: 'Kinh nghiệm (tháng)',
+                controller: _uvcmKinhnghiem,
+                validator: 'not_empty',
+              ),
+            ],
           ),
-          const SizedBox(height: 12.0),
-          CustomPickerMap(
-            label: Text('Giới tính'),
-            items: gioiTinhOptions,
-            selectedItem: _uvGioitinh,
-            onChanged: (gioiTinh) {
-              setState(() {
-                this._uvGioitinh = gioiTinh;
-              });
-            },
-          ),
-          const SizedBox(height: 12.0),
-          CustomPickerMap(
-            label: Text('Hôn nhân'),
-            items: hoNhanOptions,
-            selectedItem: _uvHonnhanId,
-            onChanged: (hoNhan) {
-              setState(() {
-                this._uvHonnhanId = hoNhan;
-              });
-            },
-          ),
-          const SizedBox(height: 12.0),
-          CustomTextField(
-            labelText: 'Số CCCD ',
-            controller: _cmndController,
-            validator: 'not_empty',
-            hintText: 'Số CCCD',
-          ),
-          const SizedBox(height: 12.0),
-          CustomPickDateTimeGrok(
-            initialValue: _uvNgaycap,
-            onChanged: (value) {
-              print("Sending to backend: $value");
-              setState(() {
-                _uvNgaycap = value;
-              });
-            },
-            labelText: 'Ngày cấp',
-            hintText: 'Ngày cấp',
-          ),
-          const SizedBox(height: 12.0),
-          CustomTextField(
-            labelText: 'Nơi cấp',
-            hintText: 'Nơi cấp',
-            controller: _uvnoicapController,
-            validator: 'not_empty',
-          ),
-          const SizedBox(height: 12.0),
-          CustomTextField(
-            labelText: 'Số điện thoại',
-            hintText: 'Số điện thoại',
-            controller: _dienthoaiController,
-            validator: 'not_empty',
-          ),
-          const SizedBox(height: 12.0),
-          CustomPicker(
-              label: Text('Dân Tộc'),
-              items: _danTocs,
-              selectedItem: danToc,
-              onChanged: (DanToc? value) {
-                setState(() {
-                  _idDanToc = value?.id;
-                });
-              },
-              displayItemBuilder: (DanToc? item) => item?.name ?? ''),
-          const SizedBox(height: 12.0),
-          CustomPicker(
-              label: Text('Tình trạng tàn tật'),
-              items: _tinhTrangTanTats,
-              selectedItem: tinhTrangTanTat,
-              onChanged: (TtTantat? value) {
-                setState(() {
-                  _uvTinhtrangtantatId = value?.id;
-                });
-              },
-              displayItemBuilder: (TtTantat? item) => item?.name ?? ''),
-          const SizedBox(height: 12.0),
-          CustomPicker(
-            label: Text('Đối tượng chính sách'),
-            items: _doiTuongChinhSachs,
-            selectedItem: doiTuongChinhSach,
-            onChanged: (DoiTuong? value) {
-              setState(() {
-                _uvDoiTuongChingSachId = value?.id;
-              });
-            },
-            displayItemBuilder: (DoiTuong? item) => item?.displayName ?? '',
-          ),
-          const SizedBox(height: 12.0),
-          CustomTextField(
-            labelText: 'Chiều cao(cm)',
-            hintText: 'Chiều cao(cm)',
-            controller: _uvchieucaoController,
-            validator: 'not_empty',
-          ),
-          const SizedBox(height: 12.0),
-          CustomTextField(
-            labelText: 'Cân năng(kg)',
-            hintText: 'Cân năng(kg)',
-            controller: _uvcannangController,
-            validator: 'not_empty',
-          ),
-          const SizedBox(height: 12.0),
-          CascadeLocationPicker(
-            initialTinh: _idTinhController.text,
-            initialHuyen: _idHuyenController.text,
-            initialXa: _idXaController.text,
-            onTinhChanged: (tinh) {
-              setState(() {
-                _selectedTinh = tinh?.tentinh;
-                _idTinhController.text = tinh?.matinh ?? '';
-              });
-            },
-            onHuyenChanged: (huyen) {
-              setState(() {
-                _selectedHuyen = huyen?.tenhuyen;
-                _idHuyenController.text = huyen?.mahuyen ?? '';
-              });
-            },
-            onXaChanged: (xa) {
-              setState(() {
-                _selectedXa = xa?.tenxa;
-                _idXaController.text = xa?.maxa ?? '';
-              });
-            },
-            isNTD: false,
-            addressDetailController: _diachichitietController,
-          ),
-          const SizedBox(height: 12.0),
-          CustomPicker(
-              label: Text('Thành phố nơi làm việc'),
-              items: _tinhThanhs,
-              selectedItem: tinhThanh,
-              onChanged: (TinhThanhModel? value) {
-                setState(() {
-                  _idThanhPho = value?.id;
-                });
-              },
-              displayItemBuilder: (TinhThanhModel? item) =>
-                  item?.displayName ?? ''),
-          const SizedBox(height: 12.0),
-          Text("Trình độ chuyên môn:"),
-          const SizedBox(height: 12.0),
-          CustomPicker(
-            label: Text('Trình độ văn hóa'),
-            items: _trinhDoVanHoas,
-            selectedItem: trinhDoVanHoa,
-            onChanged: (TrinhDoVanHoa? value) {
-              setState(() {
-                _uvcmTrinhdoId = value?.id;
-              });
-            },
-            displayItemBuilder: (TrinhDoVanHoa? item) => item?.name ?? '',
-          ),
-          const SizedBox(height: 12.0),
-          CustomPicker(
-            label: Text('Ngành nghề'),
-            items: _nganhNgheTDs,
-            selectedItem: nganhNgheTD,
-            onChanged: (NganhNgheTD? value) {
-              setState(() {
-                _uvnvNganhngheId = value?.id;
-              });
-            },
-            displayItemBuilder: (NganhNgheTD? item) => item?.displayName ?? '',
-          ),
-          const SizedBox(height: 12.0),
-          CustomPicker(
-            label: Text('Trình độ chyên môn'),
-            items: _nganhNgheBacHocs,
-            selectedItem: nganhNgheBacHoc,
-            onChanged: (NganhNgheBacHoc? value) {
-              setState(() {
-                _idBacHocController.text = value?.id.toString() ?? '';
-              });
-            },
-            displayItemBuilder: (NganhNgheBacHoc? item) =>
-                item?.displayName ?? '',
-          ),
-          const SizedBox(height: 12.0),
-          CustomTextField.number(
-            labelText: 'Kinh nghiệm',
-            hintText: 'Kinh nghiệm(tháng)',
-            controller: _uvcmKinhnghiem,
-            validator: 'not_empty',
-          ),
-          const SizedBox(height: 12.0),
-          CustomPicker(
-            label: Text('Trình độ ngoại ngữ'),
-            items: _trinhDoNgoaiNgus,
-            selectedItem: trinhDoNgoaiNgu,
-            onChanged: (TrinhDoNgoaiNgu? value) {
-              setState(() {
-                _uvcmTrinhdongoainguController.text =
-                    value?.id.toString() ?? '';
-              });
-            },
-            displayItemBuilder: (TrinhDoNgoaiNgu? item) =>
-                item?.displayName ?? '',
-          ),
-          const SizedBox(height: 12.0),
-          CustomPicker(
-            label: Text('Trình độ tin học'),
-            items: _trinhDoTinHocs,
-            selectedItem: trinhDoTinHoc,
-            onChanged: (TrinhDoTinHoc? value) {
-              setState(() {
-                _uvcmTrinhdotinhocController.text = value?.id.toString() ?? '';
-              });
-            },
-            displayItemBuilder: (TrinhDoTinHoc? item) =>
-                item?.displayName ?? '',
-          ),
-          const SizedBox(height: 12.0),
-          CustomTextField(
-            labelText: 'Bằng cấp khác',
-            hintText: 'Bằng cấp khác',
-            controller: _uvcmBangcapController,
-          ),
-          const SizedBox(height: 12.0),
-          CustomCheckbox(
-            label: 'Có Bảo Hiểm thất nghiệp',
-            value: _coBhtn ?? false,
-            onChanged: (bool? value) {
-              setState(() {
-                _coBhtn = value;
-              });
-            },
+          _buildFormSection(
+            theme,
+            'Kỹ năng',
+            [
+              CustomPicker(
+                label: Text('Trình độ ngoại ngữ'),
+                items: _trinhDoNgoaiNgus,
+                selectedItem: trinhDoNgoaiNgu,
+                onChanged: (TrinhDoNgoaiNgu? value) {
+                  setState(() {
+                    _uvcmTrinhdongoainguController.text =
+                        value?.id.toString() ?? '';
+                  });
+                },
+                displayItemBuilder: (TrinhDoNgoaiNgu? item) =>
+                    item?.displayName ?? '',
+              ),
+              const SizedBox(height: 16),
+              CustomPicker(
+                label: Text('Trình độ tin học'),
+                items: _trinhDoTinHocs,
+                selectedItem: trinhDoTinHoc,
+                onChanged: (TrinhDoTinHoc? value) {
+                  setState(() {
+                    _uvcmTrinhdotinhocController.text =
+                        value?.id.toString() ?? '';
+                  });
+                },
+                displayItemBuilder: (TrinhDoTinHoc? item) =>
+                    item?.displayName ?? '',
+              ),
+              const SizedBox(height: 16),
+              CustomTextField(
+                labelText: 'Bằng cấp khác',
+                hintText: 'Bằng cấp khác',
+                controller: _uvcmBangcapController,
+              ),
+              const SizedBox(height: 16),
+              CustomCheckbox(
+                label: 'Có Bảo Hiểm thất nghiệp',
+                value: _coBhtn ?? false,
+                onChanged: (bool? value) {
+                  setState(() {
+                    _coBhtn = value;
+                  });
+                },
+              ),
+            ],
           ),
         ],
       ),
@@ -1256,203 +1449,352 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
   }
 
   Widget buildStep2() {
+    final theme = Theme.of(context);
     return Form(
-        key: _formKeys[1],
-        child: Column(children: [
-          const SizedBox(height: 12.0),
-          Text('Cho phép hiện thị thông tin sau'),
-          const SizedBox(height: 12.0),
-          CustomCheckbox(
-            label: 'Email',
-            value: _uvhtEmail ?? false,
-            onChanged: (bool? value) {
-              setState(() {
-                _uvhtEmail = value;
-              });
-            },
-          ),
-          CustomCheckbox(
-            label: 'Địa chỉ',
-            value: _uvhtAddress ?? false,
-            onChanged: (bool? value) {
-              setState(() {
-                _uvhtAddress = value;
-              });
-            },
-          ),
-          CustomCheckbox(
-            label: 'Số điện thoại',
-            value: _uvhtTelephone ?? false,
-            onChanged: (bool? value) {
-              setState(() {
-                _uvhtTelephone = value;
-              });
-            },
-          ),
-          CustomCheckbox(
-            label: 'Đăng ký nhận bản tin',
-            value: _newletterSubscription ?? false,
-            onChanged: (bool? value) {
-              setState(() {
-                _newletterSubscription = value;
-              });
-            },
-          ),
-          CustomCheckbox(
-            label: 'Đăng ký nhận bản tin',
-            value: _jobsletterSubscription ?? false,
-            onChanged: (bool? value) {
-              setState(() {
-                _jobsletterSubscription = value;
-              });
-            },
-          ),
-          const SizedBox(height: 12.0),
-          Row(
-            children: [
-              ElevatedButton(
-                onPressed: _pickFile,
-                child: Text('Chọn File CV'),
+      key: _formKeys[1],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _buildFormSection(
+            theme,
+            'Hiển thị thông tin',
+            [
+              CustomCheckbox(
+                label: 'Email',
+                value: _uvhtEmail ?? false,
+                onChanged: (bool? value) {
+                  setState(() {
+                    _uvhtEmail = value;
+                  });
+                },
               ),
-              SizedBox(width: 10),
-              Text(_selectedFile != null
-                  ? _selectedFile!.path.split('/').last
-                  : 'No file selected'),
+              const SizedBox(height: 12),
+              CustomCheckbox(
+                label: 'Địa chỉ',
+                value: _uvhtAddress ?? false,
+                onChanged: (bool? value) {
+                  setState(() {
+                    _uvhtAddress = value;
+                  });
+                },
+              ),
+              const SizedBox(height: 12),
+              CustomCheckbox(
+                label: 'Số điện thoại',
+                value: _uvhtTelephone ?? false,
+                onChanged: (bool? value) {
+                  setState(() {
+                    _uvhtTelephone = value;
+                  });
+                },
+              ),
             ],
           ),
-          SizedBox(height: 20),
-          // Image picker with preview
-          Row(
-            children: [
-              ElevatedButton(
-                onPressed: _pickImage,
-                child: Text('Chọn Ảnh Avatar'),
+          _buildFormSection(
+            theme,
+            'Đăng ký nhận thông báo',
+            [
+              CustomCheckbox(
+                label: 'Đăng ký nhận bản tin',
+                value: _newletterSubscription ?? false,
+                onChanged: (bool? value) {
+                  setState(() {
+                    _newletterSubscription = value;
+                  });
+                },
               ),
-              SizedBox(width: 10),
-              _selectedImage != null
-                  ? Image.file(
-                      _selectedImage!,
-                      width: 100,
-                      height: 100,
-                      fit: BoxFit.cover,
-                    )
-                  : Text('No image selected'),
+              const SizedBox(height: 12),
+              CustomCheckbox(
+                label: 'Đăng ký nhận thông báo việc làm',
+                value: _jobsletterSubscription ?? false,
+                onChanged: (bool? value) {
+                  setState(() {
+                    _jobsletterSubscription = value;
+                  });
+                },
+              ),
             ],
           ),
-        ]));
+          _buildFormSection(
+            theme,
+            'Tài liệu đính kèm',
+            [
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surface,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                      color: theme.colorScheme.outline.withOpacity(0.5)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'CV của bạn',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            _selectedFile != null
+                                ? _selectedFile!.path.split('/').last
+                                : 'Chưa chọn file',
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        ElevatedButton.icon(
+                          onPressed: _pickFile,
+                          icon: Icon(Icons.upload_file, size: 18),
+                          label: Text('Chọn File CV'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: theme.colorScheme.primary,
+                            foregroundColor: theme.colorScheme.onPrimary,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surface,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                      color: theme.colorScheme.outline.withOpacity(0.5)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Ảnh đại diện',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        if (_selectedImage != null)
+                          Container(
+                            width: 100,
+                            height: 100,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              image: DecorationImage(
+                                image: FileImage(_selectedImage!),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          )
+                        else
+                          Container(
+                            width: 100,
+                            height: 100,
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.surfaceVariant,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Icon(
+                              Icons.person_outline,
+                              size: 40,
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ElevatedButton.icon(
+                                onPressed: _pickImage,
+                                icon: Icon(Icons.photo_library, size: 18),
+                                label: Text('Chọn Ảnh'),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: theme.colorScheme.primary,
+                                  foregroundColor: theme.colorScheme.onPrimary,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 12),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                              ),
+                              if (_selectedImage != null) ...[
+                                const SizedBox(height: 8),
+                                Text(
+                                  _selectedImage!.path.split('/').last,
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: theme.colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   Widget buildStep3() {
+    final theme = Theme.of(context);
     return Form(
       key: _formKeys[2],
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(height: 12.0),
-          CustomTextField(
-            labelText: 'Việc làm mong muốn',
-            hintText: 'Việc làm mong muốn',
-            controller: _cvMongMuonController,
-            validator: 'not_empty',
+          _buildFormSection(
+            theme,
+            'Việc làm mong muốn',
+            [
+              CustomTextField(
+                labelText: 'Việc làm mong muốn',
+                hintText: 'Việc làm mong muốn',
+                controller: _cvMongMuonController,
+                validator: 'not_empty',
+              ),
+              const SizedBox(height: 16),
+              CustomPicker(
+                label: Text('Chức vụ mong muốn'),
+                items: _chucDanhs,
+                selectedItem: chucDanh,
+                onChanged: (ChucDanhModel? value) {
+                  setState(() {
+                    chucDanh = value;
+                    _uvnvVitrimongmuonId = value?.id;
+                  });
+                },
+                displayItemBuilder: (ChucDanhModel? item) =>
+                    item?.displayName ?? '',
+              ),
+            ],
           ),
-          const SizedBox(height: 12.0),
-          CustomPicker(
-            label: Text('Chức vụ mong muốn'),
-            items: _chucDanhs,
-            selectedItem: chucDanh,
-            onChanged: (ChucDanhModel? value) {
-              setState(() {
-                chucDanh = value;
-                _uvnvVitrimongmuonId = value?.id;
-              });
-            },
-            displayItemBuilder: (ChucDanhModel? item) =>
-                item?.displayName ?? '',
+          _buildFormSection(
+            theme,
+            'Thông tin lương',
+            [
+              CustomPicker(
+                label: Text('Mức lương mong muốn'),
+                items: _mucluongs,
+                selectedItem: mucLuong,
+                onChanged: (MucLuongMM? value) {
+                  setState(() {
+                    _idMucluong = value?.id;
+                    mucLuong = value;
+                  });
+                },
+                displayItemBuilder: (MucLuongMM? item) =>
+                    item?.displayName ?? '',
+              ),
+              const SizedBox(height: 16),
+              CustomTextField.number(
+                allowDecimals: true,
+                hintText: 'Lương khởi điểm',
+                controller: _uvnvTienluong,
+                validator: 'not_empty',
+                labelText: 'Lương khởi điểm',
+              ),
+            ],
           ),
-          const SizedBox(height: 12.0),
-          CustomPicker(
-            label: Text('Mức lương mong muốn'),
-            items: _mucluongs,
-            selectedItem: mucLuong,
-            onChanged: (MucLuongMM? value) {
-              setState(() {
-                _idMucluong = value?.id;
-                mucLuong = value;
-              });
-            },
-            displayItemBuilder: (MucLuongMM? item) => item?.displayName ?? '',
+          _buildFormSection(
+            theme,
+            'Thời gian và hình thức làm việc',
+            [
+              CustomPicker(
+                label: Text('Thời gian làm việc mong muốn'),
+                items: _thoigianlamviecs,
+                selectedItem: thoigianlamviec,
+                onChanged: (ThoiGianLamViec? value) {
+                  setState(() {
+                    _uvnvThoigianId = value?.id;
+                    thoigianlamviec = value;
+                  });
+                },
+                displayItemBuilder: (ThoiGianLamViec? item) =>
+                    item?.displayName ?? '',
+              ),
+              const SizedBox(height: 16),
+              CustomPicker(
+                label: Text('Hình thức công ty mong muốn'),
+                items: _hinhthucdoanhnghieps,
+                selectedItem: hinhthucdoanhnghiep,
+                onChanged: (HinhThucDoanhNghiep? value) {
+                  setState(() {
+                    _uvnvHinhthuccongtyId = value?.id;
+                    hinhthucdoanhnghiep = value;
+                  });
+                },
+                displayItemBuilder: (HinhThucDoanhNghiep? item) =>
+                    item?.name ?? '',
+              ),
+              const SizedBox(height: 16),
+              CustomPicker(
+                label: Text('Thành phố mong muốn'),
+                items: _tinhThanhs,
+                selectedItem: tinhThanhmm,
+                onChanged: (TinhThanhModel? value) {
+                  setState(() {
+                    _uvnvNoilamviecController.text = value?.id.toString() ?? '';
+                    tinhThanhmm = value;
+                  });
+                },
+                displayItemBuilder: (TinhThanhModel? item) =>
+                    item?.displayName ?? '',
+              ),
+            ],
           ),
-          const SizedBox(height: 12.0),
-          CustomTextField.number(
-              allowDecimals: true,
-              hintText: 'Lương khởi điểm',
-              controller: _uvnvTienluong,
-              validator: 'not_empty',
-              labelText: 'Lương khởi điểm'),
-          const SizedBox(height: 12.0),
-          CustomPicker(
-            label: Text('Thời gian làm việc mong muốn'),
-            items: _thoigianlamviecs,
-            selectedItem: thoigianlamviec,
-            onChanged: (ThoiGianLamViec? value) {
-              setState(() {
-                _uvnvThoigianId = value?.id;
-                thoigianlamviec = value;
-              });
-            },
-            displayItemBuilder: (ThoiGianLamViec? item) =>
-                item?.displayName ?? '',
-          ),
-          const SizedBox(height: 12.0),
-          CustomPicker(
-            label: Text('Hình thức công ty mong muốn'),
-            items: _hinhthucdoanhnghieps,
-            selectedItem: hinhthucdoanhnghiep,
-            onChanged: (HinhThucDoanhNghiep? value) {
-              setState(() {
-                _uvnvHinhthuccongtyId = value?.id;
-                hinhthucdoanhnghiep = value;
-              });
-            },
-            displayItemBuilder: (HinhThucDoanhNghiep? item) => item?.name ?? '',
-          ),
-          const SizedBox(height: 12.0),
-          CustomPicker(
-            label: Text('Thành phố mong muốn'),
-            items: _tinhThanhs,
-            selectedItem: tinhThanhmm,
-            onChanged: (TinhThanhModel? value) {
-              setState(() {
-                _uvnvNoilamviecController.text = value?.id.toString() ?? '';
-                tinhThanhmm = value;
-              });
-            },
-            displayItemBuilder: (TinhThanhModel? item) =>
-                item?.displayName ?? '',
-          ),
-          const SizedBox(height: 12.0),
-          CustomTextField.textArea(
-            labelText: 'Công việc đã làm',
-            hintText: 'Công việc đã làm',
-            minLines: 3,
-            maxLines: 5,
-            controller: _uvcmCongviechientaiController,
-            validator: 'not_empty',
-          ),
-          const SizedBox(height: 12.0),
-          CustomTextField.textArea(
-            labelText: 'Kỹ năng',
-            hintText: 'Kỹ năng',
-            minLines: 3,
-            maxLines: 5,
-            controller: _uvcmKynangController,
-          ),
-          const SizedBox(height: 12.0),
-          CustomTextField.textArea(
-            labelText: 'Ghi chú',
-            hintText: 'Ghi chú',
-            minLines: 3,
-            maxLines: 5,
-            controller: _uvGhichuController,
+          _buildFormSection(
+            theme,
+            'Kinh nghiệm và kỹ năng',
+            [
+              CustomTextField.textArea(
+                labelText: 'Công việc đã làm',
+                hintText: 'Công việc đã làm',
+                minLines: 3,
+                maxLines: 5,
+                controller: _uvcmCongviechientaiController,
+                validator: 'not_empty',
+              ),
+              const SizedBox(height: 16),
+              CustomTextField.textArea(
+                labelText: 'Kỹ năng',
+                hintText: 'Kỹ năng',
+                minLines: 3,
+                maxLines: 5,
+                controller: _uvcmKynangController,
+              ),
+              const SizedBox(height: 16),
+              CustomTextField.textArea(
+                labelText: 'Ghi chú',
+                hintText: 'Ghi chú',
+                minLines: 3,
+                maxLines: 5,
+                controller: _uvGhichuController,
+              ),
+            ],
           ),
         ],
       ),
@@ -1641,39 +1983,39 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
         print("Form validation failed");
       }
     }
+  }
 
-    @override
-    void dispose() {
-      _usernameController.dispose();
-      _passwordController.dispose();
-      _hotenController.dispose();
-      _emailController.dispose();
-      _maHoSoController.dispose();
-      _cvMongMuonController.dispose();
-      _documentPathController.dispose();
-      _imagePathController.dispose();
-      _diachichitietController.dispose();
-      _dienthoaiController.dispose();
-      _cmndController.dispose();
-      _uvnoicapController.dispose();
-      _uvcmCongviechientaiController.dispose();
-      _uvnvNoilamviecController.dispose();
-      _uvGhichuController.dispose();
-      _uvcmBangcapController.dispose();
-      _uvcmKynangController.dispose();
-      _uvcmTrinhdongoainguController.dispose();
-      _uvcmTrinhdotinhocController.dispose();
-      _uvIdController.dispose();
-      _soNhaDuongController.dispose();
-      _idTinhController.dispose();
-      _idHuyenController.dispose();
-      _idXaController.dispose();
-      _fileCVController.dispose();
-      _idBacHocController.dispose();
-      _diachilienheController.dispose();
-      _tinhThanhSubscription?.cancel();
-      _tinhThanhSubscription = null;
-      super.dispose();
-    }
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    _hotenController.dispose();
+    _emailController.dispose();
+    _maHoSoController.dispose();
+    _cvMongMuonController.dispose();
+    _documentPathController.dispose();
+    _imagePathController.dispose();
+    _diachichitietController.dispose();
+    _dienthoaiController.dispose();
+    _cmndController.dispose();
+    _uvnoicapController.dispose();
+    _uvcmCongviechientaiController.dispose();
+    _uvnvNoilamviecController.dispose();
+    _uvGhichuController.dispose();
+    _uvcmBangcapController.dispose();
+    _uvcmKynangController.dispose();
+    _uvcmTrinhdongoainguController.dispose();
+    _uvcmTrinhdotinhocController.dispose();
+    _uvIdController.dispose();
+    _soNhaDuongController.dispose();
+    _idTinhController.dispose();
+    _idHuyenController.dispose();
+    _idXaController.dispose();
+    _fileCVController.dispose();
+    _idBacHocController.dispose();
+    _diachilienheController.dispose();
+    _tinhThanhSubscription?.cancel();
+    _tinhThanhSubscription = null;
+    super.dispose();
   }
 }

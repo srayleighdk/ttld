@@ -3,8 +3,10 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ttld/bloc/biendong/biendong_bloc.dart';
 import 'package:ttld/bloc/chuc_danh/chuc_danh_bloc.dart';
+import 'package:ttld/bloc/hinh_thuc_lam_viec/hinh_thuc_lam_viec_bloc.dart';
 import 'package:ttld/bloc/hinh_thuc_tuyen_dung/hinh_thuc_tuyen_dung_bloc.dart';
 import 'package:ttld/bloc/kinh_nghiem_lam_viec/kinh_nghiem_lam_viec_bloc.dart';
+import 'package:ttld/bloc/ky_nang_mem/ky_nang_mem_bloc.dart';
 import 'package:ttld/bloc/loai_hinh/loai_hinh_bloc.dart';
 import 'package:ttld/bloc/loai_hop_dong_lao_dong/loai_hop_dong_lao_dong_bloc.dart';
 import 'package:ttld/bloc/muc_dich_lam_viec/muc_dich_lam_viec_bloc.dart';
@@ -20,6 +22,7 @@ import 'package:ttld/blocs/user_role_bloc/user_role_bloc.dart';
 import 'package:ttld/core/services/dan_toc_api_service.dart';
 import 'package:ttld/core/services/hinh_thuc_dao_tao_api_service.dart';
 import 'package:ttld/core/services/hinh_thuc_dia_diem_api_service.dart';
+import 'package:ttld/core/services/hinh_thuc_lam_viec_api_service.dart';
 import 'package:ttld/core/services/hinh_thuc_loai_hinh_api_service.dart';
 import 'package:ttld/core/services/hinh_thuc_tuyen_dung_api_service.dart';
 import 'package:ttld/core/services/loai_hinh_api_service.dart';
@@ -58,7 +61,6 @@ import 'package:ttld/core/services/tinh_trang_hd_api_service.dart';
 import 'package:ttld/core/services/tinh_trangvl_api_service.dart';
 import 'package:ttld/core/services/trinh_do_hoc_van_api_service.dart';
 import 'package:ttld/core/services/trinh_do_ngoai_ngu_api_service.dart';
-import 'package:ttld/core/services/kinh_nghiem_lam_viec_api_service.dart';
 import 'package:ttld/core/services/trinh_do_tin_hoc_api_service.dart';
 import 'package:ttld/core/services/trinh_do_van_hoa_api_service.dart';
 import 'package:ttld/core/services/tt_tantat_api_service.dart';
@@ -84,11 +86,13 @@ import 'package:ttld/repositories/dan_toc/dan_toc_repository.dart';
 import 'package:ttld/repositories/do_tuoi/do_tuoi_repository.dart';
 import 'package:ttld/repositories/hinh_thuc_dao_tao/hinh_thuc_dao_tao_repository.dart';
 import 'package:ttld/repositories/hinh_thuc_dia_diem/hinh_thuc_dia_diem_repository.dart';
+import 'package:ttld/repositories/hinh_thuc_lam_viec_repository.dart';
 import 'package:ttld/repositories/hinh_thuc_loai_hinh/hinh_thuc_loai_hinh_repository.dart';
 import 'package:ttld/repositories/hinh_thuc_tuyen_dung_repository.dart';
 import 'package:ttld/repositories/hinhthuc_doanhnghiep/hinhthuc_doanhnghiep_repository.dart';
 import 'package:ttld/repositories/huyen/huyen_repository.dart';
 import 'package:ttld/repositories/kinh_nghiem_lam_viec_repository.dart';
+import 'package:ttld/repositories/ky_nang_mem_repository.dart';
 import 'package:ttld/repositories/loai_hinh/loai_hinh_repository.dart';
 import 'package:ttld/repositories/loai_hop_dong_lao_dong_repository.dart';
 import 'package:ttld/repositories/loai_vl/loai_vl_repository.dart';
@@ -126,10 +130,17 @@ import 'package:ttld/repositories/user/user_repository.dart';
 import 'package:ttld/repositories/user_role_repository.dart';
 import 'package:ttld/repositories/xa/xa_repository.dart';
 import 'package:ttld/bloc/kcn/kcn_cubit.dart';
+import 'package:ttld/services/api/ky_nang_mem_api_service.dart';
 import 'package:ttld/services/biendong_service.dart';
 import 'package:ttld/services/tuyendung_service.dart';
 import 'package:ttld/services/user_api_service.dart';
 import 'package:ttld/services/user_role_service.dart';
+import 'package:ttld/services/chapnoi_api_service.dart';
+import 'package:ttld/repositories/chapnoi_repository.dart';
+import 'package:ttld/bloc/chapnoi/chapnoi_bloc.dart';
+import 'package:ttld/repositories/kieuchapnoi_repository.dart';
+import 'package:ttld/bloc/kieuchapnoi/kieuchapnoi_cubit.dart';
+import 'package:ttld/core/services/kinh_nghiem_lam_viec_api_service.dart';
 
 final locator = GetIt.instance;
 
@@ -521,4 +532,34 @@ Future<void> setupLocator() async {
       () => UserRoleRepository(locator<UserRoleService>()));
   locator
       .registerLazySingleton(() => UserRoleBloc(locator<UserRoleRepository>()));
+
+  // Ky Nang Mem
+  locator.registerLazySingleton<KyNangMemApiService>(
+      () => KyNangMemApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<KyNangMemRepository>(
+      () => KyNangMemRepository(locator<KyNangMemApiService>()));
+  locator.registerLazySingleton(
+      () => KyNangMemBloc(locator<KyNangMemRepository>()));
+
+  // Hinh Thuc Lam Viec
+  locator.registerLazySingleton<HinhThucLamViecApiService>(
+      () => HinhThucLamViecApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<HinhThucLamViecRepository>(
+      () => HinhThucLamViecRepository(locator<HinhThucLamViecApiService>()));
+  locator.registerLazySingleton(
+      () => HinhThucLamViecBloc(locator<HinhThucLamViecRepository>()));
+
+  // ChapNoi dependencies
+  locator.registerLazySingleton<ChapNoiApiService>(
+      () => ChapNoiApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<ChapNoiRepository>(
+      () => ChapNoiRepository(locator<ChapNoiApiService>()));
+  locator.registerLazySingleton(
+      () => ChapNoiBloc(locator<ChapNoiRepository>()));
+
+  // KieuChapNoi
+  locator.registerLazySingleton<KieuChapNoiRepository>(
+      () => KieuChapNoiRepository(locator<ApiClient>()));
+  locator.registerFactory(
+      () => KieuChapNoiCubit(locator<KieuChapNoiRepository>()));
 }

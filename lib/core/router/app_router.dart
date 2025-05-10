@@ -6,6 +6,7 @@ import 'package:ttld/features/auth/bloc/auth_state.dart';
 import 'package:ttld/features/ds-ld/repositories/ld_repository.dart';
 import 'package:ttld/models/tblHoSoUngVien/tblHoSoUngVien_model.dart';
 import 'package:ttld/models/tblNhaTuyenDung/tblNhaTuyenDung_model.dart';
+import 'package:ttld/models/ntd_tuyendung/ntd_tuyendung_model.dart';
 import 'package:ttld/pages/baocaohoatdong/baocaohoatdong_page.dart';
 import 'package:ttld/pages/danhmuc/danhmuc_page.dart';
 import 'package:ttld/pages/doisoatmau/doisoatmau_page.dart';
@@ -20,6 +21,9 @@ import 'package:ttld/pages/home/ntd/quan_ly_nhan_vien/create_nhan_vien.dart';
 import 'package:ttld/pages/home/ntd/quan_ly_nhan_vien/quan_ly_nhan_vien.dart';
 import 'package:ttld/pages/home/ntd/quan_ly_tuyen_dung/quan_ly_tuyen_dung.dart';
 import 'package:ttld/pages/home/ntd/update_ntd/update_ntd_page.dart';
+import 'package:ttld/pages/home/ntv/dang_ky_hoc_nghe_page.dart';
+import 'package:ttld/pages/home/ntv/dang_ky_lam_viec_page.dart';
+import 'package:ttld/pages/home/ntv/dang_ky_tu_van_viec_lam_page.dart';
 import 'package:ttld/pages/home/ntv/ntv_home.dart';
 import 'package:ttld/pages/home/ntv/update_ntv/update_ntv_page.dart';
 import 'package:ttld/pages/hosochapnoi/hosochapnoi_page.dart';
@@ -211,6 +215,28 @@ class AppRouter {
                 hoSoUngVien: state.extra as TblHoSoUngVienModel?,
               ),
             ),
+            GoRoute(
+              path: '/ho-so-chap-noi',
+              builder: (context, state) {
+                final extra = state.extra as Map<String, dynamic>?;
+                return HoSoChapNoiPage(
+                  id: extra?['id'] as String?,
+                  uvUsername: extra?['uvUsername'] as String?,
+                );
+              },
+            ),
+            GoRoute(
+              path: '/dang-ky-lam-viec',
+              builder: (context, state) => const DangKyLamViecPage(),
+            ),
+            GoRoute(
+              path: '/dang-ky-tu-van-viec-lam',
+              builder: (context, state) => const DangKyTuVanViecLamPage(),
+            ),
+            GoRoute(
+              path: '/dang-ky-hoc-nghe',
+              builder: (context, state) => const DangKyHocNghePage(),
+            ),
           ]),
 
       GoRoute(
@@ -229,15 +255,30 @@ class AppRouter {
             ),
           ),
           GoRoute(
+            path: '/ho-so-chap-noi',
+            builder: (context, state) {
+              final extra = state.extra as Map<String, dynamic>?;
+              return HoSoChapNoiPage(
+                id: extra?['id'] as String?,
+                ntdUsername: extra?['ntdUsername'] as String?,
+              );
+            },
+          ),
+          GoRoute(
               path: '/m01tt11',
               builder: (context, state) => M01TT11Page(
                     ntd: state.extra as Ntd?,
                   )),
           GoRoute(
               path: '/create_tuyen_dung',
-              builder: (context, state) => CreateTuyenDungPage(
-                    ntd: state.extra as Ntd?,
-                  )),
+              builder: (context, state) {
+                final extra = state.extra as Map<String, dynamic>?;
+                return CreateTuyenDungPage(
+                  ntd: extra?['ntd'] as Ntd?,
+                  tuyenDung: extra?['tuyenDung'] as NTDTuyenDung?,
+                  isEdit: extra?['isEdit'] as bool? ?? false,
+                );
+              }),
           GoRoute(
             path: '/quan-ly-tuyen-dung',
             builder: (context, state) => QuanLyTuyenDungPage(

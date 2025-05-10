@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ttld/bloc/m03pli/m03pli_event.dart';
 import 'package:ttld/bloc/m03pli/m03pli_state.dart';
-import 'package:ttld/models/m03pli_model.dart';
 import 'package:ttld/repositories/m03pli/m03pli_repository.dart';
 
 class M03PLIBloc extends Bloc<M03PLIEvent, M03PLIState> {

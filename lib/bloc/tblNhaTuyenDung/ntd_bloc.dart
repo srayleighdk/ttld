@@ -6,6 +6,7 @@ import 'package:ttld/repositories/tblNhaTuyenDung/ntd_repository.dart';
 part 'ntd_event.dart';
 part 'ntd_state.dart';
 
+
 class NTDBloc extends Bloc<NTDEvent, NTDState> {
   final NTDRepository _ntdRepository;
 
@@ -13,7 +14,14 @@ class NTDBloc extends Bloc<NTDEvent, NTDState> {
     on<NTDFetchList>((event, emit) async {
       emit(NTDLoading());
       try {
-        final ntdList = await _ntdRepository.getNtdList();
+        final ntdList = await _ntdRepository.getNtdList(
+          limit: event.limit,
+          page: event.page,
+          ntdLoai: event.ntdLoai,
+          idStatus: event.idStatus,
+          search: event.search,
+          idUv: event.idUv,
+        );
         emit(NTDLoaded(ntdList));
       } catch (e) {
         emit(NTDError('Failed to fetch NTD list: $e'));

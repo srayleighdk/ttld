@@ -34,3 +34,10 @@ final Map<int, String> loaiBaoHiemOptions = {
   1: 'Không tham gia',
   2: 'Tự nguyện',
 };
+
+final Map<int, String> mucDoOptions = {0: 'Tốt', 1: 'Khá', 2: 'Trung bình'};
+
+final Map<int, String> ketQuangOptions = {
+  0: 'Thất bại',
+  1: 'Thành công',
+};

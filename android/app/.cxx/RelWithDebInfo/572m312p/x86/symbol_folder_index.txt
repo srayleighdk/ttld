@@ -1,0 +1,1 @@
+/home/kali/Documents/ttld/build/app/intermediates/cxx/RelWithDebInfo/572m312p/obj/x86

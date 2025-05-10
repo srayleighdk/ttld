@@ -16,8 +16,9 @@ class ApiClient {
       : dio = Dio(
           BaseOptions(
             baseUrl: getEnv('API_BASE_URL'),
-            connectTimeout: const Duration(seconds: 5),
-            receiveTimeout: const Duration(seconds: 5),
+            connectTimeout: const Duration(seconds: 30),
+            receiveTimeout: const Duration(seconds: 30),
+            sendTimeout: const Duration(seconds: 30),
             headers: {
               'Content-Type': 'application/json',
               'Accept': 'application/json',
@@ -30,7 +31,7 @@ class ApiClient {
           // final token = await getToken();
           final token = await getIt<AuthRepository>().getTokenFromStorage();
           options.headers['Authorization'] = 'Bearer $token';
-                  return handler.next(options);
+          return handler.next(options);
         },
         onResponse: (response, handler) {
           // Handle success response (if needed)
@@ -96,9 +97,9 @@ class ApiClient {
   }
 
   // Example PUT request
-  Future<Response> put(String path, {dynamic data}) async {
+  Future<Response> put(String path, {dynamic data, Options? options}) async {
     try {
-      final response = await dio.put(path, data: data);
+      final response = await dio.put(path, data: data, options: options);
       return response;
     } on DioException catch (e) {
       // Handle Dio errors

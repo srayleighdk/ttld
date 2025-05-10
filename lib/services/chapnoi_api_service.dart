@@ -1,10 +1,7 @@
 import 'package:dio/dio.dart';
-// import 'package:flutter_dotenv/flutter_dotenv.dart'; // Removed
-// import 'package:shared_preferences/shared_preferences.dart'; // Removed
-import '../models/chapnoi/chapnoi_model.dart';
-import '../models/api_response_list.dart'; // Assuming you have a generic list response model
-import '../models/api_response_object.dart'; // Assuming you have a generic object response model
-import '../helppers/ny_logger.dart'; // Assuming NyLogger is used for logging errors
+import 'package:ttld/models/chapnoi/chapnoi_model.dart';
+import 'package:ttld/models/api_response_list.dart';
+import 'package:ttld/models/api_response_object.dart';
 
 class ChapNoiApiService {
   final Dio _dio;
@@ -15,91 +12,96 @@ class ChapNoiApiService {
   // Removed _setAuthorizationHeader method
 
   Future<ApiResponseList<ChapNoiModel>> getChapNoiList({
-    required int limit,
-    required int page,
+    int? limit,
+    int? page,
     int? status,
     String? idTuyenDung,
     String? idDoanhNghiep,
+    String? idUv,
   }) async {
-    await _setAuthorizationHeader();
-    final url = '$_baseUrl/api/nghiep-vu/chapnoi';
     try {
-      final queryParameters = <String, dynamic>{
-        'limit': limit,
-        'page': page,
-      };
-      if (status != null) queryParameters['status'] = status;
-      if (idTuyenDung != null) queryParameters['idTuyenDung'] = idTuyenDung;
-      if (idDoanhNghiep != null) queryParameters['idDoanhNghiep'] = idDoanhNghiep;
+      final queryParams = <String, dynamic>{};
+      if (limit != null) queryParams['limit'] = limit.toString();
+      if (page != null) queryParams['page'] = page.toString();
+      if (status != null) queryParams['status'] = status.toString();
+      if (idTuyenDung != null) queryParams['idTuyenDung'] = idTuyenDung;
+      if (idDoanhNghiep != null) queryParams['idDoanhNghiep'] = idDoanhNghiep;
+      if (idUv != null) queryParams['idUv'] = idUv;
 
       final response = await _dio.get(
-        url,
-        queryParameters: queryParameters,
+        '/nghiep-vu/chapnoi',
+        queryParameters: queryParams,
       );
 
       if (response.statusCode == 200) {
-        // Assuming the API returns a structure like { data: [...], total: ... }
-        // Adjust parsing based on your actual API response structure
-        final List<dynamic> data = response.data['data'] ?? [];
-        final int total = response.data['total'] ?? 0;
-        final chapNoiList = data.map((json) => ChapNoiModel.fromJson(json)).toList();
-        return ApiResponseList<ChapNoiModel>(
-          data: chapNoiList,
-          total: total,
-          message: 'Success', // Or parse from response if available
+        return ApiResponseList<ChapNoiModel>.fromJson(
+          response.data,
+          (json) => ChapNoiModel.fromJson(json as Map<String, dynamic>),
         );
       } else {
-        throw DioException(
-          requestOptions: response.requestOptions,
-          response: response,
-          error: 'Failed to load ChapNoi list: ${response.statusMessage}',
-        );
+        throw Exception('Failed to load ChapNoi list');
       }
-    } on DioException catch (e) {
-      print('DioException fetching ChapNoi list: ${e.message}');
-      print('Response data: ${e.response?.data}');
-      throw Exception('Failed to load ChapNoi list: ${e.message}');
     } catch (e) {
-      print('Error fetching ChapNoi list: $e');
-      throw Exception('An unexpected error occurred: $e');
+      throw Exception('Failed to load ChapNoi list: $e');
     }
   }
 
-  Future<ApiResponseObject<ChapNoiModel>> createChapNoi(ChapNoiModel chapNoi) async {
-    await _setAuthorizationHeader();
-    final url = '$_baseUrl/api/nghiep-vu/chapnoi';
+  Future<ApiResponseObject<ChapNoiModel>> createChapNoi(
+      ChapNoiModel chapNoi) async {
+    final url = '/nghiep-vu/chapnoi';
     try {
       final response = await _dio.post(
         url,
         data: chapNoi.toJson(),
       );
 
-      if (response.statusCode == 201 || response.statusCode == 200) { // Check for 201 Created or 200 OK
-        // Assuming the API returns the created object in the 'data' field
-        // Adjust parsing based on your actual API response structure
-        final createdChapNoi = ChapNoiModel.fromJson(response.data['data']);
-         return ApiResponseObject<ChapNoiModel>(
-          data: createdChapNoi,
-          message: response.data['message'] ?? 'ChapNoi created successfully',
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        return ApiResponseObject.fromJson(
+          response.data,
+          (json) => ChapNoiModel.fromJson(json as Map<String, dynamic>),
         );
       } else {
-         throw DioException(
+        throw DioException(
           requestOptions: response.requestOptions,
           response: response,
           error: 'Failed to create ChapNoi: ${response.statusMessage}',
         );
       }
     } on DioException catch (e) {
-      print('DioException creating ChapNoi: ${e.message}');
-      print('Response data: ${e.response?.data}');
-      // Try to parse error message from response
       String errorMessage = 'Failed to create ChapNoi: ${e.message}';
       if (e.response?.data is Map && e.response!.data.containsKey('message')) {
         errorMessage = e.response!.data['message'];
       }
       throw Exception(errorMessage);
     } catch (e) {
-       print('Error creating ChapNoi: $e');
+      throw Exception('An unexpected error occurred: $e');
+    }
+  }
+
+  Future<ApiResponseObject<bool>> deleteChapNoi(String id) async {
+    final url = '/nghiep-vu/chapnoi/$id';
+    try {
+      final response = await _dio.delete(url);
+
+      if (response.statusCode == 200) {
+        return ApiResponseObject.fromJson(
+          response.data,
+          (json) => json['success'] as bool,
+        );
+      } else {
+        throw DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+          error: 'Failed to delete ChapNoi: ${response.statusMessage}',
+        );
+      }
+    } on DioException catch (e) {
+      String errorMessage = 'Failed to delete ChapNoi: ${e.message}';
+      if (e.response?.data is Map && e.response!.data.containsKey('message')) {
+        errorMessage = e.response!.data['message'];
+      }
+      throw Exception(errorMessage);
+    } catch (e) {
       throw Exception('An unexpected error occurred: $e');
     }
   }

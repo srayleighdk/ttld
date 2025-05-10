@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../models/chinhsachluong/chinhsachluong_model.dart';
+import 'package:ttld/models/chinhsachluong/chinhsachluong_model.dart';
 
 class ChinhSachLuongApiService {
   final Dio _dio;
@@ -8,8 +8,10 @@ class ChinhSachLuongApiService {
 
   Future<List<ChinhSachLuong>> getChinhSachLuongs() async {
     try {
-      final response = await _dio.get('/api/chinh-sach-luong');
-      return (response.data as List).map((e) => ChinhSachLuong.fromJson(e)).toList();
+      final response = await _dio.get('/chinh-sach-luong');
+      return (response.data as List)
+          .map((e) => ChinhSachLuong.fromJson(e))
+          .toList();
     } on DioException catch (e) {
       throw Exception('Failed to load chinh sach luong: ${e.message}');
     }
@@ -18,7 +20,7 @@ class ChinhSachLuongApiService {
   Future<ChinhSachLuong> createChinhSachLuong(ChinhSachLuong csl) async {
     try {
       final response = await _dio.post(
-        '/api/chinh-sach-luong',
+        '/chinh-sach-luong',
         data: csl.toJson(),
       );
       return ChinhSachLuong.fromJson(response.data);
@@ -30,7 +32,7 @@ class ChinhSachLuongApiService {
   Future<ChinhSachLuong> updateChinhSachLuong(ChinhSachLuong csl) async {
     try {
       final response = await _dio.put(
-        '/api/chinh-sach-luong',
+        '/chinh-sach-luong',
         data: csl.toJson(),
       );
       return ChinhSachLuong.fromJson(response.data);
@@ -42,7 +44,7 @@ class ChinhSachLuongApiService {
   Future<void> deleteChinhSachLuong(int id) async {
     try {
       await _dio.delete(
-        '/api/chinh-sach-luong',
+        '/chinh-sach-luong',
         data: {'Id': id},
       );
     } on DioException catch (e) {

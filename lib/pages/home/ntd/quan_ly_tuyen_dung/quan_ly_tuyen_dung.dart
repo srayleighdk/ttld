@@ -6,6 +6,8 @@ import 'package:ttld/models/ntd_tuyendung/ntd_tuyendung_model.dart';
 import 'package:ttld/bloc/tuyendung/tuyendung_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ttld/pages/home/ntd/create_tuyen_dung/create_tuyen_dung.dart';
+import 'package:ttld/bloc/tblNhaTuyenDung/ntd_bloc.dart';
+import 'package:ttld/models/tblNhaTuyenDung/tblNhaTuyenDung_model.dart';
 
 class QuanLyTuyenDungPage extends StatefulWidget {
   final String? userId;
@@ -23,108 +25,515 @@ class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
   void initState() {
     super.initState();
     _tuyenDungBloc = locator<TuyenDungBloc>();
+    _refreshList();
+  }
+
+  void _refreshList() {
     _tuyenDungBloc.add(TuyenDungEvent.fetchList(widget.userId));
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Quản lý tuyển dụng'),
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.transparent,
+      appBar: AppBar(
+        title: Text(
+          'Quản lý tuyển dụng',
+          style: theme.textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: theme.colorScheme.onSurface,
+          ),
         ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: ElevatedButton.icon(
-                  icon: const Icon(Icons.add),
-                  label: const Text('Thêm tuyển dụng mới'),
-                  onPressed: () => context.go(CreateTuyenDungPage.routePath),
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.zero,
-                  child: BlocBuilder<TuyenDungBloc, TuyenDungState>(
-                    bloc: _tuyenDungBloc,
-                    builder: (context, state) {
-                      if (state is TuyenDungLoading) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-
-                      if (state is TuyenDungError) {
-                        return Center(child: Text(state.message));
-                      }
-
-                      if (state is TuyenDungLoaded) {
-                        return _buildDataTable(state.tuyenDungList);
-                      }
-
-                      return const Center(child: Text('Không có dữ liệu'));
-                    },
-                  ),
-                ),
-              ),
+        centerTitle: true,
+        elevation: 2,
+        backgroundColor: theme.colorScheme.surface,
+        scrolledUnderElevation: 1.0,
+        iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: _refreshList,
+            tooltip: 'Làm mới danh sách',
+          ),
+        ],
+      ),
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              theme.colorScheme.primary.withAlpha(25),
+              theme.colorScheme.surface,
             ],
           ),
-        ));
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _buildHeader(theme),
+                const SizedBox(height: 24),
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.surface,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: theme.colorScheme.shadow.withOpacity(0.05),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: BlocConsumer<TuyenDungBloc, TuyenDungState>(
+                        bloc: _tuyenDungBloc,
+                        listener: (context, state) {
+                          state.whenOrNull(
+                            loaded: (list) {
+                              setState(() {
+                                tuyenDungList = list;
+                              });
+                            },
+                          );
+                        },
+                        builder: (context, state) {
+                          return state.when(
+                            initial: () => const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                            loading: () => const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                            loaded: (list) => _buildDataTable(list),
+                            error: (message) => Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.error_outline,
+                                    size: 48,
+                                    color: theme.colorScheme.error,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    message,
+                                    style: theme.textTheme.bodyLarge?.copyWith(
+                                      color: theme.colorScheme.error,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(ThemeData theme) {
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surface,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: theme.colorScheme.shadow.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.work_outline,
+                  color: theme.colorScheme.primary,
+                ),
+                const SizedBox(width: 12),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Danh sách tuyển dụng',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      'Quản lý các bài đăng tuyển dụng của bạn',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(width: 16),
+        ElevatedButton.icon(
+          icon: const Icon(Icons.add),
+          label: const Text('Thêm mới'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: theme.colorScheme.primary,
+            foregroundColor: theme.colorScheme.onPrimary,
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+          onPressed: () async {
+            final ntdBloc = locator<NTDBloc>();
+            print('Current NTD state: ${ntdBloc.state.runtimeType}');
+            print('User ID: ${widget.userId}');
+
+            if (ntdBloc.state is! NTDLoaded) {
+              print('NTD data not loaded, fetching...');
+              ntdBloc.add(NTDFetchList());
+              // Wait for the data to be loaded
+              await Future.delayed(const Duration(seconds: 1));
+            }
+
+            if (ntdBloc.state is NTDLoaded) {
+              final ntdList = (ntdBloc.state as NTDLoaded).ntdList;
+              print('NTD list length: ${ntdList.length}');
+              print(
+                  'NTD list: ${ntdList.map((e) => '${e.idDoanhNghiep} - ${e.ntdTen}').join(', ')}');
+
+              final ntd = ntdList.firstWhere(
+                (ntd) => ntd.idDoanhNghiep == widget.userId,
+                orElse: () {
+                  print('No matching NTD found for userId: ${widget.userId}');
+                  return Ntd();
+                },
+              );
+
+              print('Selected NTD: ${ntd.idDoanhNghiep} - ${ntd.ntdTen}');
+
+              if (ntd.idDoanhNghiep == null || ntd.idDoanhNghiep!.isEmpty) {
+                print('Invalid NTD data');
+                if (!mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content:
+                        Text('Vui lòng đăng nhập lại để tạo bài tuyển dụng.'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+                return;
+              }
+
+              if (!mounted) return;
+              print('Navigating to create page with NTD: ${ntd.idDoanhNghiep}');
+              context.push(
+                CreateTuyenDungPage.routePath,
+                extra: {
+                  'ntd': ntd,
+                  'isEdit': false,
+                },
+              );
+            } else {
+              print('Failed to load NTD data');
+              if (!mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                      'Không thể tải thông tin doanh nghiệp. Vui lòng thử lại.'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          },
+        ),
+      ],
+    );
   }
 
   Widget _buildDataTable(List<NTDTuyenDung> tuyenDungList) {
+    final theme = Theme.of(context);
+
     if (tuyenDungList.isEmpty) {
-      return const Center(
-        child: Text(
-          'Không có dữ liệu',
-          style: TextStyle(fontSize: 16, color: Colors.grey),
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.inbox_outlined,
+              size: 48,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Chưa có bài đăng tuyển dụng nào',
+              style: theme.textTheme.bodyLarge?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
         ),
       );
     }
 
-    return DataTable2(
-      columnSpacing: 12,
-      horizontalMargin: 12,
-      minWidth: 600,
-      columns: const [
-        DataColumn2(label: Text('Ngày đăng hồ sơ'), size: ColumnSize.L),
-        DataColumn2(label: Text('Tiêu đề hồ sơ'), size: ColumnSize.S),
-        DataColumn2(label: Text('Ngành nghề tuyển dụng'), size: ColumnSize.M),
-        DataColumn2(label: Text('Duyệt'), size: ColumnSize.S),
-        DataColumn2(label: Text('Hành động'), size: ColumnSize.S)
-      ],
-      rows: tuyenDungList
-          .map((tuyenDung) => DataRow(cells: [
-                DataCell(Text(tuyenDung.ngayNhanHoSo!)),
-                DataCell(Text(tuyenDung.tdTieude!)),
-                DataCell(Text(tuyenDung.tenNganhnghe!)),
-                DataCell(Checkbox(
-                  value: tuyenDung.tdDuyet ?? false,
-                  onChanged: null,
-                )),
-                DataCell(Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.edit, size: 20),
-                      onPressed: () => _showEditDialog(context, tuyenDung),
+    return Theme(
+      data: Theme.of(context).copyWith(
+        cardTheme: CardTheme(
+          elevation: 0,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+        dividerTheme: DividerThemeData(
+          color: theme.colorScheme.outlineVariant.withOpacity(0.5),
+        ),
+      ),
+      child: DataTable2(
+        columnSpacing: 12,
+        horizontalMargin: 12,
+        minWidth: 600,
+        headingRowColor: MaterialStateProperty.all(
+          theme.colorScheme.surfaceVariant.withOpacity(0.3),
+        ),
+        columns: [
+          DataColumn2(
+            label: Text(
+              'Ngày đăng',
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            size: ColumnSize.L,
+          ),
+          DataColumn2(
+            label: Text(
+              'Tiêu đề',
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            size: ColumnSize.S,
+          ),
+          DataColumn2(
+            label: Text(
+              'Ngành nghề',
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            size: ColumnSize.M,
+          ),
+          DataColumn2(
+            label: Text(
+              'Trạng thái',
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            size: ColumnSize.S,
+          ),
+          DataColumn2(
+            label: Text(
+              'Thao tác',
+              style: theme.textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            size: ColumnSize.S,
+          ),
+        ],
+        rows: tuyenDungList.map((tuyenDung) {
+          final ngayNhanHoSo = tuyenDung.ngayNhanHoSo ?? '';
+          final tdTieude = tuyenDung.tdTieude ?? 'Chưa có tiêu đề';
+          final tenNganhnghe = tuyenDung.tenNganhnghe ?? 'Chưa có ngành nghề';
+          final tdDuyet = tuyenDung.tdDuyet ?? false;
+          final idTuyenDung = tuyenDung.idTuyenDung;
+
+          return DataRow(
+            cells: [
+              DataCell(Text(
+                _formatDate(ngayNhanHoSo),
+                style: theme.textTheme.bodyMedium,
+              )),
+              DataCell(Text(
+                tdTieude,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w500,
+                ),
+              )),
+              DataCell(Text(
+                tenNganhnghe,
+                style: theme.textTheme.bodyMedium,
+              )),
+              DataCell(
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: tdDuyet
+                        ? theme.colorScheme.primary.withOpacity(0.1)
+                        : theme.colorScheme.error.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    tdDuyet ? 'Đã duyệt' : 'Chờ duyệt',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: tdDuyet
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.error,
+                      fontWeight: FontWeight.w500,
                     ),
-                    IconButton(
-                      icon:
-                          const Icon(Icons.delete, size: 20, color: Colors.red),
-                      onPressed: () => _deleteTuyenDung(tuyenDung.idTuyenDung!),
+                  ),
+                ),
+              ),
+              DataCell(Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      Icons.edit_outlined,
+                      color: theme.colorScheme.primary,
+                      size: 20,
                     ),
-                  ],
-                )),
-              ]))
-          .toList(),
+                    onPressed: idTuyenDung != null
+                        ? () => _showEditDialog(context, tuyenDung)
+                        : null,
+                    tooltip: 'Chỉnh sửa',
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.delete_outline,
+                      color: theme.colorScheme.error,
+                      size: 20,
+                    ),
+                    onPressed: idTuyenDung != null
+                        ? () => _showDeleteDialog(context, tuyenDung)
+                        : null,
+                    tooltip: 'Xóa',
+                  ),
+                ],
+              )),
+            ],
+          );
+        }).toList(),
+      ),
     );
   }
 
   void _showEditDialog(BuildContext context, NTDTuyenDung tuyenDung) {
-    // TODO: Implement edit dialog
+    final ntdBloc = locator<NTDBloc>();
+    if (ntdBloc.state is NTDLoaded) {
+      final ntdList = (ntdBloc.state as NTDLoaded).ntdList;
+      final ntd = ntdList.firstWhere(
+        (ntd) => ntd.idDoanhNghiep == widget.userId,
+        orElse: () => Ntd(),
+      );
+
+      if (ntd.idDoanhNghiep == null || ntd.idDoanhNghiep!.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content:
+                Text('Vui lòng đăng nhập lại để chỉnh sửa bài tuyển dụng.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
+
+      context.push(
+        CreateTuyenDungPage.routePath,
+        extra: {
+          'ntd': ntd,
+          'tuyenDung': tuyenDung,
+          'isEdit': true,
+        },
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content:
+              Text('Không thể tải thông tin doanh nghiệp. Vui lòng thử lại.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  void _showDeleteDialog(BuildContext context, NTDTuyenDung tuyenDung) {
+    final theme = Theme.of(context);
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          'Xác nhận xóa',
+          style: theme.textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: Text(
+          'Bạn có chắc chắn muốn xóa bài đăng tuyển dụng này?',
+          style: theme.textTheme.bodyLarge,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'Hủy',
+              style: theme.textTheme.labelLarge?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              _deleteTuyenDung(tuyenDung.idTuyenDung!);
+              Navigator.pop(context);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: theme.colorScheme.error,
+              foregroundColor: theme.colorScheme.onError,
+            ),
+            child: const Text('Xóa'),
+          ),
+        ],
+      ),
+    );
   }
 
   void _deleteTuyenDung(String id) {
-    _tuyenDungBloc.add(TuyenDungEvent.delete(id));
+    _tuyenDungBloc.add(TuyenDungEvent.delete(id, widget.userId));
+  }
+
+  String _formatDate(String? dateStr) {
+    if (dateStr == null || dateStr.isEmpty) {
+      return 'Chưa có ngày';
+    }
+    try {
+      final date = DateTime.parse(dateStr);
+      return '${date.day.toString().padLeft(2, '0')}-${date.month.toString().padLeft(2, '0')}-${date.year}';
+    } catch (e) {
+      print('Error formatting date: $e');
+      return 'Chưa có ngày';
+    }
   }
 }

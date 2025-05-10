@@ -6,7 +6,6 @@ import 'package:ttld/bloc/m03pli/m03pli_state.dart';
 import 'package:ttld/core/utils/toast_utils.dart';
 import 'package:ttld/models/m03pli_model.dart';
 import 'package:ttld/models/tblNhaTuyenDung/tblNhaTuyenDung_model.dart';
-import 'package:ttld/widgets/progress_indicator/step_indicator.dart';
 
 class DangKySuDungLaoDong03PLI extends StatefulWidget {
   final Ntd? ntd;
@@ -91,7 +90,7 @@ class _DangKySuDungLaoDong03PLIState extends State<DangKySuDungLaoDong03PLI> {
       m03pli.tenDn = widget.ntd!.ntdTen;
       m03pli.masothue = widget.ntd!.mst;
       m03pli.idLhdn = widget.ntd!.idLoaiHinhDoanhNghiep;
-      m03pli.matinh = widget.ntd!.ntdDiachithanhpho;
+      m03pli.matinh = widget.ntd!.ntdDiachithanhpho.toString();
       m03pli.mahuyen = widget.ntd!.ntdDiachihuyen;
       m03pli.maxa = widget.ntd!.ntdDiachixaphuong;
       m03pli.idKhuCn = widget.ntd!.ntdThuockhucongnghiep;
@@ -130,43 +129,43 @@ class _DangKySuDungLaoDong03PLIState extends State<DangKySuDungLaoDong03PLI> {
           }
         },
         child: Column(
-        // children: [
-        //   Row(
-        //     children: List.generate(
-        //       steps.length,
-        //       (index) => buildStepIndicator(
-        //         index: index,
-        //         currentStep: _currentStep,
-        //         steps: steps,
-        //       ),
-        //     ),
-        //   ),
-        //   Expanded(
-        //     child: buildStepContent(
-        //       currentStep: _currentStep,
-        //       stepWidgets: widget.stepContents,
-        //     ),
-        //   ),
-        //   buildBottomNavigation(
-        //     currentStep: _currentStep,
-        //     steps: widget.steps,
-        //     formKeys: _formKeys,
-        //     onSubmit: _submitForm,
-        //     onStepChanged: (newStep) => setState(() => _currentStep = newStep),
-        //   ),
-        // ],
-      ),      ),
+            // children: [
+            //   Row(
+            //     children: List.generate(
+            //       steps.length,
+            //       (index) => buildStepIndicator(
+            //         index: index,
+            //         currentStep: _currentStep,
+            //         steps: steps,
+            //       ),
+            //     ),
+            //   ),
+            //   Expanded(
+            //     child: buildStepContent(
+            //       currentStep: _currentStep,
+            //       stepWidgets: widget.stepContents,
+            //     ),
+            //   ),
+            //   buildBottomNavigation(
+            //     currentStep: _currentStep,
+            //     steps: widget.steps,
+            //     formKeys: _formKeys,
+            //     onSubmit: _submitForm,
+            //     onStepChanged: (newStep) => setState(() => _currentStep = newStep),
+            //   ),
+            // ],
+            ),
+      ),
     );
   }
 }
 
-
 const List<String> steps = [
-    'Thông tin\ncá nhân',
-    'Hiện thị\nthông tin',
-    'Việc làm\nmong muốn',
-    'Xác nhận',
-  ];
+  'Thông tin\ncá nhân',
+  'Hiện thị\nthông tin',
+  'Việc làm\nmong muốn',
+  'Xác nhận',
+];
 final List<Widget> stepContents = [
   Step1Form(),
   Step2Form(),
@@ -189,4 +188,3 @@ Widget Step3Form() {
 Widget ConfirmationForm() {
   return Container();
 }
-

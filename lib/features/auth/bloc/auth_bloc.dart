@@ -10,6 +10,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(AuthUnauthenticated()) {
     on<AuthLoginSuccess>(_onAuthLoginSuccess);
     on<AuthLogout>(_onAuthLogout);
+    on<AuthUpdateAvatar>(_onAuthUpdateAvatar);
   }
 
   void _onAuthLoginSuccess(
@@ -28,6 +29,29 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     ));
 
     debugPrint('✅ AuthBloc: State updated to authenticated');
+  }
+
+  void _onAuthUpdateAvatar(
+    AuthUpdateAvatar event,
+    Emitter<AuthState> emit,
+  ) {
+    debugPrint('🖼️ AuthBloc: Updating avatar');
+    debugPrint('🖼️ AuthBloc: Received avatar URL: ${event.avatarUrl}');
+    final currentState = state;
+    if (currentState is AuthAuthenticated) {
+      debugPrint('🖼️ AuthBloc: Current state before update: ${currentState.avatarUrl}');
+      emit(AuthAuthenticated(
+        token: currentState.token,
+        userId: currentState.userId,
+        userName: currentState.userName,
+        isAdmin: currentState.isAdmin,
+        userType: currentState.userType,
+        avatarUrl: event.avatarUrl,
+      ));
+      debugPrint('🖼️ AuthBloc: New state after update: ${(state as AuthAuthenticated).avatarUrl}');
+    } else {
+      debugPrint('❌ AuthBloc: Cannot update avatar - not authenticated');
+    }
   }
 
   Future<void> _onAuthLogout(

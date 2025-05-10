@@ -6,9 +6,23 @@ import 'package:ttld/models/tblNhaTuyenDung/tblNhaTuyenDung_model.dart';
 class NTDApiService {
   final Dio _dio = ApiClient().dio;
 
-  Future<List<Ntd>> getNtdList() async {
+  Future<List<Ntd>> getNtdList({
+    int? limit,
+    int? page,
+    int? ntdLoai,
+    int? idStatus,
+    String? search,
+    int? idUv,
+  }) async {
     try {
-      final response = await _dio.get(ApiEndpoints.ntd);
+      final response = await _dio.get(ApiEndpoints.ntd, queryParameters: {
+        if (limit != null) 'limit': limit,
+        if (page != null) 'page': page,
+        if (ntdLoai != null) 'ntdLoai': ntdLoai,
+        if (idStatus != null) 'idStatus': idStatus,
+        if (search != null) 'search': search,
+        if (idUv != null) 'idUv': idUv,
+      });
       List<Ntd> ntdList =
           (response.data["data"] as List).map((json) => Ntd.fromJson(json)).toList();
       return ntdList;
@@ -19,11 +33,16 @@ class NTDApiService {
 
   Future<Ntd> getNtdById(String id) async {
     try {
-      final response =
-          await _dio.get(ApiEndpoints.ntdById, queryParameters: {'id': id});
+      print('Fetching NTD with ID: $id');
+      final response = await _dio.get(ApiEndpoints.ntdById, queryParameters: {'id': id});
+      print('API Response: ${response.data}');
+      if (response.data == null || response.data['data'] == null) {
+        throw Exception('Invalid API response format');
+      }
       final Ntd ntd = Ntd.fromJson(response.data["data"]);
       return ntd;
     } catch (e) {
+      print('Error in getNtdById: $e');
       throw Exception('Failed to fetch NTD by ID: $e');
     }
   }

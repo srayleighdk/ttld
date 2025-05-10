@@ -11,6 +11,10 @@ class BienDongService {
         .get('/tttt/bien-dong-list', queryParameters: {'userId': userId});
   }
 
+  Future<Response> getBienDong(int? yearTo, int? status, String? search) async {
+    return _dio.get('/tttt/bien-dong');
+  }
+
   Future<Response> createBienDong(NhanVien bienDong) async {
     return _dio.post('/tttt/bien-dong', data: bienDong.toJson());
   }

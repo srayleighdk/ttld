@@ -14,7 +14,6 @@ import 'package:ttld/pages/home/notification_page.dart';
 import 'package:ttld/pages/home/ntd/ntd_home.dart';
 import 'package:ttld/pages/home/ntv/ntv_home.dart';
 import 'package:ttld/pages/home/profile_page.dart';
-import 'package:ttld/pages/home/search_page.dart';
 import 'package:ttld/widgets/logout_button.dart';
 
 enum UserRole { admin, ntd, ntv }
@@ -32,15 +31,33 @@ class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   UserRole? _role;
   late final List<Widget> _pages;
+  bool _isInitializing = true;
 
   @override
   void initState() {
     super.initState();
-    _initializeUserData();
-    _initializeAppData();
+    _initializeApp();
   }
 
-  void _initializeAppData() async {
+  Future<void> _initializeApp() async {
+    try {
+      await _initializeAppData();
+      if (mounted) {
+        _initializeUserData();
+      }
+    } catch (e) {
+      // Handle initialization error
+      debugPrint('Initialization error: $e');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isInitializing = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _initializeAppData() async {
     await initializeAppData(); // Preload data
   }
 
@@ -108,7 +125,6 @@ class _HomePageState extends State<HomePage> {
 
     return [
       homePage,
-      const SearchPage(),
       const NotificationsPage(),
       profilePage,
     ];
@@ -116,27 +132,81 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    if (_role == null || _pages.isEmpty) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    }
+    final theme = Theme.of(context);
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
-        title: const Text('Home'),
+        elevation: 2,
+        backgroundColor: theme.colorScheme.surface,
+        scrolledUnderElevation: 1.0,
+        title: Text(
+          'Home',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: theme.colorScheme.onSurface,
+          ),
+        ),
+        iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
         actions: [LogoutButton()],
       ),
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _pages,
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              theme.colorScheme.primary.withAlpha(25),
+              theme.colorScheme.surface,
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: _isInitializing || _role == null || _pages.isEmpty
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : IndexedStack(
+                  index: _currentIndex,
+                  children: _pages,
+                ),
+        ),
       ),
-      bottomNavigationBar: CustomNavigationBar(
-        currentIndex: _currentIndex,
-        onDestinationSelected: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-      ),
+      bottomNavigationBar: _isInitializing || _role == null || _pages.isEmpty
+          ? null
+          : Theme(
+              data: Theme.of(context).copyWith(
+                navigationBarTheme: NavigationBarThemeData(
+                  labelTextStyle: WidgetStateProperty.all(
+                    TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                  ),
+                  iconTheme: WidgetStateProperty.all(
+                    IconThemeData(
+                      color: theme.colorScheme.onSurface,
+                    ),
+                  ),
+                  backgroundColor: theme.colorScheme.surface,
+                  indicatorColor: theme.colorScheme.primary.withAlpha(25),
+                  elevation: 8,
+                  surfaceTintColor: theme.colorScheme.surface,
+                ),
+              ),
+              child: CustomNavigationBar(
+                currentIndex: _currentIndex,
+                onDestinationSelected: (index) {
+                  setState(() {
+                    _currentIndex = index;
+                  });
+                },
+              ),
+            ),
     );
   }
 }
@@ -149,45 +219,51 @@ class AnalyticsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+    return Container(
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: theme.colorScheme.shadow.withAlpha(13),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Analytics Overview',
-              style: theme.textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Analytics Overview',
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: theme.colorScheme.onSurface,
             ),
-            const SizedBox(height: 16),
-            const _AnalyticItem(
-              icon: FontAwesomeIcons.userTie,
-              label: 'Total Applicants',
-              value: '156',
-              color: Colors.blue,
-            ),
-            const Divider(height: 24),
-            const _AnalyticItem(
-              icon: FontAwesomeIcons.briefcase,
-              label: 'Active Job Posts',
-              value: '12',
-              color: Colors.green,
-            ),
-            const Divider(height: 24),
-            const _AnalyticItem(
-              icon: FontAwesomeIcons.eye,
-              label: 'Profile Views',
-              value: '1,234',
-              color: Colors.purple,
-            ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 16),
+          _AnalyticItem(
+            icon: FontAwesomeIcons.userTie,
+            label: 'Total Applicants',
+            value: '156',
+            color: theme.colorScheme.primary,
+          ),
+          const Divider(height: 24),
+          _AnalyticItem(
+            icon: FontAwesomeIcons.briefcase,
+            label: 'Active Job Posts',
+            value: '12',
+            color: theme.colorScheme.secondary,
+          ),
+          const Divider(height: 24),
+          _AnalyticItem(
+            icon: FontAwesomeIcons.eye,
+            label: 'Profile Views',
+            value: '1,234',
+            color: theme.colorScheme.tertiary,
+          ),
+        ],
       ),
     );
   }
@@ -208,12 +284,14 @@ class _AnalyticItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Row(
       children: [
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: color.withValues(),
+            color: color.withAlpha(25),
             borderRadius: BorderRadius.circular(12),
           ),
           child: FaIcon(
@@ -229,17 +307,16 @@ class _AnalyticItem extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurface.withAlpha(179),
                 ),
               ),
               const SizedBox(height: 4),
               Text(
                 value,
-                style: const TextStyle(
-                  fontSize: 20,
+                style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
+                  color: theme.colorScheme.onSurface,
                 ),
               ),
             ],

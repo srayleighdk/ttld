@@ -23,7 +23,7 @@ mixin _$UserEvent {
     required TResult Function(UserModel user) createUser,
     required TResult Function(UserModel user) updateUser,
     required TResult Function(String userId) deleteUser,
-    required TResult Function(String manv) fetchUserByManv,
+    required TResult Function() fetchUserByManv,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -33,7 +33,7 @@ mixin _$UserEvent {
     TResult? Function(UserModel user)? createUser,
     TResult? Function(UserModel user)? updateUser,
     TResult? Function(String userId)? deleteUser,
-    TResult? Function(String manv)? fetchUserByManv,
+    TResult? Function()? fetchUserByManv,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -43,7 +43,7 @@ mixin _$UserEvent {
     TResult Function(UserModel user)? createUser,
     TResult Function(UserModel user)? updateUser,
     TResult Function(String userId)? deleteUser,
-    TResult Function(String manv)? fetchUserByManv,
+    TResult Function()? fetchUserByManv,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -174,7 +174,7 @@ class _$FetchAllUsersImpl implements FetchAllUsers {
     required TResult Function(UserModel user) createUser,
     required TResult Function(UserModel user) updateUser,
     required TResult Function(String userId) deleteUser,
-    required TResult Function(String manv) fetchUserByManv,
+    required TResult Function() fetchUserByManv,
   }) {
     return fetchAllUsers(idUserGroup);
   }
@@ -187,7 +187,7 @@ class _$FetchAllUsersImpl implements FetchAllUsers {
     TResult? Function(UserModel user)? createUser,
     TResult? Function(UserModel user)? updateUser,
     TResult? Function(String userId)? deleteUser,
-    TResult? Function(String manv)? fetchUserByManv,
+    TResult? Function()? fetchUserByManv,
   }) {
     return fetchAllUsers?.call(idUserGroup);
   }
@@ -200,7 +200,7 @@ class _$FetchAllUsersImpl implements FetchAllUsers {
     TResult Function(UserModel user)? createUser,
     TResult Function(UserModel user)? updateUser,
     TResult Function(String userId)? deleteUser,
-    TResult Function(String manv)? fetchUserByManv,
+    TResult Function()? fetchUserByManv,
     required TResult orElse(),
   }) {
     if (fetchAllUsers != null) {
@@ -338,7 +338,7 @@ class _$FetchUserByIdImpl implements FetchUserById {
     required TResult Function(UserModel user) createUser,
     required TResult Function(UserModel user) updateUser,
     required TResult Function(String userId) deleteUser,
-    required TResult Function(String manv) fetchUserByManv,
+    required TResult Function() fetchUserByManv,
   }) {
     return fetchUserById(userId);
   }
@@ -351,7 +351,7 @@ class _$FetchUserByIdImpl implements FetchUserById {
     TResult? Function(UserModel user)? createUser,
     TResult? Function(UserModel user)? updateUser,
     TResult? Function(String userId)? deleteUser,
-    TResult? Function(String manv)? fetchUserByManv,
+    TResult? Function()? fetchUserByManv,
   }) {
     return fetchUserById?.call(userId);
   }
@@ -364,7 +364,7 @@ class _$FetchUserByIdImpl implements FetchUserById {
     TResult Function(UserModel user)? createUser,
     TResult Function(UserModel user)? updateUser,
     TResult Function(String userId)? deleteUser,
-    TResult Function(String manv)? fetchUserByManv,
+    TResult Function()? fetchUserByManv,
     required TResult orElse(),
   }) {
     if (fetchUserById != null) {
@@ -514,7 +514,7 @@ class _$CreateUserImpl implements CreateUser {
     required TResult Function(UserModel user) createUser,
     required TResult Function(UserModel user) updateUser,
     required TResult Function(String userId) deleteUser,
-    required TResult Function(String manv) fetchUserByManv,
+    required TResult Function() fetchUserByManv,
   }) {
     return createUser(user);
   }
@@ -527,7 +527,7 @@ class _$CreateUserImpl implements CreateUser {
     TResult? Function(UserModel user)? createUser,
     TResult? Function(UserModel user)? updateUser,
     TResult? Function(String userId)? deleteUser,
-    TResult? Function(String manv)? fetchUserByManv,
+    TResult? Function()? fetchUserByManv,
   }) {
     return createUser?.call(user);
   }
@@ -540,7 +540,7 @@ class _$CreateUserImpl implements CreateUser {
     TResult Function(UserModel user)? createUser,
     TResult Function(UserModel user)? updateUser,
     TResult Function(String userId)? deleteUser,
-    TResult Function(String manv)? fetchUserByManv,
+    TResult Function()? fetchUserByManv,
     required TResult orElse(),
   }) {
     if (createUser != null) {
@@ -690,7 +690,7 @@ class _$UpdateUserImpl implements UpdateUser {
     required TResult Function(UserModel user) createUser,
     required TResult Function(UserModel user) updateUser,
     required TResult Function(String userId) deleteUser,
-    required TResult Function(String manv) fetchUserByManv,
+    required TResult Function() fetchUserByManv,
   }) {
     return updateUser(user);
   }
@@ -703,7 +703,7 @@ class _$UpdateUserImpl implements UpdateUser {
     TResult? Function(UserModel user)? createUser,
     TResult? Function(UserModel user)? updateUser,
     TResult? Function(String userId)? deleteUser,
-    TResult? Function(String manv)? fetchUserByManv,
+    TResult? Function()? fetchUserByManv,
   }) {
     return updateUser?.call(user);
   }
@@ -716,7 +716,7 @@ class _$UpdateUserImpl implements UpdateUser {
     TResult Function(UserModel user)? createUser,
     TResult Function(UserModel user)? updateUser,
     TResult Function(String userId)? deleteUser,
-    TResult Function(String manv)? fetchUserByManv,
+    TResult Function()? fetchUserByManv,
     required TResult orElse(),
   }) {
     if (updateUser != null) {
@@ -854,7 +854,7 @@ class _$DeleteUserImpl implements DeleteUser {
     required TResult Function(UserModel user) createUser,
     required TResult Function(UserModel user) updateUser,
     required TResult Function(String userId) deleteUser,
-    required TResult Function(String manv) fetchUserByManv,
+    required TResult Function() fetchUserByManv,
   }) {
     return deleteUser(userId);
   }
@@ -867,7 +867,7 @@ class _$DeleteUserImpl implements DeleteUser {
     TResult? Function(UserModel user)? createUser,
     TResult? Function(UserModel user)? updateUser,
     TResult? Function(String userId)? deleteUser,
-    TResult? Function(String manv)? fetchUserByManv,
+    TResult? Function()? fetchUserByManv,
   }) {
     return deleteUser?.call(userId);
   }
@@ -880,7 +880,7 @@ class _$DeleteUserImpl implements DeleteUser {
     TResult Function(UserModel user)? createUser,
     TResult Function(UserModel user)? updateUser,
     TResult Function(String userId)? deleteUser,
-    TResult Function(String manv)? fetchUserByManv,
+    TResult Function()? fetchUserByManv,
     required TResult orElse(),
   }) {
     if (deleteUser != null) {
@@ -950,8 +950,6 @@ abstract class _$$FetchUserByManvImplCopyWith<$Res> {
   factory _$$FetchUserByManvImplCopyWith(_$FetchUserByManvImpl value,
           $Res Function(_$FetchUserByManvImpl) then) =
       __$$FetchUserByManvImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({String manv});
 }
 
 /// @nodoc
@@ -964,52 +962,26 @@ class __$$FetchUserByManvImplCopyWithImpl<$Res>
 
   /// Create a copy of UserEvent
   /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? manv = null,
-  }) {
-    return _then(_$FetchUserByManvImpl(
-      null == manv
-          ? _value.manv
-          : manv // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
 }
 
 /// @nodoc
 
 class _$FetchUserByManvImpl implements FetchUserByManv {
-  const _$FetchUserByManvImpl(this.manv);
-
-  @override
-  final String manv;
+  const _$FetchUserByManvImpl();
 
   @override
   String toString() {
-    return 'UserEvent.fetchUserByManv(manv: $manv)';
+    return 'UserEvent.fetchUserByManv()';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$FetchUserByManvImpl &&
-            (identical(other.manv, manv) || other.manv == manv));
+        (other.runtimeType == runtimeType && other is _$FetchUserByManvImpl);
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, manv);
-
-  /// Create a copy of UserEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$FetchUserByManvImplCopyWith<_$FetchUserByManvImpl> get copyWith =>
-      __$$FetchUserByManvImplCopyWithImpl<_$FetchUserByManvImpl>(
-          this, _$identity);
+  int get hashCode => runtimeType.hashCode;
 
   @override
   @optionalTypeArgs
@@ -1019,9 +991,9 @@ class _$FetchUserByManvImpl implements FetchUserByManv {
     required TResult Function(UserModel user) createUser,
     required TResult Function(UserModel user) updateUser,
     required TResult Function(String userId) deleteUser,
-    required TResult Function(String manv) fetchUserByManv,
+    required TResult Function() fetchUserByManv,
   }) {
-    return fetchUserByManv(manv);
+    return fetchUserByManv();
   }
 
   @override
@@ -1032,9 +1004,9 @@ class _$FetchUserByManvImpl implements FetchUserByManv {
     TResult? Function(UserModel user)? createUser,
     TResult? Function(UserModel user)? updateUser,
     TResult? Function(String userId)? deleteUser,
-    TResult? Function(String manv)? fetchUserByManv,
+    TResult? Function()? fetchUserByManv,
   }) {
-    return fetchUserByManv?.call(manv);
+    return fetchUserByManv?.call();
   }
 
   @override
@@ -1045,11 +1017,11 @@ class _$FetchUserByManvImpl implements FetchUserByManv {
     TResult Function(UserModel user)? createUser,
     TResult Function(UserModel user)? updateUser,
     TResult Function(String userId)? deleteUser,
-    TResult Function(String manv)? fetchUserByManv,
+    TResult Function()? fetchUserByManv,
     required TResult orElse(),
   }) {
     if (fetchUserByManv != null) {
-      return fetchUserByManv(manv);
+      return fetchUserByManv();
     }
     return orElse();
   }
@@ -1099,15 +1071,7 @@ class _$FetchUserByManvImpl implements FetchUserByManv {
 }
 
 abstract class FetchUserByManv implements UserEvent {
-  const factory FetchUserByManv(final String manv) = _$FetchUserByManvImpl;
-
-  String get manv;
-
-  /// Create a copy of UserEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$FetchUserByManvImplCopyWith<_$FetchUserByManvImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+  const factory FetchUserByManv() = _$FetchUserByManvImpl;
 }
 
 /// @nodoc

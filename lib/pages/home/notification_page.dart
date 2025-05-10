@@ -29,38 +29,14 @@ class NotificationsPage extends StatefulWidget {
 
 class _NotificationsPageState extends State<NotificationsPage> {
   // Sample notification data
-  final List<NotificationItem> _notifications = [
-    NotificationItem(
-      id: '1',
-      title: 'New Job Posting',
-      subtitle: 'A new job matching your profile has been posted.',
-      timestamp: DateTime.now().subtract(const Duration(minutes: 30)),
-      icon: Icons.work,
-    ),
-    NotificationItem(
-      id: '2',
-      title: 'Application Viewed',
-      subtitle: 'Your application for "Software Engineer" was viewed.',
-      timestamp: DateTime.now().subtract(const Duration(hours: 2)),
-      icon: Icons.visibility,
-      isRead: true,
-    ),
-    NotificationItem(
-      id: '3',
-      title: 'Message from Recruiter',
-      subtitle: 'You have a new message from ABC Corp.',
-      timestamp: DateTime.now().subtract(const Duration(days: 1)),
-      icon: Icons.message,
-    ),
-    NotificationItem(
-      id: '4',
-      title: 'Profile Update Reminder',
-      subtitle: 'Keep your profile updated for better matches.',
-      timestamp: DateTime.now().subtract(const Duration(days: 3)),
-      icon: Icons.person_pin_circle_outlined,
-      isRead: true,
-    ),
-  ];
+  final List<NotificationItem> _notifications = [];
+
+  @override
+  void initState() {
+    super.initState();
+    print('NotificationsPage initialized');
+    print('Initial notifications count: ${_notifications.length}');
+  }
 
   void _markAsRead(String id) {
     setState(() {
@@ -77,11 +53,14 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   @override
   Widget build(BuildContext context) {
+    print('Building NotificationsPage');
+    print('Number of notifications: ${_notifications.length}');
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Notifications'),
         centerTitle: true,
-        backgroundColor: Theme.of(context).colorScheme?.surfaceVariant ?? Colors.grey.shade100,
+        backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
       ),
       body: _notifications.isEmpty
           ? Center(
@@ -108,6 +87,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
               itemCount: _notifications.length,
               itemBuilder: (context, index) {
                 final notification = _notifications[index];
+                print('Building notification item: ${notification.title}');
                 return Card(
                   elevation: 2.0,
                   margin: const EdgeInsets.symmetric(
@@ -119,12 +99,12 @@ class _NotificationsPageState extends State<NotificationsPage> {
                     leading: CircleAvatar(
                       backgroundColor: notification.isRead
                           ? Colors.grey.shade300
-                          : Theme.of(context).colorScheme?.primaryContainer ?? Colors.blue.shade100,
+                          : Theme.of(context).colorScheme.primaryContainer,
                       child: Icon(
                         notification.icon,
                         color: notification.isRead
                             ? Colors.grey.shade600
-                            : Theme.of(context).colorScheme?.onPrimaryContainer ?? Colors.blue.shade900,
+                            : Theme.of(context).colorScheme.onPrimaryContainer,
                       ),
                     ),
                     title: Text(
@@ -136,26 +116,29 @@ class _NotificationsPageState extends State<NotificationsPage> {
                       ),
                     ),
                     subtitle: Text(notification.subtitle),
-                    trailing: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          DateFormat('MMM d, hh:mm a')
-                              .format(notification.timestamp),
-                          style:
-                              TextStyle(fontSize: 10, color: Colors.grey[600]),
-                        ),
-                        if (!notification.isRead)
-                          Container(
-                            margin: const EdgeInsets.only(top: 4.0),
-                            padding: const EdgeInsets.all(3.0),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme?.primary ?? Colors.blue,
-                              shape: BoxShape.circle,
-                            ),
+                    trailing: SizedBox(
+                      width: 80,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            DateFormat('MMM d, hh:mm a')
+                                .format(notification.timestamp),
+                            style: TextStyle(
+                                fontSize: 10, color: Colors.grey[600]),
                           ),
-                      ],
+                          if (!notification.isRead)
+                            Container(
+                              margin: const EdgeInsets.only(top: 4.0),
+                              padding: const EdgeInsets.all(3.0),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.primary,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                        ],
+                      ),
                     ),
                     onTap: () {
                       // Handle notification tap, e.g., navigate to details or mark as read

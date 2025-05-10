@@ -1,0 +1,2 @@
+/home/kali/Documents/ttld/android/app/.cxx/RelWithDebInfo/572m312p/x86_64/CMakeFiles/edit_cache.dir
+/home/kali/Documents/ttld/android/app/.cxx/RelWithDebInfo/572m312p/x86_64/CMakeFiles/rebuild_cache.dir

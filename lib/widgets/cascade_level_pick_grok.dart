@@ -128,7 +128,7 @@ class _NganhNgheCapDoPickerState extends State<NganhNgheCapDoPicker> {
       child: Column(
         children: [
           GenericPicker<NganhNgheCapDo>(
-            label: 'Ngành nghề Cấp độ lv1',
+            label: 'Ngành nghề cấp độ lv1',
             items: _nganhNgheCapDoLevel1s,
             initialValue: widget.initialNganhNgheCapDo1,
             hintText: 'Chọn ngành nghề',
@@ -152,7 +152,7 @@ class _NganhNgheCapDoPickerState extends State<NganhNgheCapDoPicker> {
               print(
                   'Level 2 BlocBuilder: state=$state, items=${_nganhNgheCapDoLevel2s?.map((e) => e.id)}');
               return GenericPicker<NganhNgheCapDo>(
-                label: 'Ngành nghề Cấp độ lv2',
+                label: 'Ngành nghề cấp độ lv2',
                 items: _nganhNgheCapDoLevel2s ?? [],
                 initialValue: widget.initialNganhNgheCapDo2,
                 hintText: 'Chọn ngành nghề',
@@ -178,7 +178,7 @@ class _NganhNgheCapDoPickerState extends State<NganhNgheCapDoPicker> {
               print(
                   'Level 3 BlocBuilder: state=$state, items=${_nganhNgheCapDoLevel3s?.map((e) => e.id)}');
               return GenericPicker<NganhNgheCapDo>(
-                label: 'Cấp độ',
+                label: 'Ngành nghề cấp độ lv3',
                 items: _nganhNgheCapDoLevel3s ?? [],
                 initialValue: widget.initialNganhNgheCapDo3,
                 hintText: 'Chọn cấp độ',
@@ -199,7 +199,7 @@ class _NganhNgheCapDoPickerState extends State<NganhNgheCapDoPicker> {
             bloc: nganhNgheCapDoBloc,
             builder: (context, state) {
               return GenericPicker<NganhNgheCapDo>(
-                label: 'Ngành nghề Cấp độ lv4',
+                label: 'Ngành nghề cấp độ lv4',
                 items: _nganhNgheCapDoLevel4s ?? [],
                 initialValue: widget.initialNganhNgheCapDo4,
                 hintText: 'Chọn ngành nghề',

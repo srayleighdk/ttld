@@ -24,21 +24,9 @@ class CustomNavigationBar extends StatelessWidget {
           selectedIcon: FontAwesomeIcons.house,
         ),
         _buildNavigationDestination(
-          label: 'Search',
-          icon: FontAwesomeIcons.magnifyingGlass,
-          selectedIcon: FontAwesomeIcons.magnifyingGlass,
-          badgeCount: 0, // Add badge if needed
-        ),
-        // _buildNavigationDestination(
-        //   label: 'Post',
-        //   icon: FontAwesomeIcons.plus,
-        //   selectedIcon: FontAwesomeIcons.plus,
-        // ),
-        _buildNavigationDestination(
           label: 'Notifications',
           icon: FontAwesomeIcons.bell,
           selectedIcon: FontAwesomeIcons.solidBell,
-          badgeCount: 3, // Example badge count
         ),
         _buildNavigationDestination(
           label: 'Profile',

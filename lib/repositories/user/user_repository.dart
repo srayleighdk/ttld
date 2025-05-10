@@ -1,3 +1,4 @@
+import 'package:ttld/models/user/manv_name_model.dart';
 import 'package:ttld/models/user/user_model.dart';
 import 'package:ttld/services/user_api_service.dart';
 
@@ -19,9 +20,11 @@ class UserRepository {
     return UserModel.fromJson(response.data);
   }
 
-  Future<UserModel> getUserByManv(String manv) async {
-    final response = await _userApiService.getUserByManv(manv);
-    return UserModel.fromJson(response.data);
+  Future<List<ManvNameModel>> getManvName() async {
+    final response = await _userApiService.getUserByManv();
+    return (response.data['data'] as List)
+        .map((e) => ManvNameModel.fromJson(e))
+        .toList();
   }
 
   Future<void> createUser(UserModel user) async {

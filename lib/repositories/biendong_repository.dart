@@ -22,7 +22,8 @@ class BienDongRepository {
   Future<List<Company>> getCompanies(
       {int? yearTo, int? status, String? search}) async {
     try {
-      final response = await _bienDongService.getBienDong();
+      final response =
+          await _bienDongService.getBienDong(yearTo, status, search);
       final companies = (response.data['data'] as List)
           .map((json) => Company.fromJson(json))
           .toList();

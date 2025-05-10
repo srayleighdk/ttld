@@ -138,13 +138,13 @@ class _CreateNhanVienState extends State<CreateNhanVien> {
                 controller: _masoBhxhController,
                 keyboardType: TextInputType.number,
               ),
-              CustomPickerGrok<NganhNgheBacHoc>(
+              CustomPickerGrok<TrinhDoChuyenMon>(
                 label: const Text('Trình độ học vấn'),
-                selectedItem: locator<List<NganhNgheBacHoc>>().firstWhere(
+                selectedItem: locator<List<TrinhDoChuyenMon>>().firstWhere(
                   (e) => e.id == _nhanVienData.idBacHoc,
-                  orElse: () => NganhNgheBacHoc(id: 0, name: 'Chọn trình độ'),
+                  orElse: () => TrinhDoChuyenMon(id: 0, name: 'Chọn trình độ'),
                 ),
-                items: locator<List<NganhNgheBacHoc>>(),
+                items: locator<List<TrinhDoChuyenMon>>(),
                 onChanged: (value) => _nhanVienData = _nhanVienData.copyWith(
                   idBacHoc: value?.id,
                 ),

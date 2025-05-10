@@ -2,26 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/helppers/map_help.dart';
 import 'package:ttld/models/chuc_danh_model.dart';
+import 'package:ttld/models/do_tuoi_model.dart';
+import 'package:ttld/models/doituong_chinhsach/doituong.dart';
+import 'package:ttld/models/hinh_thuc_lam_viec_model.dart';
 import 'package:ttld/models/hinh_thuc_loai_hinh_model.dart';
+import 'package:ttld/models/hinh_thuc_tuyen_dung_model.dart';
+import 'package:ttld/models/kcn/kcn_model.dart';
+import 'package:ttld/models/kinh_nghiem_lam_viec.dart';
 import 'package:ttld/models/ky_nang_mem_model.dart';
+import 'package:ttld/models/loai_hop_dong_lao_dong_model.dart';
 import 'package:ttld/models/m01tt11_model.dart';
+import 'package:ttld/models/muc_dich_lam_viec_model.dart';
+import 'package:ttld/models/muc_luong_mm.dart';
 import 'package:ttld/models/nganh_nghe_bachoc.dart';
 import 'package:ttld/models/nganh_nghe_chuyennganh.dart';
 import 'package:ttld/models/nganh_nghe_model.dart';
 import 'package:ttld/models/nganh_nghe_td_model.dart';
 import 'package:ttld/models/ngoai_ngu_model.dart';
 import 'package:ttld/models/tblNhaTuyenDung/tblNhaTuyenDung_model.dart';
+import 'package:ttld/models/tinh_thanh_model.dart';
 import 'package:ttld/models/trinh_do_hoc_van_model.dart';
 import 'package:ttld/models/trinh_do_ngoai_ngu_model.dart';
 import 'package:ttld/models/trinh_do_tin_hoc_model.dart';
+import 'package:ttld/models/user/manv_name_model.dart';
 import 'package:ttld/widgets/cascade_level_pick_grok.dart';
 import 'package:ttld/widgets/cascade_location_picker_grok.dart';
 import 'package:ttld/widgets/field/custom_checkbox.dart';
+import 'package:ttld/widgets/field/custom_pick_datetime_grok.dart';
 import 'package:ttld/widgets/field/custom_picker_map.dart';
 import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
 import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
 import 'package:ttld/widgets/reuseable_widgets/stepper_page.dart';
-
 
 class M01TT11Page extends StatefulWidget {
   final M01TT11? m01tt11;
@@ -69,8 +80,9 @@ class _M01TT11PageState extends State<M01TT11Page> {
   TextEditingController maxa = TextEditingController();
   TextEditingController idTuyenDung = TextEditingController();
   TextEditingController quyenloi = TextEditingController();
-  TextEditingController tienPhucloiController = TextEditingController(); // Controller for meal support amount
-
+  TextEditingController tienPhucloiController =
+      TextEditingController(); // Controller for meal support amount
+  TextEditingController idHinhthucTd = TextEditingController();
   // Number fields
   TextEditingController? soluong;
   int? nganhId;
@@ -95,6 +107,7 @@ class _M01TT11PageState extends State<M01TT11Page> {
   int? idKhuCn;
   int? idDoTuoi;
   int? idYcgt;
+  int? idLoaiDhld;
 
   // DateTime fields
   DateTime? ngaylap;
@@ -179,7 +192,7 @@ class _M01TT11PageState extends State<M01TT11Page> {
   bool status = false;
 
   // Big integer fields
-  BigInt tienluong = BigInt.from(0);
+  TextEditingController tienluong = TextEditingController();
   BigInt tienPhucloi = BigInt.from(0);
 
   @override
@@ -195,7 +208,7 @@ class _M01TT11PageState extends State<M01TT11Page> {
       email.text = widget.ntd!.ntdEmail ?? '';
       idLhdn.text = widget.ntd!.idLoaiHinhDoanhNghiep ?? '';
       idNkt.text = widget.ntd!.idNganhKinhTe ?? '';
-      matinh.text = widget.ntd!.ntdDiachithanhpho ?? '';
+      matinh.text = widget.ntd!.ntdDiachithanhpho.toString() ?? '';
       mahuyen.text = widget.ntd!.ntdDiachihuyen ?? '';
       maxa.text = widget.ntd!.ntdDiachixaphuong ?? '';
       idKhuCn = widget.ntd!.ntdThuockhucongnghiep;
@@ -207,8 +220,7 @@ class _M01TT11PageState extends State<M01TT11Page> {
   final List<String> steps = [
     'Thông tin\nDoanh nghiệp',
     'Thông tin\ntuyển dụng',
-    // 'Thông tin\nliên hệ',
-    // 'Nhật ký\ntuyển dụng',
+    'Thông tin liên hệ\n Nhật ký tuyển dụng ',
   ];
 
   Widget get stepContent {
@@ -217,6 +229,8 @@ class _M01TT11PageState extends State<M01TT11Page> {
         return _buildStep1();
       case 1:
         return _buildStep2();
+      case 2:
+        return _buildStep3();
       default:
         return const SizedBox.shrink();
     }
@@ -258,967 +272,1712 @@ class _M01TT11PageState extends State<M01TT11Page> {
   }
 
   Widget _buildStep1() {
+    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Add your form fields for step 1
-        const Text('Step 1 Content'),
-        // Example form fields:
-        CustomTextField(
-          controller: tenDn,
-          labelText: 'Tên doanh nghiệp',
-          hintText: 'Nhập tên doanh nghiệp',
-        ),
+        // Company Information Section
+        _buildSectionHeader(theme, 'Thông tin doanh nghiệp'),
         const SizedBox(height: 16),
-        CustomTextField(
-          controller: idDn,
-          labelText: 'Mã doanh nghiệp',
-          hintText: 'Nhập mã doanh nghiệp',
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.shadow.withAlpha(26),
+                spreadRadius: 1,
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomTextField(
+                controller: tenDn,
+                labelText: 'Tên doanh nghiệp',
+                hintText: 'Nhập tên doanh nghiệp',
+              ),
+              const SizedBox(height: 16),
+              CustomTextField(
+                controller: idDn,
+                labelText: 'Mã doanh nghiệp',
+                hintText: 'Nhập mã doanh nghiệp',
+              ),
+              const SizedBox(height: 16),
+              CustomTextField(
+                controller: tenGd,
+                labelText: 'Tên người liên hệ',
+                hintText: 'Nhập tên người liên hệ',
+              ),
+              const SizedBox(height: 16),
+              CustomTextField(
+                controller: diachiDn,
+                labelText: 'Địa chỉ doanh nghiệp',
+                hintText: 'Nhập địa chỉ doanh nghiệp',
+              ),
+              const SizedBox(height: 16),
+              CustomTextField(
+                controller: dienthoai,
+                labelText: 'Điện thoại',
+                hintText: 'Nhập điện thoại',
+              ),
+              const SizedBox(height: 16),
+              CustomTextField(
+                controller: email,
+                labelText: 'Email',
+                hintText: 'Nhập email',
+              ),
+            ],
+          ),
         ),
+        const SizedBox(height: 32),
+
+        // Business Type Section
+        _buildSectionHeader(theme, 'Loại hình doanh nghiệp'),
         const SizedBox(height: 16),
-        CustomTextField(
-          controller: tenGd,
-          labelText: 'Tên người liên hệ',
-          hintText: 'Nhập tên người liên hệ',
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.shadow.withAlpha(26),
+                spreadRadius: 1,
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              GenericPicker<HinhThucLoaiHinh>(
+                label: 'Loại hình doanh nghiệp',
+                items: locator<List<HinhThucLoaiHinh>>(),
+                initialValue: widget.ntd?.idLoaiHinhDoanhNghiep,
+                onChanged: (value) {
+                  setState(() {
+                    idLhdn.text = value?.displayName ?? '';
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              GenericPicker<NganhNgheKT>(
+                label: 'Ngành nghề',
+                items: locator<List<NganhNgheKT>>(),
+                initialValue: widget.ntd?.idNganhKinhTe,
+                onChanged: (value) {
+                  setState(() {
+                    idNkt.text = value?.displayName ?? '';
+                  });
+                },
+              ),
+            ],
+          ),
         ),
+        const SizedBox(height: 32),
+
+        // Location Section
+        _buildSectionHeader(theme, 'Địa chỉ'),
         const SizedBox(height: 16),
-        CustomTextField(
-          controller: diachiDn,
-          labelText: 'Địa chỉ doanh nghiệp',
-          hintText: 'Nhập địa chỉ doanh nghiệp',
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.shadow.withAlpha(26),
+                spreadRadius: 1,
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: CascadeLocationPickerGrok(
+            isNTD: true,
+            initialTinh: matinh.toString(),
+            initialHuyen: mahuyen.toString(),
+            initialXa: maxa.toString(),
+            initialKCN: idKhuCn.toString(),
+            addressDetailController: diachiDn,
+            onTinhChanged: (tinh) {
+              setState(() {
+                matinh.text = tinh?.matinh ?? '';
+              });
+            },
+            onHuyenChanged: (huyen) {
+              setState(() {
+                mahuyen.text = huyen?.tenhuyen ?? '';
+              });
+            },
+            onXaChanged: (xa) {
+              setState(() {
+                maxa.text = xa?.tenxa ?? '';
+              });
+            },
+            onKCNChanged: (kcn) {
+              setState(() {
+                idKhuCn = kcn?.id;
+              });
+            },
+          ),
         ),
+        const SizedBox(height: 32),
+
+        // Business Fields Section
+        _buildSectionHeader(theme, 'Lĩnh vực sản xuất kinh doanh'),
         const SizedBox(height: 16),
-        CustomTextField(
-          controller: dienthoai,
-          labelText: 'Điện thoại',
-          hintText: 'Nhập điện thoại',
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.shadow.withAlpha(26),
+                spreadRadius: 1,
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomCheckbox(
+                  label: 'Nông, lâm nghiệp và thủy sản',
+                  value: chkNl,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      chkNl = value ?? false;
+                    });
+                  }),
+              CustomCheckbox(
+                  label: 'Khai khoáng',
+                  value: chkKk,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      chkKk = value ?? false;
+                    });
+                  }),
+              CustomCheckbox(
+                  label:
+                      'SX và phân phối điện, khí đốt, hơi nước và điều hòa không khí',
+                  value: chkSxpp,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      chkSxpp = value ?? false;
+                    });
+                  }),
+              CustomCheckbox(
+                  label: 'Công nghiệp, chế biến, chế tạo',
+                  value: chkCn,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      chkCn = value ?? false;
+                    });
+                  }),
+              CustomCheckbox(
+                  label: 'Xây dựng',
+                  value: chkXd,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      chkXd = value ?? false;
+                    });
+                  }),
+              CustomCheckbox(
+                  label: 'Vận tải, kho bãi',
+                  value: chkVtkb,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      chkVtkb = value ?? false;
+                    });
+                  }),
+              CustomCheckbox(
+                  label: 'Dịch vụ lưu trú và ăn uống',
+                  value: chkDvlt,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      chkDvlt = value ?? false;
+                    });
+                  }),
+              CustomCheckbox(
+                  label: 'Thông tin truyền thông',
+                  value: chkTttt,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      chkTttt = value ?? false;
+                    });
+                  }),
+              CustomCheckbox(
+                  label:
+                      'Cung cấp nước, hoạt đông quản lý và xử lý nước thải,rác thải',
+                  value: chkCcn,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      chkCcn = value ?? false;
+                    });
+                  }),
+              CustomCheckbox(
+                  label: 'Hoạt động kinh doanh bất động sản',
+                  value: chkBds,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      chkBds = value ?? false;
+                    });
+                  }),
+              CustomCheckbox(
+                  label: 'Hoạt động tài chính, ngân hàng và bảo hiểm',
+                  value: chkTcnh,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      chkSxpp = value ?? false;
+                    });
+                  }),
+              CustomCheckbox(
+                  label: 'Hoạt động chuyên môn, khoa học và công nghệ',
+                  value: chkKhcn,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      chkKhcn = value ?? false;
+                    });
+                  }),
+              CustomCheckbox(
+                  label: 'Y tế và hoạt động trợ giúp xã hội',
+                  value: chkYt,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      chkYt = value ?? false;
+                    });
+                  }),
+              CustomCheckbox(
+                  label: 'Nghệ thuật, vui chơi giải trí',
+                  value: chkNt,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      chkNt = value ?? false;
+                    });
+                  }),
+              CustomCheckbox(
+                  label: 'Hoạt dộng hành chính và dịch vụ hỗ trợ',
+                  value: chkDvhc,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      chkDvhc = value ?? false;
+                    });
+                  }),
+              CustomCheckbox(
+                  label: 'Giáo dục và đào tạo',
+                  value: chkGd,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      chkGd = value ?? false;
+                    });
+                  }),
+              CustomCheckbox(
+                  label: 'Bán buôn, bán lẻ',
+                  value: chkBbl,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      chkKhcn = value ?? false;
+                    });
+                  }),
+              CustomCheckbox(
+                  label:
+                      'Hoạt động làm thuê và các công việc trong hộ gia đình',
+                  value: chkThue,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      chkYt = value ?? false;
+                    });
+                  }),
+              CustomCheckbox(
+                  label:
+                      'Hoạt động của ĐCS, tổ chức CT-XH, QLNN, ANQP, BĐXH bắt buộc',
+                  value: chkHdxh,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      chkNt = value ?? false;
+                    });
+                  }),
+              CustomCheckbox(
+                  label: 'Hoạt động quốc tế',
+                  value: chkHdqt,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      chkHdqt = value ?? false;
+                    });
+                  }),
+              CustomCheckbox(
+                  label: 'Hoạt động, dịch vụ khác',
+                  value: chkDv,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      chkDv = value ?? false;
+                    });
+                  }),
+            ],
+          ),
         ),
-        const SizedBox(height: 16),
-        CustomTextField(
-          controller: email,
-          labelText: 'Email',
-          hintText: 'Nhập email',
-        ),
-        const SizedBox(
-          height: 16,
-        ),
-        GenericPicker<HinhThucLoaiHinh>(
-          label: 'Loại hình doanh nghiệp',
-          items: locator<List<HinhThucLoaiHinh>>(),
-          initialValue: widget.ntd?.idLoaiHinhDoanhNghiep,
-          onChanged: (value) {
-            setState(() {
-              idLhdn.text = value?.displayName ?? '';
-            });
-          },
-        ),
-        const SizedBox(height: 16),
-        GenericPicker<NganhNgheKT>(
-          label: 'Ngành nghề',
-          items: locator<List<NganhNgheKT>>(),
-          initialValue: widget.ntd?.idNganhKinhTe,
-          onChanged: (value) {
-            setState(() {
-              idNkt.text = value?.displayName ?? '';
-            });
-          },
-        ),
-        const SizedBox(
-          height: 16,
-        ),
-        CascadeLocationPickerGrok(
-          isNTD: true,
-          initialTinh: matinh.toString(),
-          initialHuyen: mahuyen.toString(),
-          initialXa: maxa.toString(),
-          initialKCN: idKhuCn.toString(),
-          addressDetailController: diachiDn,
-          onTinhChanged: (tinh) {
-            setState(() {
-              matinh.text = tinh?.matinh ?? '';
-            });
-          },
-          onHuyenChanged: (huyen) {
-            setState(() {
-              mahuyen.text = huyen?.tenhuyen ?? '';
-            });
-          },
-          onXaChanged: (xa) {
-            setState(() {
-              maxa.text = xa?.tenxa ?? '';
-            });
-          },
-          onKCNChanged: (kcn) {
-            setState(() {
-              idKhuCn = kcn?.kcnId;
-            });
-          },
-        ),
-        const SizedBox(height: 16),
-        Text('Lĩnh vực sản xuất kinh doanh kèm theo:'),
-        CustomCheckbox(
-            label: 'Nông, lâm nghiệp và thủy sản',
-            value: chkNl,
-            onChanged: (bool? value) {
-              setState(() {
-                chkNl = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Khai khoáng',
-            value: chkKk,
-            onChanged: (bool? value) {
-              setState(() {
-                chkKk = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label:
-                'SX và phân phối điện, khí đốt, hơi nước và điều hòa không khí',
-            value: chkSxpp,
-            onChanged: (bool? value) {
-              setState(() {
-                chkSxpp = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Công nghiệp, chế  biến, chế tạo',
-            value: chkCn,
-            onChanged: (bool? value) {
-              setState(() {
-                chkCn = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Xây dựng',
-            value: chkXd,
-            onChanged: (bool? value) {
-              setState(() {
-                chkXd = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Vận tải, kho bãi',
-            value: chkVtkb,
-            onChanged: (bool? value) {
-              setState(() {
-                chkVtkb = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Dịch vụ lưu trú và ăn uống',
-            value: chkDvlt,
-            onChanged: (bool? value) {
-              setState(() {
-                chkDvlt = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Thông tin truyền thông',
-            value: chkTttt,
-            onChanged: (bool? value) {
-              setState(() {
-                chkTttt = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label:
-                'Cung cấp nước, hoạt đông quản lý và xử lý nước thải,rác thải',
-            value: chkCcn,
-            onChanged: (bool? value) {
-              setState(() {
-                chkCcn = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Hoạt động kinh doanh bất động sản',
-            value: chkBds,
-            onChanged: (bool? value) {
-              setState(() {
-                chkBds = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Hoạt động tài chính, ngân hàng và bảo hiểm',
-            value: chkTcnh,
-            onChanged: (bool? value) {
-              setState(() {
-                chkSxpp = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Hoạt động chuyên môn, khoa học và công nghệ',
-            value: chkKhcn,
-            onChanged: (bool? value) {
-              setState(() {
-                chkKhcn = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Y tế và hoạt động trợ giúp xã hội',
-            value: chkYt,
-            onChanged: (bool? value) {
-              setState(() {
-                chkYt = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Nghệ thuật, vui chơi giải trí',
-            value: chkNt,
-            onChanged: (bool? value) {
-              setState(() {
-                chkNt = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Hoạt dộng hành chính và dịch vụ hỗ trợ',
-            value: chkDvhc,
-            onChanged: (bool? value) {
-              setState(() {
-                chkDvhc = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Giáo dục và đào tạo',
-            value: chkGd,
-            onChanged: (bool? value) {
-              setState(() {
-                chkGd = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Bán buôn, bán lẻ',
-            value: chkBbl,
-            onChanged: (bool? value) {
-              setState(() {
-                chkKhcn = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Hoạt động làm thuê và các công việc trong hộ gia đình',
-            value: chkThue,
-            onChanged: (bool? value) {
-              setState(() {
-                chkYt = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label:
-                'Hoạt động của ĐCS, tổ chức CT-XH, QLNN, ANQP, BĐXH bắt buộc',
-            value: chkHdxh,
-            onChanged: (bool? value) {
-              setState(() {
-                chkNt = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Hoạt động quốc tế',
-            value: chkHdqt,
-            onChanged: (bool? value) {
-              setState(() {
-                chkHdqt = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Hoạt động, dịch vụ khác',
-            value: chkDv,
-            onChanged: (bool? value) {
-              setState(() {
-                chkDv = value ?? false;
-              });
-            }),
       ],
     );
   }
 
+  Widget _buildSectionHeader(ThemeData theme, String title) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: theme.colorScheme.shadow.withAlpha(26),
+            spreadRadius: 1,
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 4,
+            height: 24,
+            decoration: BoxDecoration(
+              color: theme.colorScheme.primary,
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Text(
+            title,
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: theme.colorScheme.onSurface,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildStep2() {
+    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Add your form fields for step 2
-        const Text('Step 2 Content'),
-        // Example confirmation details:
-        CustomTextField(
-          hintText: 'Tên công việc',
-          labelText: 'Tên công việc',
-          controller: tenCv,
+        // Basic Job Information Section
+        _buildSectionHeader(theme, 'Thông tin cơ bản công việc'),
+        const SizedBox(height: 16),
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.shadow.withAlpha(26),
+                spreadRadius: 1,
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomTextField(
+                hintText: 'Tên công việc',
+                labelText: 'Tên công việc',
+                controller: tenCv,
+              ),
+              const SizedBox(height: 16),
+              CustomTextField.number(
+                hintText: 'Số lượng tuyển',
+                labelText: 'Số lượng tuyển',
+                controller: soluong,
+              ),
+              const SizedBox(height: 16),
+              CustomTextField.textArea(
+                hintText: 'Mô tả công việc',
+                labelText: 'Mô tả công việc',
+                controller: motaCv,
+                maxLines: 5,
+                minLines: 3,
+              ),
+            ],
+          ),
         ),
-        const SizedBox(
-          height: 14,
-        ),
-        CustomTextField.number(
-          hintText: 'Số lượng tuyển',
-          labelText: 'Số lượng tuyển',
-          controller: soluong,
-        ),
-        const SizedBox(
-          height: 14,
-        ),
-        CustomTextField.textArea(
-          hintText: 'Mô tả công việc',
-          labelText: 'Mô tả công việc',
-          controller: motaCv,
-          maxLines: 5,
-          minLines: 3,
-        ),
-        GenericPicker<NganhNgheTD>(
-          onChanged: (NganhNgheTD? value) {
-            setState(() {
-              nganhId = value?.id;
-            });
-          },
-          label: 'Ngành nghề tuyển dụng',
-          items: locator<List<NganhNgheTD>>(),
-        ),
-        GenericPicker<ChucDanhModel>(
-          onChanged: (ChucDanhModel? value) {
-            setState(() {
-              idChucvu = value?.id;
-            });
-          },
-          label: 'Chức vụ',
-          items: locator<List<ChucDanhModel>>(),
-        ),
-        NganhNgheCapDoPicker(),
-        GenericPicker<TrinhDoHocVan>(
-          onChanged: (TrinhDoHocVan? value) {
-            setState(() {
-              idTdnn1 = value?.id;
-            });
-          },
-          label: 'Trình độ học vấn',
-          items: locator<List<TrinhDoHocVan>>(),
-        ),
-        GenericPicker<TrinhDoChuyenMon>(
-          onChanged: (TrinhDoChuyenMon? value) {
-            setState(() {
-              idTdnn2 = value?.id;
-            });
-          },
-          label: 'Trình độ CMKT',
-          items: locator<List<TrinhDoChuyenMon>>(),
-        ),
-        GenericPicker<NganhNgheChuyenNganh>(
-          onChanged: (NganhNgheChuyenNganh? value) {
-            setState(() {
-              idTdth = value?.id;
-            });
-          },
-          label: 'Chuyên ngành đào tạo',
-          items: locator<List<NganhNgheChuyenNganh>>(),
-        ),
-        CustomTextField(
-          labelText: 'Trình độ khác 1',
-          hintText: '',
-          controller: trinhdok1,
-        ),
-        CustomTextField(
-          labelText: 'Trình độ khác 2',
-          hintText: 'Ngành nghề',
-          controller: trinhdok2,
-        ),
-        CustomTextField(
-          labelText: 'Trình độ kỹ năng nghề',
-          hintText: 'Ngành nghề tuyển dụng',
-          controller: trinhdoNghe,
-        ),
-        CustomTextField.numberGrok(
-          labelText: 'Bậc',
-          hintText: 'Ngành nghề',
-          controller: bacNghe,
-        ),
-        GenericPicker<NgoaiNgu>(
-          label: 'Ngoại ngữ 1',
-          items: locator<List<NgoaiNgu>>(),
-          onChanged: (NgoaiNgu? value) {
-            setState(() {
-              idNndt1 = value?.id;
-            });
-          },
-        ),
-        GenericPicker<TrinhDoNgoaiNgu>(
-          label: 'Ngoại ngữ 2',
-          items: locator<List<TrinhDoNgoaiNgu>>(),
-          onChanged: (TrinhDoNgoaiNgu? value) {
-            setState(() {
-              idTdnn1 = value?.id;
-            });
-          },
-        ),
-        CustomPickerMap(
-          label: Text('Mức độ 1'),
-          items: mucDoOptions,
-          selectedItem: -1,
-          onChanged: (mucDo) {
-            setState(() {
-              mucNn1 = mucDo;
-            });
-          },
-        ),
+        const SizedBox(height: 32),
 
-        GenericPicker<NgoaiNgu>(
-          label: 'Ngoại ngữ 2',
-          items: locator<List<NgoaiNgu>>(),
-          onChanged: (NgoaiNgu? value) {
-            setState(() {
-              idNndt2 = value?.id;
-            });
-          },
+        // Job Requirements Section
+        _buildSectionHeader(theme, 'Yêu cầu công việc'),
+        const SizedBox(height: 16),
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.shadow.withAlpha(26),
+                spreadRadius: 1,
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              GenericPicker<NganhNgheTD>(
+                onChanged: (NganhNgheTD? value) {
+                  setState(() {
+                    nganhId = value?.id;
+                  });
+                },
+                label: 'Ngành nghề tuyển dụng',
+                items: locator<List<NganhNgheTD>>(),
+              ),
+              const SizedBox(height: 16),
+              GenericPicker<ChucDanhModel>(
+                onChanged: (ChucDanhModel? value) {
+                  setState(() {
+                    idChucvu = value?.id;
+                  });
+                },
+                label: 'Chức vụ',
+                items: locator<List<ChucDanhModel>>(),
+              ),
+              const SizedBox(height: 16),
+              NganhNgheCapDoPicker(),
+            ],
+          ),
         ),
-        GenericPicker<TrinhDoNgoaiNgu>(
-          label: 'Ngoại ngữ 2',
-          items: locator<List<TrinhDoNgoaiNgu>>(),
-          onChanged: (TrinhDoNgoaiNgu? value) {
-            setState(() {
-              idTdnn2 = value?.id;
-            });
-          },
-        ),
-        CustomPickerMap(
-          label: Text('Mức độ 1'),
-          items: mucDoOptions,
-          selectedItem: -1,
-          onChanged: (mucDo) {
-            setState(() {
-              mucNn2 = mucDo;
-            });
-          },
-        ),
-        GenericPicker<TrinhDoTinHoc>(
-          label: 'Trình độ tin học',
-          items: locator<List<TrinhDoTinHoc>>(),
-          onChanged: (TrinhDoTinHoc? value) {
-            setState(() {
-              idTdth = value?.id;
-            });
-          },
-        ),
-        CustomPickerMap(
-          label: Text('Mức độ 1'),
-          items: mucDoOptions,
-          selectedItem: -1,
-          onChanged: (mucDo) {
-            setState(() {
-              mucTh = mucDo;
-            });
-          },
-        ),
+        const SizedBox(height: 32),
 
-        GenericPicker<TrinhDoTinHoc>(
-          label: 'Trình độ tin học',
-          items: locator<List<TrinhDoTinHoc>>(),
-          onChanged: (TrinhDoTinHoc? value) {
-            setState(() {
-              idTinhockhac = value?.id;
-            });
-          },
-        ),
-        CustomPickerMap(
-          label: Text('Mức độ 1'),
-          items: mucDoOptions,
-          selectedItem: -1,
-          onChanged: (mucDo) {
-            setState(() {
-              mucThKhac = mucDo;
-            });
-          },
-        ),
+        // Education Requirements Section
+        _buildSectionHeader(theme, 'Yêu cầu học vấn'),
         const SizedBox(height: 16),
-        const Text('Điều kiện việc làm:',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 8),
-        const Text('Nơi làm việc:',
-            style: TextStyle(fontWeight: FontWeight.w500)),
-        CustomCheckbox(
-            label: 'Trong nhà',
-            value: chkNl1,
-            onChanged: (bool? value) {
-              setState(() {
-                chkNl1 = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Ngoài trời',
-            value: chkNl2,
-            onChanged: (bool? value) {
-              setState(() {
-                chkNl2 = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Hỗn hợp',
-            value: chkNl3,
-            onChanged: (bool? value) {
-              setState(() {
-                chkNl3 = value ?? false;
-              });
-            }),
-        const SizedBox(height: 8),
-        const Text('Trọng lượng nâng:',
-            style: TextStyle(fontWeight: FontWeight.w500)),
-        CustomCheckbox(
-            label: 'Dưới 5kg',
-            value: chkTl1,
-            onChanged: (bool? value) {
-              setState(() {
-                chkTl1 = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: '5-20kg',
-            value: chkTl2,
-            onChanged: (bool? value) {
-              setState(() {
-                chkTl2 = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Trên 20kg',
-            value: chkTl3,
-            onChanged: (bool? value) {
-              setState(() {
-                chkTl3 = value ?? false;
-              });
-            }),
-        const SizedBox(height: 8),
-        const Text('Đứng/đi lại:',
-            style: TextStyle(fontWeight: FontWeight.w500)),
-        CustomCheckbox(
-            label: 'Không có',
-            value: chkDl1,
-            onChanged: (bool? value) {
-              setState(() {
-                chkDl1 = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Trung bình',
-            value: chkDl2,
-            onChanged: (bool? value) {
-              setState(() {
-                chkDl2 = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Cần đứng đi lại nhiều',
-            value: chkDl3,
-            onChanged: (bool? value) {
-              setState(() {
-                chkDl3 = value ?? false;
-              });
-            }),
-        const SizedBox(height: 8),
-        const Text('Nghe/nói:', style: TextStyle(fontWeight: FontWeight.w500)),
-        CustomCheckbox(
-            label: 'Không cần thiết',
-            value: chkNn1,
-            onChanged: (bool? value) {
-              setState(() {
-                chkNn1 = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Cơ bản',
-            value: chkNn2,
-            onChanged: (bool? value) {
-              setState(() {
-                chkNn2 = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Quan trọng',
-            value: chkNn3,
-            onChanged: (bool? value) {
-              setState(() {
-                chkNn3 = value ?? false;
-              });
-            }),
-        const SizedBox(height: 8),
-        const Text('Thị lực:', style: TextStyle(fontWeight: FontWeight.w500)),
-        CustomCheckbox(
-            label: 'Mức bình thường',
-            value: chkY01, // Assuming chkY01 corresponds to 'Mức bình thường'
-            onChanged: (bool? value) {
-              setState(() {
-                chkY01 = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Nhìn được vật chi tiết nhỏ',
-            value:
-                chkY02, // Assuming chkY02 corresponds to 'Nhìn được vật chi tiết nhỏ'
-            onChanged: (bool? value) {
-              setState(() {
-                chkY02 = value ?? false;
-              });
-            }),
-        const SizedBox(height: 8),
-        const Text('Thao tác bằng tay:',
-            style: TextStyle(fontWeight: FontWeight.w500)),
-        CustomCheckbox(
-            label: 'Lắp ráp đồ vật lớn',
-            value: chkTy1,
-            onChanged: (bool? value) {
-              setState(() {
-                chkTy1 = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Lắp ráp đồ vật nhỏ',
-            value: chkTy2,
-            onChanged: (bool? value) {
-              setState(() {
-                chkTy2 = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Lắp ráp đồ vật rất nhỏ',
-            value: chkTy3,
-            onChanged: (bool? value) {
-              setState(() {
-                chkTy3 = value ?? false;
-              });
-            }),
-        const SizedBox(height: 8),
-        const Text('Dùng 2 tay:',
-            style: TextStyle(fontWeight: FontWeight.w500)),
-        CustomCheckbox(
-            label: 'Cần 2 tay',
-            value: chk2T1,
-            onChanged: (bool? value) {
-              setState(() {
-                chk2T1 = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Đôi khi cần 2 tay',
-            value: chk2T2,
-            onChanged: (bool? value) {
-              setState(() {
-                chk2T2 = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Chỉ cần 1 tay',
-            value: chk2T3,
-            onChanged: (bool? value) {
-              setState(() {
-                chk2T3 = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Tay trái',
-            value: chk2T4,
-            onChanged: (bool? value) {
-              setState(() {
-                chk2T4 = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Tay phải',
-            value: chk2T5,
-            onChanged: (bool? value) {
-              setState(() {
-                chk2T5 = value ?? false;
-              });
-            }),
-        const SizedBox(height: 16),
-        const Text('Kỹ năng mềm khác:',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 8),
-        GenericPicker<KyNangMemModel>(
-          label: 'Kỹ năng mềm',
-          items: locator<List<KyNangMemModel>>(),
-          onChanged: (KyNangMemModel? value) {
-            setState(() {
-              idKynang.text = value?.id.toString() ?? '';
-            });
-          },
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.shadow.withAlpha(26),
+                spreadRadius: 1,
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              GenericPicker<TrinhDoHocVan>(
+                onChanged: (TrinhDoHocVan? value) {
+                  setState(() {
+                    idTdnn1 = value?.id;
+                  });
+                },
+                label: 'Trình độ học vấn',
+                items: locator<List<TrinhDoHocVan>>(),
+              ),
+              const SizedBox(height: 16),
+              GenericPicker<TrinhDoChuyenMon>(
+                onChanged: (TrinhDoChuyenMon? value) {
+                  setState(() {
+                    idTdnn2 = value?.id;
+                  });
+                },
+                label: 'Trình độ CMKT',
+                items: locator<List<TrinhDoChuyenMon>>(),
+              ),
+              const SizedBox(height: 16),
+              GenericPicker<NganhNgheChuyenNganh>(
+                onChanged: (NganhNgheChuyenNganh? value) {
+                  setState(() {
+                    idTdth = value?.id;
+                  });
+                },
+                label: 'Chuyên ngành đào tạo',
+                items: locator<List<NganhNgheChuyenNganh>>(),
+              ),
+              const SizedBox(height: 16),
+              CustomTextField(
+                labelText: 'Trình độ khác 1',
+                hintText: '',
+                controller: trinhdok1,
+              ),
+              const SizedBox(height: 16),
+              CustomTextField(
+                labelText: 'Trình độ khác 2',
+                hintText: 'Ngành nghề',
+                controller: trinhdok2,
+              ),
+              const SizedBox(height: 16),
+              CustomTextField(
+                labelText: 'Trình độ kỹ năng nghề',
+                hintText: 'Ngành nghề tuyển dụng',
+                controller: trinhdoNghe,
+              ),
+              const SizedBox(height: 16),
+              CustomTextField.numberGrok(
+                labelText: 'Bậc',
+                hintText: 'Ngành nghề',
+                controller: bacNghe,
+              ),
+            ],
+          ),
         ),
-        const SizedBox(height: 8),
-        CustomCheckbox(
-            label: 'Giao tiếp',
-            value: chkGt,
-            onChanged: (bool? value) {
-              setState(() {
-                chkGt = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Thuyết trình',
-            value: chkTtr,
-            onChanged: (bool? value) {
-              setState(() {
-                chkTtr = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Quản lý thời gian',
-            value: chkQltg,
-            onChanged: (bool? value) {
-              setState(() {
-                chkQltg = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Quản lý nhân sự',
-            value: chkNs, // Assuming chkNs is for Quản lý nhân sự
-            onChanged: (bool? value) {
-              setState(() {
-                chkNs = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Tổng hợp báo cáo',
-            value: chkTh, // Assuming chkTh is for Tổng hợp báo cáo
-            onChanged: (bool? value) {
-              setState(() {
-                chkTh = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Thích ứng',
-            value: chkTu, // Assuming chkTu is for Thích ứng
-            onChanged: (bool? value) {
-              setState(() {
-                chkTu = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Làm việc nhóm',
-            value: chkNhom,
-            onChanged: (bool? value) {
-              setState(() {
-                chkNhom = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Làm việc độc lập',
-            value: chkDl, // Assuming chkDl is for Làm việc độc lập
-            onChanged: (bool? value) {
-              setState(() {
-                chkDl = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Chịu được áp lực công việc',
-            value: chkApl, // Assuming chkApl is for Áp lực
-            onChanged: (bool? value) {
-              setState(() {
-                chkApl = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Theo dõi giám sát',
-            value: chkGs, // Assuming chkGs is for Giám sát
-            onChanged: (bool? value) {
-              setState(() {
-                chkGs = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Tư duy phản biện',
-            value: chkPb, // Assuming chkPb is for Phản biện
-            onChanged: (bool? value) {
-              setState(() {
-                chkPb = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Kỹ năng khác',
-            value: chkKhac,
-            onChanged: (bool? value) {
-              setState(() {
-                chkKhac = value ?? false;
-                if (!chkKhac) {
-                  // Clear the text field if checkbox is unchecked
-                  kynangkhac.clear();
-                }
-              });
-            }),
-        if (chkKhac) // Conditionally show the text field
-          Padding(
-            padding: const EdgeInsets.only(left: 30.0, top: 8.0), // Indent
-            child: CustomTextField(
-              controller: kynangkhac,
-              labelText: 'Nhập kỹ năng khác',
-              hintText: 'Mô tả kỹ năng khác...',
-            ),
-          ),
+        const SizedBox(height: 32),
+
+        // Language Skills Section
+        _buildSectionHeader(theme, 'Kỹ năng ngoại ngữ'),
         const SizedBox(height: 16),
-        const Text('Chế độ phúc lợi:',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 8),
-        const Text('Hỗ trợ ăn:', style: TextStyle(fontWeight: FontWeight.w500)),
-        CustomCheckbox(
-            label: '1 bữa',
-            value: chkPl01,
-            onChanged: (bool? value) {
-              setState(() {
-                chkPl01 = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: '2 bữa',
-            value: chkPl02,
-            onChanged: (bool? value) {
-              setState(() {
-                chkPl02 = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: '3 bữa',
-            value: chkPl03,
-            onChanged: (bool? value) {
-              setState(() {
-                chkPl03 = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Tiền',
-            value: chkPl04,
-            onChanged: (bool? value) {
-              setState(() {
-                chkPl04 = value ?? false;
-                 if (!chkPl04) {
-                  // Clear the text field if checkbox is unchecked
-                  tienPhucloiController.clear();
-                  // Optionally reset the BigInt value too
-                  // tienPhucloi = BigInt.zero;
-                }
-              });
-            }),
-        if (chkPl04) // Conditionally show the text field for money amount
-          Padding(
-            padding: const EdgeInsets.only(left: 30.0, top: 8.0), // Indent
-            child: CustomTextField.number( // Use number variant if appropriate
-              controller: tienPhucloiController,
-              labelText: 'Nhập số tiền hỗ trợ',
-              hintText: 'Số tiền...',
-              // Add onChanged to update the BigInt if needed immediately
-              // onChanged: (value) {
-              //   tienPhucloi = BigInt.tryParse(value) ?? BigInt.zero;
-              // },
-            ),
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.shadow.withAlpha(26),
+                spreadRadius: 1,
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
-        CustomCheckbox(
-            label: 'Không hỗ trợ',
-            value: chkPl05,
-            onChanged: (bool? value) {
-              setState(() {
-                chkPl05 = value ?? false;
-              });
-            }),
-        const SizedBox(height: 8),
-        CustomCheckbox(
-            label: 'BHXH/BHTN/BHYT',
-            value: chkPl06,
-            onChanged: (bool? value) {
-              setState(() {
-                chkPl06 = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'BH Nhân thọ',
-            value: chkPl07,
-            onChanged: (bool? value) {
-              setState(() {
-                chkPl07 = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Trợ cấp thôi việc',
-            value: chkPl08,
-            onChanged: (bool? value) {
-              setState(() {
-                chkPl08 = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Nhà trẻ',
-            value: chkPl09,
-            onChanged: (bool? value) {
-              setState(() {
-                chkPl09 = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Xe đưa đón',
-            value: chkPl10,
-            onChanged: (bool? value) {
-              setState(() {
-                chkPl10 = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Hỗ trợ đi lại',
-            value: chkPl11,
-            onChanged: (bool? value) {
-              setState(() {
-                chkPl11 = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Kí túc xá',
-            value: chkPl12,
-            onChanged: (bool? value) {
-              setState(() {
-                chkPl12 = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Hỗ trợ nhà ở',
-            value: chkPl13,
-            onChanged: (bool? value) {
-              setState(() {
-                chkPl13 = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Đào tạo',
-            value: chkPl14,
-            onChanged: (bool? value) {
-              setState(() {
-                chkPl14 = value ?? false;
-              });
-            }),
-         CustomCheckbox(
-            label: 'Thiết bị hỗ trợ người khuyết tật',
-            value: chkPl15,
-            onChanged: (bool? value) {
-              setState(() {
-                chkPl15 = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Cơ hội thăng tiến',
-            value: chkPl16,
-            onChanged: (bool? value) {
-              setState(() {
-                chkPl16 = value ?? false;
-              });
-            }),
-        CustomCheckbox(
-            label: 'Phúc lợi khác',
-            value: chkPl17,
-            onChanged: (bool? value) {
-              setState(() {
-                chkPl17 = value ?? false;
-                 if (!chkPl17) {
-                  // Clear the text field if checkbox is unchecked
-                  phucloikhac.clear();
-                }
-              });
-            }),
-        if (chkPl17) // Conditionally show the text field for other benefits
-          Padding(
-            padding: const EdgeInsets.only(left: 30.0, top: 8.0), // Indent
-            child: CustomTextField(
-              controller: phucloikhac,
-              labelText: 'Nhập phúc lợi khác',
-              hintText: 'Mô tả phúc lợi khác...',
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Ngoại ngữ 1',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 16),
+              GenericPicker<NgoaiNgu>(
+                label: 'Chọn ngoại ngữ',
+                items: locator<List<NgoaiNgu>>(),
+                onChanged: (NgoaiNgu? value) {
+                  setState(() {
+                    idNndt1 = value?.id;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              GenericPicker<TrinhDoNgoaiNgu>(
+                label: 'Trình độ',
+                items: locator<List<TrinhDoNgoaiNgu>>(),
+                onChanged: (TrinhDoNgoaiNgu? value) {
+                  setState(() {
+                    idTdnn1 = value?.id;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              CustomPickerMap(
+                label: Text('Mức độ yêu cầu'),
+                items: mucDoOptions,
+                selectedItem: -1,
+                onChanged: (mucDo) {
+                  setState(() {
+                    mucNn1 = mucDo;
+                  });
+                },
+              ),
+              const SizedBox(height: 24),
+              Text(
+                'Ngoại ngữ 2',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 16),
+              GenericPicker<NgoaiNgu>(
+                label: 'Chọn ngoại ngữ',
+                items: locator<List<NgoaiNgu>>(),
+                onChanged: (NgoaiNgu? value) {
+                  setState(() {
+                    idNndt2 = value?.id;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              GenericPicker<TrinhDoNgoaiNgu>(
+                label: 'Trình độ',
+                items: locator<List<TrinhDoNgoaiNgu>>(),
+                onChanged: (TrinhDoNgoaiNgu? value) {
+                  setState(() {
+                    idTdnn2 = value?.id;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              CustomPickerMap(
+                label: Text('Mức độ yêu cầu'),
+                items: mucDoOptions,
+                selectedItem: -1,
+                onChanged: (mucDo) {
+                  setState(() {
+                    mucNn2 = mucDo;
+                  });
+                },
+              ),
+            ],
           ),
+        ),
+        const SizedBox(height: 32),
+
+        // Computer Skills Section
+        _buildSectionHeader(theme, 'Kỹ năng tin học'),
+        const SizedBox(height: 16),
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.shadow.withAlpha(26),
+                spreadRadius: 1,
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Tin học văn phòng',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 16),
+              GenericPicker<TrinhDoTinHoc>(
+                label: 'Trình độ tin học',
+                items: locator<List<TrinhDoTinHoc>>(),
+                onChanged: (TrinhDoTinHoc? value) {
+                  setState(() {
+                    idTdth = value?.id;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              CustomPickerMap(
+                label: Text('Mức độ yêu cầu'),
+                items: mucDoOptions,
+                selectedItem: -1,
+                onChanged: (mucDo) {
+                  setState(() {
+                    mucTh = mucDo;
+                  });
+                },
+              ),
+              const SizedBox(height: 24),
+              Text(
+                'Phần mềm khác',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 16),
+              GenericPicker<TrinhDoTinHoc>(
+                label: 'Trình độ tin học',
+                items: locator<List<TrinhDoTinHoc>>(),
+                onChanged: (TrinhDoTinHoc? value) {
+                  setState(() {
+                    idTinhockhac = value?.id;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              CustomPickerMap(
+                label: Text('Mức độ yêu cầu'),
+                items: mucDoOptions,
+                selectedItem: -1,
+                onChanged: (mucDo) {
+                  setState(() {
+                    mucThKhac = mucDo;
+                  });
+                },
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 32),
+
+        // Working Conditions Section
+        _buildSectionHeader(theme, 'Điều kiện việc làm'),
+        const SizedBox(height: 16),
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.shadow.withAlpha(26),
+                spreadRadius: 1,
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Nơi làm việc',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              CustomCheckbox(
+                label: 'Trong nhà',
+                value: chkNl1,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkNl1 = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Ngoài trời',
+                value: chkNl2,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkNl2 = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Hỗn hợp',
+                value: chkNl3,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkNl3 = value ?? false;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Trọng lượng nâng',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              CustomCheckbox(
+                label: 'Dưới 5kg',
+                value: chkTl1,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkTl1 = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: '5-20kg',
+                value: chkTl2,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkTl2 = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Trên 20kg',
+                value: chkTl3,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkTl3 = value ?? false;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Đứng/đi lại',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              CustomCheckbox(
+                label: 'Không có',
+                value: chkDl1,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkDl1 = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Trung bình',
+                value: chkDl2,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkDl2 = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Cần đứng đi lại nhiều',
+                value: chkDl3,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkDl3 = value ?? false;
+                  });
+                },
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 32),
+
+        // Physical Requirements Section
+        _buildSectionHeader(theme, 'Yêu cầu thể chất'),
+        const SizedBox(height: 16),
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.shadow.withAlpha(26),
+                spreadRadius: 1,
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Nghe/nói',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              CustomCheckbox(
+                label: 'Không cần thiết',
+                value: chkNn1,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkNn1 = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Cơ bản',
+                value: chkNn2,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkNn2 = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Quan trọng',
+                value: chkNn3,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkNn3 = value ?? false;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Thị lực',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              CustomCheckbox(
+                label: 'Mức bình thường',
+                value: chkY01,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkY01 = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Nhìn được vật chi tiết nhỏ',
+                value: chkY02,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkY02 = value ?? false;
+                  });
+                },
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 32),
+
+        // Hand Usage Section
+        _buildSectionHeader(theme, 'Yêu cầu sử dụng tay'),
+        const SizedBox(height: 16),
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.shadow.withAlpha(26),
+                spreadRadius: 1,
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Thao tác bằng tay',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              CustomCheckbox(
+                label: 'Lắp ráp đồ vật lớn',
+                value: chkTy1,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkTy1 = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Lắp ráp đồ vật nhỏ',
+                value: chkTy2,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkTy2 = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Lắp ráp đồ vật rất nhỏ',
+                value: chkTy3,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkTy3 = value ?? false;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Dùng 2 tay',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              CustomCheckbox(
+                label: 'Cần 2 tay',
+                value: chk2T1,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chk2T1 = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Đôi khi cần 2 tay',
+                value: chk2T2,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chk2T2 = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Chỉ cần 1 tay',
+                value: chk2T3,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chk2T3 = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Tay trái',
+                value: chk2T4,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chk2T4 = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Tay phải',
+                value: chk2T5,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chk2T5 = value ?? false;
+                  });
+                },
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 32),
+
+        // Soft Skills Section
+        _buildSectionHeader(theme, 'Kỹ năng mềm'),
+        const SizedBox(height: 16),
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.shadow.withAlpha(26),
+                spreadRadius: 1,
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              GenericPicker<KyNangMemModel>(
+                label: 'Kỹ năng mềm',
+                items: locator<List<KyNangMemModel>>(),
+                onChanged: (KyNangMemModel? value) {
+                  setState(() {
+                    idKynang.text = value?.id.toString() ?? '';
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              CustomCheckbox(
+                label: 'Giao tiếp',
+                value: chkGt,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkGt = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Thuyết trình',
+                value: chkTtr,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkTtr = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Quản lý thời gian',
+                value: chkQltg,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkQltg = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Quản lý nhân sự',
+                value: chkNs,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkNs = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Tổng hợp báo cáo',
+                value: chkTh,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkTh = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Thích ứng',
+                value: chkTu,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkTu = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Làm việc nhóm',
+                value: chkNhom,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkNhom = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Làm việc độc lập',
+                value: chkDl,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkDl = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Chịu được áp lực công việc',
+                value: chkApl,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkApl = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Kỹ năng khác',
+                value: chkKhac,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkKhac = value ?? false;
+                  });
+                },
+              ),
+              if (chkKhac)
+                Padding(
+                  padding: const EdgeInsets.only(left: 30.0, top: 8.0),
+                  child: CustomTextField(
+                    controller: kynangkhac,
+                    labelText: 'Nhập kỹ năng khác',
+                    hintText: 'Mô tả kỹ năng khác...',
+                  ),
+                ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 32),
+
+        // Benefits Section
+        _buildSectionHeader(theme, 'Chế độ phúc lợi'),
+        const SizedBox(height: 16),
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.shadow.withAlpha(26),
+                spreadRadius: 1,
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Hỗ trợ ăn',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              CustomCheckbox(
+                label: '1 bữa',
+                value: chkPl01,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkPl01 = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: '2 bữa',
+                value: chkPl02,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkPl02 = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: '3 bữa',
+                value: chkPl03,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkPl03 = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Tiền',
+                value: chkPl04,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkPl04 = value ?? false;
+                  });
+                },
+              ),
+              if (chkPl04)
+                Padding(
+                  padding: const EdgeInsets.only(left: 30.0, top: 8.0),
+                  child: CustomTextField.number(
+                    controller: tienPhucloiController,
+                    labelText: 'Nhập số tiền hỗ trợ',
+                    hintText: 'Số tiền...',
+                  ),
+                ),
+              CustomCheckbox(
+                label: 'Không hỗ trợ',
+                value: chkPl05,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkPl05 = value ?? false;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Các phúc lợi khác',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              CustomCheckbox(
+                label: 'BHXH/BHTN/BHYT',
+                value: chkPl06,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkPl06 = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'BH Nhân thọ',
+                value: chkPl07,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkPl07 = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Trợ cấp thôi việc',
+                value: chkPl08,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkPl08 = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Nhà trẻ',
+                value: chkPl09,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkPl09 = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Xe đưa đón',
+                value: chkPl10,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkPl10 = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Hỗ trợ đi lại',
+                value: chkPl11,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkPl11 = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Kí túc xá',
+                value: chkPl12,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkPl12 = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Hỗ trợ nhà ở',
+                value: chkPl13,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkPl13 = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Đào tạo',
+                value: chkPl14,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkPl14 = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Thiết bị hỗ trợ người khuyết tật',
+                value: chkPl15,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkPl15 = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Cơ hội thăng tiến',
+                value: chkPl16,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkPl16 = value ?? false;
+                  });
+                },
+              ),
+              CustomCheckbox(
+                label: 'Phúc lợi khác',
+                value: chkPl17,
+                onChanged: (bool? value) {
+                  setState(() {
+                    chkPl17 = value ?? false;
+                  });
+                },
+              ),
+              if (chkPl17)
+                Padding(
+                  padding: const EdgeInsets.only(left: 30.0, top: 8.0),
+                  child: CustomTextField(
+                    controller: phucloikhac,
+                    labelText: 'Nhập phúc lợi khác',
+                    hintText: 'Mô tả phúc lợi khác...',
+                  ),
+                ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 32),
+
+        // Job Details Section
+        _buildSectionHeader(theme, 'Chi tiết công việc'),
+        const SizedBox(height: 16),
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.shadow.withAlpha(26),
+                spreadRadius: 1,
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              GenericPicker<KinhNghiemLamViec>(
+                label: 'Kinh nghiệm',
+                items: locator<List<KinhNghiemLamViec>>(),
+                onChanged: (KinhNghiemLamViec? value) {
+                  setState(() {
+                    idKinhnghiem.text = value?.id.toString() ?? '';
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              GenericPicker<TinhThanhModel>(
+                label: 'Nơi làm việc dự kiến',
+                items: locator<List<TinhThanhModel>>(),
+                onChanged: (TinhThanhModel? value) {
+                  setState(() {
+                    noiLvTinh.text = value?.matinh ?? '';
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              GenericPicker<LoaiHopDongLaoDong>(
+                label: 'Loại hợp đồng lao động',
+                items: locator<List<LoaiHopDongLaoDong>>(),
+                onChanged: (LoaiHopDongLaoDong? value) {
+                  setState(() {
+                    idLoaiDhld = value?.id;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              GenericPicker<HinhThucTuyenDung>(
+                label: 'Hình thức tuyển dụng',
+                items: locator<List<HinhThucTuyenDung>>(),
+                onChanged: (HinhThucTuyenDung? value) {
+                  setState(() {
+                    idHinhthucTd.text = value?.id.toString() ?? '';
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              GenericPicker<HinhThucLamViecModel>(
+                label: 'Hình thức làm việc',
+                items: locator<List<HinhThucLamViecModel>>(),
+                onChanged: (HinhThucLamViecModel? value) {
+                  setState(() {
+                    idHinhthuc.text = value?.id.toString() ?? '';
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              GenericPicker<MucDichLamViec>(
+                label: 'Mục đích làm việc',
+                items: locator<List<MucDichLamViec>>(),
+                onChanged: (MucDichLamViec? value) {
+                  setState(() {
+                    idMucdich.text = value?.id.toString() ?? '';
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              GenericPicker<MucLuongMM>(
+                label: 'Mức lương',
+                items: locator<List<MucLuongMM>>(),
+                onChanged: (MucLuongMM? value) {
+                  setState(() {
+                    idMucluong = value?.id;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              CustomTextField.numberGrok(
+                controller: tienluong,
+                labelText: 'Mức lương',
+                hintText: 'Nhập mức lương',
+              ),
+              const SizedBox(height: 16),
+              GenericPicker<DoiTuong>(
+                label: 'Đối tượng tuyển dụng',
+                items: locator<List<DoiTuong>>(),
+                onChanged: (DoiTuong? value) {
+                  setState(() {
+                    idDoituong = value?.id;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              GenericPicker<DoTuoi>(
+                label: 'Độ tuổi',
+                items: locator<List<DoTuoi>>(),
+                onChanged: (DoTuoi? value) {
+                  setState(() {
+                    idDoTuoi = value?.id;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              CustomPickerMap(
+                label: Text('Giới tính'),
+                items: gioiTinhOptions,
+                selectedItem: -1,
+                onChanged: (dynamic value) {
+                  setState(() {
+                    idYcgt = value;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              CustomPickDateTimeGrok(
+                labelText: 'Thời hạn tuyển',
+                onChanged: (value) {
+                  setState(() {
+                    thoihanTd = DateTime.parse(value!);
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              CustomCheckbox(
+                label: 'Tuyển dụng nội bộ',
+                value: isDenKhiTuyenXong,
+                onChanged: (bool? value) {
+                  setState(() {
+                    isDenKhiTuyenXong = value ?? false;
+                  });
+                },
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStep3() {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Contact Information Section
+        _buildSectionHeader(theme, 'Thông tin liên hệ'),
+        const SizedBox(height: 16),
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.shadow.withAlpha(26),
+                spreadRadius: 1,
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomTextField(
+                controller: tenLienhe,
+                labelText: 'Tên liên hệ',
+                hintText: 'Nhập tên liên hệ',
+              ),
+              const SizedBox(height: 16),
+              CustomTextField(
+                controller: dienthoai,
+                labelText: 'Điện thoại',
+                hintText: 'Nhập điện thoại',
+              ),
+              const SizedBox(height: 16),
+              CustomTextField(
+                controller: email,
+                labelText: 'Email',
+                hintText: 'Nhập email',
+              ),
+              const SizedBox(height: 16),
+              CustomTextField(
+                controller: chucvu,
+                labelText: 'Chức vụ',
+                hintText: 'Nhập chức vụ',
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 32),
+
+        // Additional Information Section
+        _buildSectionHeader(theme, 'Thông tin bổ sung'),
+        const SizedBox(height: 16),
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.shadow.withAlpha(26),
+                spreadRadius: 1,
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomTextField(
+                controller: hinhthuckhac,
+                labelText: 'Hình thức khác',
+                hintText: 'Nhập hình thức khác',
+              ),
+              const SizedBox(height: 16),
+              GenericPicker<ManvNameModel>(
+                label: 'Người liên hệ',
+                items: locator<List<ManvNameModel>>(),
+                onChanged: (ManvNameModel? value) {
+                  setState(() {
+                    userName = value?.id;
+                  });
+                },
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 32),
+
+        // Notification Preferences Section
+        _buildSectionHeader(theme, 'Tùy chọn thông báo'),
+        const SizedBox(height: 16),
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.shadow.withAlpha(26),
+                spreadRadius: 1,
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomCheckbox(
+                label: 'Nhận thông báo qua SMS',
+                value: nhanSms,
+                onChanged: (bool? value) {
+                  setState(() {
+                    nhanSms = value ?? false;
+                  });
+                },
+              ),
+              const SizedBox(height: 8),
+              CustomCheckbox(
+                label: 'Nhận thông báo qua Email',
+                value: nhanEMail,
+                onChanged: (bool? value) {
+                  setState(() {
+                    nhanEMail = value ?? false;
+                  });
+                },
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -1236,7 +1995,7 @@ class _M01TT11PageState extends State<M01TT11Page> {
         ),
         body: StepperPage(
           steps: steps,
-          stepContents: [_buildStep1(), _buildStep2()],
+          stepContents: [_buildStep1(), _buildStep2(), _buildStep3()],
         ));
   }
 
@@ -1279,5 +2038,7 @@ class _M01TT11PageState extends State<M01TT11Page> {
     idTuyenDung.dispose();
     quyenloi.dispose();
     tienPhucloiController.dispose(); // Dispose the new controller
+    idHinhthucTd.dispose();
+    tienluong.dispose();
   }
 }

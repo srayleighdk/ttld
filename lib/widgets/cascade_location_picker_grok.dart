@@ -42,7 +42,7 @@ class CascadeLocationPickerGrok extends StatefulWidget {
   final Function(Tinh?)? onTinhChanged;
   final Function(Huyen?)? onHuyenChanged;
   final Function(Xa?)? onXaChanged;
-  final Function(KCN?)? onKCNChanged;
+  final Function(KCNModel?)? onKCNChanged;
   final TextEditingController addressDetailController;
   final bool isNTD;
 
@@ -55,7 +55,7 @@ class _CascadeLocationPickerGrokState extends State<CascadeLocationPickerGrok> {
   Tinh? selectedTinh;
   Huyen? selectedHuyen;
   Xa? selectedXa;
-  KCN? selectedKCN;
+  KCNModel? selectedKCN;
   late final KcnCubit _kcnCubit; // Will be initialized in initState
   bool _showAddressDetail = true;
 
@@ -127,7 +127,7 @@ class _CascadeLocationPickerGrokState extends State<CascadeLocationPickerGrok> {
           await _kcnCubit.stream.firstWhere((state) => state is KcnLoaded);
       if (kcnState is KcnLoaded) {
         final foundKCN = kcnState.kcnList.firstWhere(
-          (kcn) => kcn.kcnId == int.tryParse(widget.initialKCN ?? ''),
+          (kcn) => kcn.id == int.tryParse(widget.initialKCN ?? ''),
           orElse: () => kcnState.kcnList.first,
         );
         setState(() {
@@ -294,12 +294,12 @@ class _CascadeLocationPickerGrokState extends State<CascadeLocationPickerGrok> {
               if (state is KcnLoading) {
                 child = const CircularProgressIndicator();
               } else if (state is KcnLoaded) {
-                child = CustomPicker<KCN>(
+                child = CustomPicker<KCNModel>(
                   items: state.kcnList,
                   selectedItem: selectedKCN,
-                  displayItemBuilder: (KCN? kcn) => kcn?.kcnTen ?? '',
+                  displayItemBuilder: (KCNModel? kcn) => kcn?.displayName ?? '',
                   hint: 'Chọn KCN',
-                  onChanged: (KCN? newValue) {
+                  onChanged: (KCNModel? newValue) {
                     setState(() {
                       selectedKCN = newValue;
                     });

@@ -20,7 +20,13 @@ class TuyenDungApiService {
   }
 
   Future<Response> deleteTuyenDung(String idTuyenDung) async {
-    return _dio
-        .delete('/nghiep-vu/tuyendung', data: {'idTuyenDung': idTuyenDung});
+    return _dio.delete(
+      '/nghiep-vu/tuyendung',
+      queryParameters: {'id': idTuyenDung},
+      options: Options(
+        receiveTimeout: const Duration(seconds: 30),
+        sendTimeout: const Duration(seconds: 30),
+      ),
+    );
   }
 }

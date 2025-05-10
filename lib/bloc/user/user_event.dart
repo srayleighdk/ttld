@@ -7,5 +7,5 @@ class UserEvent with _$UserEvent {
   const factory UserEvent.createUser(UserModel user) = CreateUser;
   const factory UserEvent.updateUser(UserModel user) = UpdateUser;
   const factory UserEvent.deleteUser(String userId) = DeleteUser;
-  const factory UserEvent.fetchUserByManv(String manv) = FetchUserByManv;
+  const factory UserEvent.fetchUserByManv() = FetchUserByManv;
 }
