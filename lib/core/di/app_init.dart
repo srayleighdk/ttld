@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ttld/bloc/tinh_thanh/tinh_thanh_cubit.dart';
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/models/chuc_danh_model.dart';
+import 'package:ttld/models/dan_toc/dan_toc_model.dart';
 import 'package:ttld/models/do_tuoi_model.dart';
 import 'package:ttld/models/doituong_chinhsach/doituong.dart';
 import 'package:ttld/models/hinh_thuc_lam_viec_model.dart';
@@ -30,6 +31,7 @@ import 'package:ttld/models/trinh_do_ngoai_ngu_model.dart';
 import 'package:ttld/models/trinh_do_tin_hoc_model.dart';
 import 'package:ttld/models/user/manv_name_model.dart';
 import 'package:ttld/repositories/chuc_danh_repository.dart';
+import 'package:ttld/repositories/dan_toc/dan_toc_repository.dart';
 import 'package:ttld/repositories/do_tuoi/do_tuoi_repository.dart';
 import 'package:ttld/repositories/hinh_thuc_lam_viec_repository.dart';
 import 'package:ttld/repositories/hinh_thuc_loai_hinh/hinh_thuc_loai_hinh_repository.dart';
@@ -85,6 +87,7 @@ Future<void> initializeAppData() async {
   final userRepository = locator<UserRepository>();
   final kieuChapNoiRepository = locator<KieuChapNoiRepository>();
   final nguonThuThapRepository = locator<NguonThuThapRepository>(); // Added
+  final danTocRepository = locator<DanTocRepository>();
 
   try {
     if (!locator.isRegistered<List<QuocGia>>()) {
@@ -378,6 +381,20 @@ Future<void> initializeAppData() async {
     debugPrint('Error preloading nguon thu thap: $e');
     if (!locator.isRegistered<List<NguonThuThap>>()) {
       locator.registerSingleton<List<NguonThuThap>>([]); // Fallback empty list
+    }
+  }
+
+  // Dan Toc
+  try {
+    if (!locator.isRegistered<List<DanToc>>()) {
+      final danTocs = await danTocRepository.getDanTocs();
+      locator.registerSingleton<List<DanToc>>(danTocs);
+      debugPrint('🌍 Loaded ${danTocs.length} DanToc items at app start');
+    }
+  } catch (e) {
+    debugPrint('Error preloading dan toc: $e');
+    if (!locator.isRegistered<List<DanToc>>()) {
+      locator.registerSingleton<List<DanToc>>([]); // Fallback empty list
     }
   }
 }
