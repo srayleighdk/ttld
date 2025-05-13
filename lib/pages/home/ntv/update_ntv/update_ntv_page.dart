@@ -396,7 +396,8 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
               children: [
                 // Progress Indicator
                 Container(
-                  padding: const EdgeInsets.symmetric(vertical: 8), // Reduced padding
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 8), // Reduced padding
                   decoration: BoxDecoration(
                     color: theme.colorScheme.surface,
                     boxShadow: [
