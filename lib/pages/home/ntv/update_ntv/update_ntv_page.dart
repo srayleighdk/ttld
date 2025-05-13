@@ -419,7 +419,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                 // Form Content
                 Expanded(
                   child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(24),
+                    padding: const EdgeInsets.all(16), // Reduced padding
                     child: Container(
                       decoration: BoxDecoration(
                         color: theme.colorScheme.surface,
@@ -432,7 +432,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                           ),
                         ],
                       ),
-                      padding: const EdgeInsets.all(24),
+                      padding: const EdgeInsets.all(16), // Reduced padding
                       child: _buildCurrentStep(),
                     ),
                   ),
@@ -535,7 +535,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
   Widget _buildBottomNavigation() {
     final theme = Theme.of(context);
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(16), // Reduced padding
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         boxShadow: [
@@ -556,11 +556,11 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                   _currentStep--;
                 });
               },
-              icon: Icon(Icons.arrow_back, size: 18),
+              icon: Icon(Icons.arrow_back, size: 16), // Reduced icon size
               label: Text('Quay lại'),
               style: OutlinedButton.styleFrom(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12), // Reduced padding
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -594,7 +594,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
               _currentStep == _steps.length - 1
                   ? Icons.check
                   : Icons.arrow_forward,
-              size: 18,
+              size: 16, // Reduced icon size
             ),
             label: Text(
               _currentStep == _steps.length - 1 ? 'Hoàn thành' : 'Tiếp tục',
@@ -602,7 +602,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
             style: ElevatedButton.styleFrom(
               backgroundColor: theme.colorScheme.primary,
               foregroundColor: theme.colorScheme.onPrimary,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12), // Reduced padding
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -615,10 +615,10 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
 
   Widget _buildSectionHeader(ThemeData theme, String title) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8), // Reduced padding
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12), // Slightly smaller radius
         boxShadow: [
           BoxShadow(
             color: theme.colorScheme.shadow.withAlpha(26),
@@ -638,10 +638,10 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 8), // Reduced spacing
           Text(
             title,
-            style: theme.textTheme.titleLarge?.copyWith(
+            style: theme.textTheme.titleMedium?.copyWith( // Reduced font size
               fontWeight: FontWeight.bold,
               color: theme.colorScheme.onSurface,
             ),
@@ -657,12 +657,12 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         _buildSectionHeader(theme, title),
-        const SizedBox(height: 16),
+        const SizedBox(height: 12), // Reduced spacing
         Container(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(12), // Reduced padding
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(12), // Slightly smaller radius
             boxShadow: [
               BoxShadow(
                 color: theme.colorScheme.shadow.withAlpha(13),
@@ -676,7 +676,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
             children: children,
           ),
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 16), // Reduced spacing
       ],
     );
   }
@@ -696,14 +696,14 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                 controller: _emailController,
                 validator: 'email',
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12), // Reduced spacing
               CustomTextField(
                 labelText: 'Tên đăng nhập',
                 hintText: 'Tên đăng nhập',
                 controller: _usernameController,
                 validator: 'not_empty',
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12), // Reduced spacing
               CustomTextField.password(
                 controller: _passwordController,
                 validator: 'not_empty',
@@ -720,7 +720,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                 controller: _hotenController,
                 validator: 'not_empty',
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12), // Reduced spacing
               CustomPickDateTimeGrok(
                 hintText: 'Ngày sinh',
                 initialValue: _uvngaysinhController,
@@ -736,7 +736,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                   });
                 },
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12), // Reduced spacing
               GenericPicker<NguonThuThap>(
                 label: 'Nguồn thu thập',
                 items: locator<List<NguonThuThap>>(),
@@ -768,7 +768,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                       },
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: 12), // Reduced spacing
                   Expanded(
                     child: CustomPickerMap(
                       label: Text('Hôn nhân'),
@@ -783,14 +783,14 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12), // Reduced spacing
               CustomTextField(
                 labelText: 'Số CCCD',
                 controller: _cmndController,
                 validator: 'not_empty',
                 hintText: 'Số CCCD',
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12), // Reduced spacing
               Row(
                 children: [
                   Expanded(
@@ -804,7 +804,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                       hintText: 'Ngày cấp',
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: 12), // Reduced spacing
                   Expanded(
                     child: CustomTextField(
                       labelText: 'Nơi cấp',
@@ -815,7 +815,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12), // Reduced spacing
               CustomTextField(
                 labelText: 'Số điện thoại',
                 hintText: 'Số điện thoại',
@@ -839,7 +839,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                   });
                 },
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12), // Reduced spacing
               GenericPicker<TtTantat>(
                 label: 'Tình trạng tàn tật',
                 items: locator<List<TtTantat>>(),
@@ -851,7 +851,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                   });
                 },
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12), // Reduced spacing
               GenericPicker<DoiTuong>(
                 label: 'Đối tượng chính sách',
                 items: locator<List<DoiTuong>>(),
@@ -863,7 +863,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                   });
                 },
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12), // Reduced spacing
               Row(
                 children: [
                   Expanded(
@@ -874,7 +874,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                       validator: 'not_empty',
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: 12), // Reduced spacing
                   Expanded(
                     child: CustomTextField(
                       labelText: 'Cân nặng (kg)',
@@ -916,7 +916,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                 isNTD: false,
                 addressDetailController: _diachichitietController,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12), // Reduced spacing
               GenericPicker<TinhThanhModel>(
                 label: 'Thành phố nơi làm việc',
                 items: locator<List<TinhThanhModel>>(),
@@ -945,7 +945,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                   });
                 },
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12), // Reduced spacing
               GenericPicker<NganhNgheTD>(
                 label: 'Ngành nghề',
                 items: locator<List<NganhNgheTD>>(),
@@ -957,7 +957,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                   });
                 },
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12), // Reduced spacing
               GenericPicker<TrinhDoChuyenMon>(
                 label: 'Trình độ chuyên môn',
                 items: locator<List<TrinhDoChuyenMon>>(),
@@ -969,7 +969,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                   });
                 },
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12), // Reduced spacing
               CustomTextField.number(
                 labelText: 'Kinh nghiệm',
                 hintText: 'Kinh nghiệm (tháng)',
@@ -994,7 +994,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                   });
                 },
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12), // Reduced spacing
               GenericPicker<TrinhDoTinHoc>(
                 label: 'Trình độ tin học',
                 items: locator<List<TrinhDoTinHoc>>(),
@@ -1007,13 +1007,13 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                   });
                 },
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12), // Reduced spacing
               CustomTextField(
                 labelText: 'Bằng cấp khác',
                 hintText: 'Bằng cấp khác',
                 controller: _uvcmBangcapController,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12), // Reduced spacing
               CustomCheckbox(
                 label: 'Có Bảo Hiểm thất nghiệp',
                 value: _coBhtn ?? false,
@@ -1118,7 +1118,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 8), // Reduced spacing
                     Row(
                       children: [
                         Expanded(
@@ -1131,16 +1131,16 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 16),
+                        const SizedBox(width: 12), // Reduced spacing
                         ElevatedButton.icon(
                           onPressed: _pickFile,
-                          icon: Icon(Icons.upload_file, size: 18),
+                          icon: Icon(Icons.upload_file, size: 16), // Reduced icon size
                           label: Text('Chọn File CV'),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: theme.colorScheme.primary,
                             foregroundColor: theme.colorScheme.onPrimary,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 12),
+                            padding: const EdgeInsets.symmetric( // Reduced padding
+                                horizontal: 12, vertical: 8),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -1151,12 +1151,12 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                   ],
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 16), // Reduced spacing
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(12), // Reduced padding
                 decoration: BoxDecoration(
                   color: theme.colorScheme.surface,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(12), 
                   border: Border.all(
                       color: theme.colorScheme.outline.withOpacity(0.5)),
                 ),
@@ -1169,13 +1169,13 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 8), // Reduced spacing
                     Row(
                       children: [
                         if (_selectedImage != null)
                           Container(
-                            width: 100,
-                            height: 100,
+                            width: 80, // Reduced size
+                            height: 80, // Reduced size
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
                               image: DecorationImage(
@@ -1186,39 +1186,39 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                           )
                         else
                           Container(
-                            width: 100,
-                            height: 100,
+                            width: 80, // Reduced size
+                            height: 80, // Reduced size
                             decoration: BoxDecoration(
                               color: theme.colorScheme.surfaceVariant,
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Icon(
                               Icons.person_outline,
-                              size: 40,
+                              size: 32, // Reduced icon size
                               color: theme.colorScheme.onSurfaceVariant,
                             ),
                           ),
-                        const SizedBox(width: 16),
+                        const SizedBox(width: 12), // Reduced spacing
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               ElevatedButton.icon(
                                 onPressed: _pickImage,
-                                icon: Icon(Icons.photo_library, size: 18),
+                                icon: Icon(Icons.photo_library, size: 16), // Reduced icon size
                                 label: Text('Chọn Ảnh'),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: theme.colorScheme.primary,
                                   foregroundColor: theme.colorScheme.onPrimary,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 12),
+                                  padding: const EdgeInsets.symmetric( // Reduced padding
+                                      horizontal: 12, vertical: 8),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                 ),
                               ),
                               if (_selectedImage != null) ...[
-                                const SizedBox(height: 8),
+                                const SizedBox(height: 4), // Reduced spacing
                                 Text(
                                   _selectedImage!.path.split('/').last,
                                   style: theme.textTheme.bodySmall?.copyWith(
@@ -1258,7 +1258,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                 controller: _cvMongMuonController,
                 validator: 'not_empty',
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12), // Reduced spacing
               GenericPicker<ChucDanhModel>(
                 label: 'Chức vụ mong muốn',
                 items: locator<List<ChucDanhModel>>(),
@@ -1287,7 +1287,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                   });
                 },
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12), // Reduced spacing
               CustomTextField.number(
                 allowDecimals: true,
                 hintText: 'Lương khởi điểm',
@@ -1312,7 +1312,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                   });
                 },
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12), // Reduced spacing
               GenericPicker<HinhThucDoanhNghiep>(
                 label: 'Hình thức công ty mong muốn',
                 items: locator<List<HinhThucDoanhNghiep>>(),
@@ -1324,7 +1324,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                   });
                 },
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12), // Reduced spacing
               GenericPicker<TinhThanhModel>(
                 label: 'Thành phố mong muốn',
                 items: locator<List<TinhThanhModel>>(),
@@ -1350,7 +1350,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                 controller: _uvcmCongviechientaiController,
                 validator: 'not_empty',
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12), // Reduced spacing
               CustomTextField.textArea(
                 labelText: 'Kỹ năng',
                 hintText: 'Kỹ năng',
@@ -1358,7 +1358,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                 maxLines: 5,
                 controller: _uvcmKynangController,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12), // Reduced spacing
               CustomTextField.textArea(
                 labelText: 'Ghi chú',
                 hintText: 'Ghi chú',
