@@ -11,7 +11,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_bloc.dart';
 import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_event.dart';
 import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_state.dart';
-// import 'package:ttld/bloc/tinh_thanh/tinh_thanh_cubit.dart'; // Removed
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/core/utils/toast_utils.dart';
 import 'package:ttld/helppers/map_help.dart';
@@ -21,31 +20,15 @@ import 'package:ttld/models/doituong_chinhsach/doituong.dart';
 import 'package:ttld/models/hinhthuc_doanhnghiep/hinhthuc_doanhnghiep_model.dart';
 import 'package:ttld/models/muc_luong_mm.dart';
 import 'package:ttld/models/nganh_nghe_bachoc.dart';
-import 'package:ttld/models/nganh_nghe_model.dart';
 import 'package:ttld/models/nganh_nghe_td_model.dart';
 import 'package:ttld/models/nguon_thuthap_model.dart';
 import 'package:ttld/models/tblHoSoUngVien/tblHoSoUngVien_model.dart';
 import 'package:ttld/models/thoigianlamviec_model.dart';
 import 'package:ttld/models/tinh_thanh_model.dart';
-import 'package:ttld/models/trinh_do_hoc_van_model.dart';
 import 'package:ttld/models/trinh_do_ngoai_ngu_model.dart';
 import 'package:ttld/models/trinh_do_tin_hoc_model.dart';
 import 'package:ttld/models/trinh_do_van_hoa_model.dart';
 import 'package:ttld/models/tttantat/tttantat.dart';
-// import 'package:ttld/repositories/chuc_danh_repository.dart'; // Removed
-// import 'package:ttld/repositories/dan_toc/dan_toc_repository.dart'; // Removed
-// import 'package:ttld/repositories/hinhthuc_doanhnghiep/hinhthuc_doanhnghiep_repository.dart'; // Removed
-// import 'package:ttld/repositories/muc_luong/muc_luong_repository.dart'; // Removed
-// import 'package:ttld/repositories/nganh_nghe/nganh_nghe_bachoc_repository.dart'; // Removed
-// import 'package:ttld/repositories/nganh_nghe/nganh_nghe_td_repository.dart'; // Removed
-// import 'package:ttld/repositories/nguon_thuthap/nguon_thuthap_repository.dart'; // Removed
-// import 'package:ttld/repositories/tblDmDoiTuongChinhSach/doituong_repository.dart'; // Removed
-// import 'package:ttld/repositories/thoigianlamviec/thoigianlamviec_repository.dart'; // Removed
-// import 'package:ttld/repositories/trinh_do_hoc_van/trinh_do_hoc_van_repository.dart'; // Removed as _loadTrinhDoHocVan was removed
-// import 'package:ttld/repositories/trinh_do_ngoai_ngu/trinh_do_ngoai_ngu_repository.dart'; // Removed
-// import 'package:ttld/repositories/trinh_do_tin_hoc/trinh_do_tin_hoc_repository.dart'; // Removed
-// import 'package:ttld/repositories/trinh_do_van_hoa/trinh_do_van_hoa_repository.dart'; // Removed
-// import 'package:ttld/repositories/tt_tantat/tt_tantat_repository.dart'; // Removed
 import 'package:ttld/widgets/cascade_location_picker.dart';
 import 'package:ttld/widgets/field/custom_checkbox.dart';
 import 'package:ttld/widgets/field/custom_pick_datetime_grok.dart';
@@ -264,22 +247,67 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
     // Example of how you might re-initialize selected models if needed,
     // assuming locator provides data synchronously or GenericPicker handles async loading:
     if (widget.hoSoUngVien != null) {
-        final ntv = widget.hoSoUngVien!;
-        if (ntv.idNguonThuThap != null) nguonThuThap = locator<List<NguonThuThap>>().firstWhere((e) => e.id == ntv.idNguonThuThap, orElse: () => null as NguonThuThap);
-        if (ntv.idDanToc != null) danToc = locator<List<DanToc>>().firstWhere((e) => e.id == ntv.idDanToc, orElse: () => null as DanToc);
-        if (ntv.uvTinhtrangtantatId != null) tinhTrangTanTat = locator<List<TtTantat>>().firstWhere((e) => e.id == ntv.uvTinhtrangtantatId, orElse: () => null as TtTantat);
-        if (ntv.uvDoituongchinhsachId != null) doiTuongChinhSach = locator<List<DoiTuong>>().firstWhere((e) => e.id == ntv.uvDoituongchinhsachId, orElse: () => null as DoiTuong);
-        if (ntv.idThanhPho != null) tinhThanh = locator<List<TinhThanhModel>>().firstWhere((e) => e.id == ntv.idThanhPho, orElse: () => null as TinhThanhModel);
-        if (ntv.uvnvNoilamviec != null && ntv.uvnvNoilamviec!.isNotEmpty) tinhThanhmm = locator<List<TinhThanhModel>>().firstWhere((e) => e.id == int.tryParse(ntv.uvnvNoilamviec!), orElse: () => null as TinhThanhModel);
-        if (ntv.uvcmTrinhdotinhoc != null && ntv.uvcmTrinhdotinhoc!.isNotEmpty) trinhDoTinHoc = locator<List<TrinhDoTinHoc>>().firstWhere((e) => e.id == ntv.uvcmTrinhdotinhoc, orElse: () => null as TrinhDoTinHoc);
-        if (ntv.uvcmTrinhdongoaingu != null && ntv.uvcmTrinhdongoaingu!.isNotEmpty) trinhDoNgoaiNgu = locator<List<TrinhDoNgoaiNgu>>().firstWhere((e) => e.id == ntv.uvcmTrinhdongoaingu, orElse: () => null as TrinhDoNgoaiNgu);
-        if (ntv.idBacHoc != null && ntv.idBacHoc!.isNotEmpty) nganhNgheBacHoc = locator<List<TrinhDoChuyenMon>>().firstWhere((e) => e.id == ntv.idBacHoc, orElse: () => null as TrinhDoChuyenMon);
-        if (ntv.uvnvNganhngheId != null) nganhNgheTD = locator<List<NganhNgheTD>>().firstWhere((e) => e.id == ntv.uvnvNganhngheId, orElse: () => null as NganhNgheTD);
-        if (ntv.uvnvVitrimongmuonid != null) chucDanh = locator<List<ChucDanhModel>>().firstWhere((e) => e.id == ntv.uvnvVitrimongmuonid, orElse: () => null as ChucDanhModel);
-        if (ntv.idMucluong != null) mucLuong = locator<List<MucLuongMM>>().firstWhere((e) => e.id == ntv.idMucluong, orElse: () => null as MucLuongMM);
-        if (ntv.uvnvThoigianId != null) thoigianlamviec = locator<List<ThoiGianLamViec>>().firstWhere((e) => e.id == ntv.uvnvThoigianId, orElse: () => null as ThoiGianLamViec);
-        if (ntv.uvnvHinhthuccongtyId != null) hinhthucdoanhnghiep = locator<List<HinhThucDoanhNghiep>>().firstWhere((e) => e.id == ntv.uvnvHinhthuccongtyId, orElse: () => null as HinhThucDoanhNghiep);
-        if (ntv.uvcmTrinhdoId != null) trinhDoVanHoa = locator<List<TrinhDoVanHoa>>().firstWhere((e) => e.id == ntv.uvcmTrinhdoId, orElse: () => null as TrinhDoVanHoa);
+      final ntv = widget.hoSoUngVien!;
+      if (ntv.idNguonThuThap != null)
+        nguonThuThap = locator<List<NguonThuThap>>().firstWhere(
+            (e) => e.id == ntv.idNguonThuThap,
+            orElse: () => null as NguonThuThap);
+      if (ntv.idDanToc != null)
+        danToc = locator<List<DanToc>>().firstWhere((e) => e.id == ntv.idDanToc,
+            orElse: () => null as DanToc);
+      if (ntv.uvTinhtrangtantatId != null)
+        tinhTrangTanTat = locator<List<TtTantat>>().firstWhere(
+            (e) => e.id == ntv.uvTinhtrangtantatId,
+            orElse: () => null as TtTantat);
+      if (ntv.uvDoituongchinhsachId != null)
+        doiTuongChinhSach = locator<List<DoiTuong>>().firstWhere(
+            (e) => e.id == ntv.uvDoituongchinhsachId,
+            orElse: () => null as DoiTuong);
+      if (ntv.idThanhPho != null)
+        tinhThanh = locator<List<TinhThanhModel>>().firstWhere(
+            (e) => e.id == ntv.idThanhPho,
+            orElse: () => null as TinhThanhModel);
+      if (ntv.uvnvNoilamviec != null && ntv.uvnvNoilamviec!.isNotEmpty)
+        tinhThanhmm = locator<List<TinhThanhModel>>().firstWhere(
+            (e) => e.id == int.tryParse(ntv.uvnvNoilamviec!),
+            orElse: () => null as TinhThanhModel);
+      if (ntv.uvcmTrinhdotinhoc != null && ntv.uvcmTrinhdotinhoc!.isNotEmpty)
+        trinhDoTinHoc = locator<List<TrinhDoTinHoc>>().firstWhere(
+            (e) => e.id == ntv.uvcmTrinhdotinhoc,
+            orElse: () => null as TrinhDoTinHoc);
+      if (ntv.uvcmTrinhdongoaingu != null &&
+          ntv.uvcmTrinhdongoaingu!.isNotEmpty)
+        trinhDoNgoaiNgu = locator<List<TrinhDoNgoaiNgu>>().firstWhere(
+            (e) => e.id == ntv.uvcmTrinhdongoaingu,
+            orElse: () => null as TrinhDoNgoaiNgu);
+      if (ntv.idBacHoc != null && ntv.idBacHoc!.isNotEmpty)
+        nganhNgheBacHoc = locator<List<TrinhDoChuyenMon>>().firstWhere(
+            (e) => e.id == ntv.idBacHoc,
+            orElse: () => null as TrinhDoChuyenMon);
+      if (ntv.uvnvNganhngheId != null)
+        nganhNgheTD = locator<List<NganhNgheTD>>().firstWhere(
+            (e) => e.id == ntv.uvnvNganhngheId,
+            orElse: () => null as NganhNgheTD);
+      if (ntv.uvnvVitrimongmuonid != null)
+        chucDanh = locator<List<ChucDanhModel>>().firstWhere(
+            (e) => e.id == ntv.uvnvVitrimongmuonid,
+            orElse: () => null as ChucDanhModel);
+      if (ntv.idMucluong != null)
+        mucLuong = locator<List<MucLuongMM>>().firstWhere(
+            (e) => e.id == ntv.idMucluong,
+            orElse: () => null as MucLuongMM);
+      if (ntv.uvnvThoigianId != null)
+        thoigianlamviec = locator<List<ThoiGianLamViec>>().firstWhere(
+            (e) => e.id == ntv.uvnvThoigianId,
+            orElse: () => null as ThoiGianLamViec);
+      if (ntv.uvnvHinhthuccongtyId != null)
+        hinhthucdoanhnghiep = locator<List<HinhThucDoanhNghiep>>().firstWhere(
+            (e) => e.id == ntv.uvnvHinhthuccongtyId,
+            orElse: () => null as HinhThucDoanhNghiep);
+      if (ntv.uvcmTrinhdoId != null)
+        trinhDoVanHoa = locator<List<TrinhDoVanHoa>>().firstWhere(
+            (e) => e.id == ntv.uvcmTrinhdoId,
+            orElse: () => null as TrinhDoVanHoa);
     }
   }
 
@@ -959,7 +987,8 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                 initialValue: _uvcmTrinhdongoainguController.text,
                 onChanged: (TrinhDoNgoaiNgu? value) {
                   setState(() {
-                    _uvcmTrinhdongoainguController.text = value?.id.toString() ?? '';
+                    _uvcmTrinhdongoainguController.text =
+                        value?.id.toString() ?? '';
                     trinhDoNgoaiNgu = value;
                   });
                 },
@@ -971,7 +1000,8 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                 initialValue: _uvcmTrinhdotinhocController.text,
                 onChanged: (TrinhDoTinHoc? value) {
                   setState(() {
-                    _uvcmTrinhdotinhocController.text = value?.id.toString() ?? '';
+                    _uvcmTrinhdotinhocController.text =
+                        value?.id.toString() ?? '';
                     trinhDoTinHoc = value;
                   });
                 },
