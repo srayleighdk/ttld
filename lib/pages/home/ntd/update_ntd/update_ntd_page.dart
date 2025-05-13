@@ -11,10 +11,10 @@ import 'package:ttld/models/hinhthuc_doanhnghiep/hinhthuc_doanhnghiep_model.dart
 import 'package:ttld/models/loai_hinh_model.dart';
 import 'package:ttld/models/nganh_nghe_model.dart';
 import 'package:ttld/models/thoigian_hoatdong.dart';
-import 'package:ttld/repositories/chuc_danh_repository.dart';
-import 'package:ttld/repositories/hinhthuc_doanhnghiep/hinhthuc_doanhnghiep_repository.dart';
-import 'package:ttld/repositories/loai_hinh/loai_hinh_repository.dart';
-import 'package:ttld/repositories/nganh_nghe/nganh_nghe_repository.dart';
+// import 'package:ttld/repositories/chuc_danh_repository.dart'; // Removed
+// import 'package:ttld/repositories/hinhthuc_doanhnghiep/hinhthuc_doanhnghiep_repository.dart'; // Removed
+// import 'package:ttld/repositories/loai_hinh/loai_hinh_repository.dart'; // Removed
+// import 'package:ttld/repositories/nganh_nghe/nganh_nghe_repository.dart'; // Removed
 import 'package:ttld/widgets/cascade_location_picker.dart';
 import 'package:ttld/widgets/field/custom_checkbox.dart';
 import 'package:ttld/widgets/field/custom_picker_grok.dart';
@@ -89,13 +89,13 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
   int? maKCN;
   int? ntdQuocgia;
 
-  List<ChucDanhModel> _chucDanhs = [];
+  // List<ChucDanhModel> _chucDanhs = []; // Removed
   ChucDanhModel? chucDanh;
 
-  List<HinhThucDoanhNghiep> _hinhthucDoanhNghieps = [];
+  // List<HinhThucDoanhNghiep> _hinhthucDoanhNghieps = []; // Removed
   HinhThucDoanhNghiep? hinhthucDoanhNghiep;
 
-  List<LoaiHinh> _loaihinhs = [];
+  // List<LoaiHinh> _loaihinhs = []; // Removed
   LoaiHinh? loaihinh;
 
   final _idDoanhNghiepController = TextEditingController();
@@ -104,16 +104,16 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
   List<ThoiGianHoatDong> _thoigianhoatdongs = [];
   ThoiGianHoatDong? thoigianhoatdong;
 
-  List<NganhNgheKT> _nganhNghes = [];
-  NganhNgheKT? nganhNghe;
+  // List<NganhNgheKT> _nganhNghes = []; // Removed
+  // NganhNgheKT? nganhNghe; // Removed
 
   @override
   void initState() {
     super.initState();
-    _loadChucDanh();
-    _loadHinhThucDoanhNghiep();
-    _loadLoaiHinh();
-    _loadNganhNghe();
+    // _loadChucDanh(); // Removed
+    // _loadHinhThucDoanhNghiep(); // Removed
+    // _loadLoaiHinh(); // Removed
+    // _loadNganhNghe(); // Removed
   }
 
   @override
@@ -169,107 +169,32 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
         ntdLoai = ntd.ntdLoai;
         ntdHinhthucdoanhnghiep = ntd.ntdHinhthucdoanhnghiep;
         ntdQuocgia = ntd.idQuocGia;
-      }
-    }
-  }
 
-  Future<void> _loadChucDanh() async {
-    final chucDanhRepository = locator<ChucDanhRepository>();
-    try {
-      final chucDanhs = await chucDanhRepository.getChucDanhs();
-
-      if (mounted) {
-        setState(() {
-          _chucDanhs = chucDanhs;
-        });
+        // Initialize model instances for GenericPickers
         if (ntdChucvu != null) {
-          ChucDanhModel? _chucDanh =
-              chucDanhs.firstWhere((element) => element.id == ntdChucvu);
-          if (_chucDanh != null) {
-            setState(() {
-              chucDanh = _chucDanh;
-            });
-          }
+          chucDanh = locator<List<ChucDanhModel>>().firstWhere(
+              (item) => item.id == ntdChucvu,
+              orElse: () => null as ChucDanhModel);
         }
-      }
-    } catch (e) {
-      print("Error loading chuc danh: $e");
-    }
-  }
-
-  Future<void> _loadHinhThucDoanhNghiep() async {
-    final hinhThucDoanhNghiepRepository =
-        locator<HinhThucDoanhNghiepRepository>();
-    try {
-      final hinhthucDoanhNghieps =
-          await hinhThucDoanhNghiepRepository.getHinhThucDoanhNghieps();
-      if (mounted) {
-        setState(() {
-          _hinhthucDoanhNghieps = hinhthucDoanhNghieps;
-        });
         if (ntdHinhthucdoanhnghiep != null) {
-          HinhThucDoanhNghiep? _hinhthucDoanhNghiep = hinhthucDoanhNghieps
-              .firstWhere((element) => element.id == ntdHinhthucdoanhnghiep);
-          if (_hinhthucDoanhNghiep != null) {
-            setState(() {
-              hinhthucDoanhNghiep = _hinhthucDoanhNghiep;
-            });
-          }
+          hinhthucDoanhNghiep = locator<List<HinhThucDoanhNghiep>>().firstWhere(
+              (item) => item.id == ntdHinhthucdoanhnghiep,
+              orElse: () => null as HinhThucDoanhNghiep);
         }
-      }
-    } catch (e) {
-      print("Error loading hinh thuc doanh nghiep: $e");
-    }
-  }
-
-  Future<void> _loadNganhNghe() async {
-    final nganhNgheRepository = locator<NganhNgheRepository>();
-    try {
-      final nganhNghes = await nganhNgheRepository.getNganhNghes();
-
-      if (mounted) {
-        setState(() {
-          _nganhNghes = nganhNghes;
-        });
-        if (idNganhKinhTe != null) {
-          NganhNgheKT? _nganhNghe =
-              _nganhNghes.firstWhere((element) => element.id == idNganhKinhTe);
-          if (_nganhNghe != null) {
-            setState(() {
-              idNganhKinhTe = _nganhNghe?.id;
-              nganhNghe = _nganhNghe;
-            });
-          }
-        }
-      }
-    } catch (e) {
-      print("Error loading nganh nghe: $e");
-    }
-  }
-
-  Future<void> _loadLoaiHinh() async {
-    final loaihinhRepository = locator<LoaiHinhRepository>();
-    try {
-      final loaihinhs = await loaihinhRepository.getLoaiHinhs();
-      if (mounted) {
-        setState(() {
-          _loaihinhs = loaihinhs;
-        });
         if (idLoaiHinhDoanhNghiep != null) {
-          LoaiHinh? _loaihinh = loaihinhs
-              .firstWhere((element) => element.id == idLoaiHinhDoanhNghiep);
-          if (_loaihinh != null) {
-            setState(() {
-              idLoaiHinhDoanhNghiep = _loaihinh.id;
-              loaihinh = _loaihinh;
-            });
-          }
+          loaihinh = locator<List<LoaiHinh>>().firstWhere(
+              (item) => item.id == idLoaiHinhDoanhNghiep,
+              orElse: () => null as LoaiHinh);
         }
+        // NganhNgheKT model instance (nganhNghe) is not set/used by its picker or _handleUpdate directly.
       }
-    } catch (e) {
-      print("Error loading loai hinh: $e");
     }
   }
+
+  // Future<void> _loadChucDanh() async { ... } // Removed
+  // Future<void> _loadHinhThucDoanhNghiep() async { ... } // Removed
+  // Future<void> _loadNganhNghe() async { ... } // Removed
+  // Future<void> _loadLoaiHinh() async { ... } // Removed
 
   Future<void> _loadThoiGianHoatDong() async {
     try {
@@ -461,7 +386,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                             const SizedBox(height: 16),
                             GenericPicker<ChucDanhModel>(
                               label: "Chức vụ người liên hệ",
-                              items: _chucDanhs,
+                              items: locator<List<ChucDanhModel>>(),
                               initialValue: ntdChucvu,
                               onChanged: (ChucDanhModel? value) {
                                 setState(() {
@@ -602,7 +527,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                           children: [
                             GenericPicker<HinhThucDoanhNghiep>(
                               label: "Hình thức doanh nghiệp",
-                              items: _hinhthucDoanhNghieps,
+                              items: locator<List<HinhThucDoanhNghiep>>(),
                               initialValue: ntdHinhthucdoanhnghiep,
                               onChanged: (HinhThucDoanhNghiep? value) {
                                 setState(() {
@@ -616,7 +541,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                             const SizedBox(height: 16),
                             GenericPicker<LoaiHinh>(
                               label: "Loại hình doanh nghiệp",
-                              items: _loaihinhs,
+                              items: locator<List<LoaiHinh>>(),
                               initialValue: idLoaiHinhDoanhNghiep,
                               onChanged: (LoaiHinh? value) {
                                 setState(() {
