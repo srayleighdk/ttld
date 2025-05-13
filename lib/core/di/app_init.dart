@@ -27,6 +27,7 @@ import 'package:ttld/models/thoigianlamviec_model.dart';
 import 'package:ttld/models/tinh_thanh_model.dart';
 import 'package:ttld/models/tinh_trang_hd_model.dart';
 import 'package:ttld/models/trinh_do_hoc_van_model.dart';
+import 'package:ttld/models/trinh_do_van_hoa_model.dart';
 import 'package:ttld/models/tttantat/tttantat.dart';
 import 'package:ttld/models/trinh_do_ngoai_ngu_model.dart';
 import 'package:ttld/models/trinh_do_tin_hoc_model.dart';
@@ -55,6 +56,7 @@ import 'package:ttld/repositories/thoigianlamviec/thoigianlamviec_repository.dar
 import 'package:ttld/repositories/tinh_trang_hd_repository.dart';
 import 'package:ttld/repositories/tt_tantat/tt_tantat_repository.dart';
 import 'package:ttld/repositories/trinh_do_hoc_van/trinh_do_hoc_van_repository.dart';
+import 'package:ttld/repositories/trinh_do_van_hoa/trinh_do_van_hoa_repository.dart';
 import 'package:ttld/repositories/trinh_do_ngoai_ngu/trinh_do_ngoai_ngu_repository.dart';
 import 'package:ttld/repositories/trinh_do_tin_hoc/trinh_do_tin_hoc_repository.dart';
 import 'package:ttld/repositories/nguon_thuthap/nguon_thuthap_repository.dart'; // Added
@@ -91,6 +93,7 @@ Future<void> initializeAppData() async {
   final nguonThuThapRepository = locator<NguonThuThapRepository>(); // Added
   final danTocRepository = locator<DanTocRepository>();
   final ttTanTatRepository = locator<TTTanTatRepository>();
+  final trinhDoVanHoaRepository = locator<TrinhDoVanHoaRepository>();
 
   try {
     if (!locator.isRegistered<List<QuocGia>>()) {
@@ -412,6 +415,22 @@ Future<void> initializeAppData() async {
     debugPrint('Error preloading tinh trang tan tat: $e');
     if (!locator.isRegistered<List<TtTantat>>()) {
       locator.registerSingleton<List<TtTantat>>([]); // Fallback empty list
+    }
+  }
+
+  // Trinh Do Van Hoa
+  try {
+    if (!locator.isRegistered<List<TrinhDoVanHoa>>()) {
+      final trinhDoVanHoas =
+          await trinhDoVanHoaRepository.getTrinhDoVanHoas();
+      locator.registerSingleton<List<TrinhDoVanHoa>>(trinhDoVanHoas);
+      debugPrint(
+          '🌍 Loaded ${trinhDoVanHoas.length} TrinhDoVanHoa items at app start');
+    }
+  } catch (e) {
+    debugPrint('Error preloading trinh do van hoa: $e');
+    if (!locator.isRegistered<List<TrinhDoVanHoa>>()) {
+      locator.registerSingleton<List<TrinhDoVanHoa>>([]); // Fallback empty list
     }
   }
 }
