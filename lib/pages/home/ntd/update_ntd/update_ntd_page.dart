@@ -459,17 +459,17 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                               hintText: 'Tên người liên hệ',
                             ),
                             const SizedBox(height: 16),
-                            CustomPickerGrok<ChucDanhModel>(
-                              label: const Text("Chức vụ người liên hệ"),
+                            GenericPicker<ChucDanhModel>(
+                              label: "Chức vụ người liên hệ",
                               items: _chucDanhs,
-                              selectedItem: chucDanh,
-                              onChanged: (chucdanh) {
+                              initialValue: ntdChucvu,
+                              onChanged: (ChucDanhModel? value) {
                                 setState(() {
-                                  ntdChucvu = chucdanh?.id;
+                                  ntdChucvu = value?.id;
+                                  chucDanh = value;
                                 });
                               },
-                              displayItemBuilder: (ChucDanhModel? item) =>
-                                  item?.displayName ?? '',
+                              // displayItemBuilder is handled by GenericPicker (expects item.displayName)
                             ),
                           ],
                         ),
@@ -552,30 +552,28 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            CustomPickerGrok<int>(
+                            CustomPickerMap<int>(
                               label: const Text("Trạng thái"),
-                              items: statusOptions.keys.toList(),
+                              items: statusOptions,
                               selectedItem: idStatus,
-                              onChanged: (value) {
+                              onChanged: (int? value) {
                                 setState(() {
                                   idStatus = value;
                                 });
                               },
-                              displayItemBuilder: (int? item) =>
-                                  statusOptions[item] ?? '',
+                              hint: 'Chọn trạng thái',
                             ),
                             const SizedBox(height: 16),
-                            CustomPickerGrok<int>(
+                            CustomPickerMap<int>(
                               label: const Text("Thời gian hoạt động"),
-                              items: thoiGianHoatDongOptions.keys.toList(),
+                              items: thoiGianHoatDongOptions,
                               selectedItem: idThoiGianHoatDong,
-                              onChanged: (value) {
+                              onChanged: (int? value) {
                                 setState(() {
                                   idThoiGianHoatDong = value;
                                 });
                               },
-                              displayItemBuilder: (int? item) =>
-                                  thoiGianHoatDongOptions[item] ?? '',
+                              hint: 'Chọn thời gian hoạt động',
                             ),
                           ],
                         ),
@@ -602,31 +600,32 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            CustomPickerGrok<HinhThucDoanhNghiep>(
-                              label: const Text("Hình thức doanh nghiệp"),
+                            GenericPicker<HinhThucDoanhNghiep>(
+                              label: "Hình thức doanh nghiệp",
                               items: _hinhthucDoanhNghieps,
-                              selectedItem: hinhthucDoanhNghiep,
-                              onChanged: (hinhthucdoanhnhiep) {
+                              initialValue: ntdHinhthucdoanhnghiep,
+                              onChanged: (HinhThucDoanhNghiep? value) {
                                 setState(() {
-                                  ntdHinhthucdoanhnghiep =
-                                      hinhthucdoanhnhiep?.id;
+                                  ntdHinhthucdoanhnghiep = value?.id;
+                                  hinhthucDoanhNghiep = value;
                                 });
                               },
-                              displayItemBuilder: (HinhThucDoanhNghiep? item) =>
-                                  item?.name ?? '',
+                              // displayItemBuilder is handled by GenericPicker (expects item.displayName)
+                              // Ensure HinhThucDoanhNghiep has a 'displayName' property or getter (e.g., returning item.name)
                             ),
                             const SizedBox(height: 16),
-                            CustomPickerGrok<LoaiHinh>(
-                              label: const Text("Loại hình doanh nghiệp"),
+                            GenericPicker<LoaiHinh>(
+                              label: "Loại hình doanh nghiệp",
                               items: _loaihinhs,
-                              selectedItem: loaihinh,
-                              onChanged: (loaihinh) {
+                              initialValue: idLoaiHinhDoanhNghiep,
+                              onChanged: (LoaiHinh? value) {
                                 setState(() {
-                                  idLoaiHinhDoanhNghiep = loaihinh?.id;
+                                  idLoaiHinhDoanhNghiep = value?.id;
+                                  loaihinh = value;
                                 });
                               },
-                              displayItemBuilder: (LoaiHinh? item) =>
-                                  item?.name ?? '',
+                              // displayItemBuilder is handled by GenericPicker (expects item.displayName)
+                              // Ensure LoaiHinh has a 'displayName' property or getter (e.g., returning item.name)
                             ),
                           ],
                         ),
