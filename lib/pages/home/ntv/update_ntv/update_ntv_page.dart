@@ -49,9 +49,9 @@ import 'package:ttld/repositories/tt_tantat/tt_tantat_repository.dart';
 import 'package:ttld/widgets/cascade_location_picker.dart';
 import 'package:ttld/widgets/field/custom_checkbox.dart';
 import 'package:ttld/widgets/field/custom_pick_datetime_grok.dart';
-import 'package:ttld/widgets/field/custom_picker.dart';
 import 'package:ttld/widgets/field/custom_picker_map.dart';
 import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
+import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
 
 class UpdateNTVPage extends StatefulWidget {
   final TblHoSoUngVienModel? hoSoUngVien;
@@ -1149,17 +1149,16 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                 },
               ),
               const SizedBox(height: 16),
-              CustomPicker(
-                label: Text('Nguồn thu thập'),
+              GenericPicker<NguonThuThap>(
+                label: 'Nguồn thu thập',
                 items: _nguonThuThaps,
-                selectedItem: nguonThuThap,
+                initialValue: _idNguonThuThap,
                 onChanged: (NguonThuThap? value) {
                   setState(() {
                     _idNguonThuThap = value?.id;
                     nguonThuThap = value;
                   });
                 },
-                displayItemBuilder: (NguonThuThap? item) => item?.name ?? '',
               ),
             ],
           ),
@@ -1241,40 +1240,40 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
             theme,
             'Thông tin bổ sung',
             [
-              CustomPicker(
-                label: Text('Dân Tộc'),
+              GenericPicker<DanToc>(
+                label: 'Dân Tộc',
                 items: _danTocs,
-                selectedItem: danToc,
+                initialValue: _idDanToc,
                 onChanged: (DanToc? value) {
                   setState(() {
                     _idDanToc = value?.id;
+                    danToc = value;
                   });
                 },
-                displayItemBuilder: (DanToc? item) => item?.name ?? '',
               ),
               const SizedBox(height: 16),
-              CustomPicker(
-                label: Text('Tình trạng tàn tật'),
+              GenericPicker<TtTantat>(
+                label: 'Tình trạng tàn tật',
                 items: _tinhTrangTanTats,
-                selectedItem: tinhTrangTanTat,
+                initialValue: _uvTinhtrangtantatId,
                 onChanged: (TtTantat? value) {
                   setState(() {
                     _uvTinhtrangtantatId = value?.id;
+                    tinhTrangTanTat = value;
                   });
                 },
-                displayItemBuilder: (TtTantat? item) => item?.name ?? '',
               ),
               const SizedBox(height: 16),
-              CustomPicker(
-                label: Text('Đối tượng chính sách'),
+              GenericPicker<DoiTuong>(
+                label: 'Đối tượng chính sách',
                 items: _doiTuongChinhSachs,
-                selectedItem: doiTuongChinhSach,
+                initialValue: _uvDoiTuongChingSachId,
                 onChanged: (DoiTuong? value) {
                   setState(() {
                     _uvDoiTuongChingSachId = value?.id;
+                    doiTuongChinhSach = value;
                   });
                 },
-                displayItemBuilder: (DoiTuong? item) => item?.displayName ?? '',
               ),
               const SizedBox(height: 16),
               Row(
@@ -1330,17 +1329,16 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                 addressDetailController: _diachichitietController,
               ),
               const SizedBox(height: 16),
-              CustomPicker(
-                label: Text('Thành phố nơi làm việc'),
+              GenericPicker<TinhThanhModel>(
+                label: 'Thành phố nơi làm việc',
                 items: _tinhThanhs,
-                selectedItem: tinhThanh,
+                initialValue: _idThanhPho,
                 onChanged: (TinhThanhModel? value) {
                   setState(() {
                     _idThanhPho = value?.id;
+                    tinhThanh = value;
                   });
                 },
-                displayItemBuilder: (TinhThanhModel? item) =>
-                    item?.displayName ?? '',
               ),
             ],
           ),
@@ -1348,42 +1346,40 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
             theme,
             'Trình độ chuyên môn',
             [
-              CustomPicker(
-                label: Text('Trình độ văn hóa'),
+              GenericPicker<TrinhDoVanHoa>(
+                label: 'Trình độ văn hóa',
                 items: _trinhDoVanHoas,
-                selectedItem: trinhDoVanHoa,
+                initialValue: _uvcmTrinhdoId,
                 onChanged: (TrinhDoVanHoa? value) {
                   setState(() {
                     _uvcmTrinhdoId = value?.id;
+                    trinhDoVanHoa = value;
                   });
                 },
-                displayItemBuilder: (TrinhDoVanHoa? item) => item?.name ?? '',
               ),
               const SizedBox(height: 16),
-              CustomPicker(
-                label: Text('Ngành nghề'),
+              GenericPicker<NganhNgheTD>(
+                label: 'Ngành nghề',
                 items: _nganhNgheTDs,
-                selectedItem: nganhNgheTD,
+                initialValue: _uvnvNganhngheId,
                 onChanged: (NganhNgheTD? value) {
                   setState(() {
                     _uvnvNganhngheId = value?.id;
+                    nganhNgheTD = value;
                   });
                 },
-                displayItemBuilder: (NganhNgheTD? item) =>
-                    item?.displayName ?? '',
               ),
               const SizedBox(height: 16),
-              CustomPicker(
-                label: Text('Trình độ chuyên môn'),
+              GenericPicker<TrinhDoChuyenMon>(
+                label: 'Trình độ chuyên môn',
                 items: _nganhNgheBacHocs,
-                selectedItem: nganhNgheBacHoc,
+                initialValue: _idBacHocController.text,
                 onChanged: (TrinhDoChuyenMon? value) {
                   setState(() {
                     _idBacHocController.text = value?.id.toString() ?? '';
+                    nganhNgheBacHoc = value;
                   });
                 },
-                displayItemBuilder: (TrinhDoChuyenMon? item) =>
-                    item?.displayName ?? '',
               ),
               const SizedBox(height: 16),
               CustomTextField.number(
@@ -1398,32 +1394,28 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
             theme,
             'Kỹ năng',
             [
-              CustomPicker(
-                label: Text('Trình độ ngoại ngữ'),
+              GenericPicker<TrinhDoNgoaiNgu>(
+                label: 'Trình độ ngoại ngữ',
                 items: _trinhDoNgoaiNgus,
-                selectedItem: trinhDoNgoaiNgu,
+                initialValue: _uvcmTrinhdongoainguController.text,
                 onChanged: (TrinhDoNgoaiNgu? value) {
                   setState(() {
-                    _uvcmTrinhdongoainguController.text =
-                        value?.id.toString() ?? '';
+                    _uvcmTrinhdongoainguController.text = value?.id.toString() ?? '';
+                    trinhDoNgoaiNgu = value;
                   });
                 },
-                displayItemBuilder: (TrinhDoNgoaiNgu? item) =>
-                    item?.displayName ?? '',
               ),
               const SizedBox(height: 16),
-              CustomPicker(
-                label: Text('Trình độ tin học'),
+              GenericPicker<TrinhDoTinHoc>(
+                label: 'Trình độ tin học',
                 items: _trinhDoTinHocs,
-                selectedItem: trinhDoTinHoc,
+                initialValue: _uvcmTrinhdotinhocController.text,
                 onChanged: (TrinhDoTinHoc? value) {
                   setState(() {
-                    _uvcmTrinhdotinhocController.text =
-                        value?.id.toString() ?? '';
+                    _uvcmTrinhdotinhocController.text = value?.id.toString() ?? '';
+                    trinhDoTinHoc = value;
                   });
                 },
-                displayItemBuilder: (TrinhDoTinHoc? item) =>
-                    item?.displayName ?? '',
               ),
               const SizedBox(height: 16),
               CustomTextField(
@@ -1677,18 +1669,16 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                 validator: 'not_empty',
               ),
               const SizedBox(height: 16),
-              CustomPicker(
-                label: Text('Chức vụ mong muốn'),
+              GenericPicker<ChucDanhModel>(
+                label: 'Chức vụ mong muốn',
                 items: _chucDanhs,
-                selectedItem: chucDanh,
+                initialValue: _uvnvVitrimongmuonId,
                 onChanged: (ChucDanhModel? value) {
                   setState(() {
                     chucDanh = value;
                     _uvnvVitrimongmuonId = value?.id;
                   });
                 },
-                displayItemBuilder: (ChucDanhModel? item) =>
-                    item?.displayName ?? '',
               ),
             ],
           ),
@@ -1696,18 +1686,16 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
             theme,
             'Thông tin lương',
             [
-              CustomPicker(
-                label: Text('Mức lương mong muốn'),
+              GenericPicker<MucLuongMM>(
+                label: 'Mức lương mong muốn',
                 items: _mucluongs,
-                selectedItem: mucLuong,
+                initialValue: _idMucluong,
                 onChanged: (MucLuongMM? value) {
                   setState(() {
                     _idMucluong = value?.id;
                     mucLuong = value;
                   });
                 },
-                displayItemBuilder: (MucLuongMM? item) =>
-                    item?.displayName ?? '',
               ),
               const SizedBox(height: 16),
               CustomTextField.number(
@@ -1723,46 +1711,40 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
             theme,
             'Thời gian và hình thức làm việc',
             [
-              CustomPicker(
-                label: Text('Thời gian làm việc mong muốn'),
+              GenericPicker<ThoiGianLamViec>(
+                label: 'Thời gian làm việc mong muốn',
                 items: _thoigianlamviecs,
-                selectedItem: thoigianlamviec,
+                initialValue: _uvnvThoigianId,
                 onChanged: (ThoiGianLamViec? value) {
                   setState(() {
                     _uvnvThoigianId = value?.id;
                     thoigianlamviec = value;
                   });
                 },
-                displayItemBuilder: (ThoiGianLamViec? item) =>
-                    item?.displayName ?? '',
               ),
               const SizedBox(height: 16),
-              CustomPicker(
-                label: Text('Hình thức công ty mong muốn'),
+              GenericPicker<HinhThucDoanhNghiep>(
+                label: 'Hình thức công ty mong muốn',
                 items: _hinhthucdoanhnghieps,
-                selectedItem: hinhthucdoanhnghiep,
+                initialValue: _uvnvHinhthuccongtyId,
                 onChanged: (HinhThucDoanhNghiep? value) {
                   setState(() {
                     _uvnvHinhthuccongtyId = value?.id;
                     hinhthucdoanhnghiep = value;
                   });
                 },
-                displayItemBuilder: (HinhThucDoanhNghiep? item) =>
-                    item?.name ?? '',
               ),
               const SizedBox(height: 16),
-              CustomPicker(
-                label: Text('Thành phố mong muốn'),
+              GenericPicker<TinhThanhModel>(
+                label: 'Thành phố mong muốn',
                 items: _tinhThanhs,
-                selectedItem: tinhThanhmm,
+                initialValue: _uvnvNoilamviecController.text,
                 onChanged: (TinhThanhModel? value) {
                   setState(() {
                     _uvnvNoilamviecController.text = value?.id.toString() ?? '';
                     tinhThanhmm = value;
                   });
                 },
-                displayItemBuilder: (TinhThanhModel? item) =>
-                    item?.displayName ?? '',
               ),
             ],
           ),
