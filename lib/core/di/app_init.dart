@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ttld/bloc/tinh_thanh/tinh_thanh_cubit.dart';
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/models/chuc_danh_model.dart';
-import 'package:ttld/models/dan_toc/dan_toc_model.dart';
+import 'package:ttld/models/dan_toc_model.dart';
 import 'package:ttld/models/do_tuoi_model.dart';
 import 'package:ttld/models/doituong_chinhsach/doituong.dart';
 import 'package:ttld/models/hinh_thuc_lam_viec_model.dart';
