@@ -27,6 +27,7 @@ import 'package:ttld/models/tinh_trang_hd_model.dart';
 import 'package:ttld/models/trinh_do_hoc_van_model.dart';
 import 'package:ttld/models/trinh_do_ngoai_ngu_model.dart';
 import 'package:ttld/models/trinh_do_tin_hoc_model.dart';
+import 'package:ttld/models/nguon_thuthap/nguon_thuthap_model.dart'; // Added
 import 'package:ttld/models/user/manv_name_model.dart';
 import 'package:ttld/repositories/chuc_danh_repository.dart';
 import 'package:ttld/repositories/do_tuoi/do_tuoi_repository.dart';
@@ -52,6 +53,7 @@ import 'package:ttld/repositories/tinh_trang_hd_repository.dart';
 import 'package:ttld/repositories/trinh_do_hoc_van/trinh_do_hoc_van_repository.dart';
 import 'package:ttld/repositories/trinh_do_ngoai_ngu/trinh_do_ngoai_ngu_repository.dart';
 import 'package:ttld/repositories/trinh_do_tin_hoc/trinh_do_tin_hoc_repository.dart';
+import 'package:ttld/repositories/nguon_thuthap/nguon_thuthap_repository.dart'; // Added
 import 'package:ttld/repositories/user/user_repository.dart';
 
 Future<void> initializeAppData() async {
@@ -82,6 +84,7 @@ Future<void> initializeAppData() async {
   final hinhThucLamViecRepository = locator<HinhThucLamViecRepository>();
   final userRepository = locator<UserRepository>();
   final kieuChapNoiRepository = locator<KieuChapNoiRepository>();
+  final nguonThuThapRepository = locator<NguonThuThapRepository>(); // Added
 
   try {
     if (!locator.isRegistered<List<QuocGia>>()) {
@@ -359,5 +362,20 @@ Future<void> initializeAppData() async {
     debugPrint('🌍 Loaded ${kieuChapNois.length} KieuChapNoi items at app start');
   } catch (e) {
     debugPrint('Error preloading kieu chap noi: $e');
+  }
+
+  // Nguon Thu Thap
+  try {
+    if (!locator.isRegistered<List<NguonThuThap>>()) {
+      final nguonThuThaps = await nguonThuThapRepository.getNguonThuThaps();
+      locator.registerSingleton<List<NguonThuThap>>(nguonThuThaps);
+      debugPrint(
+          '🌍 Loaded ${nguonThuThaps.length} NguonThuThap items at app start');
+    }
+  } catch (e) {
+    debugPrint('Error preloading nguon thu thap: $e');
+    if (!locator.isRegistered<List<NguonThuThap>>()) {
+      locator.registerSingleton<List<NguonThuThap>>([]); // Fallback empty list
+    }
   }
 }
