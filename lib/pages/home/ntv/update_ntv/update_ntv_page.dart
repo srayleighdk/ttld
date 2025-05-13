@@ -11,7 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_bloc.dart';
 import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_event.dart';
 import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_state.dart';
-import 'package:ttld/bloc/tinh_thanh/tinh_thanh_cubit.dart';
+// import 'package:ttld/bloc/tinh_thanh/tinh_thanh_cubit.dart'; // Removed
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/core/utils/toast_utils.dart';
 import 'package:ttld/helppers/map_help.dart';
@@ -32,20 +32,20 @@ import 'package:ttld/models/trinh_do_ngoai_ngu_model.dart';
 import 'package:ttld/models/trinh_do_tin_hoc_model.dart';
 import 'package:ttld/models/trinh_do_van_hoa_model.dart';
 import 'package:ttld/models/tttantat/tttantat.dart';
-import 'package:ttld/repositories/chuc_danh_repository.dart';
-import 'package:ttld/repositories/dan_toc/dan_toc_repository.dart';
-import 'package:ttld/repositories/hinhthuc_doanhnghiep/hinhthuc_doanhnghiep_repository.dart';
-import 'package:ttld/repositories/muc_luong/muc_luong_repository.dart';
-import 'package:ttld/repositories/nganh_nghe/nganh_nghe_bachoc_repository.dart';
-import 'package:ttld/repositories/nganh_nghe/nganh_nghe_td_repository.dart';
-import 'package:ttld/repositories/nguon_thuthap/nguon_thuthap_repository.dart';
-import 'package:ttld/repositories/tblDmDoiTuongChinhSach/doituong_repository.dart';
-import 'package:ttld/repositories/thoigianlamviec/thoigianlamviec_repository.dart';
-import 'package:ttld/repositories/trinh_do_hoc_van/trinh_do_hoc_van_repository.dart';
-import 'package:ttld/repositories/trinh_do_ngoai_ngu/trinh_do_ngoai_ngu_repository.dart';
-import 'package:ttld/repositories/trinh_do_tin_hoc/trinh_do_tin_hoc_repository.dart';
-import 'package:ttld/repositories/trinh_do_van_hoa/trinh_do_van_hoa_repository.dart';
-import 'package:ttld/repositories/tt_tantat/tt_tantat_repository.dart';
+// import 'package:ttld/repositories/chuc_danh_repository.dart'; // Removed
+// import 'package:ttld/repositories/dan_toc/dan_toc_repository.dart'; // Removed
+// import 'package:ttld/repositories/hinhthuc_doanhnghiep/hinhthuc_doanhnghiep_repository.dart'; // Removed
+// import 'package:ttld/repositories/muc_luong/muc_luong_repository.dart'; // Removed
+// import 'package:ttld/repositories/nganh_nghe/nganh_nghe_bachoc_repository.dart'; // Removed
+// import 'package:ttld/repositories/nganh_nghe/nganh_nghe_td_repository.dart'; // Removed
+// import 'package:ttld/repositories/nguon_thuthap/nguon_thuthap_repository.dart'; // Removed
+// import 'package:ttld/repositories/tblDmDoiTuongChinhSach/doituong_repository.dart'; // Removed
+// import 'package:ttld/repositories/thoigianlamviec/thoigianlamviec_repository.dart'; // Removed
+// import 'package:ttld/repositories/trinh_do_hoc_van/trinh_do_hoc_van_repository.dart'; // Removed as _loadTrinhDoHocVan was removed
+// import 'package:ttld/repositories/trinh_do_ngoai_ngu/trinh_do_ngoai_ngu_repository.dart'; // Removed
+// import 'package:ttld/repositories/trinh_do_tin_hoc/trinh_do_tin_hoc_repository.dart'; // Removed
+// import 'package:ttld/repositories/trinh_do_van_hoa/trinh_do_van_hoa_repository.dart'; // Removed
+// import 'package:ttld/repositories/tt_tantat/tt_tantat_repository.dart'; // Removed
 import 'package:ttld/widgets/cascade_location_picker.dart';
 import 'package:ttld/widgets/field/custom_checkbox.dart';
 import 'package:ttld/widgets/field/custom_pick_datetime_grok.dart';
@@ -63,7 +63,6 @@ class UpdateNTVPage extends StatefulWidget {
 }
 
 class _UpdateNTVPageState extends State<UpdateNTVPage> {
-  StreamSubscription? _tinhThanhSubscription;
   final Map<int, GlobalKey<FormState>> _formKeys = {
     0: GlobalKey<FormState>(),
     1: GlobalKey<FormState>(),
@@ -151,52 +150,23 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
   String? _selectedHuyen;
   String? _selectedXa;
 
-  List<NguonThuThap> _nguonThuThaps = [];
+  // Model instance variables are kept for onChanged logic if needed by the page
   NguonThuThap? nguonThuThap;
-
-  List<DanToc> _danTocs = [];
   DanToc? danToc;
-
-  List<TtTantat> _tinhTrangTanTats = [];
   TtTantat? tinhTrangTanTat;
-
-  List<DoiTuong> _doiTuongChinhSachs = [];
   DoiTuong? doiTuongChinhSach;
-
-  List<TinhThanhModel> _tinhThanhs = [];
   TinhThanhModel? tinhThanh;
   TinhThanhModel? tinhThanhmm;
-
-  List<TrinhDoHocVan> _trinhDoHocVans = [];
-  TrinhDoHocVan? trinhDoHocVan;
-
-  List<TrinhDoTinHoc> _trinhDoTinHocs = [];
+  // TrinhDoHocVan? trinhDoHocVan; // This was unused
   TrinhDoTinHoc? trinhDoTinHoc;
-
-  List<TrinhDoNgoaiNgu> _trinhDoNgoaiNgus = [];
   TrinhDoNgoaiNgu? trinhDoNgoaiNgu;
-  List<NganhNgheKT> _nganhNghes = [];
-  NganhNgheKT? nganhNghe;
-
-  List<TrinhDoChuyenMon> _nganhNgheBacHocs = [];
+  // NganhNgheKT? nganhNghe; // This was unused
   TrinhDoChuyenMon? nganhNgheBacHoc;
-
-  List<NganhNgheTD> _nganhNgheTDs = [];
   NganhNgheTD? nganhNgheTD;
-
-  List<ChucDanhModel> _chucDanhs = [];
   ChucDanhModel? chucDanh;
-
-  List<MucLuongMM> _mucluongs = [];
   MucLuongMM? mucLuong;
-
-  List<ThoiGianLamViec> _thoigianlamviecs = [];
   ThoiGianLamViec? thoigianlamviec;
-
-  List<HinhThucDoanhNghiep> _hinhthucdoanhnghieps = [];
   HinhThucDoanhNghiep? hinhthucdoanhnghiep;
-
-  List<TrinhDoVanHoa> _trinhDoVanHoas = [];
   TrinhDoVanHoa? trinhDoVanHoa;
 
   File? _selectedFile; // For file (e.g., CV)
@@ -286,445 +256,34 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
     // if (ntvBloc.state is NTVError) {
     //   print('Error message: ${(ntvBloc.state as NTVError).message}');
     // }
-    _loadNguonThuThap();
-    _loadDanToc();
-    _loadTinhTrangTanTat();
-    _loadDoiTuong();
-    _loadTinhThanh();
-    _loadTrinhDoHocVan();
-    _loadTrinhDoTinHoc();
-    _loadTrinhDoNgoaiNgu();
-    // _loadNganhNghe();
-    _loadNganhNgheBacHoc();
-    _loadNganhNgheTD();
-    _loadChucDanh();
-    _loadMucLuong();
-    _loadThoiGianLamViec();
-    _loadHinhThucDoanhNghiep();
-    _loadTrinhDoVanHoa();
-  }
+    // Data for GenericPickers will be fetched via locator directly in the items prop.
+    // Initialize model instances if needed based on existing IDs after widget.hoSoUngVien is processed.
+    // This part might require adjustment if initial selection logic was heavily tied to _load methods.
+    // GenericPicker itself will handle finding the item from locator<List<T>>() using initialValue.
 
-  Future<void> _loadChucDanh() async {
-    final chucDanhRepository = locator<ChucDanhRepository>();
-    try {
-      final chucDanhs = await chucDanhRepository.getChucDanhs();
-
-      if (mounted) {
-        setState(() {
-          _chucDanhs = chucDanhs;
-        });
-        if (_uvnvVitrimongmuonId != null) {
-          ChucDanhModel? _chucDanh = _chucDanhs
-              .firstWhere((element) => element.id == _uvnvVitrimongmuonId);
-          if (_chucDanh != null) {
-            setState(() {
-              chucDanh = _chucDanh;
-            });
-          }
-        }
-      }
-    } catch (e) {
-      // Added stackTrace
-      print("Error loading chuc danh: $e");
+    // Example of how you might re-initialize selected models if needed,
+    // assuming locator provides data synchronously or GenericPicker handles async loading:
+    if (widget.hoSoUngVien != null) {
+        final ntv = widget.hoSoUngVien!;
+        if (ntv.idNguonThuThap != null) nguonThuThap = locator<List<NguonThuThap>>().firstWhere((e) => e.id == ntv.idNguonThuThap, orElse: () => null as NguonThuThap);
+        if (ntv.idDanToc != null) danToc = locator<List<DanToc>>().firstWhere((e) => e.id == ntv.idDanToc, orElse: () => null as DanToc);
+        if (ntv.uvTinhtrangtantatId != null) tinhTrangTanTat = locator<List<TtTantat>>().firstWhere((e) => e.id == ntv.uvTinhtrangtantatId, orElse: () => null as TtTantat);
+        if (ntv.uvDoituongchinhsachId != null) doiTuongChinhSach = locator<List<DoiTuong>>().firstWhere((e) => e.id == ntv.uvDoituongchinhsachId, orElse: () => null as DoiTuong);
+        if (ntv.idThanhPho != null) tinhThanh = locator<List<TinhThanhModel>>().firstWhere((e) => e.id == ntv.idThanhPho, orElse: () => null as TinhThanhModel);
+        if (ntv.uvnvNoilamviec != null && ntv.uvnvNoilamviec!.isNotEmpty) tinhThanhmm = locator<List<TinhThanhModel>>().firstWhere((e) => e.id == int.tryParse(ntv.uvnvNoilamviec!), orElse: () => null as TinhThanhModel);
+        if (ntv.uvcmTrinhdotinhoc != null && ntv.uvcmTrinhdotinhoc!.isNotEmpty) trinhDoTinHoc = locator<List<TrinhDoTinHoc>>().firstWhere((e) => e.id == ntv.uvcmTrinhdotinhoc, orElse: () => null as TrinhDoTinHoc);
+        if (ntv.uvcmTrinhdongoaingu != null && ntv.uvcmTrinhdongoaingu!.isNotEmpty) trinhDoNgoaiNgu = locator<List<TrinhDoNgoaiNgu>>().firstWhere((e) => e.id == ntv.uvcmTrinhdongoaingu, orElse: () => null as TrinhDoNgoaiNgu);
+        if (ntv.idBacHoc != null && ntv.idBacHoc!.isNotEmpty) nganhNgheBacHoc = locator<List<TrinhDoChuyenMon>>().firstWhere((e) => e.id == ntv.idBacHoc, orElse: () => null as TrinhDoChuyenMon);
+        if (ntv.uvnvNganhngheId != null) nganhNgheTD = locator<List<NganhNgheTD>>().firstWhere((e) => e.id == ntv.uvnvNganhngheId, orElse: () => null as NganhNgheTD);
+        if (ntv.uvnvVitrimongmuonid != null) chucDanh = locator<List<ChucDanhModel>>().firstWhere((e) => e.id == ntv.uvnvVitrimongmuonid, orElse: () => null as ChucDanhModel);
+        if (ntv.idMucluong != null) mucLuong = locator<List<MucLuongMM>>().firstWhere((e) => e.id == ntv.idMucluong, orElse: () => null as MucLuongMM);
+        if (ntv.uvnvThoigianId != null) thoigianlamviec = locator<List<ThoiGianLamViec>>().firstWhere((e) => e.id == ntv.uvnvThoigianId, orElse: () => null as ThoiGianLamViec);
+        if (ntv.uvnvHinhthuccongtyId != null) hinhthucdoanhnghiep = locator<List<HinhThucDoanhNghiep>>().firstWhere((e) => e.id == ntv.uvnvHinhthuccongtyId, orElse: () => null as HinhThucDoanhNghiep);
+        if (ntv.uvcmTrinhdoId != null) trinhDoVanHoa = locator<List<TrinhDoVanHoa>>().firstWhere((e) => e.id == ntv.uvcmTrinhdoId, orElse: () => null as TrinhDoVanHoa);
     }
   }
 
-  Future<void> _loadHinhThucDoanhNghiep() async {
-    final hinhthucdoanhnghiepRepository =
-        locator<HinhThucDoanhNghiepRepository>();
-    try {
-      final hinhthucdoanhnghieps =
-          await hinhthucdoanhnghiepRepository.getHinhThucDoanhNghieps();
-
-      if (mounted) {
-        setState(() {
-          _hinhthucdoanhnghieps = hinhthucdoanhnghieps;
-        });
-        if (_uvnvHinhthuccongtyId != null) {
-          HinhThucDoanhNghiep? _hinhthucdoanhnghiep = _hinhthucdoanhnghieps
-              .firstWhere((element) => element.id == _uvnvHinhthuccongtyId);
-          if (_hinhthucdoanhnghiep != null) {
-            setState(() {
-              hinhthucdoanhnghiep = _hinhthucdoanhnghiep;
-            });
-          }
-        }
-      }
-    } catch (e) {
-      print("Error loading hinhthucdoanhnghiep: $e");
-    }
-  }
-
-  Future<void> _loadThoiGianLamViec() async {
-    final thoigianlamviecRepository = locator<ThoiGianLamViecRepository>();
-    try {
-      final thoigianlamviecs =
-          await thoigianlamviecRepository.getThoiGianLamViecs();
-
-      if (mounted) {
-        setState(() {
-          _thoigianlamviecs = thoigianlamviecs;
-        });
-        if (_uvnvThoigianId != null) {
-          ThoiGianLamViec? _thoigianlamviec = _thoigianlamviecs
-              .firstWhere((element) => element.id == _uvnvThoigianId);
-          if (_thoigianlamviec != null) {
-            setState(() {
-              thoigianlamviec = _thoigianlamviec;
-            });
-          }
-        }
-      }
-    } catch (e) {
-      print("Error loading thoigianlamviec: $e");
-    }
-  }
-
-  Future<void> _loadMucLuong() async {
-    final mucluongRepository = locator<MucLuongRepository>();
-    try {
-      final mucluongs = await mucluongRepository.getMucLuongs();
-
-      if (mounted) {
-        setState(() {
-          _mucluongs = mucluongs;
-        });
-        if (_idMucluong != null) {
-          MucLuongMM? _mucluong =
-              _mucluongs.firstWhere((element) => element.id == _idMucluong);
-          if (_mucluong != null) {
-            setState(() {
-              mucLuong = _mucluong;
-            });
-          }
-        }
-      }
-    } catch (e) {
-      // Added stackTrace
-      print("Error loading mucluong: $e");
-    }
-  }
-
-  Future<void> _loadNguonThuThap() async {
-    final nguonThuThapRepository = locator<NguonThuThapRepository>();
-    try {
-      final nguonThuThaps = await nguonThuThapRepository.getNguonThuThaps();
-
-      if (mounted) {
-        setState(() {
-          _nguonThuThaps = nguonThuThaps;
-        });
-        if (_idNguonThuThap != null) {
-          NguonThuThap? _nguonThuThap = _nguonThuThaps
-              .firstWhere((element) => element.id == _idNguonThuThap);
-          if (_nguonThuThap != null) {
-            setState(() {
-              nguonThuThap = _nguonThuThap;
-            });
-          }
-        }
-      }
-    } catch (e) {
-      // Added stackTrace
-      print("Error loading nguon thu thap: $e");
-    }
-  }
-
-  Future<void> _loadDanToc() async {
-    final danTocRepository = locator<DanTocRepository>();
-    try {
-      final danTocs = await danTocRepository.getDanTocs();
-
-      if (mounted) {
-        setState(() {
-          _danTocs = danTocs;
-        });
-        if (_idDanToc != null) {
-          DanToc? _danToc =
-              _danTocs.firstWhere((element) => element.id == _idDanToc);
-          if (_danToc != null) {
-            setState(() {
-              danToc = _danToc;
-            });
-          }
-        }
-      }
-    } catch (e) {
-      // Added stackTrace
-      print("Error loading dan toc: $e");
-    }
-  }
-
-  Future<void> _loadTinhTrangTanTat() async {
-    final tinhTrangTanTatRepository = locator<TTTanTatRepository>();
-    try {
-      final tinhTrangTanTats = await tinhTrangTanTatRepository.getTTTanTats();
-
-      if (mounted) {
-        setState(() {
-          _tinhTrangTanTats = tinhTrangTanTats;
-        });
-        if (_uvTinhtrangtantatId != null) {
-          TtTantat? _tinhTrangTanTat = _tinhTrangTanTats
-              .firstWhere((element) => element.id == _uvTinhtrangtantatId);
-          if (_tinhTrangTanTat != null) {
-            setState(() {
-              tinhTrangTanTat = _tinhTrangTanTat;
-            });
-          }
-        }
-      }
-    } catch (e) {
-      // Added stackTrace
-      print("Error loading tinh trang tan tat: $e");
-    }
-  }
-
-  Future<void> _loadDoiTuong() async {
-    final doiTuongRepository = locator<DoiTuongRepository>();
-    try {
-      final doiTuongs = await doiTuongRepository.getDoiTuongs();
-
-      if (mounted) {
-        setState(() {
-          _doiTuongChinhSachs = doiTuongs;
-        });
-        if (_uvDoiTuongChingSach != null) {
-          DoiTuong? _doiTuong = _doiTuongChinhSachs
-              .firstWhere((element) => element.id == _uvDoiTuongChingSachId);
-          if (_doiTuong != null) {
-            setState(() {
-              doiTuongChinhSach = _doiTuong;
-            });
-          }
-        }
-      }
-    } catch (e) {
-      // Added stackTrace
-      print("Error loading doi tuong: $e");
-    }
-  }
-
-// Option 3: Using a separate method with BlocListener
-  Future<void> _loadTinhThanh() async {
-    final tinhThanhCubit = locator<TinhThanhCubit>();
-    try {
-      // Subscribe to state changes
-      _tinhThanhSubscription = tinhThanhCubit.stream.listen((state) {
-        print("Stream event received: $state, mounted: $mounted");
-        if (state is TinhThanhLoaded && mounted) {
-          setState(() {
-            _tinhThanhs = state.tinhThanhs;
-            print("State updated with tinhThanhs: ${_tinhThanhs.length}");
-          });
-        }
-      });
-
-      // Load the data
-      print("Loading tinh thanhs...");
-      await tinhThanhCubit.loadTinhThanhs();
-      print("Load completed");
-
-      // Optional: Check current state immediately after loading
-      final currentState = tinhThanhCubit.state;
-      if (currentState is TinhThanhLoaded && mounted) {
-        setState(() {
-          _tinhThanhs = currentState.tinhThanhs;
-        });
-        if (_idThanhPho != null) {
-          TinhThanhModel? _tinhThanh =
-              _tinhThanhs.firstWhere((element) => element.id == _idThanhPho);
-          if (_tinhThanh != null) {
-            setState(() {
-              tinhThanh = _tinhThanh;
-            });
-          }
-        }
-        if (_uvnvNoilamviecController.text.isNotEmpty) {
-          TinhThanhModel? _tinhThanh = _tinhThanhs.firstWhere((element) =>
-              element.id == int.parse(_uvnvNoilamviecController.text));
-          if (_tinhThanh != null) {
-            setState(() {
-              tinhThanhmm = _tinhThanh;
-            });
-          }
-        }
-      }
-    } catch (e, stackTrace) {
-      print("Error loading tinh thanh: $e, stackTrace: $stackTrace");
-    }
-  }
-
-  Future<void> _loadTrinhDoHocVan() async {
-    final trinhDoHocVanRepository = locator<TrinhDoHocVanRepository>();
-    try {
-      final trinhDoHocVans = await trinhDoHocVanRepository.getTrinhDoHocVans();
-
-      if (mounted) {
-        setState(() {
-          _trinhDoHocVans = trinhDoHocVans;
-        });
-        if (_uvcmTrinhdoId != null) {
-          TrinhDoHocVan? _trinhDoHocVan = _trinhDoHocVans
-              .firstWhere((element) => element.id == _uvcmTrinhdoId);
-          if (_trinhDoHocVan != null) {
-            setState(() {
-              trinhDoHocVan = _trinhDoHocVan;
-            });
-          }
-        }
-      }
-    } catch (e) {
-      // Added stackTrace
-      print("Error loading trinh do hoc van: $e");
-    }
-  }
-
-  Future<void> _loadTrinhDoVanHoa() async {
-    final trinhDoVanHoaRepository = locator<TrinhDoVanHoaRepository>();
-    try {
-      final trinhDoVanHoas = await trinhDoVanHoaRepository.getTrinhDoVanHoas();
-
-      if (mounted) {
-        setState(() {
-          _trinhDoVanHoas = trinhDoVanHoas;
-        });
-        if (_uvcmTrinhdoId != null) {
-          TrinhDoVanHoa? _trinhDoVanHoa = _trinhDoVanHoas
-              .firstWhere((element) => element.id == _uvcmTrinhdoId);
-          if (_trinhDoVanHoa != null) {
-            setState(() {
-              trinhDoVanHoa = _trinhDoVanHoa;
-            });
-          }
-        }
-      }
-    } catch (e) {
-      // Added stackTrace
-      print("Error loading trinh do van hoa: $e");
-    }
-  }
-
-  Future<void> _loadTrinhDoTinHoc() async {
-    final trinhDoTinHocRepository = locator<TrinhDoTinHocRepository>();
-    try {
-      final trinhDoTinHocs = await trinhDoTinHocRepository.getTrinhDoTinHocs();
-
-      if (mounted) {
-        setState(() {
-          _trinhDoTinHocs = trinhDoTinHocs;
-        });
-        if (_uvcmTrinhdotinhocController.text.isNotEmpty) {
-          TrinhDoTinHoc? _trinhDoTinHoc = _trinhDoTinHocs.firstWhere(
-              (element) => element.id == _uvcmTrinhdotinhocController.text);
-          if (_trinhDoTinHoc != null) {
-            setState(() {
-              trinhDoTinHoc = _trinhDoTinHoc;
-            });
-          }
-        }
-      }
-    } catch (e) {
-      print("Error loading trinh do tin hoc: $e");
-    }
-  }
-
-  Future<void> _loadTrinhDoNgoaiNgu() async {
-    final trinhDoNgoaiNguRepository = locator<TrinhDoNgoaiNguRepository>();
-    try {
-      final trinhDoNgoaiNgus =
-          await trinhDoNgoaiNguRepository.getTrinhDoNgoaiNgus();
-
-      if (mounted) {
-        setState(() {
-          _trinhDoNgoaiNgus = trinhDoNgoaiNgus;
-        });
-        if (_uvcmTrinhdongoainguController.text.isNotEmpty) {
-          TrinhDoNgoaiNgu? _trinhDoNgoaiNgu = _trinhDoNgoaiNgus.firstWhere(
-              (element) => element.id == _uvcmTrinhdongoainguController.text);
-          if (_trinhDoNgoaiNgu != null) {
-            setState(() {
-              trinhDoNgoaiNgu = _trinhDoNgoaiNgu;
-            });
-          }
-        }
-      }
-    } catch (e) {
-      print("Error loading trinh do ngoai ngu: $e");
-    }
-  }
-
-  // Future<void> _loadNganhNghe() async {
-  //   final nganhNgheRepository = locator<NganhNgheRepository>();
-  //   try {
-  //     final nganhNghes = await nganhNgheRepository.getNganhNghes();
-  //
-  //     if (mounted) {
-  //       setState(() {
-  //         _nganhNghes = nganhNghes;
-  //       });
-  //       if (_uvnvNganhngheId != null) {
-  //         NganhNgheKT? _nganhNghe = _nganhNghes.firstWhere(
-  //             (element) => element.id == _uvnvNganhngheId.toString());
-  //         if (_nganhNghe != null) {
-  //           setState(() {
-  //             nganhNghe = _nganhNghe;
-  //           });
-  //         }
-  //       }
-  //     }
-  //   } catch (e) {
-  //     print("Error loading nganh nghe: $e");
-  //   }
-  // }
-
-  Future<void> _loadNganhNgheBacHoc() async {
-    final nganhNgheBacHocRepository = locator<NganhNgheBacHocRepository>();
-    try {
-      final nganhNgheBacHocs =
-          await nganhNgheBacHocRepository.getNganhNgheBacHocs();
-
-      if (mounted) {
-        setState(() {
-          _nganhNgheBacHocs = nganhNgheBacHocs;
-        });
-        if (_idBacHocController.text.isNotEmpty) {
-          TrinhDoChuyenMon? _nganhNgheBacHoc = _nganhNgheBacHocs
-              .firstWhere((element) => element.id == _idBacHocController.text);
-          setState(() {
-            nganhNgheBacHoc = _nganhNgheBacHoc;
-          });
-        }
-      }
-    } catch (e) {
-      print("Error loading nganh nghe bac hoc: $e");
-    }
-  }
-
-  Future<void> _loadNganhNgheTD() async {
-    final nganhNgheTDRepository = locator<NganhNgheTDRepository>();
-    try {
-      final nganhNgheTDs = await nganhNgheTDRepository.getNganhNgheTDs();
-
-      if (mounted) {
-        setState(() {
-          _nganhNgheTDs = nganhNgheTDs;
-        });
-        if (_uvnvNganhngheId != null) {
-          NganhNgheTD? _nganhNgheTD = _nganhNgheTDs
-              .firstWhere((element) => element.id == _uvnvNganhngheId);
-          if (_nganhNgheTD != null) {
-            setState(() {
-              nganhNgheTD = _nganhNgheTD;
-            });
-          }
-        }
-      }
-    } catch (e, stackTrace) {
-      // Added stackTrace
-      print("Error loading nganh nghe td: $e");
-    }
-  }
+// Data loading functions are removed as GenericPickers will use locator directly.
 
 // Pick a file
   Future<void> _pickFile() async {
@@ -1151,7 +710,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
               const SizedBox(height: 16),
               GenericPicker<NguonThuThap>(
                 label: 'Nguồn thu thập',
-                items: _nguonThuThaps,
+                items: locator<List<NguonThuThap>>(),
                 initialValue: _idNguonThuThap,
                 onChanged: (NguonThuThap? value) {
                   setState(() {
@@ -1242,7 +801,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
             [
               GenericPicker<DanToc>(
                 label: 'Dân Tộc',
-                items: _danTocs,
+                items: locator<List<DanToc>>(),
                 initialValue: _idDanToc,
                 onChanged: (DanToc? value) {
                   setState(() {
@@ -1254,7 +813,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
               const SizedBox(height: 16),
               GenericPicker<TtTantat>(
                 label: 'Tình trạng tàn tật',
-                items: _tinhTrangTanTats,
+                items: locator<List<TtTantat>>(),
                 initialValue: _uvTinhtrangtantatId,
                 onChanged: (TtTantat? value) {
                   setState(() {
@@ -1266,7 +825,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
               const SizedBox(height: 16),
               GenericPicker<DoiTuong>(
                 label: 'Đối tượng chính sách',
-                items: _doiTuongChinhSachs,
+                items: locator<List<DoiTuong>>(),
                 initialValue: _uvDoiTuongChingSachId,
                 onChanged: (DoiTuong? value) {
                   setState(() {
@@ -1331,7 +890,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
               const SizedBox(height: 16),
               GenericPicker<TinhThanhModel>(
                 label: 'Thành phố nơi làm việc',
-                items: _tinhThanhs,
+                items: locator<List<TinhThanhModel>>(),
                 initialValue: _idThanhPho,
                 onChanged: (TinhThanhModel? value) {
                   setState(() {
@@ -1348,7 +907,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
             [
               GenericPicker<TrinhDoVanHoa>(
                 label: 'Trình độ văn hóa',
-                items: _trinhDoVanHoas,
+                items: locator<List<TrinhDoVanHoa>>(),
                 initialValue: _uvcmTrinhdoId,
                 onChanged: (TrinhDoVanHoa? value) {
                   setState(() {
@@ -1360,7 +919,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
               const SizedBox(height: 16),
               GenericPicker<NganhNgheTD>(
                 label: 'Ngành nghề',
-                items: _nganhNgheTDs,
+                items: locator<List<NganhNgheTD>>(),
                 initialValue: _uvnvNganhngheId,
                 onChanged: (NganhNgheTD? value) {
                   setState(() {
@@ -1372,7 +931,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
               const SizedBox(height: 16),
               GenericPicker<TrinhDoChuyenMon>(
                 label: 'Trình độ chuyên môn',
-                items: _nganhNgheBacHocs,
+                items: locator<List<TrinhDoChuyenMon>>(),
                 initialValue: _idBacHocController.text,
                 onChanged: (TrinhDoChuyenMon? value) {
                   setState(() {
@@ -1396,7 +955,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
             [
               GenericPicker<TrinhDoNgoaiNgu>(
                 label: 'Trình độ ngoại ngữ',
-                items: _trinhDoNgoaiNgus,
+                items: locator<List<TrinhDoNgoaiNgu>>(),
                 initialValue: _uvcmTrinhdongoainguController.text,
                 onChanged: (TrinhDoNgoaiNgu? value) {
                   setState(() {
@@ -1408,7 +967,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
               const SizedBox(height: 16),
               GenericPicker<TrinhDoTinHoc>(
                 label: 'Trình độ tin học',
-                items: _trinhDoTinHocs,
+                items: locator<List<TrinhDoTinHoc>>(),
                 initialValue: _uvcmTrinhdotinhocController.text,
                 onChanged: (TrinhDoTinHoc? value) {
                   setState(() {
@@ -1671,7 +1230,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
               const SizedBox(height: 16),
               GenericPicker<ChucDanhModel>(
                 label: 'Chức vụ mong muốn',
-                items: _chucDanhs,
+                items: locator<List<ChucDanhModel>>(),
                 initialValue: _uvnvVitrimongmuonId,
                 onChanged: (ChucDanhModel? value) {
                   setState(() {
@@ -1688,7 +1247,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
             [
               GenericPicker<MucLuongMM>(
                 label: 'Mức lương mong muốn',
-                items: _mucluongs,
+                items: locator<List<MucLuongMM>>(),
                 initialValue: _idMucluong,
                 onChanged: (MucLuongMM? value) {
                   setState(() {
@@ -1713,7 +1272,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
             [
               GenericPicker<ThoiGianLamViec>(
                 label: 'Thời gian làm việc mong muốn',
-                items: _thoigianlamviecs,
+                items: locator<List<ThoiGianLamViec>>(),
                 initialValue: _uvnvThoigianId,
                 onChanged: (ThoiGianLamViec? value) {
                   setState(() {
@@ -1725,7 +1284,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
               const SizedBox(height: 16),
               GenericPicker<HinhThucDoanhNghiep>(
                 label: 'Hình thức công ty mong muốn',
-                items: _hinhthucdoanhnghieps,
+                items: locator<List<HinhThucDoanhNghiep>>(),
                 initialValue: _uvnvHinhthuccongtyId,
                 onChanged: (HinhThucDoanhNghiep? value) {
                   setState(() {
@@ -1737,7 +1296,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
               const SizedBox(height: 16),
               GenericPicker<TinhThanhModel>(
                 label: 'Thành phố mong muốn',
-                items: _tinhThanhs,
+                items: locator<List<TinhThanhModel>>(),
                 initialValue: _uvnvNoilamviecController.text,
                 onChanged: (TinhThanhModel? value) {
                   setState(() {
@@ -1996,8 +1555,6 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
     _fileCVController.dispose();
     _idBacHocController.dispose();
     _diachilienheController.dispose();
-    _tinhThanhSubscription?.cancel();
-    _tinhThanhSubscription = null;
     super.dispose();
   }
 }
