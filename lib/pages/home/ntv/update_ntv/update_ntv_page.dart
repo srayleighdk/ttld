@@ -1176,7 +1176,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                       selectedItem: _uvGioitinh,
                       onChanged: (gioiTinh) {
                         setState(() {
-                          this._uvGioitinh = gioiTinh;
+                          _uvGioitinh = gioiTinh;
                         });
                       },
                     ),
@@ -1189,7 +1189,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                       selectedItem: _uvHonnhanId,
                       onChanged: (hoNhan) {
                         setState(() {
-                          this._uvHonnhanId = hoNhan;
+                          _uvHonnhanId = hoNhan;
                         });
                       },
                     ),
