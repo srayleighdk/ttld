@@ -27,6 +27,7 @@ import 'package:ttld/models/thoigianlamviec_model.dart';
 import 'package:ttld/models/tinh_thanh_model.dart';
 import 'package:ttld/models/tinh_trang_hd_model.dart';
 import 'package:ttld/models/trinh_do_hoc_van_model.dart';
+import 'package:ttld/models/tttantat/tttantat.dart';
 import 'package:ttld/models/trinh_do_ngoai_ngu_model.dart';
 import 'package:ttld/models/trinh_do_tin_hoc_model.dart';
 import 'package:ttld/models/user/manv_name_model.dart';
@@ -52,6 +53,7 @@ import 'package:ttld/repositories/quocgia/quocgia_repository.dart';
 import 'package:ttld/repositories/tblDmDoiTuongChinhSach/doituong_repository.dart';
 import 'package:ttld/repositories/thoigianlamviec/thoigianlamviec_repository.dart';
 import 'package:ttld/repositories/tinh_trang_hd_repository.dart';
+import 'package:ttld/repositories/tt_tantat/tt_tantat_repository.dart';
 import 'package:ttld/repositories/trinh_do_hoc_van/trinh_do_hoc_van_repository.dart';
 import 'package:ttld/repositories/trinh_do_ngoai_ngu/trinh_do_ngoai_ngu_repository.dart';
 import 'package:ttld/repositories/trinh_do_tin_hoc/trinh_do_tin_hoc_repository.dart';
@@ -88,6 +90,7 @@ Future<void> initializeAppData() async {
   final kieuChapNoiRepository = locator<KieuChapNoiRepository>();
   final nguonThuThapRepository = locator<NguonThuThapRepository>(); // Added
   final danTocRepository = locator<DanTocRepository>();
+  final ttTanTatRepository = locator<TTTanTatRepository>();
 
   try {
     if (!locator.isRegistered<List<QuocGia>>()) {
@@ -395,6 +398,20 @@ Future<void> initializeAppData() async {
     debugPrint('Error preloading dan toc: $e');
     if (!locator.isRegistered<List<DanToc>>()) {
       locator.registerSingleton<List<DanToc>>([]); // Fallback empty list
+    }
+  }
+
+  // Tinh Trang Tan Tat
+  try {
+    if (!locator.isRegistered<List<TtTantat>>()) {
+      final ttTanTats = await ttTanTatRepository.getTTTanTats();
+      locator.registerSingleton<List<TtTantat>>(ttTanTats);
+      debugPrint('🌍 Loaded ${ttTanTats.length} TtTantat items at app start');
+    }
+  } catch (e) {
+    debugPrint('Error preloading tinh trang tan tat: $e');
+    if (!locator.isRegistered<List<TtTantat>>()) {
+      locator.registerSingleton<List<TtTantat>>([]); // Fallback empty list
     }
   }
 }
