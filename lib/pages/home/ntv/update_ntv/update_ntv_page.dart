@@ -396,7 +396,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
               children: [
                 // Progress Indicator
                 Container(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  padding: const EdgeInsets.symmetric(vertical: 8), // Reduced padding
                   decoration: BoxDecoration(
                     color: theme.colorScheme.surface,
                     boxShadow: [
@@ -458,8 +458,8 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
         children: [
           // Step number circle
           Container(
-            width: 36,
-            height: 36,
+            width: 28, // Reduced size
+            height: 28, // Reduced size
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               gradient: isCurrent
@@ -497,7 +497,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
               ),
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 4), // Reduced spacing
           // Step title
           Text(
             _steps[index],
