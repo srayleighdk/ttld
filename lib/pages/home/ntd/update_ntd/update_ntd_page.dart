@@ -20,7 +20,7 @@ import 'package:ttld/widgets/field/custom_checkbox.dart';
 import 'package:ttld/widgets/field/custom_picker_grok.dart';
 import 'package:ttld/widgets/field/custom_picker_map.dart';
 import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
-import 'package:ttld/widgets/reuseable_widgets/generic_picker.dart';
+import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
 
 class UpdateNTDPage extends StatefulWidget {
   static const routePath = '/update_ntd';
@@ -519,7 +519,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                               },
                             ),
                             const SizedBox(height: 16),
-                            GenericPicker(
+                            GenericPicker<NganhNgheKT>(
                               initialValue: idNganhKinhTe,
                               items: locator<List<NganhNgheKT>>(),
                               onChanged: (NganhNgheKT? value) {
