@@ -20,6 +20,7 @@ import 'package:ttld/models/nganh_nghe_chuyennganh.dart';
 import 'package:ttld/models/nganh_nghe_model.dart';
 import 'package:ttld/models/nganh_nghe_td_model.dart';
 import 'package:ttld/models/ngoai_ngu_model.dart';
+import 'package:ttld/models/nguon_thuthap_model.dart';
 import 'package:ttld/models/quocgia/quocgia_model.dart';
 import 'package:ttld/models/thoigianlamviec_model.dart';
 import 'package:ttld/models/tinh_thanh_model.dart';
@@ -27,7 +28,6 @@ import 'package:ttld/models/tinh_trang_hd_model.dart';
 import 'package:ttld/models/trinh_do_hoc_van_model.dart';
 import 'package:ttld/models/trinh_do_ngoai_ngu_model.dart';
 import 'package:ttld/models/trinh_do_tin_hoc_model.dart';
-import 'package:ttld/models/nguon_thuthap/nguon_thuthap_model.dart'; // Added
 import 'package:ttld/models/user/manv_name_model.dart';
 import 'package:ttld/repositories/chuc_danh_repository.dart';
 import 'package:ttld/repositories/do_tuoi/do_tuoi_repository.dart';
@@ -152,7 +152,8 @@ Future<void> initializeAppData() async {
 
   try {
     if (!locator.isRegistered<List<NganhNgheCapDo>>()) {
-      final nganhNgheCapDos = await nganhNgheCapDoRepository.getNganhNgheCapDos();
+      final nganhNgheCapDos =
+          await nganhNgheCapDoRepository.getNganhNgheCapDos();
       locator.registerSingleton<List<NganhNgheCapDo>>(nganhNgheCapDos);
       debugPrint(
           '🌍 Loaded ${nganhNgheCapDos.length} NganhNgheCapDo items at app start');
@@ -359,7 +360,8 @@ Future<void> initializeAppData() async {
   try {
     final kieuChapNois = await kieuChapNoiRepository.getKieuChapNois();
     locator.registerSingleton<List<KieuChapNoiModel>>(kieuChapNois);
-    debugPrint('🌍 Loaded ${kieuChapNois.length} KieuChapNoi items at app start');
+    debugPrint(
+        '🌍 Loaded ${kieuChapNois.length} KieuChapNoi items at app start');
   } catch (e) {
     debugPrint('Error preloading kieu chap noi: $e');
   }
