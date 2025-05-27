@@ -1,10 +1,13 @@
 import 'package:dio/dio.dart';
+import 'package:get_it/get_it.dart'; // Import GetIt
 import 'package:ttld/core/api_client.dart';
 import 'package:ttld/core/constants/api_endpoints.dart';
 import 'package:ttld/models/tblNhaTuyenDung/tblNhaTuyenDung_model.dart';
 
+final locator = GetIt.instance; // Get the locator instance
+
 class NTDApiService {
-  final Dio _dio = ApiClient().dio;
+  final Dio _dio = locator<ApiClient>().dio; // Use locator to get ApiClient
 
   Future<List<Ntd>> getNtdList({
     int? limit,

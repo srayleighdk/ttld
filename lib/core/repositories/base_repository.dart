@@ -1,9 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart'; // Import GetIt
 import 'package:ttld/core/api_client.dart';
 
+final locator = GetIt.instance; // Get the locator instance
+
 abstract class BaseRepository {
-  final Dio dio = ApiClient().dio;
+  final Dio dio = locator<ApiClient>().dio; // Use locator to get ApiClient
 
   Exception handleDioError(DioException e) {
     switch (e.type) {

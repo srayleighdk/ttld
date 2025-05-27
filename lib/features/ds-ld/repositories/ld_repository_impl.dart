@@ -1,10 +1,13 @@
 import 'package:dio/dio.dart';
+import 'package:get_it/get_it.dart'; // Import GetIt
 import 'package:ttld/core/api_client.dart';
 import 'package:ttld/core/constants/api_endpoints.dart';
 import 'package:ttld/core/models/paginated_reponse.dart';
 import 'package:ttld/core/repositories/base_repository.dart';
 import 'package:ttld/features/ds-ld/models/ld.dart';
 import 'package:ttld/features/ds-ld/repositories/ld_repository.dart';
+
+final locator = GetIt.instance; // Get the locator instance
 
 class LdRepositoryImpl extends BaseRepository implements LdRepository {
   final Dio _dio;
@@ -13,7 +16,7 @@ class LdRepositoryImpl extends BaseRepository implements LdRepository {
   LdRepositoryImpl(this._dio);
 
   // Named constructor using ApiClient singleton
-  LdRepositoryImpl.withDefaultDio() : _dio = ApiClient().dio;
+  LdRepositoryImpl.withDefaultDio() : _dio = locator<ApiClient>().dio; // Use locator
 
   @override
   Future<LdModel> getLd(String id) async {
