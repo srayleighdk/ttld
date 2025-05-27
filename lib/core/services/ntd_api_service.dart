@@ -23,8 +23,9 @@ class NTDApiService {
         if (search != null) 'search': search,
         if (idUv != null) 'idUv': idUv,
       });
-      List<Ntd> ntdList =
-          (response.data["data"] as List).map((json) => Ntd.fromJson(json)).toList();
+      List<Ntd> ntdList = (response.data["data"] as List)
+          .map((json) => Ntd.fromJson(json))
+          .toList();
       return ntdList;
     } catch (e) {
       throw Exception('Failed to fetch NTD list: $e');
@@ -34,7 +35,8 @@ class NTDApiService {
   Future<Ntd> getNtdById(String id) async {
     try {
       print('Fetching NTD with ID: $id');
-      final response = await _dio.get(ApiEndpoints.ntdById, queryParameters: {'id': id});
+      final response =
+          await _dio.get(ApiEndpoints.ntdById, queryParameters: {'id': id});
       print('API Response: ${response.data}');
       if (response.data == null || response.data['data'] == null) {
         throw Exception('Invalid API response format');

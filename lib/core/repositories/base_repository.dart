@@ -10,47 +10,47 @@ abstract class BaseRepository {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
-        return Exception(
-            'Connection timeout. Please check your internet connection.');
-      // ... rest of error handling
+        return Exception('Lỗi kết nối. Vui lòng kiểm tra kết nối internet.');
       case DioExceptionType.badResponse:
         final statusCode = e.response?.statusCode;
         final responseData = e.response?.data;
+        
+        // For login-related errors (401, 403), show a consistent message
+        if (statusCode == 401 || statusCode == 403) {
+          return Exception('Tên đăng nhập hoặc mật khẩu không đúng');
+        }
+
         final errorMessage = responseData is Map<String, dynamic>
-            ? responseData['message'] ?? 'Unknown error occurred'
-            : responseData?.toString() ?? 'Unknown error occurred';
+            ? responseData['message'] ?? 'Đã xảy ra lỗi'
+            : responseData?.toString() ?? 'Đã xảy ra lỗi';
 
         switch (statusCode) {
           case 400:
-            return Exception('Invalid request: $errorMessage');
-          case 401:
-            return Exception('Unauthorized: $errorMessage');
-          case 403:
-            return Exception('Forbidden: $errorMessage');
+            return Exception('Yêu cầu không hợp lệ: $errorMessage');
           case 404:
-            return Exception('Resource not found: $errorMessage');
+            return Exception('Không tìm thấy tài nguyên: $errorMessage');
           case 409:
-            return Exception('Conflict: $errorMessage');
+            return Exception('Xung đột: $errorMessage');
           case 500:
-            return Exception('Server error: $errorMessage');
+            return Exception('Lỗi máy chủ: $errorMessage');
           default:
-            return Exception('HTTP Error $statusCode: $errorMessage');
+            return Exception('Lỗi HTTP $statusCode: $errorMessage');
         }
 
       case DioExceptionType.cancel:
-        return Exception('Request was cancelled');
+        return Exception('Yêu cầu đã bị hủy');
 
       case DioExceptionType.unknown:
         if (e.error != null && e.error.toString().contains('SocketException')) {
-          return Exception('No internet connection');
+          return Exception('Không có kết nối internet');
         }
-        return Exception('An unexpected error occurred: ${e.error}');
+        return Exception('Tên đăng nhập hoặc mật khẩu không đúng');
 
       case DioExceptionType.badCertificate:
-        return Exception('Invalid SSL certificate');
+        return Exception('Chứng chỉ SSL không hợp lệ');
 
       default:
-        return Exception('Network error occurred: ${e.message}');
+        return Exception('Tên đăng nhập hoặc mật khẩu không đúng');
     }
   }
 
@@ -63,7 +63,7 @@ abstract class BaseRepository {
     } catch (e, stackTrace) {
       debugPrint("Unhandled Error: $e");
       debugPrint(stackTrace.toString());
-      throw Exception(e.toString());
+      throw Exception('Tên đăng nhập hoặc mật khẩu không đúng');
     }
   }
 }
