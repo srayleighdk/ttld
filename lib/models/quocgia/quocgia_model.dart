@@ -1,4 +1,4 @@
-import 'package:ttld/widgets/reuseable_widgets/generic_picker.dart';
+import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
 
 class QuocGia extends GenericPickerItem {
   final String viettat;
@@ -6,12 +6,12 @@ class QuocGia extends GenericPickerItem {
   final bool status;
 
   QuocGia({
-    required int id,
+    required int super.id,
     required String name,
     required this.viettat,
     required this.displayOrder,
     required this.status,
-  }) : super(id: id, displayName: name);
+  }) : super(displayName: name);
 
   factory QuocGia.fromJson(Map<String, dynamic> json) {
     return QuocGia(

@@ -24,7 +24,7 @@ class AuthRepository {
       await saveUserDataToPrefs(response, userType);
       return response;
     } catch (e) {
-      throw Exception('Failed to login: $e');
+      throw Exception('Tên đăng nhập hoặc mật khẩu không đúng');
     }
   }
 

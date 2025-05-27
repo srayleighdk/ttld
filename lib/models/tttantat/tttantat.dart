@@ -1,15 +1,15 @@
-class TtTantat {
-  final int id;
-  final String name;
+import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
+
+class TtTantat extends GenericPickerItem {
   final int displayOrder;
   final bool status;
 
   TtTantat({
-    required this.id,
-    required this.name,
+    required super.id,
+    required String name,
     required this.displayOrder,
     required this.status,
-  });
+  }) : super(displayName: name);
 
   factory TtTantat.fromJson(Map<String, dynamic> json) {
     return TtTantat(
@@ -23,7 +23,7 @@ class TtTantat {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'name': name,
+      'name': displayName,
       'displayOrder': displayOrder,
       'status': status,
     };

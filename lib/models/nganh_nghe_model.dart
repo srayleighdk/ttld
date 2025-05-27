@@ -1,4 +1,4 @@
-import 'package:ttld/widgets/reuseable_widgets/generic_picker.dart';
+import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
 
 class NganhNgheKT extends GenericPickerItem {
   final String manhom;
@@ -6,12 +6,12 @@ class NganhNgheKT extends GenericPickerItem {
   final bool status;
 
   NganhNgheKT({
-    required String id,
+    required String super.id,
     required String name,
     required this.manhom,
     required this.displayOrder,
     required this.status,
-  }) : super(id: id, displayName: name);
+  }) : super(displayName: name);
 
   factory NganhNgheKT.fromJson(Map<String, dynamic> json) {
     return NganhNgheKT(

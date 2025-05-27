@@ -19,19 +19,24 @@ class CustomNavigationBar extends StatelessWidget {
       onDestinationSelected: onDestinationSelected,
       destinations: [
         _buildNavigationDestination(
-          label: 'Home',
+          label: 'Trang chủ',
           icon: FontAwesomeIcons.house,
           selectedIcon: FontAwesomeIcons.house,
         ),
         _buildNavigationDestination(
-          label: 'Notifications',
+          label: 'Thông báo',
           icon: FontAwesomeIcons.bell,
           selectedIcon: FontAwesomeIcons.solidBell,
         ),
         _buildNavigationDestination(
-          label: 'Profile',
+          label: 'Hồ sơ',
           icon: FontAwesomeIcons.user,
           selectedIcon: FontAwesomeIcons.solidUser,
+        ),
+        _buildNavigationDestination(
+          label: 'Liên hệ',
+          icon: FontAwesomeIcons.solidEnvelope,
+          selectedIcon: FontAwesomeIcons.envelope,
         ),
       ],
     );

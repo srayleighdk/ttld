@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ttld/bloc/tblNhaTuyenDung/ntd_bloc.dart';
 import 'package:ttld/core/di/injection.dart';
-import 'package:ttld/core/services/thoigianhoatdong_api_service.dart';
 import 'package:ttld/core/utils/toast_utils.dart';
 import 'package:ttld/helppers/map_help.dart';
 import 'package:ttld/models/chuc_danh_model.dart';
@@ -11,13 +10,8 @@ import 'package:ttld/models/hinhthuc_doanhnghiep/hinhthuc_doanhnghiep_model.dart
 import 'package:ttld/models/loai_hinh_model.dart';
 import 'package:ttld/models/nganh_nghe_model.dart';
 import 'package:ttld/models/thoigian_hoatdong.dart';
-// import 'package:ttld/repositories/chuc_danh_repository.dart'; // Removed
-// import 'package:ttld/repositories/hinhthuc_doanhnghiep/hinhthuc_doanhnghiep_repository.dart'; // Removed
-// import 'package:ttld/repositories/loai_hinh/loai_hinh_repository.dart'; // Removed
-// import 'package:ttld/repositories/nganh_nghe/nganh_nghe_repository.dart'; // Removed
 import 'package:ttld/widgets/cascade_location_picker.dart';
 import 'package:ttld/widgets/field/custom_checkbox.dart';
-import 'package:ttld/widgets/field/custom_picker_grok.dart';
 import 'package:ttld/widgets/field/custom_picker_map.dart';
 import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
 import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
@@ -123,7 +117,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
     if (ntdBloc.state is NTDLoadedById) {
       final ntd = (ntdBloc.state as NTDLoadedById).ntd;
       if (ntd != null) {
-        _idDoanhNghiepController.text = ntd.idDoanhNghiep ?? '';
+        _idDoanhNghiepController.text = ntd.idDoanhNghiep?.toString() ?? '';
         _usernameController.text = ntd.username ?? '';
         _passwordController.text = ntd.password ?? '';
         _ntdMadnController.text = ntd.ntdMadn ?? '';
@@ -132,10 +126,10 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
         _ntdEmailController.text = ntd.ntdEmail ?? '';
         _ntdSolaodongController.text = ntd.ntdSolaodong?.toString() ?? '';
         _ntdGioithieuController.text = ntd.ntdGioithieu ?? '';
-        _ntdDiachithanhphoController.text = ntd.ntdDiachithanhpho.toString();
-        maTinh = int.parse(ntd.ntdDiachithanhpho ?? '0');
-        maHuyen = ntd.ntdDiachihuyen ?? '';
-        maXa = ntd.ntdDiachixaphuong ?? '';
+        _ntdDiachithanhphoController.text = ntd.ntdDiachithanhpho?.toString() ?? '';
+        maTinh = ntd.ntdDiachithanhpho != null ? int.tryParse(ntd.ntdDiachithanhpho!) : null;
+        maHuyen = ntd.ntdDiachihuyen;
+        maXa = ntd.ntdDiachixaphuong;
         maKCN = ntd.ntdThuockhucongnghiep;
         _mstController.text = ntd.mst ?? '';
         ntdChucvu = ntd.ntdChucvu;
@@ -172,41 +166,37 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
 
         // Initialize model instances for GenericPickers
         if (ntdChucvu != null) {
-          chucDanh = locator<List<ChucDanhModel>>().firstWhere(
+          try {
+            chucDanh = locator<List<ChucDanhModel>>().firstWhere(
               (item) => item.id == ntdChucvu,
-              orElse: () => null as ChucDanhModel);
+              orElse: () => null as ChucDanhModel,
+            );
+          } catch (e) {
+            debugPrint('Error finding ChucDanh: $e');
+          }
         }
         if (ntdHinhthucdoanhnghiep != null) {
-          hinhthucDoanhNghiep = locator<List<HinhThucDoanhNghiep>>().firstWhere(
+          try {
+            hinhthucDoanhNghiep = locator<List<HinhThucDoanhNghiep>>().firstWhere(
               (item) => item.id == ntdHinhthucdoanhnghiep,
-              orElse: () => null as HinhThucDoanhNghiep);
+              orElse: () => null as HinhThucDoanhNghiep,
+            );
+          } catch (e) {
+            debugPrint('Error finding HinhThucDoanhNghiep: $e');
+          }
         }
         if (idLoaiHinhDoanhNghiep != null) {
-          loaihinh = locator<List<LoaiHinh>>().firstWhere(
+          try {
+            loaihinh = locator<List<LoaiHinh>>().firstWhere(
               (item) => item.id == idLoaiHinhDoanhNghiep,
-              orElse: () => null as LoaiHinh);
+              orElse: () => null as LoaiHinh,
+            );
+          } catch (e) {
+            debugPrint('Error finding LoaiHinh: $e');
+          }
         }
         // NganhNgheKT model instance (nganhNghe) is not set/used by its picker or _handleUpdate directly.
       }
-    }
-  }
-
-  // Future<void> _loadChucDanh() async { ... } // Removed
-  // Future<void> _loadHinhThucDoanhNghiep() async { ... } // Removed
-  // Future<void> _loadNganhNghe() async { ... } // Removed
-  // Future<void> _loadLoaiHinh() async { ... } // Removed
-
-  Future<void> _loadThoiGianHoatDong() async {
-    try {
-      final thoigianhoatdongs =
-          await locator<ThoiGianHoatDongApiService>().getThoiGianHoatDongList();
-      if (mounted) {
-        setState(() {
-          _thoigianhoatdongs = thoigianhoatdongs;
-        });
-      }
-    } catch (e) {
-      print("Error loading thoigianhoatdongs: $e");
     }
   }
 
@@ -258,7 +248,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
             },
             child: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(24.0),
+                padding: const EdgeInsets.all(12.0),
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -266,15 +256,15 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                     children: [
                       // Header Section
                       Container(
-                        padding: const EdgeInsets.all(24),
+                        padding: const EdgeInsets.all(12.0),
                         decoration: BoxDecoration(
                           color: theme.colorScheme.surface,
-                          borderRadius: BorderRadius.circular(24),
+                          borderRadius: BorderRadius.circular(12.0),
                           boxShadow: [
                             BoxShadow(
                               color: theme.colorScheme.shadow.withAlpha(26),
                               spreadRadius: 1,
-                              blurRadius: 10,
+                              blurRadius: 5,
                               offset: const Offset(0, 2),
                             ),
                           ],
@@ -284,37 +274,36 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                           children: [
                             Text(
                               'Cập nhật thông tin',
-                              style: theme.textTheme.headlineMedium?.copyWith(
+                              style: theme.textTheme.titleLarge?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: theme.colorScheme.primary,
                               ),
                             ),
-                            const SizedBox(height: 8),
+                            const SizedBox(height: 4),
                             Text(
                               'Vui lòng cập nhật thông tin của bạn',
-                              style: theme.textTheme.bodyLarge?.copyWith(
-                                color:
-                                    theme.colorScheme.onSurface.withAlpha(179),
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: theme.colorScheme.onSurface.withAlpha(179),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      const SizedBox(height: 32),
+                      const SizedBox(height: 16),
 
                       // Account Information Section
                       _buildSectionHeader(theme, 'Thông tin tài khoản'),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 8),
                       Container(
-                        padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(12.0),
                         decoration: BoxDecoration(
                           color: theme.colorScheme.surface,
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(8.0),
                           boxShadow: [
                             BoxShadow(
                               color: theme.colorScheme.shadow.withAlpha(26),
                               spreadRadius: 1,
-                              blurRadius: 10,
+                              blurRadius: 5,
                               offset: const Offset(0, 2),
                             ),
                           ],
@@ -325,23 +314,23 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                             CustomTextField.email(
                               controller: _ntdEmailController,
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 8),
                             CustomTextField(
                               labelText: "Mã số thuế",
                               controller: _mstController,
                               hintText: 'Mã số thuế',
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 8),
                             CustomTextField(
                               labelText: "Username",
                               controller: _usernameController,
                               hintText: 'Username',
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 8),
                             CustomTextField.password(
                               controller: _passwordController,
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 8),
                             CustomTextField(
                               labelText: "Mã NTD",
                               controller: _ntdMadnController,
@@ -356,7 +345,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 32),
+                      const SizedBox(height: 16),
 
                       // Contact Information Section
                       _buildSectionHeader(theme, 'Thông tin người liên hệ'),
@@ -667,7 +656,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                       // Submit Button
                       SizedBox(
                         width: double.infinity,
-                        height: 56,
+                        height: 48,
                         child: ElevatedButton(
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
@@ -679,19 +668,19 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                             foregroundColor: theme.colorScheme.onPrimary,
                             elevation: 0,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(8),
                             ),
                           ),
                           child: const Text(
                             'Cập nhật',
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 14,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 32),
+                      const SizedBox(height: 16),
                     ],
                   ),
                 ),

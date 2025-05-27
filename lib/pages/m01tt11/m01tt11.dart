@@ -7,7 +7,6 @@ import 'package:ttld/models/doituong_chinhsach/doituong.dart';
 import 'package:ttld/models/hinh_thuc_lam_viec_model.dart';
 import 'package:ttld/models/hinh_thuc_loai_hinh_model.dart';
 import 'package:ttld/models/hinh_thuc_tuyen_dung_model.dart';
-import 'package:ttld/models/kcn/kcn_model.dart';
 import 'package:ttld/models/kinh_nghiem_lam_viec.dart';
 import 'package:ttld/models/ky_nang_mem_model.dart';
 import 'package:ttld/models/loai_hop_dong_lao_dong_model.dart';
@@ -423,7 +422,7 @@ class _M01TT11PageState extends State<M01TT11Page> {
             },
             onKCNChanged: (kcn) {
               setState(() {
-                idKhuCn = kcn?.id;
+                // idKhuCn = kcn?.matinh;
               });
             },
           ),

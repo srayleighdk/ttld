@@ -14,7 +14,7 @@ class AuthApiService {
       final response = await apiClient.post(ApiEndpoints.login, data: request);
       return LoginResponse.fromJson(response.data);
     } catch (e) {
-      throw Exception(e);
+      throw Exception('Tên đăng nhập hoặc mật khẩu không đúng');
     }
   }
 

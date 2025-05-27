@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ttld/bloc/nganh_nghe/nganh_nghe_capdo_bloc.dart';
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/models/nganh_nghe_capdo.dart';
-import 'package:ttld/widgets/reuseable_widgets/generic_picker.dart';
+import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
 
 class NganhNgheCapDoPicker extends StatefulWidget {
   final int? initialNganhNgheCapDo1;

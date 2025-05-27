@@ -170,24 +170,29 @@ class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
                 Icon(
                   Icons.work_outline,
                   color: theme.colorScheme.primary,
+                  size: 20,
                 ),
-                const SizedBox(width: 12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Danh sách tuyển dụng',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Danh sách tuyển dụng',
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                    Text(
-                      'Quản lý các bài đăng tuyển dụng của bạn',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
+                      Text(
+                        'Quản lý các bài đăng tuyển dụng của bạn',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -207,39 +212,21 @@ class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
           ),
           onPressed: () async {
             final ntdBloc = locator<NTDBloc>();
-            print('Current NTD state: ${ntdBloc.state.runtimeType}');
-            print('User ID: ${widget.userId}');
 
-            if (ntdBloc.state is! NTDLoaded) {
-              print('NTD data not loaded, fetching...');
-              ntdBloc.add(NTDFetchList());
-              // Wait for the data to be loaded
-              await Future.delayed(const Duration(seconds: 1));
-            }
+            // Check if we have the NTD data loaded
+            if (ntdBloc.state is NTDLoadedById) {
+              final ntd = (ntdBloc.state as NTDLoadedById).ntd;
 
-            if (ntdBloc.state is NTDLoaded) {
-              final ntdList = (ntdBloc.state as NTDLoaded).ntdList;
-              print('NTD list length: ${ntdList.length}');
+              // Debug prints
               print(
-                  'NTD list: ${ntdList.map((e) => '${e.idDoanhNghiep} - ${e.ntdTen}').join(', ')}');
-
-              final ntd = ntdList.firstWhere(
-                (ntd) => ntd.idDoanhNghiep == widget.userId,
-                orElse: () {
-                  print('No matching NTD found for userId: ${widget.userId}');
-                  return Ntd();
-                },
-              );
-
-              print('Selected NTD: ${ntd.idDoanhNghiep} - ${ntd.ntdTen}');
+                  'Using existing NTD data - ID: ${ntd.idDoanhNghiep}, Name: ${ntd.ntdTen}');
 
               if (ntd.idDoanhNghiep == null || ntd.idDoanhNghiep!.isEmpty) {
-                print('Invalid NTD data');
                 if (!mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content:
-                        Text('Vui lòng đăng nhập lại để tạo bài tuyển dụng.'),
+                        Text('Không tìm thấy thông tin doanh nghiệp của bạn.'),
                     backgroundColor: Colors.red,
                   ),
                 );
@@ -247,7 +234,7 @@ class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
               }
 
               if (!mounted) return;
-              print('Navigating to create page with NTD: ${ntd.idDoanhNghiep}');
+              // Navigate to create page
               context.push(
                 CreateTuyenDungPage.routePath,
                 extra: {
@@ -256,12 +243,12 @@ class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
                 },
               );
             } else {
-              print('Failed to load NTD data');
+              // Show error if NTD data is not loaded
               if (!mounted) return;
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text(
-                      'Không thể tải thông tin doanh nghiệp. Vui lòng thử lại.'),
+                      'Vui lòng tải lại trang để lấy thông tin doanh nghiệp.'),
                   backgroundColor: Colors.red,
                 ),
               );
@@ -309,9 +296,13 @@ class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
         ),
       ),
       child: DataTable2(
-        columnSpacing: 12,
-        horizontalMargin: 12,
+        columnSpacing: 8,
+        horizontalMargin: 8,
         minWidth: 600,
+        smRatio: 0.5,
+        lmRatio: 1.5,
+        headingRowHeight: 40,
+        dataRowHeight: 48,
         headingRowColor: MaterialStateProperty.all(
           theme.colorScheme.surfaceVariant.withOpacity(0.3),
         ),
@@ -319,16 +310,7 @@ class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
           DataColumn2(
             label: Text(
               'Ngày đăng',
-              style: theme.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            size: ColumnSize.L,
-          ),
-          DataColumn2(
-            label: Text(
-              'Tiêu đề',
-              style: theme.textTheme.titleSmall?.copyWith(
+              style: theme.textTheme.bodySmall?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -336,8 +318,17 @@ class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
           ),
           DataColumn2(
             label: Text(
+              'Tiêu đề',
+              style: theme.textTheme.bodySmall?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            size: ColumnSize.L,
+          ),
+          DataColumn2(
+            label: Text(
               'Ngành nghề',
-              style: theme.textTheme.titleSmall?.copyWith(
+              style: theme.textTheme.bodySmall?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -346,7 +337,7 @@ class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
           DataColumn2(
             label: Text(
               'Trạng thái',
-              style: theme.textTheme.titleSmall?.copyWith(
+              style: theme.textTheme.bodySmall?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -355,7 +346,7 @@ class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
           DataColumn2(
             label: Text(
               'Thao tác',
-              style: theme.textTheme.titleSmall?.copyWith(
+              style: theme.textTheme.bodySmall?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -373,27 +364,30 @@ class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
             cells: [
               DataCell(Text(
                 _formatDate(ngayNhanHoSo),
-                style: theme.textTheme.bodyMedium,
+                style: theme.textTheme.bodySmall,
+                overflow: TextOverflow.ellipsis,
               )),
               DataCell(Text(
                 tdTieude,
-                style: theme.textTheme.bodyMedium?.copyWith(
+                style: theme.textTheme.bodySmall?.copyWith(
                   fontWeight: FontWeight.w500,
                 ),
+                overflow: TextOverflow.ellipsis,
               )),
               DataCell(Text(
                 tenNganhnghe,
-                style: theme.textTheme.bodyMedium,
+                style: theme.textTheme.bodySmall,
+                overflow: TextOverflow.ellipsis,
               )),
               DataCell(
                 Container(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
                   decoration: BoxDecoration(
                     color: tdDuyet
                         ? theme.colorScheme.primary.withOpacity(0.1)
                         : theme.colorScheme.error.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
                     tdDuyet ? 'Đã duyệt' : 'Chờ duyệt',
@@ -408,28 +402,42 @@ class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
               ),
               DataCell(Row(
                 mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  IconButton(
-                    icon: Icon(
-                      Icons.edit_outlined,
-                      color: theme.colorScheme.primary,
-                      size: 20,
+                  SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.edit_outlined,
+                        color: theme.colorScheme.primary,
+                        size: 16,
+                      ),
+                      constraints: const BoxConstraints(),
+                      padding: EdgeInsets.zero,
+                      onPressed: idTuyenDung != null
+                          ? () => _showEditDialog(context, tuyenDung)
+                          : null,
+                      tooltip: 'Chỉnh sửa',
                     ),
-                    onPressed: idTuyenDung != null
-                        ? () => _showEditDialog(context, tuyenDung)
-                        : null,
-                    tooltip: 'Chỉnh sửa',
                   ),
-                  IconButton(
-                    icon: Icon(
-                      Icons.delete_outline,
-                      color: theme.colorScheme.error,
-                      size: 20,
+                  const SizedBox(width: 2),
+                  SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.delete_outline,
+                        color: theme.colorScheme.error,
+                        size: 16,
+                      ),
+                      constraints: const BoxConstraints(),
+                      padding: EdgeInsets.zero,
+                      onPressed: idTuyenDung != null
+                          ? () => _showDeleteDialog(context, tuyenDung)
+                          : null,
+                      tooltip: 'Xóa',
                     ),
-                    onPressed: idTuyenDung != null
-                        ? () => _showDeleteDialog(context, tuyenDung)
-                        : null,
-                    tooltip: 'Xóa',
                   ),
                 ],
               )),

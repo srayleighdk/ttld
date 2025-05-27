@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ttld/core/enums/region.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
 import 'package:ttld/features/ds-ld/repositories/ld_repository.dart';
@@ -17,6 +18,7 @@ import 'package:ttld/pages/home/admin/admin_home.dart';
 import 'package:ttld/pages/home/home_page.dart';
 import 'package:ttld/pages/home/ntd/create_tuyen_dung/create_tuyen_dung.dart';
 import 'package:ttld/pages/home/ntd/ntd_home.dart';
+import 'package:ttld/pages/home/ntd/ntd_tuyendung_info_page.dart';
 import 'package:ttld/pages/home/ntd/quan_ly_nhan_vien/create_nhan_vien.dart';
 import 'package:ttld/pages/home/ntd/quan_ly_nhan_vien/quan_ly_nhan_vien.dart';
 import 'package:ttld/pages/home/ntd/quan_ly_tuyen_dung/quan_ly_tuyen_dung.dart';
@@ -49,11 +51,15 @@ import 'package:ttld/pages/thuThapCauLaoDong/m03pli.dart';
 class AppRouter {
   final AuthBloc authBloc;
   final LdRepository ldRepository;
+  final Region initialRegion;
 
   final GlobalKey<NavigatorState> rootNavigatorKey =
       GlobalKey<NavigatorState>();
 
-  AppRouter({required this.authBloc, required this.ldRepository});
+  AppRouter(
+      {required this.authBloc,
+      required this.ldRepository,
+      required this.initialRegion});
 
   late final GoRouter router = GoRouter(
     navigatorKey: rootNavigatorKey,
@@ -300,31 +306,56 @@ class AppRouter {
         ],
       ),
       GoRoute(
+        path: '/ntd_info',
+        builder: (context, state) =>
+            NTDInfoPage(ntdData: state.extra as TblHoSoUngVienModel?),
+      ),
+      GoRoute(
         path: '/update_ntd',
         builder: (context, state) => const UpdateNTDPage(),
       ),
       GoRoute(
           path: '/home',
           builder: (BuildContext context, GoRouterState state) {
-            debugPrint('🏠 Navigating to Home with extra: ${state.extra}');
-            final extra = state.extra as Map<String, String>?;
+            debugPrint(
+                '🏠 Navigating to Home with extra: [38;5;246m${state.extra}[0m');
+            final extra = state.extra as Map<String, dynamic>?;
             final authState = authBloc.state;
             String userId;
             String userType;
+            Region region = initialRegion;
             if (extra != null) {
-              // Use extra if provided
               userId = extra['userId'] ?? 'default_id';
               userType = extra['userType'] ?? 'default_type';
+              if (extra['region'] != null && extra['region'] is Region) {
+                region = extra['region'] as Region;
+              } else if (extra['region'] != null && extra['region'] is String) {
+                // If region is passed as a string, parse it
+                switch (extra['region']) {
+                  case 'Region.lamDong':
+                  case 'lamDong':
+                    region = Region.lamDong;
+                    break;
+                  case 'Region.binhThuan':
+                  case 'binhThuan':
+                    region = Region.binhThuan;
+                    break;
+                  case 'Region.binhDinh':
+                  case 'binhDinh':
+                    region = Region.binhDinh;
+                    break;
+                  default:
+                    region = initialRegion;
+                }
+              }
             } else if (authState is AuthAuthenticated) {
-              // Fallback to authState if extra is null
               userId = authState.userId;
               userType = authState.userType;
             } else {
-              // Shouldn't reach here due to redirect, but provide fallback
               userId = 'default_id';
               userType = 'default_type';
             }
-            return HomePage(userId: userId, userType: userType);
+            return HomePage(userId: userId, userType: userType, region: region);
           }),
       GoRoute(
         path: '/error', // Default home route

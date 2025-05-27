@@ -1,6 +1,6 @@
-import 'package:ttld/widgets/reuseable_widgets/generic_picker.dart';
+import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
 
-class TrinhDoNgoaiNgu extends GenericPickerItem{
+class TrinhDoNgoaiNgu extends GenericPickerItem {
   final int displayOrder;
   final bool status;
 
@@ -9,7 +9,7 @@ class TrinhDoNgoaiNgu extends GenericPickerItem{
     required String name,
     required this.displayOrder,
     required this.status,
-  }): super(displayName: name);
+  }) : super(displayName: name);
 
   factory TrinhDoNgoaiNgu.fromJson(Map<String, dynamic> json) {
     return TrinhDoNgoaiNgu(

@@ -1,4 +1,4 @@
-import 'package:ttld/widgets/reuseable_widgets/generic_picker.dart';
+import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
 
 class NganhNgheCapDo extends GenericPickerItem {
   final int groupId;
@@ -11,7 +11,7 @@ class NganhNgheCapDo extends GenericPickerItem {
   final bool status;
 
   NganhNgheCapDo({
-    required int id,
+    required int super.id,
     required String name,
     required this.groupId,
     required this.level1,
@@ -21,7 +21,7 @@ class NganhNgheCapDo extends GenericPickerItem {
     required this.level5,
     required this.displayOrder,
     required this.status,
-  }) : super(id: id, displayName: name);
+  }) : super(displayName: name);
 
   factory NganhNgheCapDo.fromJson(Map<String, dynamic> json) {
     return NganhNgheCapDo(

@@ -1,6 +1,6 @@
-import 'package:ttld/widgets/reuseable_widgets/generic_picker.dart';
+import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
 
-class TinhThanhModel  extends GenericPickerItem{
+class TinhThanhModel extends GenericPickerItem {
   int? displayOrder;
   bool? status;
   String? matinh;
@@ -33,3 +33,4 @@ class TinhThanhModel  extends GenericPickerItem{
     };
   }
 }
+

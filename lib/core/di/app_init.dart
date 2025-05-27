@@ -12,6 +12,7 @@ import 'package:ttld/models/hinh_thuc_tuyen_dung_model.dart';
 import 'package:ttld/models/kieuchapnoi_model.dart';
 import 'package:ttld/models/kinh_nghiem_lam_viec.dart';
 import 'package:ttld/models/ky_nang_mem_model.dart';
+import 'package:ttld/models/loai_hinh_model.dart';
 import 'package:ttld/models/loai_hop_dong_lao_dong_model.dart';
 import 'package:ttld/models/muc_dich_lam_viec_model.dart';
 import 'package:ttld/models/muc_luong_mm.dart';
@@ -32,6 +33,7 @@ import 'package:ttld/models/tttantat/tttantat.dart';
 import 'package:ttld/models/trinh_do_ngoai_ngu_model.dart';
 import 'package:ttld/models/trinh_do_tin_hoc_model.dart';
 import 'package:ttld/models/user/manv_name_model.dart';
+import 'package:ttld/models/hinhthuc_doanhnghiep/hinhthuc_doanhnghiep_model.dart';
 import 'package:ttld/repositories/chuc_danh_repository.dart';
 import 'package:ttld/repositories/dan_toc/dan_toc_repository.dart';
 import 'package:ttld/repositories/do_tuoi/do_tuoi_repository.dart';
@@ -59,8 +61,10 @@ import 'package:ttld/repositories/trinh_do_hoc_van/trinh_do_hoc_van_repository.d
 import 'package:ttld/repositories/trinh_do_van_hoa/trinh_do_van_hoa_repository.dart';
 import 'package:ttld/repositories/trinh_do_ngoai_ngu/trinh_do_ngoai_ngu_repository.dart';
 import 'package:ttld/repositories/trinh_do_tin_hoc/trinh_do_tin_hoc_repository.dart';
-import 'package:ttld/repositories/nguon_thuthap/nguon_thuthap_repository.dart'; // Added
+import 'package:ttld/repositories/nguon_thuthap/nguon_thuthap_repository.dart';
 import 'package:ttld/repositories/user/user_repository.dart';
+import 'package:ttld/repositories/hinhthuc_doanhnghiep/hinhthuc_doanhnghiep_repository.dart';
+import 'package:ttld/repositories/loai_hinh/loai_hinh_repository.dart';
 
 Future<void> initializeAppData() async {
   final quocGiaRepository = locator<QuocGiaRepository>();
@@ -90,10 +94,13 @@ Future<void> initializeAppData() async {
   final hinhThucLamViecRepository = locator<HinhThucLamViecRepository>();
   final userRepository = locator<UserRepository>();
   final kieuChapNoiRepository = locator<KieuChapNoiRepository>();
-  final nguonThuThapRepository = locator<NguonThuThapRepository>(); // Added
+  final nguonThuThapRepository = locator<NguonThuThapRepository>();
   final danTocRepository = locator<DanTocRepository>();
   final ttTanTatRepository = locator<TTTanTatRepository>();
   final trinhDoVanHoaRepository = locator<TrinhDoVanHoaRepository>();
+  final hinhThucDoanhNghiepRepository =
+      locator<HinhThucDoanhNghiepRepository>();
+  final loaiHinhRepository = locator<LoaiHinhRepository>();
 
   try {
     if (!locator.isRegistered<List<QuocGia>>()) {
@@ -421,8 +428,7 @@ Future<void> initializeAppData() async {
   // Trinh Do Van Hoa
   try {
     if (!locator.isRegistered<List<TrinhDoVanHoa>>()) {
-      final trinhDoVanHoas =
-          await trinhDoVanHoaRepository.getTrinhDoVanHoas();
+      final trinhDoVanHoas = await trinhDoVanHoaRepository.getTrinhDoVanHoas();
       locator.registerSingleton<List<TrinhDoVanHoa>>(trinhDoVanHoas);
       debugPrint(
           '🌍 Loaded ${trinhDoVanHoas.length} TrinhDoVanHoa items at app start');
@@ -431,6 +437,38 @@ Future<void> initializeAppData() async {
     debugPrint('Error preloading trinh do van hoa: $e');
     if (!locator.isRegistered<List<TrinhDoVanHoa>>()) {
       locator.registerSingleton<List<TrinhDoVanHoa>>([]); // Fallback empty list
+    }
+  }
+
+  // Hinh Thuc Doanh Nghiep
+  try {
+    if (!locator.isRegistered<List<HinhThucDoanhNghiep>>()) {
+      final hinhThucDoanhNghieps =
+          await hinhThucDoanhNghiepRepository.getHinhThucDoanhNghieps();
+      locator
+          .registerSingleton<List<HinhThucDoanhNghiep>>(hinhThucDoanhNghieps);
+      debugPrint(
+          '🌍 Loaded ${hinhThucDoanhNghieps.length} HinhThucDoanhNghiep items at app start');
+    }
+  } catch (e) {
+    debugPrint('Error preloading hinh thuc doanh nghiep: $e');
+    if (!locator.isRegistered<List<HinhThucDoanhNghiep>>()) {
+      locator.registerSingleton<List<HinhThucDoanhNghiep>>(
+          []); // Fallback empty list
+    }
+  }
+
+  // Loai Hinh
+  try {
+    if (!locator.isRegistered<List<LoaiHinh>>()) {
+      final loaiHinhs = await loaiHinhRepository.getLoaiHinhs();
+      locator.registerSingleton<List<LoaiHinh>>(loaiHinhs);
+      debugPrint('🌍 Loaded ${loaiHinhs.length} LoaiHinh items at app start');
+    }
+  } catch (e) {
+    debugPrint('Error preloading loai hinh: $e');
+    if (!locator.isRegistered<List<LoaiHinh>>()) {
+      locator.registerSingleton<List<LoaiHinh>>([]); // Fallback empty list
     }
   }
 }

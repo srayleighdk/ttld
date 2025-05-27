@@ -1,4 +1,5 @@
-import 'package:ttld/widgets/reuseable_widgets/generic_picker.dart';
+import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
+
 import 'tblNhaTuyenDung_model.dart';
 
 class NTDPickerItem extends GenericPickerItem {
@@ -22,4 +23,5 @@ class NTDPickerItem extends GenericPickerItem {
       'ntd': ntd.toJson(),
     };
   }
-} 
+}
+

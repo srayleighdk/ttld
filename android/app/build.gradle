@@ -36,16 +36,20 @@ android {
         versionName = flutter.versionName
     }
 
-    buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            ndk {
-                debugSymbolLevel 'FULL' 
-            }
-            signingConfig = signingConfigs.debug
-        }
-    }
+    // buildTypes {
+    //     release {
+    //         // TODO: Add your own signing config for the release build.
+    //         // Signing with the debug keys for now, so `flutter run --release` works.
+    //         ndk {
+    //             debugSymbolLevel 'FULL' 
+    //         }
+    //         signingConfig = signingConfigs.release
+    //         minifyEnabled false
+    //         shrinkResources false
+    //         proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    //     }
+    // }
+
     signingConfigs {
         release {
         keyAlias keystoreProperties['keyAlias']
@@ -57,6 +61,9 @@ android {
     buildTypes {
         release {
         signingConfig signingConfigs.release
+        minifyEnabled false
+        shrinkResources false
+        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }

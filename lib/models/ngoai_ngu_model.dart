@@ -1,4 +1,4 @@
-import 'package:ttld/widgets/reuseable_widgets/generic_picker.dart';
+import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
 
 class NgoaiNgu extends GenericPickerItem {
   final int displayOrder;

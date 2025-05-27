@@ -911,7 +911,7 @@ class _CreateHoSoUngVienPageState extends State<CreateHoSoUngVienPage> {
                 nguonThuThap = value;
               });
             },
-            displayItemBuilder: (NguonThuThap? item) => item?.name ?? '',
+            displayItemBuilder: (NguonThuThap? item) => item?.displayName ?? '',
           ),
           const SizedBox(height: 12.0),
           CustomPickerMap(
@@ -978,7 +978,7 @@ class _CreateHoSoUngVienPageState extends State<CreateHoSoUngVienPage> {
                   _idDanToc = value?.id;
                 });
               },
-              displayItemBuilder: (DanToc? item) => item?.name ?? ''),
+              displayItemBuilder: (DanToc? item) => item?.displayName ?? ''),
           const SizedBox(height: 12.0),
           CustomPicker(
               label: Text('Tình trạng tàn tật'),
@@ -989,7 +989,7 @@ class _CreateHoSoUngVienPageState extends State<CreateHoSoUngVienPage> {
                   _uvTinhtrangtantatId = value?.id;
                 });
               },
-              displayItemBuilder: (TtTantat? item) => item?.name ?? ''),
+              displayItemBuilder: (TtTantat? item) => item?.displayName ?? ''),
           const SizedBox(height: 12.0),
           CustomPicker(
             label: Text('Đối tượng chính sách'),
@@ -1066,7 +1066,8 @@ class _CreateHoSoUngVienPageState extends State<CreateHoSoUngVienPage> {
                 _uvcmTrinhdoId = value?.id;
               });
             },
-            displayItemBuilder: (TrinhDoVanHoa? item) => item?.name ?? '',
+            displayItemBuilder: (TrinhDoVanHoa? item) =>
+                item?.displayName ?? '',
           ),
           const SizedBox(height: 12.0),
           CustomPicker(
@@ -1306,7 +1307,8 @@ class _CreateHoSoUngVienPageState extends State<CreateHoSoUngVienPage> {
                 hinhthucdoanhnghiep = value;
               });
             },
-            displayItemBuilder: (HinhThucDoanhNghiep? item) => item?.name ?? '',
+            displayItemBuilder: (HinhThucDoanhNghiep? item) =>
+                item?.displayName ?? '',
           ),
           const SizedBox(height: 12.0),
           CustomPicker(

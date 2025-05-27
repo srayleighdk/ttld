@@ -18,7 +18,8 @@ class ApiClient {
     // Load base URL from SharedPreferences on initialization
     final savedRegionName = _prefs.getString('selected_region');
     final savedRegion = regionFromString(savedRegionName);
-    final initialBaseUrl = getEnv(savedRegion?.baseUrlKey ?? Region.lamDong.baseUrlKey); // Use default if none saved
+    final initialBaseUrl = getEnv(savedRegion?.baseUrlKey ??
+        Region.lamDong.baseUrlKey); // Use default if none saved
 
     _dio = Dio(
       BaseOptions(

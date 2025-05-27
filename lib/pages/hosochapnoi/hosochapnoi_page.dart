@@ -10,7 +10,6 @@ import 'package:ttld/widgets/field/custom_pick_datetime_grok.dart';
 import 'package:ttld/widgets/field/custom_picker_map.dart';
 import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
 import 'package:ttld/repositories/tblNhaTuyenDung/ntd_repository.dart';
-import 'package:ttld/widgets/reuseable_widgets/generic_picker.dart';
 import 'package:ttld/models/tblNhaTuyenDung/ntd_picker_model.dart';
 import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_bloc.dart';
 import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_event.dart';
@@ -20,6 +19,7 @@ import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
 import 'package:ttld/bloc/tuyendung/tuyendung_bloc.dart';
 import 'package:ttld/models/ntd_tuyendung/ntd_tuyendung_model.dart';
+import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
 
 class HoSoUngVienPickerItem extends GenericPickerItem {
   final TblHoSoUngVienModel hoSoUngVien;
@@ -157,6 +157,9 @@ class _HoSoChapNoiPageState extends State<HoSoChapNoiPage> {
         backgroundColor: theme.colorScheme.surface,
         scrolledUnderElevation: 1.0,
         iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
+        // actions: [
+        //   LogoutButton(),
+        // ],
       ),
       body: Container(
         height: MediaQuery.of(context).size.height,
@@ -173,12 +176,12 @@ class _HoSoChapNoiPageState extends State<HoSoChapNoiPage> {
         ),
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(24.0),
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 _buildHeader(theme),
-                const SizedBox(height: 24),
+                const SizedBox(height: 12.0),
                 Expanded(
                   child: Container(
                     decoration: BoxDecoration(
@@ -267,8 +270,8 @@ class _HoSoChapNoiPageState extends State<HoSoChapNoiPage> {
                                     ),
                                   ),
                                   child: DataTable2(
-                                    columnSpacing: 12,
-                                    horizontalMargin: 12,
+                                    columnSpacing: 8,
+                                    horizontalMargin: 8,
                                     minWidth: 1000,
                                     headingRowColor: MaterialStateProperty.all(
                                       theme.colorScheme.surfaceVariant
@@ -451,65 +454,144 @@ class _HoSoChapNoiPageState extends State<HoSoChapNoiPage> {
   }
 
   Widget _buildHeader(ThemeData theme) {
-    return Row(
-      children: [
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surface,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: theme.colorScheme.shadow.withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.person_outline,
-                  color: theme.colorScheme.primary,
-                ),
-                const SizedBox(width: 12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Danh sách hồ sơ chắp nối',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isSmallScreen = constraints.maxWidth < 600;
+
+        if (isSmallScreen) {
+          // Stack layout for small screens
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surface,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: theme.colorScheme.shadow.withOpacity(0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
                     ),
-                    Text(
-                      'Quản lý các hồ sơ đã giới thiệu',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.person_outline,
+                      color: theme.colorScheme.primary,
+                      size: 20, // Slightly smaller icon for mobile
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Danh sách hồ sơ chắp nối',
+                            style: theme.textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            'Quản lý các hồ sơ đã giới thiệu',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
-              ],
+              ),
+              const SizedBox(height: 12),
+              ElevatedButton.icon(
+                onPressed: () => _showCreateDialog(context),
+                icon: const Icon(Icons.add, size: 20),
+                label: const Text('Tạo mới'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: theme.colorScheme.primary,
+                  foregroundColor: theme.colorScheme.onPrimary,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ],
+          );
+        }
+
+        // Original layout for larger screens
+        return Row(
+          children: [
+            Expanded(
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surface,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: theme.colorScheme.shadow.withOpacity(0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.person_outline,
+                      color: theme.colorScheme.primary,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Danh sách hồ sơ chắp nối',
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            'Quản lý các hồ sơ đã giới thiệu',
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ),
-        ),
-        const SizedBox(width: 16),
-        ElevatedButton.icon(
-          onPressed: () => _showCreateDialog(context),
-          icon: const Icon(Icons.add),
-          label: const Text('Tạo mới'),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: theme.colorScheme.primary,
-            foregroundColor: theme.colorScheme.onPrimary,
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+            const SizedBox(width: 16),
+            ElevatedButton.icon(
+              onPressed: () => _showCreateDialog(context),
+              icon: const Icon(Icons.add),
+              label: const Text('Tạo mới'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: theme.colorScheme.primary,
+                foregroundColor: theme.colorScheme.onPrimary,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
             ),
-          ),
-        ),
-      ],
+          ],
+        );
+      },
     );
   }
 

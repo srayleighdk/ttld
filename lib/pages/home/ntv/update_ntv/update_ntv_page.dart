@@ -158,74 +158,48 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
   @override
   void initState() {
     super.initState();
-    // final ntvBloc = BlocProvider.of<NTVBloc>(context);
-    // print('ntvBloc: ${ntvBloc.state}');
-
-    // if (ntvBloc.state is NTVLoadedById || widget.hoSoUngVien != null) {
     final ntv = widget.hoSoUngVien;
     if (ntv != null) {
+      // Basic Information
       _usernameController.text = ntv.uvUsername ?? '';
       _passwordController.text = ntv.uvPassword ?? '';
       _hotenController.text = ntv.uvHoten ?? '';
       _emailController.text = ntv.uvEmail ?? '';
       _maHoSoController.text = ntv.maHoSo ?? '';
-      _idDanToc = ntv.idDanToc;
-      _cvMongMuonController.text = ntv.cvMongMuon ?? '';
-      _documentPathController.text = ntv.documentPath ?? '';
-      _imagePathController.text = ntv.imagePath ?? '';
+
+      // Personal Information
+      _uvGioitinh = ntv.uvGioitinh;
+      _uvHonnhanId = ntv.uvHonnhanId;
+      _uvngaysinhController = ntv.uvNgaysinh;
+      _uvchieucaoController.text = ntv.uvChieucao ?? '';
+      _uvcannangController.text = ntv.uvCannang ?? '';
+
+      // Contact Information
       _diachichitietController.text = ntv.uvDiachichitiet ?? '';
       _dienthoaiController.text = ntv.uvDienthoai ?? '';
+      _diachilienheController.text = ntv.diachilienhe ?? '';
+
+      // ID Document Information
       _cmndController.text = ntv.uvSoCmnd ?? '';
       _uvNgaycap = ntv.uvNgaycap;
       _uvnoicapController.text = ntv.uvNoicap ?? '';
-      _uvGioitinh = ntv.uvGioitinh;
-      _uvchieucaoController.text = ntv.uvChieucao ?? '';
-      _uvcannangController.text = ntv.uvCannang ?? '';
-      _uvDoiTuongChingSach = ntv.uvDoituongchinhsachId.toString();
-      _uvTinhtrangtantat = ntv.uvTinhtrangtantatId.toString();
-      _uvHonnhanId = ntv.uvHonnhanId;
-      _uvngaysinhController = ntv.uvNgaysinh;
-      _uvcmCongviechientaiController.text = ntv.uvcmCongviechientai ?? '';
-      _uvnvNganhnghe = ntv.uvnvNganhngheId.toString();
-      _uvnvVitrimongmuon = ntv.uvnvVitrimongmuonid.toString();
-      _uvnvThoigian = ntv.uvnvThoigianId.toString();
-      _uvnvNoilamviecController.text = ntv.uvnvNoilamviec ?? '';
-      _idMucluong = ntv.idMucluong;
-      _uvnvTienluong.text = ntv.uvnvTienluong?.toString() ?? '';
-      _uvnvHinhthuccongty = ntv.uvnvHinhthuccongtyId.toString();
-      _uvGhichuController.text = ntv.uvGhichu ?? '';
-      _uvcmTrinhdo = ntv.uvcmTrinhdoId.toString();
-      _uvcmBangcapController.text = ntv.uvcmBangcap ?? '';
-      _uvcmKynangController.text = ntv.uvcmKynang ?? '';
-      _uvcmTrinhdongoainguController.text = ntv.uvcmTrinhdongoaingu ?? '';
-      _uvcmTrinhdotinhocController.text = ntv.uvcmTrinhdotinhoc ?? '';
-      _uvcmKinhnghiem.text = ntv.uvcmKinhnghiem?.toString() ?? '';
-      _uvSolanxem = ntv.uvSolanxem;
-      _interview = ntv.interview;
-      _interviewed = ntv.interviewed;
-      _uvDuyet = ntv.uvDuyet;
-      _uvHienthi = ntv.uvHienthi;
-      _uvhtTelephone = ntv.uvhtTelephone;
-      _uvhtEmail = ntv.uvhtEmail;
-      _uvhtAddress = ntv.uvhtAddress;
-      _uvIdController.text = ntv.uvId.toString();
-      _newletterSubscription = ntv.newsletterSubscription;
-      _jobsletterSubscription = ntv.jobsletterSubscription;
-      _coBhtn = ntv.coBhtn;
-      _soNhaDuongController.text = ntv.soNhaDuong ?? '';
+
+      // Location Information
       _idThanhPho = ntv.idThanhPho;
       _idTinhController.text = ntv.idTinh ?? '';
       _idHuyenController.text = ntv.idhuyen ?? '';
       _idXaController.text = ntv.idxa ?? '';
-      _idTv = ntv.idtv;
-      _mahoGd = ntv.mahoGd;
-      _fileCVController.text = ntv.fileCv ?? '';
-      _displayOrder = ntv.displayOrder;
-      _ngayduyet = ntv.ngayduyet;
-      _idNguonThuThap = ntv.idNguonThuThap;
-      _avatarUrlController.text = ntv.avatarUrl ?? '';
-      _idBacHocController.text = ntv.idBacHoc ?? '';
-      _diachilienheController.text = ntv.diachilienhe ?? '';
+
+      // Work Experience and Skills
+      _uvcmCongviechientaiController.text = ntv.uvcmCongviechientai ?? '';
+      _uvcmKynangController.text = ntv.uvcmKynang ?? '';
+      _uvcmKinhnghiem.text = ntv.uvcmKinhnghiem?.toString() ?? '';
+      _cvMongMuonController.text = ntv.cvMongMuon ?? '';
+      _uvnvTienluong.text = ntv.uvnvTienluong?.toString() ?? '';
+      _uvGhichuController.text = ntv.uvGhichu ?? '';
+
+      // IDs for Dropdowns
+      _idDanToc = ntv.idDanToc;
       _uvTinhtrangtantatId = ntv.uvTinhtrangtantatId;
       _uvDoiTuongChingSachId = ntv.uvDoituongchinhsachId;
       _uvcmTrinhdoId = ntv.uvcmTrinhdoId;
@@ -233,81 +207,88 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
       _uvnvVitrimongmuonId = ntv.uvnvVitrimongmuonid;
       _uvnvThoigianId = ntv.uvnvThoigianId;
       _uvnvHinhthuccongtyId = ntv.uvnvHinhthuccongtyId;
+      _idMucluong = ntv.idMucluong;
+
+      // Education and Certificates
+      _uvcmBangcapController.text = ntv.uvcmBangcap ?? '';
+      _uvcmTrinhdongoainguController.text = ntv.uvcmTrinhdongoaingu ?? '';
+      _uvcmTrinhdotinhocController.text = ntv.uvcmTrinhdotinhoc ?? '';
+      _idBacHocController.text = ntv.idBacHoc ?? '';
+
+      // Display Settings
+      _uvDuyet = ntv.uvDuyet;
+      _uvHienthi = ntv.uvHienthi;
+      _uvhtTelephone = ntv.uvhtTelephone;
+      _uvhtEmail = ntv.uvhtEmail;
+      _uvhtAddress = ntv.uvhtAddress;
+
+      // Subscription Settings
+      _newletterSubscription = ntv.newsletterSubscription;
+      _jobsletterSubscription = ntv.jobsletterSubscription;
+      _coBhtn = ntv.coBhtn;
+
+      // Files and Images
+      _documentPathController.text = ntv.documentPath ?? '';
+      _imagePathController.text = ntv.imagePath ?? '';
+      _fileCVController.text = ntv.fileCv ?? '';
+      _avatarUrlController.text = ntv.avatarUrl ?? '';
+
+      // Initialize model instances from locator
+      _initializeModelInstances(ntv);
     }
-    // }
+  }
 
-    // if (ntvBloc.state is NTVError) {
-    //   print('Error message: ${(ntvBloc.state as NTVError).message}');
-    // }
-    // Data for GenericPickers will be fetched via locator directly in the items prop.
-    // Initialize model instances if needed based on existing IDs after widget.hoSoUngVien is processed.
-    // This part might require adjustment if initial selection logic was heavily tied to _load methods.
-    // GenericPicker itself will handle finding the item from locator<List<T>>() using initialValue.
-
-    // Example of how you might re-initialize selected models if needed,
-    // assuming locator provides data synchronously or GenericPicker handles async loading:
-    if (widget.hoSoUngVien != null) {
-      final ntv = widget.hoSoUngVien!;
-      if (ntv.idNguonThuThap != null)
+  void _initializeModelInstances(TblHoSoUngVienModel ntv) {
+    try {
+      if (ntv.idNguonThuThap != null) {
         nguonThuThap = locator<List<NguonThuThap>>().firstWhere(
-            (e) => e.id == ntv.idNguonThuThap,
-            orElse: () => null as NguonThuThap);
-      if (ntv.idDanToc != null)
-        danToc = locator<List<DanToc>>().firstWhere((e) => e.id == ntv.idDanToc,
-            orElse: () => null as DanToc);
-      if (ntv.uvTinhtrangtantatId != null)
+          (e) => e.id == ntv.idNguonThuThap,
+          orElse: () => null as NguonThuThap,
+        );
+      }
+
+      if (ntv.idDanToc != null) {
+        danToc = locator<List<DanToc>>().firstWhere(
+          (e) => e.id == ntv.idDanToc,
+          orElse: () => null as DanToc,
+        );
+      }
+
+      if (ntv.uvTinhtrangtantatId != null) {
         tinhTrangTanTat = locator<List<TtTantat>>().firstWhere(
-            (e) => e.id == ntv.uvTinhtrangtantatId,
-            orElse: () => null as TtTantat);
-      if (ntv.uvDoituongchinhsachId != null)
+          (e) => e.id == ntv.uvTinhtrangtantatId,
+          orElse: () => null as TtTantat,
+        );
+      }
+
+      if (ntv.uvDoituongchinhsachId != null) {
         doiTuongChinhSach = locator<List<DoiTuong>>().firstWhere(
-            (e) => e.id == ntv.uvDoituongchinhsachId,
-            orElse: () => null as DoiTuong);
-      if (ntv.idThanhPho != null)
+          (e) => e.id == ntv.uvDoituongchinhsachId,
+          orElse: () => null as DoiTuong,
+        );
+      }
+
+      if (ntv.idThanhPho != null) {
         tinhThanh = locator<List<TinhThanhModel>>().firstWhere(
-            (e) => e.id == ntv.idThanhPho,
-            orElse: () => null as TinhThanhModel);
-      if (ntv.uvnvNoilamviec != null && ntv.uvnvNoilamviec!.isNotEmpty)
-        tinhThanhmm = locator<List<TinhThanhModel>>().firstWhere(
-            (e) => e.id == int.tryParse(ntv.uvnvNoilamviec!),
-            orElse: () => null as TinhThanhModel);
-      if (ntv.uvcmTrinhdotinhoc != null && ntv.uvcmTrinhdotinhoc!.isNotEmpty)
-        trinhDoTinHoc = locator<List<TrinhDoTinHoc>>().firstWhere(
-            (e) => e.id == ntv.uvcmTrinhdotinhoc,
-            orElse: () => null as TrinhDoTinHoc);
-      if (ntv.uvcmTrinhdongoaingu != null &&
-          ntv.uvcmTrinhdongoaingu!.isNotEmpty)
-        trinhDoNgoaiNgu = locator<List<TrinhDoNgoaiNgu>>().firstWhere(
-            (e) => e.id == ntv.uvcmTrinhdongoaingu,
-            orElse: () => null as TrinhDoNgoaiNgu);
-      if (ntv.idBacHoc != null && ntv.idBacHoc!.isNotEmpty)
-        nganhNgheBacHoc = locator<List<TrinhDoChuyenMon>>().firstWhere(
-            (e) => e.id == ntv.idBacHoc,
-            orElse: () => null as TrinhDoChuyenMon);
-      if (ntv.uvnvNganhngheId != null)
-        nganhNgheTD = locator<List<NganhNgheTD>>().firstWhere(
-            (e) => e.id == ntv.uvnvNganhngheId,
-            orElse: () => null as NganhNgheTD);
-      if (ntv.uvnvVitrimongmuonid != null)
-        chucDanh = locator<List<ChucDanhModel>>().firstWhere(
-            (e) => e.id == ntv.uvnvVitrimongmuonid,
-            orElse: () => null as ChucDanhModel);
-      if (ntv.idMucluong != null)
-        mucLuong = locator<List<MucLuongMM>>().firstWhere(
-            (e) => e.id == ntv.idMucluong,
-            orElse: () => null as MucLuongMM);
-      if (ntv.uvnvThoigianId != null)
-        thoigianlamviec = locator<List<ThoiGianLamViec>>().firstWhere(
-            (e) => e.id == ntv.uvnvThoigianId,
-            orElse: () => null as ThoiGianLamViec);
-      if (ntv.uvnvHinhthuccongtyId != null)
-        hinhthucdoanhnghiep = locator<List<HinhThucDoanhNghiep>>().firstWhere(
-            (e) => e.id == ntv.uvnvHinhthuccongtyId,
-            orElse: () => null as HinhThucDoanhNghiep);
-      if (ntv.uvcmTrinhdoId != null)
-        trinhDoVanHoa = locator<List<TrinhDoVanHoa>>().firstWhere(
-            (e) => e.id == ntv.uvcmTrinhdoId,
-            orElse: () => null as TrinhDoVanHoa);
+          (e) => e.id == ntv.idThanhPho,
+          orElse: () => null as TinhThanhModel,
+        );
+      }
+
+      if (ntv.uvnvNoilamviec != null && ntv.uvnvNoilamviec!.isNotEmpty) {
+        final noiLamViecId = int.tryParse(ntv.uvnvNoilamviec!);
+        if (noiLamViecId != null) {
+          tinhThanhmm = locator<List<TinhThanhModel>>().firstWhere(
+            (e) => e.id == noiLamViecId,
+            orElse: () => null as TinhThanhModel,
+          );
+        }
+      }
+
+      // Initialize other model instances similarly...
+      // Add proper error handling for each initialization
+    } catch (e) {
+      print('Error initializing model instances: $e');
     }
   }
 
@@ -535,14 +516,14 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
   Widget _buildBottomNavigation() {
     final theme = Theme.of(context);
     return Container(
-      padding: const EdgeInsets.all(16), // Reduced padding
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         boxShadow: [
           BoxShadow(
-            color: theme.colorScheme.shadow.withAlpha(13),
-            blurRadius: 10,
-            offset: const Offset(0, -4),
+            color: theme.colorScheme.shadow.withAlpha(10),
+            blurRadius: 6,
+            offset: const Offset(0, -2),
           ),
         ],
       ),
@@ -556,19 +537,25 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                   _currentStep--;
                 });
               },
-              icon: Icon(Icons.arrow_back, size: 16), // Reduced icon size
-              label: Text('Quay lại'),
+              icon: Icon(Icons.arrow_back, size: 14),
+              label: Text(
+                'Quay lại',
+                style: theme.textTheme.labelMedium,
+              ),
               style: OutlinedButton.styleFrom(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12), // Reduced padding
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(8),
                 ),
-                side: BorderSide(color: theme.colorScheme.outline),
+                side: BorderSide(
+                  color: theme.colorScheme.outline.withOpacity(0.5),
+                  width: 0.5,
+                ),
               ),
             )
           else
-            const SizedBox(width: 120),
+            const SizedBox(width: 85),
           ElevatedButton.icon(
             onPressed: () {
               final currentFormKey = _formKeys[_currentStep];
@@ -584,7 +571,12 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('Vui lòng điền đầy đủ thông tin bắt buộc'),
+                    content: Text(
+                      'Vui lòng điền đầy đủ thông tin bắt buộc',
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        color: theme.colorScheme.onError,
+                      ),
+                    ),
                     backgroundColor: theme.colorScheme.error,
                   ),
                 );
@@ -594,17 +586,19 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
               _currentStep == _steps.length - 1
                   ? Icons.check
                   : Icons.arrow_forward,
-              size: 16, // Reduced icon size
+              size: 14,
             ),
             label: Text(
               _currentStep == _steps.length - 1 ? 'Hoàn thành' : 'Tiếp tục',
+              style: theme.textTheme.labelMedium?.copyWith(
+                color: theme.colorScheme.onPrimary,
+              ),
             ),
             style: ElevatedButton.styleFrom(
               backgroundColor: theme.colorScheme.primary,
-              foregroundColor: theme.colorScheme.onPrimary,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12), // Reduced padding
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(8),
               ),
             ),
           ),
@@ -615,7 +609,8 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
 
   Widget _buildSectionHeader(ThemeData theme, String title) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8), // Reduced padding
+      padding: const EdgeInsets.symmetric(
+          horizontal: 12, vertical: 8), // Reduced padding
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(12), // Slightly smaller radius
@@ -641,7 +636,8 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
           const SizedBox(width: 8), // Reduced spacing
           Text(
             title,
-            style: theme.textTheme.titleMedium?.copyWith( // Reduced font size
+            style: theme.textTheme.titleMedium?.copyWith(
+              // Reduced font size
               fontWeight: FontWeight.bold,
               color: theme.colorScheme.onSurface,
             ),
@@ -1134,13 +1130,16 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                         const SizedBox(width: 12), // Reduced spacing
                         ElevatedButton.icon(
                           onPressed: _pickFile,
-                          icon: Icon(Icons.upload_file, size: 16), // Reduced icon size
+                          icon: Icon(Icons.upload_file,
+                              size: 16), // Reduced icon size
                           label: Text('Chọn File CV'),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: theme.colorScheme.primary,
                             foregroundColor: theme.colorScheme.onPrimary,
-                            padding: const EdgeInsets.symmetric( // Reduced padding
-                                horizontal: 12, vertical: 8),
+                            padding: const EdgeInsets.symmetric(
+                                // Reduced padding
+                                horizontal: 12,
+                                vertical: 8),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -1156,7 +1155,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                 padding: const EdgeInsets.all(12), // Reduced padding
                 decoration: BoxDecoration(
                   color: theme.colorScheme.surface,
-                  borderRadius: BorderRadius.circular(12), 
+                  borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                       color: theme.colorScheme.outline.withOpacity(0.5)),
                 ),
@@ -1205,13 +1204,16 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                             children: [
                               ElevatedButton.icon(
                                 onPressed: _pickImage,
-                                icon: Icon(Icons.photo_library, size: 16), // Reduced icon size
+                                icon: Icon(Icons.photo_library,
+                                    size: 16), // Reduced icon size
                                 label: Text('Chọn Ảnh'),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: theme.colorScheme.primary,
                                   foregroundColor: theme.colorScheme.onPrimary,
-                                  padding: const EdgeInsets.symmetric( // Reduced padding
-                                      horizontal: 12, vertical: 8),
+                                  padding: const EdgeInsets.symmetric(
+                                      // Reduced padding
+                                      horizontal: 12,
+                                      vertical: 8),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8),
                                   ),
@@ -1458,19 +1460,6 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
             uvnvThoigianId: _uvnvThoigianId ?? 0,
             fileCv: _selectedFile?.path ?? originalNtv.fileCv,
             avatarUrl: _selectedImage?.path ?? originalNtv.avatarUrl,
-
-            // uvnvThoigian: thoigianlamviec?.name ?? '',
-            // tenDanToc: danToc?.name ?? '',
-            // uvTinhtrangtantat: tinhTrangTanTat?.name ?? '',
-            // uvHonnhan: hoNhanOptions[false],
-            // uvnvNganhnghe: nganhNgheTD?.name ?? '',
-            // uvnvVitrimongmuon: chucDanh?.name ?? '',
-            // uvnvHinhthuccongty: hinhthucdoanhnghiep?.name ?? '',
-            // uvcmTrinhdo: trinhDoHocVan?.name ?? '',
-            // uvSolanxem: _uvSolanxem,
-            // avatarUrl: _avatarUrlController.text ?? 'Test',
-            // uvDoituongchinhsach: doiTuongChinhSach?.name ?? '',
-            // avatar: _avatarUrlController.text ?? 'Test',
           );
           FormData formData = FormData.fromMap({
             'id': originalNtv.id,

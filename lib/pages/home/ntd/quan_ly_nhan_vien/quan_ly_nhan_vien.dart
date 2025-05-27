@@ -61,17 +61,17 @@ class _QuanLyNhanVienPageState extends State<QuanLyNhanVienPage> {
         ),
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(24.0),
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 _buildHeader(theme),
-                const SizedBox(height: 24),
+                const SizedBox(height: 16),
                 Expanded(
                   child: Container(
                     decoration: BoxDecoration(
                       color: theme.colorScheme.surface,
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
                           color: theme.colorScheme.shadow.withOpacity(0.05),
@@ -152,7 +152,7 @@ class _QuanLyNhanVienPageState extends State<QuanLyNhanVienPage> {
       children: [
         Expanded(
           child: Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: theme.colorScheme.surface,
               borderRadius: BorderRadius.circular(12),
@@ -169,24 +169,29 @@ class _QuanLyNhanVienPageState extends State<QuanLyNhanVienPage> {
                 Icon(
                   Icons.people,
                   color: theme.colorScheme.primary,
+                  size: 20,
                 ),
-                const SizedBox(width: 12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Danh sách nhân viên',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Danh sách nhân viên',
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                    Text(
-                      'Quản lý thông tin nhân viên của bạn',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
+                      Text(
+                        'Quản lý thông tin nhân viên của bạn',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -199,7 +204,7 @@ class _QuanLyNhanVienPageState extends State<QuanLyNhanVienPage> {
           style: ElevatedButton.styleFrom(
             backgroundColor: theme.colorScheme.primary,
             foregroundColor: theme.colorScheme.onPrimary,
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -246,8 +251,8 @@ class _QuanLyNhanVienPageState extends State<QuanLyNhanVienPage> {
         ),
       ),
       child: DataTable2(
-        columnSpacing: 12,
-        horizontalMargin: 12,
+        columnSpacing: 8,
+        horizontalMargin: 8,
         minWidth: 1000,
         headingRowColor: MaterialStateProperty.all(
           theme.colorScheme.surfaceVariant.withOpacity(0.3),
@@ -385,10 +390,10 @@ class _QuanLyNhanVienPageState extends State<QuanLyNhanVienPage> {
               )),
               DataCell(
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: _getStatusColor(nhanVien.tinhtrangHd ?? '').withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
                     nhanVien.tinhtrangHd ?? '',

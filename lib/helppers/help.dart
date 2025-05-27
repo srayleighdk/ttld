@@ -26,6 +26,11 @@ dynamic getEnv(String key, {dynamic defaultValue}) {
   return value.toString();
 }
 
+/// Set an environment variable at runtime
+void setEnv(String key, String value) {
+  dotenv.env[key] = value;
+}
+
 List<AppTheme> getAppThemes(List<BaseThemeConfig> test) {
   return test.map((appTheme) => appTheme.toAppTheme()).toList();
 }

@@ -1,15 +1,15 @@
-class NguonThuThap {
-  final String id;
-  final String name;
+import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
+
+class NguonThuThap extends GenericPickerItem {
   final int displayOrder;
   final bool status;
 
   NguonThuThap({
-    required this.id,
-    required this.name,
+    required super.id,
+    required String name,
     required this.displayOrder,
     required this.status,
-  });
+  }) : super(displayName: name);
 
   factory NguonThuThap.fromJson(Map<String, dynamic> json) {
     return NguonThuThap(
@@ -23,7 +23,7 @@ class NguonThuThap {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'name': name,
+      'name': displayName,
       'displayOrder': displayOrder,
       'status': status,
     };

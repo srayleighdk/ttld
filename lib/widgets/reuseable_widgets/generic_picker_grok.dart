@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:ttld/widgets/field/custom_picker_grok.dart';
-import 'package:ttld/widgets/reuseable_widgets/generic_picker.dart';
+
+class GenericPickerItem {
+  final dynamic id;
+  final String displayName;
+
+  const GenericPickerItem({
+    required this.id,
+    required this.displayName,
+  });
+}
 
 class GenericPicker<T extends GenericPickerItem> extends StatefulWidget {
   final dynamic initialValue;

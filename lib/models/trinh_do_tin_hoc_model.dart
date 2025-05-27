@@ -1,4 +1,4 @@
-import 'package:ttld/widgets/reuseable_widgets/generic_picker.dart';
+import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
 
 class TrinhDoTinHoc extends GenericPickerItem {
   final int displayOrder;
@@ -9,7 +9,7 @@ class TrinhDoTinHoc extends GenericPickerItem {
     required String name,
     required this.displayOrder,
     required this.status,
-  }): super(displayName: name);
+  }) : super(displayName: name);
 
   factory TrinhDoTinHoc.fromJson(Map<String, dynamic> json) {
     return TrinhDoTinHoc(

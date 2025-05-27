@@ -81,7 +81,7 @@ class _SignupPageState extends State<SignupPage> {
         if (state is SignupSuccess) {
           ToastUtils.showToastSuccess(
             context,
-            message: 'Sign up successful! Please login.',
+            message: 'Đăng ký thành công! Vui lòng đăng nhập.',
             description: '',
           );
           // Navigate to login or verification page
@@ -188,11 +188,13 @@ class _SignupPageState extends State<SignupPage> {
                               child: SizedBox(
                                 width: 300,
                                 child: SegmentedButton<UserType>(
-                                  segments: UserType.values.map((type) {
+                                  segments: UserType.values
+                                      .where((type) => type != UserType.admin)
+                                      .map((type) {
                                     return ButtonSegment<UserType>(
                                       value: type,
                                       label: Text(
-                                        type.displayName,
+                                        type.tooltip,
                                         style: const TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w500,

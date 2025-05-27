@@ -11,9 +11,8 @@ import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
 import 'package:ttld/helppers/help.dart';
 import 'package:ttld/models/tblNhaTuyenDung/tblNhaTuyenDung_model.dart';
-import 'package:ttld/models/tblHoSoUngVien/tblHoSoUngVien_model.dart';
 import 'package:data_table_2/data_table_2.dart';
-import 'package:ttld/repositories/tuyendung_repository.dart';
+import 'package:ttld/pages/home/ntd/ntv_info_page.dart';
 
 class NTDHomePage extends StatefulWidget {
   static const routePath = '/ntd_home';
@@ -46,10 +45,14 @@ class _NTDHomePageState extends State<NTDHomePage> {
     final authState = locator<AuthBloc>().state;
     if (authState is AuthAuthenticated && authState.userType == 'ntd') {
       userId = authState.userId;
+      print('NTDHomePage initialized with userId: $userId'); // Debug print
       // Load NTD data
       if (!_ntdBloc.isClosed) {
         _ntdBloc.add(NTDFetchById(int.parse(userId!)));
       }
+    } else {
+      print(
+          'Auth state is not authenticated or not ntd type: ${authState.runtimeType}'); // Debug print
     }
     if (!_hoSoUngVienBloc.isClosed) {
       _hoSoUngVienBloc.add(LoadTblHoSoUngViens());
@@ -64,14 +67,12 @@ class _NTDHomePageState extends State<NTDHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final size = MediaQuery.of(context).size;
-
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding:
+              const EdgeInsets.all(16.0), // Reduced from 24.0 to save space
           child: BlocBuilder<NTDBloc, NTDState>(
             bloc: _ntdBloc,
             builder: (context, ntdState) {
@@ -96,17 +97,15 @@ class _NTDHomePageState extends State<NTDHomePage> {
                   return Column(
                     children: [
                       // Top section with user info and quick access
-                      Container(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildUserInfoSection(context, ntdState),
-                            const SizedBox(height: 32.0),
-                            _buildQuickAccessSection(context),
-                          ],
-                        ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildUserInfoSection(context, ntdState),
+                          const SizedBox(height: 12.0), // Reduced from 32.0
+                          _buildQuickAccessSection(context),
+                        ],
                       ),
-                      const SizedBox(height: 32.0),
+                      const SizedBox(height: 12.0), // Reduced from 32.0
                       // Statistics section
                       Expanded(
                         child: _buildStatisticsSection(context, ntvState),
@@ -128,15 +127,15 @@ class _NTDHomePageState extends State<NTDHomePage> {
     if (state is NTDLoadedById) {
       final ntd = state.ntd;
       return Container(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
           color: theme.colorScheme.surface,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: theme.colorScheme.shadow.withAlpha(13),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+              color: theme.colorScheme.shadow.withAlpha(26),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
             ),
           ],
         ),
@@ -203,7 +202,7 @@ class _NTDHomePageState extends State<NTDHomePage> {
                   const SizedBox(height: 4),
                   Text(
                     ntd.ntdTen ?? 'Unknown Company',
-                    style: theme.textTheme.headlineSmall?.copyWith(
+                    style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: theme.colorScheme.onSurface,
                     ),
@@ -228,15 +227,15 @@ class _NTDHomePageState extends State<NTDHomePage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
                 color: theme.colorScheme.shadow.withAlpha(26),
                 spreadRadius: 1,
-                blurRadius: 10,
+                blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
             ],
@@ -244,76 +243,60 @@ class _NTDHomePageState extends State<NTDHomePage> {
           child: Row(
             children: [
               Container(
-                width: 4,
-                height: 24,
+                width: 3,
+                height: 16, // Reduced from 24
                 decoration: BoxDecoration(
                   color: theme.colorScheme.primary,
-                  borderRadius: BorderRadius.circular(2),
+                  borderRadius: BorderRadius.circular(1.5),
                 ),
               ),
-              const SizedBox(width: 12),
-              Text(
-                'Danh mục chức năng',
-                style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.onSurface,
+              const SizedBox(width: 8), // Reduced from 12
+              Expanded(
+                child: Text(
+                  'Danh mục chức năng',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 8), // Reduced from 16
         Container(
+          width: double.infinity,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: theme.colorScheme.shadow.withAlpha(13),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
+                color: theme.colorScheme.shadow.withAlpha(26),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
               ),
             ],
           ),
           child: GridView.count(
-            crossAxisCount: 3,
+            crossAxisCount: 4,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             mainAxisSpacing: 16,
             crossAxisSpacing: 16,
-            childAspectRatio: 1.2,
+            childAspectRatio: 0.85,
             children: [
-              _buildQuickAccessButton(
-                context: context,
-                icon: FontAwesomeIcons.solidPenToSquare,
-                label: 'Cập nhật NTD',
-                route: '/update_ntd',
-              ),
-              _buildQuickAccessButton(
-                context: context,
-                icon: FontAwesomeIcons.fileImport,
-                label: 'Hồ sơ chắp nối',
-                route: '/ntd_home/ho-so-chap-noi',
-              ),
-              _buildQuickAccessButton(
-                context: context,
-                icon: FontAwesomeIcons.calendarPlus,
-                label: 'Thêm tuyển dụng',
-                route: '/ntd_home/create_tuyen_dung',
-              ),
-              _buildQuickAccessButton(
-                context: context,
-                icon: FontAwesomeIcons.calendarCheck,
-                label: 'Quản Lý Tuyển Dụng',
-                route: '/ntd_home/quan-ly-tuyen-dung',
-              ),
-              _buildQuickAccessButton(
-                context: context,
-                icon: FontAwesomeIcons.calendarCheck,
-                label: 'Quản Lý Nhân Viên',
-                route: '/ntd_home/quan-ly-nhan-vien',
-              ),
+              _buildQuickAccessItem(context, FontAwesomeIcons.solidPenToSquare,
+                  'Cập nhật NTD', '/update_ntd'),
+              _buildQuickAccessItem(context, FontAwesomeIcons.fileImport,
+                  'Hồ sơ chắp nối', '/ntd_home/ho-so-chap-noi'),
+              // _buildQuickAccessItem(context, FontAwesomeIcons.calendarPlus,
+              //     'Thêm tuyển dụng', '/ntd_home/create_tuyen_dung'),
+              _buildQuickAccessItem(context, FontAwesomeIcons.calendarCheck,
+                  'Quản Lý Tuyển Dụng', '/ntd_home/quan-ly-tuyen-dung'),
+              _buildQuickAccessItem(context, FontAwesomeIcons.calendarCheck,
+                  'Quản Lý Nhân Viên', '/ntd_home/quan-ly-nhan-vien'),
             ],
           ),
         ),
@@ -324,63 +307,73 @@ class _NTDHomePageState extends State<NTDHomePage> {
   Widget _buildQuickAccessButton({
     required BuildContext context,
     required IconData icon,
-    required String label,
     required String route,
   }) {
     final theme = Theme.of(context);
-    return Card(
-      elevation: 0,
-      margin: EdgeInsets.zero,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: BorderSide(
-          color: theme.colorScheme.outline.withAlpha(26),
-        ),
-      ),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(16),
-        onTap: () {
-          try {
-            if (route == '/ntd_home/ho-so-chap-noi') {
-              context.push(route, extra: {
-                'id': userId,
-                'ntdUsername': ntd?.username,
-              });
-            } else if (route == '/ntd_home/quan-ly-tuyen-dung') {
-              context.push(route, extra: userId);
-            } else {
-              context.push(route);
-            }
-          } catch (e) {
-            print('Navigation error: $e');
-          }
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                icon,
-                size: 24,
-                color: theme.colorScheme.primary,
-              ),
-              const SizedBox(height: 8.0),
-              Flexible(
-                child: Text(
-                  label,
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: theme.colorScheme.onSurface,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
+    return SizedBox(
+      width: 40,
+      height: 40,
+      child: Card(
+        elevation: 0,
+        margin: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+          side: BorderSide(
+            color: theme.colorScheme.outline.withAlpha(26),
           ),
         ),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(24),
+          onTap: () {
+            try {
+              if (route == '/ntd_home/quan-ly-tuyen-dung') {
+                context.push(route, extra: userId);
+              } else if (route == '/ntd_home/quan-ly-nhan-vien') {
+                context.push(route, extra: userId);
+              } else if (route == '/ntd_home/ho-so-chap-noi') {
+                context.push(route, extra: {
+                  'tabIndex': 0,
+                });
+              } else {
+                context.push(route);
+              }
+            } catch (e) {
+              debugPrint('Navigation error: $e');
+            }
+          },
+          child: Center(
+            child: Icon(
+              icon,
+              size: 16,
+              color: theme.colorScheme.primary,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildQuickAccessItem(
+      BuildContext context, IconData icon, String label, String route) {
+    final theme = Theme.of(context);
+    return SizedBox(
+      width: 104,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildQuickAccessButton(context: context, icon: icon, route: route),
+          const SizedBox(height: 2),
+          Text(
+            label,
+            textAlign: TextAlign.center,
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: theme.colorScheme.onSurface,
+              fontSize: 11,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
       ),
     );
   }
@@ -399,114 +392,146 @@ class _NTDHomePageState extends State<NTDHomePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: const EdgeInsets.symmetric(
+                horizontal: 8, vertical: 4), // Reduced padding
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.surface,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(8), // Reduced radius
               boxShadow: [
                 BoxShadow(
-                  color: Theme.of(context).colorScheme.shadow.withAlpha(26),
-                  spreadRadius: 1,
-                  blurRadius: 10,
-                  offset: const Offset(0, 2),
+                  color: Theme.of(context).colorScheme.shadow.withAlpha(20),
+                  spreadRadius: 0,
+                  blurRadius: 4,
+                  offset: const Offset(0, 1),
                 ),
               ],
             ),
             child: Row(
               children: [
                 Container(
-                  width: 4,
-                  height: 24,
+                  width: 3, // Reduced width
+                  height: 16, // Reduced height
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.primary,
-                    borderRadius: BorderRadius.circular(2),
+                    borderRadius: BorderRadius.circular(1.5),
                   ),
                 ),
-                const SizedBox(width: 12),
-                Text(
-                  'Danh sách người tìm việc',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Danh sách người tìm việc',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 8),
           Expanded(
             child: Container(
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                   color: Theme.of(context).colorScheme.outline.withOpacity(0.1),
                   width: 1,
                 ),
               ),
               child: DataTable2(
-                columnSpacing: 0,
-                horizontalMargin: 12,
-                minWidth: 900,
-                headingRowColor: MaterialStateProperty.all(
-                  Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
-                ),
+                columnSpacing: 4, // Reduced spacing
+                horizontalMargin: 8,
+                minWidth: 300, // Reduced minimum width
+                headingRowHeight: 32, // Reduced header height
+                dataRowHeight: 36, // Reduced row height
+                headingTextStyle:
+                    Theme.of(context).textTheme.bodySmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
+                dividerThickness: 0.5, // Reduced divider thickness
                 columns: [
                   DataColumn2(
-                    label: Text(
-                      'Họ tên',
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
+                    label: Text('Họ tên'),
+                    size: ColumnSize.L,
+                  ),
+                  DataColumn2(
+                    label: Text('Giới tính'),
                     size: ColumnSize.S,
                   ),
                   DataColumn2(
-                    label: Text(
-                      'Giới tính',
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
+                    label: Text('Tuổi'),
                     size: ColumnSize.S,
                   ),
                   DataColumn2(
-                    label: Text(
-                      'Tuổi',
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-                    size: ColumnSize.S,
-                  ),
-                  DataColumn2(
-                    label: Text(
-                      'Ngành nghề',
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-                    size: ColumnSize.S,
+                    label: Text('Ngành nghề'),
+                    size: ColumnSize.L,
                   ),
                 ],
                 rows: state.tblHoSoUngViens.map((hoSo) {
                   return DataRow(
                     cells: [
-                      DataCell(Text(
-                        hoSo.uvHoten ?? 'Chưa có',
-                        style: Theme.of(context).textTheme.bodyMedium,
+                      DataCell(
+                        Container(
+                          constraints: BoxConstraints(
+                              maxWidth: 80,
+                              minWidth: 80), // Reduced constraints
+                          child: Text(
+                            hoSo.uvHoten ?? 'Chưa có',
+                            style:
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      fontSize: 11,
+                                    ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => NTVInfoPage(ntdData: hoSo),
+                            ),
+                          );
+                        },
+                      ),
+                      DataCell(Container(
+                        constraints: BoxConstraints(
+                            maxWidth: 50, minWidth: 50), // Reduced constraints
+                        child: Text(
+                          hoSo.uvGioitinh == 1 ? 'Nam' : 'Nữ',
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    fontSize: 11,
+                                  ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       )),
-                      DataCell(Text(
-                        hoSo.uvGioitinh == 1 ? 'Nam' : 'Nữ',
-                        style: Theme.of(context).textTheme.bodyMedium,
+                      DataCell(Container(
+                        constraints: BoxConstraints(
+                            maxWidth: 40, minWidth: 40), // Reduced constraints
+                        child: Text(
+                          _calculateAge(hoSo.uvNgaysinh)?.toString() ??
+                              'Chưa có',
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    fontSize: 11,
+                                  ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       )),
-                      DataCell(Text(
-                        _calculateAge(hoSo.uvNgaysinh)?.toString() ?? 'Chưa có',
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      )),
-                      DataCell(Text(
-                        hoSo.uvnvNganhnghe ?? 'Chưa có',
-                        style: Theme.of(context).textTheme.bodyMedium,
+                      DataCell(Container(
+                        constraints: BoxConstraints(
+                            maxWidth: 70, minWidth: 70), // Reduced constraints
+                        child: Text(
+                          hoSo.uvnvNganhnghe ?? 'Chưa có',
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    fontSize: 11,
+                                  ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       )),
                     ],
                   );
@@ -521,9 +546,25 @@ class _NTDHomePageState extends State<NTDHomePage> {
   }
 
   int? _calculateAge(String? birthDate) {
-    if (birthDate == null) return null;
+    if (birthDate == null || birthDate.isEmpty) return null;
     try {
-      final birth = DateTime.parse(birthDate);
+      // Handle different date formats
+      DateTime birth;
+      if (birthDate.contains('/')) {
+        final parts = birthDate.split('/');
+        if (parts.length == 3) {
+          birth = DateTime(
+            int.parse(parts[2]),
+            int.parse(parts[1]),
+            int.parse(parts[0]),
+          );
+        } else {
+          return null;
+        }
+      } else {
+        birth = DateTime.parse(birthDate);
+      }
+
       final today = DateTime.now();
       int age = today.year - birth.year;
       if (today.month < birth.month ||
@@ -532,6 +573,7 @@ class _NTDHomePageState extends State<NTDHomePage> {
       }
       return age;
     } catch (e) {
+      debugPrint('Error calculating age: $e');
       return null;
     }
   }

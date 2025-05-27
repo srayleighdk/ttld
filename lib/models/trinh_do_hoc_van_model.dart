@@ -1,4 +1,4 @@
-import 'package:ttld/widgets/reuseable_widgets/generic_picker.dart';
+import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
 
 class TrinhDoHocVan extends GenericPickerItem {
   int? displayOrder;
@@ -37,4 +37,3 @@ class TrinhDoHocVan extends GenericPickerItem {
     };
   }
 }
-

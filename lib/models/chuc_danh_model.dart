@@ -1,4 +1,4 @@
-import 'package:ttld/widgets/reuseable_widgets/generic_picker.dart';
+import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
 
 class ChucDanhModel extends GenericPickerItem {
   int? displayOrder;
@@ -6,12 +6,12 @@ class ChucDanhModel extends GenericPickerItem {
   bool? status;
 
   ChucDanhModel({
-    required int id,
+    required int super.id,
     required String name,
     this.displayOrder,
     this.idLoai,
     this.status,
-  }) : super(id: id, displayName: name);
+  }) : super(displayName: name);
 
   factory ChucDanhModel.fromJson(Map<String, dynamic> json) {
     return ChucDanhModel(

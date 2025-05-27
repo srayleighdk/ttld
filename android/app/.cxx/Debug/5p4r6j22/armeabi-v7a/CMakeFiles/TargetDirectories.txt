@@ -1,0 +1,2 @@
+/home/kali/Documents/ttld/android/app/.cxx/Debug/5p4r6j22/armeabi-v7a/CMakeFiles/edit_cache.dir
+/home/kali/Documents/ttld/android/app/.cxx/Debug/5p4r6j22/armeabi-v7a/CMakeFiles/rebuild_cache.dir

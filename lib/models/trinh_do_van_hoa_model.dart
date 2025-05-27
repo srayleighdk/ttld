@@ -1,15 +1,15 @@
-class TrinhDoVanHoa {
-  final int id;
-  final String name;
+import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
+
+class TrinhDoVanHoa extends GenericPickerItem {
   final int displayOrder;
   final bool status;
 
   TrinhDoVanHoa({
-    required this.id,
-    required this.name,
+    required super.id,
+    required String name,
     required this.displayOrder,
     required this.status,
-  });
+  }) : super(displayName: name);
 
   factory TrinhDoVanHoa.fromJson(Map<String, dynamic> json) {
     return TrinhDoVanHoa(
@@ -23,7 +23,7 @@ class TrinhDoVanHoa {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'name': name,
+      'name': displayName,
       'displayOrder': displayOrder,
       'status': status,
     };

@@ -6,6 +6,7 @@ import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_event.dart';
 import 'package:ttld/bloc/tblNhaTuyenDung/ntd_bloc.dart';
 import 'package:ttld/core/di/app_init.dart' show initializeAppData;
 import 'package:ttld/core/di/injection.dart';
+import 'package:ttld/core/enums/region.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
 import 'package:ttld/pages/home/admin/admin_home.dart';
@@ -14,6 +15,7 @@ import 'package:ttld/pages/home/notification_page.dart';
 import 'package:ttld/pages/home/ntd/ntd_home.dart';
 import 'package:ttld/pages/home/ntv/ntv_home.dart';
 import 'package:ttld/pages/home/profile_page.dart';
+import 'package:ttld/pages/home/lien_he_page.dart';
 import 'package:ttld/widgets/logout_button.dart';
 
 enum UserRole { admin, ntd, ntv }
@@ -21,7 +23,12 @@ enum UserRole { admin, ntd, ntv }
 class HomePage extends StatefulWidget {
   final String userId;
   final String userType;
-  const HomePage({super.key, required this.userId, required this.userType});
+  final Region region;
+  const HomePage(
+      {super.key,
+      required this.userId,
+      required this.userType,
+      required this.region});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -79,6 +86,31 @@ class _HomePageState extends State<HomePage> {
     _pages = _buildPages();
   }
 
+  Widget _wrapWithAppBar({required String title, required Widget child}) {
+    final theme = Theme.of(context);
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.transparent,
+      appBar: AppBar(
+        elevation: 2,
+        backgroundColor: theme.colorScheme.surface,
+        scrolledUnderElevation: 1.0,
+        title: Text(
+          title,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: theme.colorScheme.onSurface,
+          ),
+        ),
+        iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
+        actions: [
+          LogoutButton(),
+        ],
+      ),
+      body: child,
+    );
+  }
+
   List<Widget> _buildPages() {
     late final Widget homePage;
     switch (_role) {
@@ -124,9 +156,11 @@ class _HomePageState extends State<HomePage> {
     }
 
     return [
-      homePage,
-      const NotificationsPage(),
-      profilePage,
+      _wrapWithAppBar(title: 'Trang chủ', child: homePage),
+      _wrapWithAppBar(title: 'Thông báo', child: const NotificationsPage()),
+      _wrapWithAppBar(title: 'Hồ sơ', child: profilePage),
+      _wrapWithAppBar(
+          title: 'Liên hệ', child: LienHePage(region: widget.region)),
     ];
   }
 
@@ -137,20 +171,6 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        elevation: 2,
-        backgroundColor: theme.colorScheme.surface,
-        scrolledUnderElevation: 1.0,
-        title: Text(
-          'Home',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: theme.colorScheme.onSurface,
-          ),
-        ),
-        iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
-        actions: [LogoutButton()],
-      ),
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,

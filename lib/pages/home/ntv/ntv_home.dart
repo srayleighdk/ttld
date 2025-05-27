@@ -12,6 +12,7 @@ import 'package:ttld/helppers/help.dart';
 import 'package:ttld/models/tblHoSoUngVien/tblHoSoUngVien_model.dart';
 import 'package:ttld/bloc/tuyendung/tuyendung_bloc.dart';
 import 'package:data_table_2/data_table_2.dart';
+import 'package:ttld/pages/home/ntd/ntd_tuyendung_info_page.dart';
 import 'package:ttld/repositories/tuyendung_repository.dart';
 import 'package:ttld/bloc/kinh_nghiem_lam_viec/kinh_nghiem_lam_viec_bloc.dart';
 import 'package:ttld/repositories/kinh_nghiem_lam_viec_repository.dart';
@@ -69,88 +70,58 @@ class _NTVHomePageState extends State<NTVHomePage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final size = MediaQuery.of(context).size;
-
-    return MultiBlocListener(
-      listeners: [
-        BlocListener<NTVBloc, NTVState>(
-          bloc: locator<NTVBloc>(),
-          listener: (context, state) {
-            if (state is NTVLoadedById) {
-              setState(() {
-                tblHoSoUngVien = state.tblHoSoUngVien;
-                _isInitialLoading = false;
-              });
-            } else if (state is NTVError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("Error: ${state.message}")),
-              );
-            }
-          },
-        ),
-        BlocListener<KinhNghiemLamViecBloc, KinhNghiemLamViecState>(
-          bloc: _kinhNghiemBloc,
-          listener: (context, state) {
-            if (state is KinhNghiemLamViecLoaded) {
-              setState(() {
-                _kinhNghiemMap = {
-                  for (var kn in state.kinhNghiemList)
-                    kn.id.toString(): kn.displayName
-                };
-              });
-            }
-          },
-        ),
-      ],
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Container(
-          height: size.height,
-          width: size.width,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                theme.colorScheme.primary.withAlpha(25),
-                theme.colorScheme.surface,
-              ],
-            ),
-          ),
-          child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: BlocBuilder<TuyenDungBloc, TuyenDungState>(
-                bloc: _tuyenDungBloc,
-                builder: (context, tuyenDungState) {
-                  if (_isInitialLoading && tuyenDungState is TuyenDungLoading) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: MultiBlocListener(
+            listeners: [
+              BlocListener<NTVBloc, NTVState>(
+                bloc: locator<NTVBloc>(),
+                listener: (context, state) {
+                  if (state is NTVLoadedById) {
+                    setState(() {
+                      tblHoSoUngVien = state.tblHoSoUngVien;
+                      _isInitialLoading = false;
+                    });
+                  } else if (state is NTVError) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Error: ${state.message}")),
                     );
                   }
-
-                  return Column(
-                    children: [
-                      // Top section with user info and quick access
-                      Container(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildUserInfoSection(context),
-                            const SizedBox(height: 32.0),
-                            _buildQuickAccessSection(context),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 32.0),
-                      // Statistics section
-                      Expanded(
-                        child: _buildStatisticsSection(context, tuyenDungState),
-                      ),
-                    ],
-                  );
                 },
               ),
+              BlocListener<KinhNghiemLamViecBloc, KinhNghiemLamViecState>(
+                bloc: _kinhNghiemBloc,
+                listener: (context, state) {
+                  if (state is KinhNghiemLamViecLoaded) {
+                    setState(() {
+                      _kinhNghiemMap = {
+                        for (var kn in state.kinhNghiemList)
+                          kn.id.toString(): kn.displayName
+                      };
+                    });
+                  }
+                },
+              ),
+            ],
+            child: BlocBuilder<TuyenDungBloc, TuyenDungState>(
+              bloc: _tuyenDungBloc,
+              builder: (context, tuyenDungState) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildUserInfoSection(context),
+                    const SizedBox(height: 12.0),
+                    _buildQuickAccessSection(context),
+                    const SizedBox(height: 12.0),
+                    Expanded(
+                      child: _buildStatisticsSection(context, tuyenDungState),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
         ),
@@ -158,7 +129,6 @@ class _NTVHomePageState extends State<NTVHomePage> {
     );
   }
 
-  // Section 1: User Information
   Widget _buildUserInfoSection(BuildContext context) {
     final theme = Theme.of(context);
     return BlocBuilder<AuthBloc, AuthState>(
@@ -167,15 +137,15 @@ class _NTVHomePageState extends State<NTVHomePage> {
         if (state is AuthAuthenticated) {
           final user = state;
           return Container(
-            padding: const EdgeInsets.all(24.0),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
               color: theme.colorScheme.surface,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: theme.colorScheme.shadow.withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
+                  color: theme.colorScheme.shadow.withAlpha(26),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
                 ),
               ],
             ),
@@ -194,8 +164,8 @@ class _NTVHomePageState extends State<NTVHomePage> {
                   ),
                   child: ClipOval(
                     child: Container(
-                      width: 60,
-                      height: 60,
+                      width: 40,
+                      height: 40,
                       color: theme.colorScheme.surface,
                       child: tblHoSoUngVien?.avatarUrl != null &&
                               tblHoSoUngVien!.avatarUrl!.isNotEmpty
@@ -208,7 +178,7 @@ class _NTVHomePageState extends State<NTVHomePage> {
                                   child: Text(
                                     user.userName[0].toUpperCase(),
                                     style: TextStyle(
-                                      fontSize: 24,
+                                      fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                       color: theme.colorScheme.primary,
                                     ),
@@ -220,7 +190,7 @@ class _NTVHomePageState extends State<NTVHomePage> {
                               child: Text(
                                 user.userName[0].toUpperCase(),
                                 style: TextStyle(
-                                  fontSize: 24,
+                                  fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                   color: theme.colorScheme.primary,
                                 ),
@@ -229,7 +199,7 @@ class _NTVHomePageState extends State<NTVHomePage> {
                     ),
                   ),
                 ),
-                const SizedBox(width: 20),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -261,22 +231,22 @@ class _NTVHomePageState extends State<NTVHomePage> {
     );
   }
 
-  // Section 2: Quick Access Buttons
   Widget _buildQuickAccessSection(BuildContext context) {
     final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Only the title row remains in a Container
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: theme.colorScheme.shadow.withOpacity(0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
+                color: theme.colorScheme.shadow.withAlpha(26),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
               ),
             ],
           ),
@@ -301,58 +271,43 @@ class _NTVHomePageState extends State<NTVHomePage> {
             ],
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 12),
+        // Show the quick access items directly, not inside another container
         Container(
-          padding: const EdgeInsets.all(24),
+          width: double.infinity,
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: theme.colorScheme.shadow.withOpacity(0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
+                color: theme.colorScheme.shadow.withAlpha(26),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
               ),
             ],
           ),
           child: GridView.count(
-            crossAxisCount: 3,
+            crossAxisCount: 4,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            mainAxisSpacing: 16,
+            mainAxisSpacing: 8,
             crossAxisSpacing: 16,
             childAspectRatio: 1.2,
             children: [
-              _buildQuickAccessButton(
-                context: context,
-                icon: FontAwesomeIcons.solidPenToSquare,
-                label: 'Cập nhật NTV',
-                route: '/ntv_home/update_ntv',
-              ),
-              _buildQuickAccessButton(
-                context: context,
-                icon: FontAwesomeIcons.fileImport,
-                label: 'Hồ sơ chắp nối',
-                route: '/ntv_home/ho-so-chap-noi',
-              ),
-              _buildQuickAccessButton(
-                context: context,
-                icon: FontAwesomeIcons.calendarPlus,
-                label: 'Đăng ký tìm việc',
-                route: '/ntv_home/dang-ky-lam-viec',
-              ),
-              _buildQuickAccessButton(
-                context: context,
-                icon: FontAwesomeIcons.calendarCheck,
-                label: 'Đăng ký tư vấn việc làm',
-                route: '/ntv_home/dang-ky-tu-van-viec-lam',
-              ),
-              _buildQuickAccessButton(
-                context: context,
-                icon: FontAwesomeIcons.graduationCap,
-                label: 'Đăng ký học nghề',
-                route: '/ntv_home/dang-ky-hoc-nghe',
-              ),
+              _buildQuickAccessItem(context, FontAwesomeIcons.solidPenToSquare,
+                  'Cập nhật NTV', '/ntv_home/update_ntv'),
+              _buildQuickAccessItem(context, FontAwesomeIcons.fileImport,
+                  'Hồ sơ chắp nối', '/ntv_home/ho-so-chap-noi'),
+              _buildQuickAccessItem(context, FontAwesomeIcons.calendarPlus,
+                  'Đăng ký tìm việc', '/ntv_home/dang-ky-lam-viec'),
+              _buildQuickAccessItem(
+                  context,
+                  FontAwesomeIcons.calendarCheck,
+                  'Đăng ký tư vấn việc làm',
+                  '/ntv_home/dang-ky-tu-van-viec-lam'),
+              _buildQuickAccessItem(context, FontAwesomeIcons.graduationCap,
+                  'Đăng ký học nghề', '/ntv_home/dang-ky-hoc-nghe'),
             ],
           ),
         ),
@@ -360,64 +315,72 @@ class _NTVHomePageState extends State<NTVHomePage> {
     );
   }
 
+  Widget _buildQuickAccessItem(
+    BuildContext context,
+    IconData icon,
+    String label,
+    String route,
+  ) {
+    final theme = Theme.of(context);
+    return SizedBox(
+      width: 104,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildQuickAccessButton(context: context, icon: icon, route: route),
+          const SizedBox(height: 2),
+          Text(
+            label,
+            textAlign: TextAlign.center,
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: theme.colorScheme.onSurface,
+              fontSize: 11,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildQuickAccessButton({
     required BuildContext context,
     required IconData icon,
-    required String label,
     required String route,
   }) {
     final theme = Theme.of(context);
-    return Card(
-      elevation: 0,
-      margin: EdgeInsets.zero,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: BorderSide(
-          color: theme.colorScheme.outline.withAlpha(26),
+    return SizedBox(
+      width: 40,
+      height: 40,
+      child: Card(
+        elevation: 0,
+        margin: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+          side: BorderSide(
+            color: theme.colorScheme.outline.withAlpha(26),
+          ),
         ),
-      ),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(16),
-        onTap: () {
-          try {
-            if (route == '/ntv_home/update_ntv') {
-              context.push(route, extra: tblHoSoUngVien);
-            } else if (route == '/ntv_home/ho-so-chap-noi') {
-              context.push(route, extra: {
-                'id': tblHoSoUngVien?.id,
-                'uvUsername': tblHoSoUngVien?.uvUsername,
-              });
-            } else {
-              context.push(route);
+        child: InkWell(
+          borderRadius: BorderRadius.circular(24),
+          onTap: () {
+            try {
+              if (route == '/ntv_home/update_ntv') {
+                context.push(route, extra: tblHoSoUngVien);
+              } else {
+                context.push(route);
+              }
+            } catch (e) {
+              debugPrint('Navigation error: $e');
             }
-          } catch (e) {
-            print('Navigation error: $e');
-          }
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                icon,
-                size: 24,
-                color: theme.colorScheme.primary,
-              ),
-              const SizedBox(height: 8.0),
-              Flexible(
-                child: Text(
-                  label,
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: theme.colorScheme.onSurface,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
+          },
+          child: Center(
+            child: Icon(
+              icon,
+              size: 16,
+              color: theme.colorScheme.primary,
+            ),
           ),
         ),
       ),
@@ -441,15 +404,15 @@ class _NTVHomePageState extends State<NTVHomePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.surface,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: Theme.of(context).colorScheme.shadow.withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
+                  color: Theme.of(context).colorScheme.shadow.withAlpha(26),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
                 ),
               ],
             ),
@@ -486,12 +449,11 @@ class _NTVHomePageState extends State<NTVHomePage> {
                 ),
               ),
               child: DataTable2(
-                columnSpacing: 12,
-                horizontalMargin: 12,
-                minWidth: 1200,
-                headingRowColor: MaterialStateProperty.all(
-                  Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
-                ),
+                columnSpacing: 8,
+                horizontalMargin: 8,
+                minWidth: 500,
+                headingRowHeight: 40,
+                dataRowHeight: 40,
                 columns: [
                   DataColumn2(
                     label: Text(
@@ -500,7 +462,7 @@ class _NTVHomePageState extends State<NTVHomePage> {
                             fontWeight: FontWeight.bold,
                           ),
                     ),
-                    size: ColumnSize.S,
+                    size: ColumnSize.L,
                   ),
                   DataColumn2(
                     label: Text(
@@ -518,7 +480,7 @@ class _NTVHomePageState extends State<NTVHomePage> {
                             fontWeight: FontWeight.bold,
                           ),
                     ),
-                    size: ColumnSize.S,
+                    size: ColumnSize.M,
                   ),
                   DataColumn2(
                     label: Text(
@@ -533,10 +495,36 @@ class _NTVHomePageState extends State<NTVHomePage> {
                 rows: state.tuyenDungList
                     .map((tuyenDung) => DataRow(
                           cells: [
-                            DataCell(Text(
-                              tuyenDung.tdTieude ?? 'Chưa có',
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            )),
+                            DataCell(
+                              Text(
+                                tuyenDung.tdTieude ?? 'Chưa có',
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => NTDInfoPage(
+                                      ntdData: {
+                                        'tuyendungId': tuyenDung.idTuyenDung,
+                                        'tuyendung': tuyenDung.tdTieude ?? '',
+                                        'soLuong': tuyenDung.tdSoluong.toString(),
+                                        'gioiTinh': tuyenDung.tdYeuCauGioiTinh,
+                                        'trinhDo': tuyenDung.tdYeuCauHocVan ?? '',
+                                        'nganhNghe': tuyenDung.tdNganhnghe ?? '',
+                                        'motaCongViec':
+                                            tuyenDung.tdMotacongviec ?? '',
+                                        'ngayNhanHoSo':
+                                            tuyenDung.ngayNhanHoSo ?? '',
+                                        'tenNTD': tuyenDung.tdTieude ?? '',
+                                        'address': tuyenDung.noiLamviec ?? '',
+                                        'idDoanhNghiep':
+                                            tuyenDung.idDoanhNghiep.toString(),
+                                      },
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
                             DataCell(Text(
                               tuyenDung.noiLamviec ?? 'Chưa có',
                               style: Theme.of(context).textTheme.bodyMedium,
