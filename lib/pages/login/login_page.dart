@@ -8,8 +8,10 @@ import 'package:ttld/features/auth/bloc/login_bloc.dart';
 import 'package:ttld/features/auth/bloc/login_event.dart';
 import 'package:ttld/features/auth/bloc/login_state.dart';
 import 'package:ttld/features/auth/enums/user_type.dart';
+import 'package:ttld/helppers/help.dart';
 import 'package:ttld/pages/signup/signup.dart';
 import 'package:ttld/core/api_client.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -18,12 +20,29 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
+// Add Region enum
+enum Region { lamDong, binhThuan, binhDinh }
+
+extension RegionExtension on Region {
+  String get displayName {
+    switch (this) {
+      case Region.lamDong:
+        return 'Lâm Đồng';
+      case Region.binhThuan:
+        return 'Bình Thuận';
+      case Region.binhDinh:
+        return 'Bình Định';
+    }
+  }
+}
+
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _userNameController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
   UserType _selectedUserType = UserType.ntd;
+  Region _selectedRegion = Region.lamDong;
 
   @override
   void dispose() {
@@ -32,9 +51,25 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void _handleLogin() {
+  void _handleLogin() async {
     if (_formKey.currentState!.validate()) {
       debugPrint('📝 Login form submitted');
+      // Set API base URL based on region
+      String baseUrl;
+      switch (_selectedRegion) {
+        case Region.lamDong:
+          baseUrl = getEnv('API_LAMDONG');
+          break;
+        case Region.binhThuan:
+          baseUrl = getEnv('API_BINHTHUAN');
+          break;
+        case Region.binhDinh:
+          baseUrl = getEnv('API_BINHDINH');
+          break;
+      }
+      // Optionally, set the base URL in your ApiClient here
+      locator<ApiClient>().setBaseUrl(baseUrl);
+      setEnv('API_BASE_URL', baseUrl);
       locator<LoginBloc>().add(
         LoginSubmitted(
           userName: _userNameController.text,
@@ -203,21 +238,25 @@ class _LoginPageState extends State<LoginPage> {
       listeners: [
         BlocListener<LoginBloc, LoginState>(
           bloc: locator<LoginBloc>(),
-          listener: (context, state) {
+          listener: (context, state) async {
             debugPrint('👂 Login state changed: ${state.runtimeType}');
 
             if (state is LoginSuccess) {
               debugPrint(
-                  '🎉 Login successful in page, navigating to /home with userId: ${state.userId}');
+                  '🎉 Login successful in page, navigating to /home with userId: [38;5;246m${state.userId}[0m');
               ToastUtils.showToastSuccess(
                 context,
                 description: 'Welcome back!',
                 message: '',
               );
               try {
+                // Save region to SharedPreferences
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.setString('selected_region', _selectedRegion.name);
                 context.go('/home', extra: {
                   'userId': state.userId,
-                  'userType': state.userType
+                  'userType': state.userType,
+                  'region': _selectedRegion,
                 });
                 debugPrint('🚀 Navigation to /home triggered');
               } catch (e) {
@@ -278,7 +317,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             const SizedBox(height: 16),
                             Text(
-                              'Chào Mừng Trở Lại',
+                              'Chào mừng bạn đến với sàn giao dịch việc làm (Swork)',
                               style: theme.textTheme.headlineMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: theme.colorScheme.primary,
@@ -298,6 +337,34 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       const SizedBox(height: 32),
+
+                      // Region Dropdown
+                      Container(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: DropdownButtonFormField<Region>(
+                          value: _selectedRegion,
+                          decoration: InputDecoration(
+                            labelText: 'Chọn khu vực',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ),
+                          items: Region.values.map((region) {
+                            return DropdownMenuItem<Region>(
+                              value: region,
+                              child: Text(region.displayName),
+                            );
+                          }).toList(),
+                          onChanged: (region) {
+                            if (region != null) {
+                              setState(() {
+                                _selectedRegion = region;
+                              });
+                            }
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 16),
 
                       // User Type Selection
                       Container(
@@ -334,7 +401,7 @@ class _LoginPageState extends State<LoginPage> {
                                     return ButtonSegment<UserType>(
                                       value: type,
                                       label: Text(
-                                        type.displayName,
+                                        type.tooltip,
                                         style: const TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w500,
