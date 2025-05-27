@@ -372,7 +372,7 @@ class LienHePage extends StatelessWidget {
                     GestureDetector(
                       onTap: () => _makePhoneCall('0256364509'),
                       child: const Text(
-                        '(0256)3646.509',
+                        '(0256) 3646.509',
                         style: TextStyle(
                           decoration: TextDecoration.underline,
                           color: Colors.blue,
@@ -399,6 +399,25 @@ class LienHePage extends StatelessWidget {
                     ),
                   ],
                 ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    const Icon(Icons
+                        .language), // Using language icon for Zalo as in Lam Dong example
+                    const SizedBox(width: 8),
+                    GestureDetector(
+                      onTap: () => _openZalo('2659249034461702353'),
+                      child: const Text(
+                        'Trung tâm DVVL tỉnh Bình Định', // Display text for Zalo link
+                        style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8),
               ],
             ),
           ),
