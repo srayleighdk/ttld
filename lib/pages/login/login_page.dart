@@ -6,6 +6,7 @@ import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/core/utils/toast_utils.dart';
 import 'package:ttld/features/auth/bloc/login_bloc.dart';
 import 'package:ttld/features/auth/bloc/login_event.dart';
+import 'package:ttld/core/enums/region.dart'; // Import Region enum
 import 'package:ttld/features/auth/bloc/login_state.dart';
 import 'package:ttld/features/auth/enums/user_type.dart';
 import 'package:ttld/helppers/help.dart';
@@ -16,24 +17,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
+// Remove local Region enum definition
+
   @override
   State<LoginPage> createState() => _LoginPageState();
-}
-
-// Add Region enum
-enum Region { lamDong, binhThuan, binhDinh }
-
-extension RegionExtension on Region {
-  String get displayName {
-    switch (this) {
-      case Region.lamDong:
-        return 'Lâm Đồng';
-      case Region.binhThuan:
-        return 'Bình Thuận';
-      case Region.binhDinh:
-        return 'Bình Định';
-    }
-  }
 }
 
 class _LoginPageState extends State<LoginPage> {

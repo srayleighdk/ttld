@@ -4,15 +4,25 @@ import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ttld/core/enums/region.dart';
 import 'package:ttld/features/auth/repositories/auth_repository.dart';
+import 'package:ttld/helppers/help.dart'; // Assuming getEnv is here
 
 class ApiClient {
   late final Dio _dio;
   final getIt = GetIt.instance;
+  final SharedPreferences _prefs;
 
-  ApiClient() {
+  ApiClient(this._prefs) {
+    // Load base URL from SharedPreferences on initialization
+    final savedRegionName = _prefs.getString('selected_region');
+    final savedRegion = regionFromString(savedRegionName);
+    final initialBaseUrl = getEnv(savedRegion?.baseUrlKey ?? Region.lamDong.baseUrlKey); // Use default if none saved
+
     _dio = Dio(
       BaseOptions(
+        baseUrl: initialBaseUrl, // Set initial base URL
         connectTimeout: const Duration(seconds: 30),
         receiveTimeout: const Duration(seconds: 30),
         sendTimeout: const Duration(seconds: 30),

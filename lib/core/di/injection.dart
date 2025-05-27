@@ -154,7 +154,7 @@ Future<void> setupLocator() async {
       () => FlutterSecureStorage());
 
   // Register ApiClient as a singleton:
-  locator.registerLazySingleton<ApiClient>(() => ApiClient());
+  locator.registerLazySingleton<ApiClient>(() => ApiClient(locator<SharedPreferences>()));
 
   // Register AuthApiService as a singleton:
   locator.registerLazySingleton<AuthApiService>(
