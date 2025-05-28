@@ -13,6 +13,8 @@ import 'package:ttld/helppers/help.dart';
 import 'package:ttld/models/tblNhaTuyenDung/tblNhaTuyenDung_model.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:ttld/pages/home/ntd/ntv_info_page.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPreferences
+import 'package:ttld/core/enums/region.dart'; // Import Region enum
 
 class NTDHomePage extends StatefulWidget {
   static const routePath = '/ntd_home';
@@ -30,11 +32,13 @@ class _NTDHomePageState extends State<NTDHomePage> {
   late NTDBloc _ntdBloc;
   bool _isInitialLoading = true;
   bool _hasImageError = false;
+  String _avatarBaseUrl = ''; // Variable to store the avatar base URL
 
   @override
   void initState() {
     super.initState();
     _initializeBlocs();
+    _loadAvatarBaseUrl(); // Load avatar base URL
   }
 
   void _initializeBlocs() {
@@ -56,6 +60,25 @@ class _NTDHomePageState extends State<NTDHomePage> {
     }
     if (!_hoSoUngVienBloc.isClosed) {
       _hoSoUngVienBloc.add(LoadTblHoSoUngViens());
+    }
+  }
+
+  Future<void> _loadAvatarBaseUrl() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedRegionName = prefs.getString('selected_region');
+    final savedRegion = regionFromString(savedRegionName);
+
+    if (savedRegion != null) {
+      setState(() {
+        _avatarBaseUrl = getEnv(savedRegion.avatarUrlKey);
+      });
+    } else {
+      // Fallback or error handling if region is not saved
+      debugPrint('Warning: Region not found in SharedPreferences.');
+      // Optionally set a default or show an error
+       setState(() {
+         _avatarBaseUrl = getEnv('URL_AVATAR_BD'); // Example fallback
+      });
     }
   }
 
@@ -157,9 +180,11 @@ class _NTDHomePageState extends State<NTDHomePage> {
                   width: 60,
                   height: 60,
                   color: theme.colorScheme.surface,
-                  child: ntd.imagePath != null && ntd.imagePath!.isNotEmpty
+                  child: _avatarBaseUrl.isNotEmpty &&
+                          ntd.imagePath != null &&
+                          ntd.imagePath!.isNotEmpty
                       ? Image.network(
-                          '${getEnv('URL_AVATAR')}${ntd.imagePath}',
+                          '$_avatarBaseUrl${ntd.imagePath}', // Use the dynamic URL
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
                             debugPrint('Error loading avatar: $error');

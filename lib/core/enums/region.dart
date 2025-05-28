@@ -22,6 +22,17 @@ extension RegionExtension on Region {
         return 'API_BINHDINH';
     }
   }
+
+  String get avatarUrlKey {
+    switch (this) {
+      case Region.lamDong:
+        return 'URL_AVATAR_LD';
+      case Region.binhThuan:
+        return 'URL_AVATAR_BT';
+      case Region.binhDinh:
+        return 'URL_AVATAR_BD';
+    }
+  }
 }
 
 Region? regionFromString(String? regionName) {
