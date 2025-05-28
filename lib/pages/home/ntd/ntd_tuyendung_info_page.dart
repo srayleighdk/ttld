@@ -21,10 +21,10 @@ String getGioiTinhString(int? gioiTinh) {
 
 String getTrinhDoName(dynamic id) {
   if (id == null) return '';
-  
+
   // Convert to string if it's an integer
   String stringId = id is int ? id.toString() : id;
-  
+
   // Assuming you have a list of trinhDo objects fetched and stored
   final trinhDoList = locator<List<TrinhDoHocVan>>();
 
@@ -38,10 +38,10 @@ String getTrinhDoName(dynamic id) {
 
 String getNganhNgheName(dynamic id) {
   if (id == null) return '';
-  
+
   // Convert to string if it's an integer
   String stringId = id is int ? id.toString() : id;
-  
+
   final nganhNgheList = locator<List<NganhNgheTD>>();
 
   final nganhNghe = nganhNgheList.firstWhere(
@@ -138,7 +138,8 @@ class _NTDInfoPageState extends State<NTDInfoPage> {
                     children: [
                       // Section 1: Thông tin tuyển dụng
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
                           color: theme.colorScheme.surface,
                           borderRadius: BorderRadius.circular(12),
@@ -186,8 +187,8 @@ class _NTDInfoPageState extends State<NTDInfoPage> {
                                       ''),
                               NTDInfoPage._infoRow('Tuyển dụng',
                                   widget.ntdData['tuyendung'] ?? ''),
-                              NTDInfoPage._infoRow('Số lượng',
-                                  widget.ntdData['soLuong'] ?? ''),
+                              NTDInfoPage._infoRow(
+                                  'Số lượng', widget.ntdData['soLuong'] ?? ''),
                               NTDInfoPage._infoRow(
                                   'Giới tính',
                                   getGioiTinhString(
@@ -208,7 +209,8 @@ class _NTDInfoPageState extends State<NTDInfoPage> {
                       ),
                       // Section 2: Thông tin liên hệ
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
                           color: theme.colorScheme.surface,
                           borderRadius: BorderRadius.circular(12),
@@ -261,6 +263,10 @@ class _NTDInfoPageState extends State<NTDInfoPage> {
                                   'Địa chỉ', ntd?.ntdDiachichitiet ?? ''),
                               NTDInfoPage._infoRow(
                                   'Giới thiệu', ntd?.ntdGioithieu ?? ''),
+                              NTDInfoPage._infoRow(
+                                  'Số điện thoại', ntd?.ntdDienthoai ?? ''),
+                              NTDInfoPage._infoRow(
+                                  'Email', ntd?.ntdEmail ?? ''),
                             ],
                           ),
                         ),
