@@ -50,16 +50,19 @@ class _NTVHomePageState extends State<NTVHomePage> {
   @override
   void initState() {
     super.initState();
-    final authState = locator<AuthBloc>().state; // Keep locator for AuthBloc as per HomePage pattern
+    final authState = locator<AuthBloc>()
+        .state; // Keep locator for AuthBloc as per HomePage pattern
     if (authState is AuthAuthenticated && authState.userType == 'ntv') {
       // Use BlocProvider.of for NTVBloc as it's provided by HomePage
-      BlocProvider.of<NTVBloc>(context, listen: false).add(LoadTblHoSoUngVien(int.parse(authState.userId)));
+      BlocProvider.of<NTVBloc>(context, listen: false)
+          .add(LoadTblHoSoUngVien(int.parse(authState.userId)));
     }
-    _tuyenDungBloc = TuyenDungBloc(locator<TuyenDungRepository>()); // Keep local TuyenDungBloc
+    _tuyenDungBloc = TuyenDungBloc(
+        locator<TuyenDungRepository>()); // Keep local TuyenDungBloc
     _tuyenDungBloc.add(FetchTuyenDungList(null));
 
-    _kinhNghiemBloc =
-        KinhNghiemLamViecBloc(locator<KinhNghiemLamViecRepository>()); // Keep local KinhNghiemLamViecBloc
+    _kinhNghiemBloc = KinhNghiemLamViecBloc(locator<
+        KinhNghiemLamViecRepository>()); // Keep local KinhNghiemLamViecBloc
     _kinhNghiemBloc.add(FetchKinhNghiemLamViecList());
 
     _loadAvatarBaseUrl(); // Load avatar base URL
@@ -116,15 +119,18 @@ class _NTVHomePageState extends State<NTVHomePage> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _buildActionButtonItem(context, FontAwesomeIcons.store, 'Sàn GDVL'),
-          _buildActionButtonItem(context, FontAwesomeIcons.magnifyingGlass, 'Tìm Việc'),
-          _buildActionButtonItem(context, FontAwesomeIcons.handshake, 'Chắp Nối'),
+          _buildActionButtonItem(
+              context, FontAwesomeIcons.magnifyingGlass, 'Tìm Việc'),
+          _buildActionButtonItem(
+              context, FontAwesomeIcons.handshake, 'Chắp Nối'),
         ],
       ),
     );
   }
 
   // Helper widget for each action button item
-  Widget _buildActionButtonItem(BuildContext context, IconData icon, String label) {
+  Widget _buildActionButtonItem(
+      BuildContext context, IconData icon, String label) {
     final theme = Theme.of(context);
     return Expanded(
       child: Column(
@@ -150,7 +156,6 @@ class _NTVHomePageState extends State<NTVHomePage> {
       ),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -200,8 +205,10 @@ class _NTVHomePageState extends State<NTVHomePage> {
                   children: [
                     _buildUserInfoSection(context),
                     const SizedBox(height: 12.0),
-                    _buildActionButtonsSection(context), // Add the new section here
-                    const SizedBox(height: 12.0), // Add spacing below the new section
+                    _buildActionButtonsSection(
+                        context), // Add the new section here
+                    const SizedBox(
+                        height: 12.0), // Add spacing below the new section
                     _buildQuickAccessSection(context),
                     const SizedBox(height: 12.0),
                     Expanded(
