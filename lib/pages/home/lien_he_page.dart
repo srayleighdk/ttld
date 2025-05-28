@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ttld/core/enums/region.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart';
@@ -119,7 +120,8 @@ class LienHePage extends StatelessWidget {
                 SizedBox(height: 8),
                 Row(
                   children: [
-                    const Icon(Icons.language),
+                    SvgPicture.asset('assets/zalo_icon/zalo-icon-svg.svg',
+                        width: 20, height: 20),
                     const SizedBox(width: 8),
                     GestureDetector(
                       onTap: () => _openZalo('0918007245'),

@@ -139,7 +139,8 @@ class _NTDInfoPageState extends State<NTDInfoPage> {
                     child: Text(
                       displayValue,
                       style: TextStyle(
-                        color: theme.colorScheme.primary, // Make it look clickable
+                        color:
+                            theme.colorScheme.primary, // Make it look clickable
                         decoration: TextDecoration.underline,
                       ),
                     ),
@@ -180,7 +181,8 @@ class _NTDInfoPageState extends State<NTDInfoPage> {
                     child: Text(
                       displayValue,
                       style: TextStyle(
-                        color: theme.colorScheme.primary, // Make it look clickable
+                        color:
+                            theme.colorScheme.primary, // Make it look clickable
                         decoration: TextDecoration.underline,
                       ),
                     ),
