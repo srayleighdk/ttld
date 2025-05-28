@@ -98,7 +98,8 @@ class LienHePage extends StatelessWidget {
                     const Icon(Icons.phone_outlined),
                     const SizedBox(width: 8),
                     GestureDetector(
-                      onTap: () => launchPhoneCall(context, '02633822360'), // Use the shared function
+                      onTap: () => launchPhoneCall(
+                          context, '02633822360'), // Use the shared function
                       child: const Text(
                         '(0263).3822360',
                         style: TextStyle(
@@ -166,7 +167,8 @@ class LienHePage extends StatelessWidget {
                     const Icon(Icons.phone_outlined),
                     const SizedBox(width: 8),
                     GestureDetector(
-                      onTap: () => launchPhoneCall(context, '02633822360'), // Use the shared function
+                      onTap: () => launchPhoneCall(
+                          context, '02633822360'), // Use the shared function
                       child: const Text(
                         '(0263).3822360',
                         style: TextStyle(
@@ -221,7 +223,7 @@ class LienHePage extends StatelessWidget {
                     SizedBox(width: 8),
                     Expanded(
                         child: Text(
-                            'Số 2 Phạm Tuấn Tài, Phường Phú Thủy, TP. Phan Thiết, Bình Thuận')),
+                            'Văn phòng Phan Thiết\nSố 2 Phạm Tuấn Tài, Phường Phú Thủy, TP. Phan Thiết, Bình Thuận')),
                   ],
                 ),
                 SizedBox(height: 8),
@@ -248,7 +250,8 @@ class LienHePage extends StatelessWidget {
                     const Icon(Icons.phone_outlined),
                     const SizedBox(width: 8),
                     GestureDetector(
-                      onTap: () => _makePhoneCall('02523820145'),
+                      onTap: () => launchPhoneCall(
+                          context, '02523820145'), // Use the shared function
                       child: const Text(
                         '(0252) 3820145',
                         style: TextStyle(
@@ -269,6 +272,24 @@ class LienHePage extends StatelessWidget {
                           _openWebsite('http://vieclambinhthuan.com.vn/'),
                       child: const Text(
                         'http://vieclambinhthuan.com.vn/',
+                        style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    SvgPicture.asset('assets/zalo_icon/zalo-icon-svg.svg',
+                        width: 20, height: 20),
+                    const SizedBox(width: 8),
+                    GestureDetector(
+                      onTap: () => _openZalo('0911186448'),
+                      child: const Text(
+                        'TRUNG TÂM DVVL BÌNH THUẬN',
                         style: TextStyle(
                           decoration: TextDecoration.underline,
                           color: Colors.blue,
@@ -299,7 +320,8 @@ class LienHePage extends StatelessWidget {
                     const Icon(Icons.phone_outlined),
                     const SizedBox(width: 8),
                     GestureDetector(
-                      onTap: () => launchPhoneCall(context, '02523820145'), // Use the shared function
+                      onTap: () => launchPhoneCall(
+                          context, '02523820145'), // Use the shared function
                       child: const Text(
                         '(0252) 3820145',
                         style: TextStyle(
@@ -364,7 +386,8 @@ class LienHePage extends StatelessWidget {
                     const Icon(Icons.phone_outlined),
                     const SizedBox(width: 8),
                     GestureDetector(
-                      onTap: () => launchPhoneCall(context, '0256364509'), // Use the shared function
+                      onTap: () => launchPhoneCall(
+                          context, '0256364509'), // Use the shared function
                       child: const Text(
                         '(0256) 3646.509',
                         style: TextStyle(
@@ -396,8 +419,8 @@ class LienHePage extends StatelessWidget {
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    const Icon(Icons
-                        .language), // Using language icon for Zalo as in Lam Dong example
+                    SvgPicture.asset('assets/zalo_icon/zalo-icon-svg.svg',
+                        width: 20, height: 20),
                     const SizedBox(width: 8),
                     GestureDetector(
                       onTap: () => _openZalo('2659249034461702353'),
