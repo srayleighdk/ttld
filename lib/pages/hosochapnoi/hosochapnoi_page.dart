@@ -94,8 +94,6 @@ class _HoSoChapNoiPageState extends State<HoSoChapNoiPage> {
     // Check user type and load appropriate data
     final authState = locator<AuthBloc>().state;
     if (authState is AuthAuthenticated) {
-      print('Auth State: ${authState.userType}'); // Debug auth state
-      print('Auth User ID: ${authState.userId}'); // Debug user ID
       if (authState.userType == 'ntd') {
         // If NTD is logged in, set the NTD username and load HoSoUngVien list
         ntdUsernameController.text = authState.userName;
@@ -103,8 +101,6 @@ class _HoSoChapNoiPageState extends State<HoSoChapNoiPage> {
           _ntvBloc.add(LoadTblHoSoUngViens());
         }
         // Load TuyenDung list for NTD
-        print(
-            'Fetching TuyenDung list for NTD ID: ${authState.userId}'); // Debug API call
         _tuyenDungBloc.add(TuyenDungEvent.fetchList(authState.userId));
       } else if (authState.userType == 'ntv' && widget.id != null) {
         // If NTV is logged in, load NTD list
@@ -124,14 +120,11 @@ class _HoSoChapNoiPageState extends State<HoSoChapNoiPage> {
 
   Future<void> _fetchNtdList() async {
     try {
-      print('Fetching NTD list for id: ${widget.id}');
       final ntds = await _ntdRepository.getNtdList(
         idUv: widget.id != null ? int.tryParse(widget.id!) : null,
       );
-      print('Fetched ${ntds.length} NTDs');
       setState(() {
         ntdPickerList = ntds.map((ntd) => NTDPickerItem.fromNtd(ntd)).toList();
-        print('Converted to ${ntdPickerList.length} picker items');
       });
     } catch (e) {
       print('Error fetching NTD list: $e');
