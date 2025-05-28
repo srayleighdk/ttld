@@ -133,26 +133,43 @@ class _NTVHomePageState extends State<NTVHomePage> {
       BuildContext context, IconData icon, String label) {
     final theme = Theme.of(context);
     return Expanded(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            icon,
-            size: 24,
-            color: Colors.red, // Set icon color to red
+      child: InkWell( // Make the entire item tappable
+        onTap: () {
+          // TODO: Implement navigation or action for each button
+          debugPrint('Tapped on $label');
+        },
+        borderRadius: BorderRadius.circular(8), // Match container border radius
+        child: Padding( // Add padding for the tap area
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container( // Container for the icon background
+                padding: const EdgeInsets.all(10), // Adjust padding as needed
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.red, // Red background
+                ),
+                child: Icon(
+                  icon,
+                  size: 20, // Adjust icon size as needed
+                  color: Colors.white, // White icon
+                ),
+              ),
+              const SizedBox(height: 8), // Increased spacing
+              Text(
+                label,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.onSurface,
+                  fontSize: 11,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
           ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            textAlign: TextAlign.center,
-            style: theme.textTheme.labelSmall?.copyWith(
-              color: theme.colorScheme.onSurface,
-              fontSize: 11,
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
+        ),
       ),
     );
   }
