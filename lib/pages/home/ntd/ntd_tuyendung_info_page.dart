@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:ttld/core/di/injection.dart';
+import 'package:flutter/services.dart'; // Required for Clipboard
+import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/models/nganh_nghe_td_model.dart';
 import 'package:ttld/models/tblNhaTuyenDung/tblNhaTuyenDung_model.dart';
 import 'package:ttld/models/trinh_do_hoc_van_model.dart';
 import 'package:ttld/repositories/tblNhaTuyenDung/ntd_repository.dart';
+import 'package:url_launcher/url_launcher.dart'; // Required for launching URLs
 
 String getGioiTinhString(int? gioiTinh) {
   if (gioiTinh == null) return '';
@@ -96,6 +99,96 @@ class _NTDInfoPageState extends State<NTDInfoPage> {
         ntd = value;
       });
     });
+  }
+
+  // Helper method to build a clickable phone number row
+  Widget _buildClickablePhoneRow(String label, String? phoneNumber) {
+    final theme = Theme.of(context);
+    final displayValue = phoneNumber?.isNotEmpty == true ? phoneNumber! : '-';
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 150,
+            child: Text(label,
+                style: const TextStyle(fontWeight: FontWeight.w600)),
+          ),
+          Expanded(
+            child: displayValue == '-'
+                ? Text(displayValue,
+                    style: const TextStyle(color: Colors.black87))
+                : GestureDetector(
+                    onTap: () async {
+                      final Uri launchUri = Uri(
+                        scheme: 'tel',
+                        path: phoneNumber,
+                      );
+                      if (await canLaunchUrl(launchUri)) {
+                        await launchUrl(launchUri);
+                      } else {
+                        // Optionally show an error message
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Could not launch $phoneNumber'),
+                          ),
+                        );
+                      }
+                    },
+                    child: Text(
+                      displayValue,
+                      style: TextStyle(
+                        color: theme.colorScheme.primary, // Make it look clickable
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Helper method to build a copyable email row
+  Widget _buildCopyableEmailRow(String label, String? email) {
+    final theme = Theme.of(context);
+    final displayValue = email?.isNotEmpty == true ? email! : '-';
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 150,
+            child: Text(label,
+                style: const TextStyle(fontWeight: FontWeight.w600)),
+          ),
+          Expanded(
+            child: displayValue == '-'
+                ? Text(displayValue,
+                    style: const TextStyle(color: Colors.black87))
+                : GestureDetector(
+                    onTap: () {
+                      Clipboard.setData(ClipboardData(text: email!));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Copied email to clipboard: $email'),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      displayValue,
+                      style: TextStyle(
+                        color: theme.colorScheme.primary, // Make it look clickable
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -263,10 +356,9 @@ class _NTDInfoPageState extends State<NTDInfoPage> {
                                   'Địa chỉ', ntd?.ntdDiachichitiet ?? ''),
                               NTDInfoPage._infoRow(
                                   'Giới thiệu', ntd?.ntdGioithieu ?? ''),
-                              NTDInfoPage._infoRow(
-                                  'Số điện thoại', ntd?.ntdDienthoai ?? ''),
-                              NTDInfoPage._infoRow(
-                                  'Email', ntd?.ntdEmail ?? ''),
+                              _buildClickablePhoneRow(
+                                  'Số điện thoại', ntd?.ntdDienthoai),
+                              _buildCopyableEmailRow('Email', ntd?.ntdEmail),
                             ],
                           ),
                         ),
