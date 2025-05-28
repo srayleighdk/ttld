@@ -331,7 +331,111 @@ class LienHePage extends StatelessWidget {
                       ),
                     ),
                   ],
-                )
+                ),
+                const SizedBox(height: 20),
+                Text('Văn Phòng Đức Linh',
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium
+                        ?.copyWith(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 10),
+                Row(
+                  children: const [
+                    Icon(Icons.location_on_outlined),
+                    SizedBox(width: 8),
+                    Expanded(
+                        child: Text(
+                            '69 Tôn Đức Thắng - thị trấn Võ Xu - huyện Đức Linh')),
+                  ],
+                ),
+                SizedBox(height: 8),
+                Row(
+                  children: [
+                    const Icon(Icons.phone_outlined),
+                    const SizedBox(width: 8),
+                    GestureDetector(
+                      onTap: () => launchPhoneCall(
+                          context, '02523737008'), // Use the shared function
+                      child: const Text(
+                        '(0252) 3737 008',
+                        style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8),
+                Row(
+                  children: [
+                    const Icon(Icons.email_outlined),
+                    const SizedBox(width: 8),
+                    GestureDetector(
+                      onTap: () => _copyToClipboard(
+                          context, 'ttdvvl@vieclambinhthuan.gov.vn'),
+                      child: const Text(
+                        'ttdvvl@vieclambinhthuan.gov.vn',
+                        style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Text('Văn Phòng La Gi',
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium
+                        ?.copyWith(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 10),
+                Row(
+                  children: const [
+                    Icon(Icons.location_on_outlined),
+                    SizedBox(width: 8),
+                    Expanded(
+                        child: Text(
+                            '108 Nguyễn Chí Thanh - Xã Tân Bình thị xã La Gi')),
+                  ],
+                ),
+                SizedBox(height: 8),
+                Row(
+                  children: [
+                    const Icon(Icons.phone_outlined),
+                    const SizedBox(width: 8),
+                    GestureDetector(
+                      onTap: () => launchPhoneCall(
+                          context, '02523737007'), // Use the shared function
+                      child: const Text(
+                        '(0252) 3737 007',
+                        style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8),
+                Row(
+                  children: [
+                    const Icon(Icons.email_outlined),
+                    const SizedBox(width: 8),
+                    GestureDetector(
+                      onTap: () => _copyToClipboard(
+                          context, 'ttdvvl@vieclambinhthuan.gov.vn'),
+                      child: const Text(
+                        'ttdvvl@vieclambinhthuan.gov.vn',
+                        style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
