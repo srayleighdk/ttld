@@ -160,93 +160,108 @@ class _NTVHomePageState extends State<NTVHomePage> {
       builder: (context, state) {
         if (state is AuthAuthenticated) {
           final user = state;
-          return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surface,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: theme.colorScheme.shadow.withAlpha(26),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: LinearGradient(
-                      colors: [
-                        theme.colorScheme.primary,
-                        theme.colorScheme.primary.withAlpha(204),
-                      ],
-                    ),
+          return InkWell(
+            onTap: () {
+              // Navigate to ProfilePage, passing userId and userType
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => ProfilePage(
+                    userId: user.userId,
+                    userType: user.userType,
                   ),
-                  child: ClipOval(
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      color: theme.colorScheme.surface,
-                      child: _avatarBaseUrl.isNotEmpty &&
-                              tblHoSoUngVien?.avatarUrl != null &&
-                              tblHoSoUngVien!.avatarUrl!.isNotEmpty
-                          ? Image.network(
-                              '$_avatarBaseUrl${tblHoSoUngVien?.avatarUrl}', // Use the dynamic URL
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                debugPrint('Error loading avatar: $error');
-                                return Center(
-                                  child: Text(
-                                    user.userName[0].toUpperCase(),
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: theme.colorScheme.primary,
+                ),
+              );
+            },
+            borderRadius: BorderRadius.circular(12), // Match container border radius
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surface,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: theme.colorScheme.shadow.withAlpha(26),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: LinearGradient(
+                        colors: [
+                          theme.colorScheme.primary,
+                          theme.colorScheme.primary.withAlpha(204),
+                        ],
+                      ),
+                    ),
+                    child: ClipOval(
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        color: theme.colorScheme.surface,
+                        child: _avatarBaseUrl.isNotEmpty &&
+                                tblHoSoUngVien?.avatarUrl != null &&
+                                tblHoSoUngVien!.avatarUrl!.isNotEmpty
+                            ? Image.network(
+                                '$_avatarBaseUrl${tblHoSoUngVien?.avatarUrl}', // Use the dynamic URL
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  debugPrint('Error loading avatar: $error');
+                                  return Center(
+                                    child: Text(
+                                      user.userName[0].toUpperCase(),
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: theme.colorScheme.primary,
+                                      ),
                                     ),
                                   ),
                                 );
-                              },
-                            )
-                          : Center(
-                              child: Text(
-                                user.userName[0].toUpperCase(),
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: theme.colorScheme.primary,
+                                },
+                              )
+                            : Center(
+                                child: Text(
+                                  user.userName[0].toUpperCase(),
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: theme.colorScheme.primary,
+                                  ),
                                 ),
                               ),
-                            ),
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Welcome back,',
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          color: theme.colorScheme.onSurface.withAlpha(179),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Welcome back,',
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            color: theme.colorScheme.onSurface.withAlpha(179),
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        user.userName,
-                        style: theme.textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: theme.colorScheme.onSurface,
+                        const SizedBox(height: 4),
+                        Text(
+                          user.userName,
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: theme.colorScheme.onSurface,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         } else {
