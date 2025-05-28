@@ -21,8 +21,11 @@ import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPre
 import 'package:ttld/core/enums/region.dart'; // Import Region enum
 
 class NTVHomePage extends StatefulWidget {
+  final VoidCallback? onProfileTap; // Add callback parameter
+
   const NTVHomePage({
     super.key,
+    this.onProfileTap, // Make it optional
   });
 
   static const String routePath = '/ntv_home';
@@ -163,15 +166,8 @@ class _NTVHomePageState extends State<NTVHomePage> {
           final user = state;
           return InkWell(
             onTap: () {
-              // Navigate to ProfilePage, passing userId and userType
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => ProfilePage(
-                    userId: user.userId,
-                    userType: user.userType,
-                  ),
-                ),
-              );
+              // Call the callback to switch to the Profile tab
+              widget.onProfileTap?.call();
             },
             borderRadius:
                 BorderRadius.circular(12), // Match container border radius

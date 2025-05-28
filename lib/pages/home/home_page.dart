@@ -126,7 +126,14 @@ class _HomePageState extends State<HomePage> {
       case UserRole.ntv:
         homePage = BlocProvider<NTVBloc>.value(
           value: locator<NTVBloc>(),
-          child: const NTVHomePage(),
+          child: NTVHomePage(
+            onProfileTap: () {
+              // Callback to switch to the Profile tab (index 2)
+              setState(() {
+                _currentIndex = 2;
+              });
+            },
+          ),
         );
         break;
       case null:
