@@ -347,14 +347,12 @@ class _NTVHomePageState extends State<NTVHomePage> {
     String route,
   ) {
     final theme = Theme.of(context);
-    return SizedBox(
-      width: 104,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildQuickAccessButton(context: context, icon: icon, route: route),
-          const SizedBox(height: 2),
-          Text(
+    return Column(
+      children: [
+        _buildQuickAccessButton(context: context, icon: icon, route: route),
+        const SizedBox(height: 2),
+        Expanded(
+          child: Text(
             label,
             textAlign: TextAlign.center,
             style: theme.textTheme.labelSmall?.copyWith(
@@ -364,8 +362,8 @@ class _NTVHomePageState extends State<NTVHomePage> {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
