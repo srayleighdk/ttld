@@ -96,6 +96,62 @@ class _NTVHomePageState extends State<NTVHomePage> {
     return _kinhNghiemMap[id] ?? 'Chưa có';
   }
 
+  // New section for action buttons
+  Widget _buildActionButtonsSection(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: theme.colorScheme.shadow.withAlpha(26),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _buildActionButtonItem(context, FontAwesomeIcons.store, 'Sàn GDVL'),
+          _buildActionButtonItem(context, FontAwesomeIcons.magnifyingGlass, 'Tìm Việc'),
+          _buildActionButtonItem(context, FontAwesomeIcons.handshake, 'Chắp Nối'),
+        ],
+      ),
+    );
+  }
+
+  // Helper widget for each action button item
+  Widget _buildActionButtonItem(BuildContext context, IconData icon, String label) {
+    final theme = Theme.of(context);
+    return Expanded(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            size: 24,
+            color: Colors.red, // Set icon color to red
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            textAlign: TextAlign.center,
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: theme.colorScheme.onSurface,
+              fontSize: 11,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -144,6 +200,8 @@ class _NTVHomePageState extends State<NTVHomePage> {
                   children: [
                     _buildUserInfoSection(context),
                     const SizedBox(height: 12.0),
+                    _buildActionButtonsSection(context), // Add the new section here
+                    const SizedBox(height: 12.0), // Add spacing below the new section
                     _buildQuickAccessSection(context),
                     const SizedBox(height: 12.0),
                     Expanded(
