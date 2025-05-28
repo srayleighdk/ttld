@@ -318,7 +318,7 @@ class _NTVHomePageState extends State<NTVHomePage> {
             physics: const NeverScrollableScrollPhysics(),
             mainAxisSpacing: 8,
             crossAxisSpacing: 16,
-            childAspectRatio: 1.2,
+            childAspectRatio: 0.9, // Adjusted aspect ratio for more height
             children: [
               _buildQuickAccessItem(context, FontAwesomeIcons.solidPenToSquare,
                   'Cập nhật NTV', '/ntv_home/update_ntv'),
