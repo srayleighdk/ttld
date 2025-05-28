@@ -13,6 +13,7 @@ import 'package:ttld/models/tblHoSoUngVien/tblHoSoUngVien_model.dart';
 import 'package:ttld/bloc/tuyendung/tuyendung_bloc.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:ttld/pages/home/ntd/ntd_tuyendung_info_page.dart';
+import 'package:ttld/pages/home/profile_page.dart';
 import 'package:ttld/repositories/tuyendung_repository.dart';
 import 'package:ttld/bloc/kinh_nghiem_lam_viec/kinh_nghiem_lam_viec_bloc.dart';
 import 'package:ttld/repositories/kinh_nghiem_lam_viec_repository.dart';
@@ -74,7 +75,7 @@ class _NTVHomePageState extends State<NTVHomePage> {
       debugPrint('Warning: Region not found in SharedPreferences.');
       // Optionally set a default or show an error
       setState(() {
-         _avatarBaseUrl = getEnv('URL_AVATAR_BD'); // Example fallback
+        _avatarBaseUrl = getEnv('URL_AVATAR_BD'); // Example fallback
       });
     }
   }
@@ -172,7 +173,8 @@ class _NTVHomePageState extends State<NTVHomePage> {
                 ),
               );
             },
-            borderRadius: BorderRadius.circular(12), // Match container border radius
+            borderRadius:
+                BorderRadius.circular(12), // Match container border radius
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
@@ -544,10 +546,13 @@ class _NTVHomePageState extends State<NTVHomePage> {
                                       ntdData: {
                                         'tuyendungId': tuyenDung.idTuyenDung,
                                         'tuyendung': tuyenDung.tdTieude ?? '',
-                                        'soLuong': tuyenDung.tdSoluong.toString(),
+                                        'soLuong':
+                                            tuyenDung.tdSoluong.toString(),
                                         'gioiTinh': tuyenDung.tdYeuCauGioiTinh,
-                                        'trinhDo': tuyenDung.tdYeuCauHocVan ?? '',
-                                        'nganhNghe': tuyenDung.tdNganhnghe ?? '',
+                                        'trinhDo':
+                                            tuyenDung.tdYeuCauHocVan ?? '',
+                                        'nganhNghe':
+                                            tuyenDung.tdNganhnghe ?? '',
                                         'motaCongViec':
                                             tuyenDung.tdMotacongviec ?? '',
                                         'ngayNhanHoSo':
