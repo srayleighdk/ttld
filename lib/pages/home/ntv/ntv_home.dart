@@ -221,8 +221,7 @@ class _NTVHomePageState extends State<NTVHomePage> {
                                         color: theme.colorScheme.primary,
                                       ),
                                     ),
-                                  ),
-                                );
+                                  );
                                 },
                               )
                             : Center(
