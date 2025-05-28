@@ -6,7 +6,7 @@ import 'package:ttld/models/nganh_nghe_td_model.dart';
 import 'package:ttld/models/tblNhaTuyenDung/tblNhaTuyenDung_model.dart';
 import 'package:ttld/models/trinh_do_hoc_van_model.dart';
 import 'package:ttld/repositories/tblNhaTuyenDung/ntd_repository.dart';
-import 'package:url_launcher/url_launcher.dart'; // Required for launching URLs
+import 'package:ttld/core/utils/launch_utils.dart'; // Import the new utility function
 
 String getGioiTinhString(int? gioiTinh) {
   if (gioiTinh == null) return '';
@@ -120,22 +120,7 @@ class _NTDInfoPageState extends State<NTDInfoPage> {
                 ? Text(displayValue,
                     style: const TextStyle(color: Colors.black87))
                 : GestureDetector(
-                    onTap: () async {
-                      final Uri launchUri = Uri(
-                        scheme: 'tel',
-                        path: phoneNumber,
-                      );
-                      if (await canLaunchUrl(launchUri)) {
-                        await launchUrl(launchUri);
-                      } else {
-                        // Optionally show an error message
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Could not launch $phoneNumber'),
-                          ),
-                        );
-                      }
-                    },
+                    onTap: () => launchPhoneCall(context, phoneNumber!), // Use the shared function
                     child: Text(
                       displayValue,
                       style: TextStyle(

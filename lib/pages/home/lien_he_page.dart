@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ttld/core/enums/region.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart';
-import 'package:ttld/pages/login/login_page.dart'; // For Region enum
+import 'package:ttld/core/utils/launch_utils.dart'; // Import the new utility function
 
 class LienHePage extends StatelessWidget {
   const LienHePage({super.key, this.region = Region.binhDinh});
@@ -15,14 +15,6 @@ class LienHePage extends StatelessWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Copied to clipboard')),
     );
-  }
-
-  Future<void> _makePhoneCall(String phoneNumber) async {
-    final Uri launchUri = Uri(
-      scheme: 'tel',
-      path: phoneNumber,
-    );
-    await launchUrl(launchUri);
   }
 
   Future<void> _openZalo(String zaloId) async {
@@ -106,7 +98,7 @@ class LienHePage extends StatelessWidget {
                     const Icon(Icons.phone_outlined),
                     const SizedBox(width: 8),
                     GestureDetector(
-                      onTap: () => _makePhoneCall('02633822360'),
+                      onTap: () => launchPhoneCall(context, '02633822360'), // Use the shared function
                       child: const Text(
                         '(0263).3822360',
                         style: TextStyle(
@@ -174,7 +166,7 @@ class LienHePage extends StatelessWidget {
                     const Icon(Icons.phone_outlined),
                     const SizedBox(width: 8),
                     GestureDetector(
-                      onTap: () => _makePhoneCall('02633822360'),
+                      onTap: () => launchPhoneCall(context, '02633822360'), // Use the shared function
                       child: const Text(
                         '(0263).3822360',
                         style: TextStyle(
@@ -307,7 +299,7 @@ class LienHePage extends StatelessWidget {
                     const Icon(Icons.phone_outlined),
                     const SizedBox(width: 8),
                     GestureDetector(
-                      onTap: () => _makePhoneCall('02523820145'),
+                      onTap: () => launchPhoneCall(context, '02523820145'), // Use the shared function
                       child: const Text(
                         '(0252) 3820145',
                         style: TextStyle(
@@ -372,7 +364,7 @@ class LienHePage extends StatelessWidget {
                     const Icon(Icons.phone_outlined),
                     const SizedBox(width: 8),
                     GestureDetector(
-                      onTap: () => _makePhoneCall('0256364509'),
+                      onTap: () => launchPhoneCall(context, '0256364509'), // Use the shared function
                       child: const Text(
                         '(0256) 3646.509',
                         style: TextStyle(
