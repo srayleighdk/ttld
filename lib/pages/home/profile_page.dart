@@ -560,7 +560,8 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _buildUserInfoSection() {
     if (widget.userType.toLowerCase() == 'ntv') {
       return BlocBuilder<NTVBloc, NTVState>(
-        bloc: locator<NTVBloc>(),
+        // Use BlocProvider.of for NTVBloc as it's provided by HomePage
+        bloc: BlocProvider.of<NTVBloc>(context),
         builder: (context, state) {
           if (state is NTVLoadedById && state.tblHoSoUngVien != null) {
             final candidate = state.tblHoSoUngVien!;
@@ -571,12 +572,18 @@ class _ProfilePageState extends State<ProfilePage> {
               id: widget.userId,
             );
           }
-          return const Center(child: CircularProgressIndicator());
+          // Show loading or initial state based on NTVBloc state
+          if (state is NTVLoading) {
+             return const Center(child: CircularProgressIndicator());
+          }
+          // Handle other states like initial or error if necessary
+          return const SizedBox.shrink(); // Or an error message
         },
       );
     } else if (widget.userType.toLowerCase() == 'ntd') {
       return BlocBuilder<NTDBloc, NTDState>(
-        bloc: locator<NTDBloc>(),
+        // Use BlocProvider.of for NTDBloc as it's provided by HomePage
+        bloc: BlocProvider.of<NTDBloc>(context),
         builder: (context, state) {
           if (state is NTDLoadedById) {
             final employer = state.ntd;
@@ -587,10 +594,16 @@ class _ProfilePageState extends State<ProfilePage> {
               id: widget.userId,
             );
           }
-          return const Center(child: CircularProgressIndicator());
+           // Show loading or initial state based on NTDBloc state
+          if (state is NTDLoading) {
+             return const Center(child: CircularProgressIndicator());
+          }
+          // Handle other states like initial or error if necessary
+          return const SizedBox.shrink(); // Or an error message
         },
       );
     } else {
+      // Admin case, no specific bloc needed for user info display
       return _buildUserInfoCard(
         name: 'Quản Trị Viên',
         email: 'admin@example.com',

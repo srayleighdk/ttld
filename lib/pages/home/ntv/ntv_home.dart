@@ -50,15 +50,16 @@ class _NTVHomePageState extends State<NTVHomePage> {
   @override
   void initState() {
     super.initState();
-    final authState = locator<AuthBloc>().state;
+    final authState = locator<AuthBloc>().state; // Keep locator for AuthBloc as per HomePage pattern
     if (authState is AuthAuthenticated && authState.userType == 'ntv') {
-      locator<NTVBloc>().add(LoadTblHoSoUngVien(int.parse(authState.userId)));
+      // Use BlocProvider.of for NTVBloc as it's provided by HomePage
+      BlocProvider.of<NTVBloc>(context, listen: false).add(LoadTblHoSoUngVien(int.parse(authState.userId)));
     }
-    _tuyenDungBloc = TuyenDungBloc(locator<TuyenDungRepository>());
+    _tuyenDungBloc = TuyenDungBloc(locator<TuyenDungRepository>()); // Keep local TuyenDungBloc
     _tuyenDungBloc.add(FetchTuyenDungList(null));
 
     _kinhNghiemBloc =
-        KinhNghiemLamViecBloc(locator<KinhNghiemLamViecRepository>());
+        KinhNghiemLamViecBloc(locator<KinhNghiemLamViecRepository>()); // Keep local KinhNghiemLamViecBloc
     _kinhNghiemBloc.add(FetchKinhNghiemLamViecList());
 
     _loadAvatarBaseUrl(); // Load avatar base URL
@@ -106,7 +107,8 @@ class _NTVHomePageState extends State<NTVHomePage> {
           child: MultiBlocListener(
             listeners: [
               BlocListener<NTVBloc, NTVState>(
-                bloc: locator<NTVBloc>(),
+                // Use BlocProvider.of for NTVBloc as it's provided by HomePage
+                bloc: BlocProvider.of<NTVBloc>(context),
                 listener: (context, state) {
                   if (state is NTVLoadedById) {
                     setState(() {
