@@ -243,6 +243,7 @@ class _CreateHoSoChapNoiPageState extends State<CreateHoSoChapNoiPage> {
                             hintText: 'Nhập tên doanh nghiệp',
                             prefixIcon: const Icon(Icons.business),
                             readOnly: true, // NTD's own business
+                            enabled: false, // Make it non-interactive
                           ),
                           const SizedBox(height: 16),
                           BlocBuilder<NTVBloc, NTVState>(
@@ -259,10 +260,7 @@ class _CreateHoSoChapNoiPageState extends State<CreateHoSoChapNoiPage> {
                                   onChanged: (value) {
                                     setState(() {
                                       selectedHoSoUngVien = value?.hoSoUngVien;
-                                      if (value != null) {
-                                        uvUsernameController.text =
-                                            value.hoSoUngVien.uvUsername ?? '';
-                                      }
+                                      // uvUsernameController.text = value.hoSoUngVien.uvUsername ?? ''; // This line was removed in a previous step
                                     });
                                   },
                                 );
@@ -285,6 +283,7 @@ class _CreateHoSoChapNoiPageState extends State<CreateHoSoChapNoiPage> {
                             hintText: 'Nhập tên ứng viên',
                             prefixIcon: const Icon(Icons.person),
                             readOnly: true, // NTV's own profile
+                            enabled: false, // Make it non-interactive
                           ),
                           const SizedBox(height: 16),
                           GenericPicker<NTDPickerItem>(
