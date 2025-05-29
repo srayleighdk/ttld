@@ -133,18 +133,21 @@ class _NTVHomePageState extends State<NTVHomePage> {
       BuildContext context, IconData icon, String label) {
     final theme = Theme.of(context);
     return Expanded(
-      child: InkWell( // Make the entire item tappable
+      child: InkWell(
+        // Make the entire item tappable
         onTap: () {
           // TODO: Implement navigation or action for each button
           debugPrint('Tapped on $label');
         },
         borderRadius: BorderRadius.circular(8), // Match container border radius
-        child: Padding( // Add padding for the tap area
+        child: Padding(
+          // Add padding for the tap area
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Container( // Container for the icon background
+              Container(
+                // Container for the icon background
                 padding: const EdgeInsets.all(10), // Adjust padding as needed
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
