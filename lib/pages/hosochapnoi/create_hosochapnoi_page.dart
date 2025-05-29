@@ -8,10 +8,8 @@
                                   onChanged: (value) {
                                     setState(() {
                                       selectedHoSoUngVien = value?.hoSoUngVien;
-                                      if (value != null) {
-                                        uvUsernameController.text =
-                                            value.hoSoUngVien.uvUsername ?? '';
-                                      }
+                                      // Removed the line below as per request:
+                                      // uvUsernameController.text = value.hoSoUngVien.uvUsername ?? '';
                                     });
                                   },
                                 );
