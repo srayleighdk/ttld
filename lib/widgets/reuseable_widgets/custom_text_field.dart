@@ -20,6 +20,7 @@ class CustomTextField extends StatefulWidget {
   final int? maxLength;
   final bool expands;
   final List<TextInputFormatter>? inputFormatters;
+  final bool readOnly; // Added readOnly property
 
   const CustomTextField(
       {super.key,
@@ -40,7 +41,8 @@ class CustomTextField extends StatefulWidget {
       this.minLines,
       this.maxLength,
       this.expands = false,
-      this.inputFormatters});
+      this.inputFormatters,
+      this.readOnly = false}); // Initialize readOnly
 
   factory CustomTextField.email({
     TextEditingController? controller,
@@ -329,6 +331,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         maxLength: widget.maxLength,
         expands: widget.expands,
         inputFormatters: widget.inputFormatters,
+        readOnly: widget.readOnly, // Pass readOnly to TextFormField
         validator: (value) {
           final error =
               CustomTextField.handleValidation(value, widget.validator);
