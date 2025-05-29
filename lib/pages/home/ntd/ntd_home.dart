@@ -271,6 +271,8 @@ class _NTDHomePageState extends State<NTDHomePage> {
               'Thêm tuyển dụng', '/ntd_home/create_tuyen_dung'),
           _buildKeyActionButtonItem(context, FontAwesomeIcons.fileImport,
               'Hồ sơ chắp nối', '/ntd_home/ho-so-chap-noi'),
+          _buildKeyActionButtonItem(context, FontAwesomeIcons.store,
+              'Sàn GDVL', null), // Added Sàn GDVL button
           // Add more key actions here if needed
         ],
       ),
