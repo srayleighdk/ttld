@@ -431,14 +431,14 @@ class _NTVHomePageState extends State<NTVHomePage> {
                   'Đăng ký tư vấn học nghề', '/ntv_home/dang-ky-hoc-nghe'),
               _buildQuickAccessItem(
                   context,
-                  FontAwesomeIcons.graduationCap,
+                  FontAwesomeIcons.plane, // Changed icon
                   'Đăng ký xuất khẩu lao động',
                   '/ntv_home/dang-ky-xuat-khao-lao-dong'),
-              _buildQuickAccessItem(context, FontAwesomeIcons.graduationCap,
+              _buildQuickAccessItem(context, FontAwesomeIcons.store, // Changed icon
                   'Đăng ký tham gia PGDVL', '/ntv_home/dang-ky-tham-gia-pgdvl'),
-              _buildQuickAccessItem(context, FontAwesomeIcons.graduationCap,
+              _buildQuickAccessItem(context, FontAwesomeIcons.clipboardCheck, // Changed icon
                   'Kết quả kết nối VL', '/ntv_home/ket-quoc-ket-noi-vl'),
-              _buildQuickAccessItem(context, FontAwesomeIcons.graduationCap,
+              _buildQuickAccessItem(context, FontAwesomeIcons.fileContract, // Changed icon
                   'Thông tin hợp đồng LD', '/ntv_home/thong-tin-hop-dong-ld'),
             ],
           ),
