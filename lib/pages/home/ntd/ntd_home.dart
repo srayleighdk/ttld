@@ -126,7 +126,8 @@ class _NTDHomePageState extends State<NTDHomePage> {
                           _buildUserInfoSection(context, ntdState),
                           const SizedBox(height: 12.0),
                           _buildKeyActionButtonsSection(context), // NEW SECTION
-                          const SizedBox(height: 12.0), // Spacing after new section
+                          const SizedBox(
+                              height: 12.0), // Spacing after new section
                           _buildQuickAccessSection(context),
                         ],
                       ),
