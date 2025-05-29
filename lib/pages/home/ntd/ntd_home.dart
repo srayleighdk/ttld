@@ -76,8 +76,8 @@ class _NTDHomePageState extends State<NTDHomePage> {
       // Fallback or error handling if region is not saved
       debugPrint('Warning: Region not found in SharedPreferences.');
       // Optionally set a default or show an error
-       setState(() {
-         _avatarBaseUrl = getEnv('URL_AVATAR_BD'); // Example fallback
+      setState(() {
+        _avatarBaseUrl = getEnv('URL_AVATAR_BD'); // Example fallback
       });
     }
   }
@@ -278,7 +278,7 @@ class _NTDHomePageState extends State<NTDHomePage> {
               const SizedBox(width: 8), // Reduced from 12
               Expanded(
                 child: Text(
-                  'Danh mục chức năng',
+                  'Danh mục việc làm',
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: theme.colorScheme.onSurface,
@@ -313,7 +313,7 @@ class _NTDHomePageState extends State<NTDHomePage> {
             childAspectRatio: 0.85,
             children: [
               _buildQuickAccessItem(context, FontAwesomeIcons.solidPenToSquare,
-                  'Cập nhật NTD', '/update_ntd'),
+                  'Cập nhật TT, phiếu TT tuyển dụng', '/update_ntd'),
               _buildQuickAccessItem(context, FontAwesomeIcons.fileImport,
                   'Hồ sơ chắp nối', '/ntd_home/ho-so-chap-noi'),
               // _buildQuickAccessItem(context, FontAwesomeIcons.calendarPlus,
