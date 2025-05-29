@@ -83,7 +83,11 @@ class _CreateHoSoChapNoiPageState extends State<CreateHoSoChapNoiPage> {
           _ntvBloc.add(LoadTblHoSoUngViens());
         }
         _tuyenDungBloc.add(TuyenDungEvent.fetchList(authState.userId));
-      } else if (authState.userType == 'ntv' && widget.id != null) {
+      } else if (authState.userType == 'ntv') {
+        // Populate uvUsernameController with authenticated NTV's username if not already set
+        if (widget.uvUsername == null || widget.uvUsername!.isEmpty) {
+          uvUsernameController.text = authState.userName;
+        }
         _fetchNtdList();
       }
     }
@@ -238,7 +242,7 @@ class _CreateHoSoChapNoiPageState extends State<CreateHoSoChapNoiPage> {
                             controller: ntdUsernameController,
                             hintText: 'Nhập tên doanh nghiệp',
                             prefixIcon: const Icon(Icons.business),
-                            // readOnly: true, // NTD's own business
+                            readOnly: true, // NTD's own business
                           ),
                           const SizedBox(height: 16),
                           BlocBuilder<NTVBloc, NTVState>(
@@ -280,7 +284,7 @@ class _CreateHoSoChapNoiPageState extends State<CreateHoSoChapNoiPage> {
                             controller: uvUsernameController,
                             hintText: 'Nhập tên ứng viên',
                             prefixIcon: const Icon(Icons.person),
-                            // readOnly: true, // NTV's own profile
+                            readOnly: true, // NTV's own profile
                           ),
                           const SizedBox(height: 16),
                           GenericPicker<NTDPickerItem>(
