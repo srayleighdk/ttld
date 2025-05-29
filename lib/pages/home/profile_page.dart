@@ -17,6 +17,7 @@ import 'package:ttld/features/auth/bloc/auth_state.dart';
 import 'package:ttld/features/auth/repositories/auth_repository.dart';
 import 'package:ttld/helppers/help.dart';
 import 'package:dio/dio.dart';
+import 'package:go_router/go_router.dart'; // Import go_router
 
 class ProfilePage extends StatefulWidget {
   final String userId;
@@ -30,12 +31,6 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   File? _avatarImage;
-  final _oldPasswordController = TextEditingController();
-  final _newPasswordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
-  bool _obscureOldPassword = true;
-  bool _obscureNewPassword = true;
-  bool _obscureConfirmPassword = true;
 
   @override
   void initState() {
@@ -136,298 +131,8 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  void _showChangePasswordDialog() {
-    // Reset controllers and visibility flags
-    _oldPasswordController.clear();
-    _newPasswordController.clear();
-    _confirmPasswordController.clear();
-    setState(() {
-      _obscureOldPassword = true;
-      _obscureNewPassword = true;
-      _obscureConfirmPassword = true;
-    });
-
-    showDialog(
-      context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setStateDialog) {
-          return Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Container(
-              width: MediaQuery.of(context).size.width * 0.9,
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    'Đổi Mật Khẩu',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 24),
-                  TextField(
-                    controller: _oldPasswordController,
-                    decoration: InputDecoration(
-                      labelText: 'Mật Khẩu Hiện Tại',
-                      prefixIcon: const Icon(Icons.lock_outline),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscureOldPassword
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                        ),
-                        onPressed: () {
-                          setStateDialog(() {
-                            _obscureOldPassword = !_obscureOldPassword;
-                          });
-                        },
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    obscureText: _obscureOldPassword,
-                  ),
-                  const SizedBox(height: 16),
-                  TextField(
-                    controller: _newPasswordController,
-                    decoration: InputDecoration(
-                      labelText: 'Mật Khẩu Mới',
-                      prefixIcon: const Icon(Icons.lock_outline),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscureNewPassword
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                        ),
-                        onPressed: () {
-                          setStateDialog(() {
-                            _obscureNewPassword = !_obscureNewPassword;
-                          });
-                        },
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    obscureText: _obscureNewPassword,
-                  ),
-                  const SizedBox(height: 16),
-                  TextField(
-                    controller: _confirmPasswordController,
-                    decoration: InputDecoration(
-                      labelText: 'Xác Nhận Mật Khẩu Mới',
-                      prefixIcon: const Icon(Icons.lock_outline),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscureConfirmPassword
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                        ),
-                        onPressed: () {
-                          setStateDialog(() {
-                            _obscureConfirmPassword = !_obscureConfirmPassword;
-                          });
-                        },
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    obscureText: _obscureConfirmPassword,
-                  ),
-                  const SizedBox(height: 24),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text('Hủy'),
-                        style: TextButton.styleFrom(
-                          foregroundColor: Colors.grey[700],
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      ElevatedButton(
-                        onPressed: () async {
-                          if (_newPasswordController.text.isEmpty ||
-                              _oldPasswordController.text.isEmpty ||
-                              _confirmPasswordController.text.isEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Vui lòng điền đầy đủ thông tin'),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                            return;
-                          }
-                          if (_newPasswordController.text !=
-                              _confirmPasswordController.text) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Mật khẩu mới không khớp'),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                            return;
-                          }
-                          if (_newPasswordController.text.length < 6) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                    'Mật khẩu mới phải có ít nhất 6 ký tự'),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                            return;
-                          }
-
-                          // Verify old password first
-                          try {
-                            final authState = locator<AuthBloc>().state;
-                            if (authState is! AuthAuthenticated) {
-                              throw Exception('Người dùng chưa đăng nhập');
-                            }
-
-                            // Close dialog first
-                            Navigator.pop(context);
-
-                            // Show loading indicator
-                            if (mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Row(
-                                    children: [
-                                      SizedBox(
-                                        width: 20,
-                                        height: 20,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                          valueColor:
-                                              AlwaysStoppedAnimation<Color>(
-                                                  Colors.white),
-                                        ),
-                                      ),
-                                      SizedBox(width: 12),
-                                      Text('Đang đổi mật khẩu...'),
-                                    ],
-                                  ),
-                                  duration: Duration(seconds: 2),
-                                ),
-                              );
-                            }
-
-                            // Call change password
-                            await _changePassword(
-                              widget.userId,
-                              _oldPasswordController.text,
-                              _newPasswordController.text,
-                            );
-                          } catch (e) {
-                            if (mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('Lỗi: ${e.toString()}'),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
-                            }
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 24, vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        child: const Text('Xác Nhận'),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  void _showSuccessSnackbar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const Icon(Icons.check_circle, color: Colors.white),
-            const SizedBox(width: 12),
-            Text(message),
-          ],
-        ),
-        backgroundColor: Colors.green,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        margin: const EdgeInsets.all(12),
-      ),
-    );
-  }
-
-  Future<void> _changePassword(
-      String userId, String oldPassword, String newPassword) async {
-    try {
-      // Get the current user's token from AuthBloc
-      final authState = locator<AuthBloc>().state;
-      if (authState is! AuthAuthenticated) {
-        throw Exception('Người dùng chưa đăng nhập');
-      }
-
-      // Make the API call with increased timeout
-      final response = await locator<ApiClient>().post(
-        '/auth/reset-password',
-        data: {
-          'token': authState.token,
-          'newPassword': newPassword,
-          'userId': userId, // Add userId to help backend identify the user
-        },
-      );
-
-      if (response.statusCode == 200) {
-        if (mounted) {
-          _showSuccessSnackbar('Đổi mật khẩu thành công');
-        }
-      } else {
-        throw Exception('Đổi mật khẩu thất bại');
-      }
-    } on DioException catch (e) {
-      if (e.type == DioExceptionType.receiveTimeout) {
-        throw Exception(
-            'Yêu cầu đổi mật khẩu đã hết thời gian chờ. Vui lòng thử lại.');
-      }
-      throw Exception('Lỗi: ${e.message}');
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Lỗi: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    }
-  }
-
   @override
   void dispose() {
-    _oldPasswordController.dispose();
-    _newPasswordController.dispose();
-    _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -716,7 +421,15 @@ class _ProfilePageState extends State<ProfilePage> {
           _buildSettingItem(
             icon: Icons.lock_outline,
             title: 'Đổi Mật Khẩu',
-            onTap: _showChangePasswordDialog,
+            onTap: () {
+              context.push(
+                '/change_password',
+                extra: {
+                  'userId': widget.userId,
+                  'userType': widget.userType,
+                },
+              );
+            },
           ),
           const Divider(height: 1, indent: 56),
           _buildSettingItem(
@@ -764,7 +477,7 @@ class _ProfilePageState extends State<ProfilePage> {
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: (color ?? Theme.of(context).colorScheme.primary)
-                    .withValues(alpha: 0.1),
+                    .withOpacity(0.1), // Corrected from withValues
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(
