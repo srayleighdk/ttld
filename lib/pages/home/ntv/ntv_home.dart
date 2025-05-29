@@ -13,7 +13,6 @@ import 'package:ttld/models/tblHoSoUngVien/tblHoSoUngVien_model.dart';
 import 'package:ttld/bloc/tuyendung/tuyendung_bloc.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:ttld/pages/home/ntd/ntd_tuyendung_info_page.dart';
-import 'package:ttld/pages/home/profile_page.dart';
 import 'package:ttld/repositories/tuyendung_repository.dart';
 import 'package:ttld/bloc/kinh_nghiem_lam_viec/kinh_nghiem_lam_viec_bloc.dart';
 import 'package:ttld/repositories/kinh_nghiem_lam_viec_repository.dart';
@@ -118,11 +117,12 @@ class _NTVHomePageState extends State<NTVHomePage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _buildActionButtonItem(context, FontAwesomeIcons.store, 'Sàn GDVL', null),
+          _buildActionButtonItem(
+              context, FontAwesomeIcons.store, 'Sàn GDVL', null),
           _buildActionButtonItem(
               context, FontAwesomeIcons.magnifyingGlass, 'Tìm Việc', null),
-          _buildActionButtonItem(
-              context, FontAwesomeIcons.handshake, 'Chắp Nối', '/ntv_home/ho-so-chap-noi'),
+          _buildActionButtonItem(context, FontAwesomeIcons.handshake,
+              'Chắp Nối', '/ntv_home/ho-so-chap-noi'),
         ],
       ),
     );
@@ -385,7 +385,7 @@ class _NTVHomePageState extends State<NTVHomePage> {
               ),
               const SizedBox(width: 12),
               Text(
-                'Danh mục chức năng',
+                'Dịch vụ việc làm',
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: theme.colorScheme.onSurface,
@@ -418,17 +418,28 @@ class _NTVHomePageState extends State<NTVHomePage> {
             crossAxisSpacing: 16,
             childAspectRatio: 0.9, // Adjusted aspect ratio for more height
             children: [
+              // _buildQuickAccessItem(context, FontAwesomeIcons.calendarPlus,
+              //     'Dịch vụ việc làm', '/ntv_home/dang-ky-lam-viec'),
               _buildQuickAccessItem(context, FontAwesomeIcons.solidPenToSquare,
-                  'Cập nhật NTV', '/ntv_home/update_ntv'),
-              _buildQuickAccessItem(context, FontAwesomeIcons.calendarPlus,
-                  'Đăng ký tìm việc', '/ntv_home/dang-ky-lam-viec'),
+                  'Cập nhật TT\nPhiếu TT tìm việc', '/ntv_home/update_ntv'),
               _buildQuickAccessItem(
                   context,
                   FontAwesomeIcons.calendarCheck,
                   'Đăng ký tư vấn việc làm',
                   '/ntv_home/dang-ky-tu-van-viec-lam'),
               _buildQuickAccessItem(context, FontAwesomeIcons.graduationCap,
-                  'Đăng ký học nghề', '/ntv_home/dang-ky-hoc-nghe'),
+                  'Đăng ký tư vấn học nghề', '/ntv_home/dang-ky-hoc-nghe'),
+              _buildQuickAccessItem(
+                  context,
+                  FontAwesomeIcons.graduationCap,
+                  'Đăng ký xuất khẩu lao động',
+                  '/ntv_home/dang-ky-xuat-khao-lao-dong'),
+              _buildQuickAccessItem(context, FontAwesomeIcons.graduationCap,
+                  'Đăng ký tham gia PGDVL', '/ntv_home/dang-ky-tham-gia-pgdvl'),
+              _buildQuickAccessItem(context, FontAwesomeIcons.graduationCap,
+                  'Kết quả kết nối VL', '/ntv_home/ket-quoc-ket-noi-vl'),
+              _buildQuickAccessItem(context, FontAwesomeIcons.graduationCap,
+                  'Thông tin hợp đồng LD', '/ntv_home/thong-tin-hop-dong-ld'),
             ],
           ),
         ),
