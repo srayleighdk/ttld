@@ -2,25 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:ttld/bloc/chapnoi/chapnoi_bloc.dart';
-import 'package:ttld/helppers/map_help.dart';
 import 'package:ttld/models/chapnoi/chapnoi_model.dart';
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/models/kieuchapnoi_model.dart';
-import 'package:ttld/widgets/field/custom_pick_datetime_grok.dart';
-import 'package:ttld/widgets/field/custom_picker_map.dart';
-import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
 import 'package:ttld/repositories/tblNhaTuyenDung/ntd_repository.dart';
 import 'package:ttld/models/tblNhaTuyenDung/ntd_picker_model.dart';
 import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_bloc.dart';
 import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_event.dart';
-import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_state.dart';
-import 'package:ttld/models/tblHoSoUngVien/tblHoSoUngVien_model.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
 import 'package:ttld/bloc/tuyendung/tuyendung_bloc.dart';
-import 'package:ttld/models/ntd_tuyendung/ntd_tuyendung_model.dart';
-import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
-import 'package:ttld/models/chapnoi/chapnoi_picker_items.dart'; // Import the new file
 import 'package:ttld/pages/hosochapnoi/create_hosochapnoi_page.dart'; // Import the new page
 
 class HoSoChapNoiPage extends StatefulWidget {
