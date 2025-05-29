@@ -124,7 +124,9 @@ class _NTDHomePageState extends State<NTDHomePage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           _buildUserInfoSection(context, ntdState),
-                          const SizedBox(height: 12.0), // Reduced from 32.0
+                          const SizedBox(height: 12.0),
+                          _buildKeyActionButtonsSection(context), // NEW SECTION
+                          const SizedBox(height: 12.0), // Spacing after new section
                           _buildQuickAccessSection(context),
                         ],
                       ),
@@ -245,7 +247,93 @@ class _NTDHomePageState extends State<NTDHomePage> {
     }
   }
 
-  // Section 2: Quick Access Buttons
+  // New section for key action buttons (similar to NTV's action buttons)
+  Widget _buildKeyActionButtonsSection(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: theme.colorScheme.shadow.withAlpha(26),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _buildKeyActionButtonItem(context, FontAwesomeIcons.calendarPlus,
+              'Thêm tuyển dụng', '/ntd_home/create_tuyen_dung'),
+          _buildKeyActionButtonItem(context, FontAwesomeIcons.fileImport,
+              'Hồ sơ chắp nối', '/ntd_home/ho-so-chap-noi'),
+          // Add more key actions here if needed
+        ],
+      ),
+    );
+  }
+
+  // Helper widget for each key action button item
+  Widget _buildKeyActionButtonItem(
+      BuildContext context, IconData icon, String label, String? route) {
+    final theme = Theme.of(context);
+    return Expanded(
+      child: InkWell(
+        onTap: () {
+          if (route != null) {
+            try {
+              if (route == '/ntd_home/ho-so-chap-noi') {
+                context.push(route, extra: {
+                  'tabIndex': 0,
+                });
+              } else {
+                context.push(route);
+              }
+            } catch (e) {
+              debugPrint('Navigation error: $e');
+            }
+          }
+        },
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.red, // Red background as in NTV
+                ),
+                child: Icon(
+                  icon,
+                  size: 20,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                label,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.onSurface,
+                  fontSize: 11,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Section 2: Quick Access Buttons (now with fewer items)
   Widget _buildQuickAccessSection(BuildContext context) {
     final theme = Theme.of(context);
     return Column(
@@ -314,10 +402,6 @@ class _NTDHomePageState extends State<NTDHomePage> {
             children: [
               _buildQuickAccessItem(context, FontAwesomeIcons.solidPenToSquare,
                   'Cập nhật TT, phiếu TT tuyển dụng', '/update_ntd'),
-              _buildQuickAccessItem(context, FontAwesomeIcons.fileImport,
-                  'Hồ sơ chắp nối', '/ntd_home/ho-so-chap-noi'),
-              // _buildQuickAccessItem(context, FontAwesomeIcons.calendarPlus,
-              //     'Thêm tuyển dụng', '/ntd_home/create_tuyen_dung'),
               _buildQuickAccessItem(context, FontAwesomeIcons.calendarCheck,
                   'Quản Lý Tuyển Dụng', '/ntd_home/quan-ly-tuyen-dung'),
               _buildQuickAccessItem(context, FontAwesomeIcons.calendarCheck,
