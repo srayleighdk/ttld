@@ -40,6 +40,7 @@ class _HoSoChapNoiPageState extends State<HoSoChapNoiPage> {
   final kieuChapNoiList = locator<List<KieuChapNoiModel>>();
   String? selectedIdTuyenDung;
   String? selectedIdDoanhNghiep;
+  late final AuthBloc _authBloc; // Add AuthBloc instance
 
   String? _formatDate(String? dateString) {
     if (dateString == null) return null;
@@ -58,6 +59,7 @@ class _HoSoChapNoiPageState extends State<HoSoChapNoiPage> {
     _ntdRepository = locator<NTDRepository>();
     _ntvBloc = locator<NTVBloc>();
     _tuyenDungBloc = locator<TuyenDungBloc>();
+    _authBloc = locator<AuthBloc>(); // Initialize AuthBloc
 
     // Initialize controllers with empty strings by default
     uvUsernameController = TextEditingController(text: widget.uvUsername ?? '');
@@ -65,7 +67,7 @@ class _HoSoChapNoiPageState extends State<HoSoChapNoiPage> {
         TextEditingController(text: widget.ntdUsername ?? '');
 
     // Check user type and load appropriate data
-    final authState = locator<AuthBloc>().state;
+    final authState = _authBloc.state; // Use the initialized _authBloc
     if (authState is AuthAuthenticated) {
       if (authState.userType == 'ntd') {
         // If NTD is logged in, set the NTD username and load HoSoUngVien list
@@ -107,6 +109,9 @@ class _HoSoChapNoiPageState extends State<HoSoChapNoiPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final authState = _authBloc.state; // Get current auth state
+    final isNTD = authState is AuthAuthenticated && authState.userType == 'ntd';
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.transparent,
@@ -146,7 +151,7 @@ class _HoSoChapNoiPageState extends State<HoSoChapNoiPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _buildHeader(theme),
+                _buildHeader(theme, isNTD), // Pass isNTD to _buildHeader
                 const SizedBox(height: 12.0),
                 Expanded(
                   child: Container(
@@ -419,7 +424,7 @@ class _HoSoChapNoiPageState extends State<HoSoChapNoiPage> {
     );
   }
 
-  Widget _buildHeader(ThemeData theme) {
+  Widget _buildHeader(ThemeData theme, bool isNTD) {
     return LayoutBuilder(
       builder: (context, constraints) {
         final isSmallScreen = constraints.maxWidth < 600;
@@ -474,36 +479,22 @@ class _HoSoChapNoiPageState extends State<HoSoChapNoiPage> {
                 ),
               ),
               const SizedBox(height: 12),
-              // ElevatedButton.icon(
-              //   onPressed: () => _showCreateDialog(context),
-              //   icon: const Icon(Icons.add, size: 20),
-              //   label: const Text('Tạo mới'),
-              //   style: ElevatedButton.styleFrom(
-              //     backgroundColor: theme.colorScheme.primary,
-              //     foregroundColor: theme.colorScheme.onPrimary,
-              //     padding:
-              //         const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              //     shape: RoundedRectangleBorder(
-              //       borderRadius: BorderRadius.circular(12),
-              //     ),
-              //   ),
-              // ),
-
-              ElevatedButton.icon(
-                onPressed: () =>
-                    _navigateToCreatePage(context), // Navigate to the new page
-                icon: const Icon(Icons.add),
-                label: const Text('Tạo mới'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.colorScheme.primary,
-                  foregroundColor: theme.colorScheme.onPrimary,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+              if (isNTD) // Only show if NTD
+                ElevatedButton.icon(
+                  onPressed: () => _navigateToCreatePage(
+                      context), // Navigate to the new page
+                  icon: const Icon(Icons.add),
+                  label: const Text('Tạo mới'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: theme.colorScheme.primary,
+                    foregroundColor: theme.colorScheme.onPrimary,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                 ),
-              ),
             ],
           );
         }
@@ -557,21 +548,22 @@ class _HoSoChapNoiPageState extends State<HoSoChapNoiPage> {
               ),
             ),
             const SizedBox(width: 16),
-            ElevatedButton.icon(
-              onPressed: () =>
-                  _navigateToCreatePage(context), // Navigate to the new page
-              icon: const Icon(Icons.add),
-              label: const Text('Tạo mới'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: theme.colorScheme.primary,
-                foregroundColor: theme.colorScheme.onPrimary,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+            if (isNTD) // Only show if NTD
+              ElevatedButton.icon(
+                onPressed: () =>
+                    _navigateToCreatePage(context), // Navigate to the new page
+                icon: const Icon(Icons.add),
+                label: const Text('Tạo mới'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: theme.colorScheme.primary,
+                  foregroundColor: theme.colorScheme.onPrimary,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
               ),
-            ),
           ],
         );
       },
