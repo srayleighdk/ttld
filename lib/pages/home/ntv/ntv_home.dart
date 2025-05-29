@@ -118,11 +118,11 @@ class _NTVHomePageState extends State<NTVHomePage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _buildActionButtonItem(context, FontAwesomeIcons.store, 'Sàn GDVL'),
+          _buildActionButtonItem(context, FontAwesomeIcons.store, 'Sàn GDVL', null),
           _buildActionButtonItem(
-              context, FontAwesomeIcons.magnifyingGlass, 'Tìm Việc'),
+              context, FontAwesomeIcons.magnifyingGlass, 'Tìm Việc', null),
           _buildActionButtonItem(
-              context, FontAwesomeIcons.handshake, 'Chắp Nối'),
+              context, FontAwesomeIcons.handshake, 'Chắp Nối', '/ntv_home/ho-so-chap-noi'),
         ],
       ),
     );
@@ -130,14 +130,13 @@ class _NTVHomePageState extends State<NTVHomePage> {
 
   // Helper widget for each action button item
   Widget _buildActionButtonItem(
-      BuildContext context, IconData icon, String label) {
+      BuildContext context, IconData icon, String label, String? route) {
     final theme = Theme.of(context);
     return Expanded(
       child: InkWell(
         // Make the entire item tappable
         onTap: () {
-          // TODO: Implement navigation or action for each button
-          debugPrint('Tapped on $label');
+          if (route != null) context.push(route);
         },
         borderRadius: BorderRadius.circular(8), // Match container border radius
         child: Padding(
@@ -421,8 +420,6 @@ class _NTVHomePageState extends State<NTVHomePage> {
             children: [
               _buildQuickAccessItem(context, FontAwesomeIcons.solidPenToSquare,
                   'Cập nhật NTV', '/ntv_home/update_ntv'),
-              _buildQuickAccessItem(context, FontAwesomeIcons.fileImport,
-                  'Hồ sơ chắp nối', '/ntv_home/ho-so-chap-noi'),
               _buildQuickAccessItem(context, FontAwesomeIcons.calendarPlus,
                   'Đăng ký tìm việc', '/ntv_home/dang-ky-lam-viec'),
               _buildQuickAccessItem(
