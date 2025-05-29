@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.h';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
@@ -409,6 +409,12 @@ class _NTDHomePageState extends State<NTDHomePage> {
                   'Quản Lý Tuyển Dụng', '/ntd_home/quan-ly-tuyen-dung'),
               _buildQuickAccessItem(context, FontAwesomeIcons.calendarCheck,
                   'Quản Lý Nhân Viên', '/ntd_home/quan-ly-nhan-vien'),
+              _buildQuickAccessItem(context, FontAwesomeIcons.globe,
+                  'TD lao động nước ngoài', null),
+              _buildQuickAccessItem(context, FontAwesomeIcons.envelopeOpenText,
+                  'Thư mời tham gia GDVL', null),
+              _buildQuickAccessItem(context, FontAwesomeIcons.handshake,
+                  'Kết quả kết nối việc làm', null),
             ],
           ),
         ),
@@ -419,7 +425,7 @@ class _NTDHomePageState extends State<NTDHomePage> {
   Widget _buildQuickAccessButton({
     required BuildContext context,
     required IconData icon,
-    required String route,
+    required String? route, // Changed to nullable String
   }) {
     final theme = Theme.of(context);
     return SizedBox(
@@ -437,20 +443,25 @@ class _NTDHomePageState extends State<NTDHomePage> {
         child: InkWell(
           borderRadius: BorderRadius.circular(24),
           onTap: () {
-            try {
-              if (route == '/ntd_home/quan-ly-tuyen-dung') {
-                context.push(route, extra: userId);
-              } else if (route == '/ntd_home/quan-ly-nhan-vien') {
-                context.push(route, extra: userId);
-              } else if (route == '/ntd_home/ho-so-chap-noi') {
-                context.push(route, extra: {
-                  'tabIndex': 0,
-                });
-              } else {
-                context.push(route);
+            if (route != null) {
+              try {
+                if (route == '/ntd_home/quan-ly-tuyen-dung') {
+                  context.push(route, extra: userId);
+                } else if (route == '/ntd_home/quan-ly-nhan-vien') {
+                  context.push(route, extra: userId);
+                } else if (route == '/ntd_home/ho-so-chap-noi') {
+                  context.push(route, extra: {
+                    'tabIndex': 0,
+                  });
+                } else {
+                  context.push(route);
+                }
+              } catch (e) {
+                debugPrint('Navigation error: $e');
               }
-            } catch (e) {
-              debugPrint('Navigation error: $e');
+            } else {
+              // Handle cases where route is null (e.g., show a message or do nothing)
+              debugPrint('Route is null for this quick access item.');
             }
           },
           child: Center(
@@ -466,7 +477,7 @@ class _NTDHomePageState extends State<NTDHomePage> {
   }
 
   Widget _buildQuickAccessItem(
-      BuildContext context, IconData icon, String label, String route) {
+      BuildContext context, IconData icon, String label, String? route) {
     final theme = Theme.of(context);
     return SizedBox(
       width: 104,
