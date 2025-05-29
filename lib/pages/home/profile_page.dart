@@ -279,7 +279,7 @@ class _ProfilePageState extends State<ProfilePage> {
           }
           // Show loading or initial state based on NTVBloc state
           if (state is NTVLoading) {
-             return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
           // Handle other states like initial or error if necessary
           return const SizedBox.shrink(); // Or an error message
@@ -299,9 +299,9 @@ class _ProfilePageState extends State<ProfilePage> {
               id: widget.userId,
             );
           }
-           // Show loading or initial state based on NTDBloc state
+          // Show loading or initial state based on NTDBloc state
           if (state is NTDLoading) {
-             return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
           // Handle other states like initial or error if necessary
           return const SizedBox.shrink(); // Or an error message

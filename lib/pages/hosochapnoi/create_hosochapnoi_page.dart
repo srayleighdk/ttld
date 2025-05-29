@@ -17,7 +17,6 @@ import 'package:ttld/models/tblHoSoUngVien/tblHoSoUngVien_model.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
 import 'package:ttld/bloc/tuyendung/tuyendung_bloc.dart';
-import 'package:ttld/models/ntd_tuyendung/ntd_tuyendung_model.dart';
 import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
 import 'package:ttld/models/chapnoi/chapnoi_picker_items.dart'; // Import picker items
 
@@ -113,11 +112,13 @@ class _CreateHoSoChapNoiPageState extends State<CreateHoSoChapNoiPage> {
 
   void _createChapNoi() {
     print('Validating form...'); // Debug validation start
-    print('selectedKieuChapNoi: ${selectedKieuChapNoi?.id}'); // Debug kieu chap noi
+    print(
+        'selectedKieuChapNoi: ${selectedKieuChapNoi?.id}'); // Debug kieu chap noi
     final authState = _authBloc.state;
     final isNTD = authState is AuthAuthenticated && authState.userType == 'ntd';
     print('isNTD: $isNTD'); // Debug user type
-    print('selectedHoSoUngVien: ${selectedHoSoUngVien?.id}'); // Debug ho so ung vien
+    print(
+        'selectedHoSoUngVien: ${selectedHoSoUngVien?.id}'); // Debug ho so ung vien
     print('selectedNTD: ${selectedNTD?.id}'); // Debug NTD
     print('selectedIdTuyenDung: $selectedIdTuyenDung'); // Debug tuyen dung
     print('selectedKetQua: $ketQua'); // Debug ket qua
@@ -135,8 +136,7 @@ class _CreateHoSoChapNoiPageState extends State<CreateHoSoChapNoiPage> {
       if (!isNTD && selectedNTD == null) print('- Nhà tuyển dụng is missing');
       if (selectedIdTuyenDung == null) print('- Hồ sơ tuyển dụng is missing');
       if (ketQua == null) print('- Kết quả is missing');
-      if (selectedNgayMuonHs == null)
-        print('- Ngày mượn hồ sơ is missing');
+      if (selectedNgayMuonHs == null) print('- Ngày mượn hồ sơ is missing');
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -238,7 +238,7 @@ class _CreateHoSoChapNoiPageState extends State<CreateHoSoChapNoiPage> {
                             controller: ntdUsernameController,
                             hintText: 'Nhập tên doanh nghiệp',
                             prefixIcon: const Icon(Icons.business),
-                            readOnly: true, // NTD's own business
+                            // readOnly: true, // NTD's own business
                           ),
                           const SizedBox(height: 16),
                           BlocBuilder<NTVBloc, NTVState>(
@@ -280,7 +280,7 @@ class _CreateHoSoChapNoiPageState extends State<CreateHoSoChapNoiPage> {
                             controller: uvUsernameController,
                             hintText: 'Nhập tên ứng viên',
                             prefixIcon: const Icon(Icons.person),
-                            readOnly: true, // NTV's own profile
+                            // readOnly: true, // NTV's own profile
                           ),
                           const SizedBox(height: 16),
                           GenericPicker<NTDPickerItem>(
@@ -299,7 +299,7 @@ class _CreateHoSoChapNoiPageState extends State<CreateHoSoChapNoiPage> {
                                     .add(TuyenDungEvent.fetchList(value.id));
                               } else {
                                 // Clear TuyenDung list if no NTD is selected
-                                _tuyenDungBloc.add(TuyenDungEvent.clearList());
+                                // _tuyenDungBloc.add(TuyenDungEvent.clearList());
                               }
                             },
                           ),
@@ -323,12 +323,11 @@ class _CreateHoSoChapNoiPageState extends State<CreateHoSoChapNoiPage> {
                               isLoading = true;
                               hintText = 'Đang tải...';
                             } else if (isNTD) {
-                               // If NTD, TuyenDung list is loaded initially
-                               // This case should ideally not be reached if initial load is handled
+                              // If NTD, TuyenDung list is loaded initially
+                              // This case should ideally not be reached if initial load is handled
                             } else if (selectedIdDoanhNghiep == null) {
-                               hintText = 'Vui lòng chọn doanh nghiệp trước';
+                              hintText = 'Vui lòng chọn doanh nghiệp trước';
                             }
-
 
                             return GenericPicker<TuyenDungPickerItem>(
                               label: 'HS tuyển dụng',
@@ -340,7 +339,8 @@ class _CreateHoSoChapNoiPageState extends State<CreateHoSoChapNoiPage> {
                                   selectedIdTuyenDung = value?.id;
                                 });
                               },
-                              initialValue: selectedIdTuyenDung, // Keep selected value
+                              initialValue:
+                                  selectedIdTuyenDung, // Keep selected value
                             );
                           },
                         ),

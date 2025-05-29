@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:ttld/models/tblHoSoUngVien/tblHoSoUngVien_model.dart';
 
 class NTVInfoPage extends StatelessWidget {
@@ -189,8 +190,14 @@ class NTVInfoPage extends StatelessWidget {
                               children: [
                                 _modernInfoRow(Icons.person_outline, 'Họ tên',
                                     ntdData?.uvHoten),
-                                _modernInfoRow(Icons.cake_outlined, 'Ngày sinh',
-                                    ntdData?.uvNgaysinh),
+                                _modernInfoRow(
+                                    Icons.cake_outlined,
+                                    'Ngày sinh',
+                                    ntdData?.uvNgaysinh != null
+                                        ? DateFormat('dd-MM-yyyy').format(
+                                            DateTime.parse(
+                                                ntdData!.uvNgaysinh!))
+                                        : '-'),
                                 _modernInfoRow(Icons.email_outlined, 'Email',
                                     ntdData?.uvEmail),
                                 _modernInfoRow(Icons.phone_outlined,

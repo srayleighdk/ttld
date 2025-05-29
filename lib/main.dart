@@ -16,6 +16,7 @@ Future<void> main() async {
   await dotenv.load(fileName: ".env");
   await setupLocator(); // Initialize GetIt
   WidgetsFlutterBinding.ensureInitialized();
+
   // Read region from SharedPreferences
   final prefs = await SharedPreferences.getInstance();
   String? regionStr = prefs.getString('selected_region');

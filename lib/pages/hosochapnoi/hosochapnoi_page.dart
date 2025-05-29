@@ -483,15 +483,31 @@ class _HoSoChapNoiPageState extends State<HoSoChapNoiPage> {
                 ),
               ),
               const SizedBox(height: 12),
+              // ElevatedButton.icon(
+              //   onPressed: () => _showCreateDialog(context),
+              //   icon: const Icon(Icons.add, size: 20),
+              //   label: const Text('Tạo mới'),
+              //   style: ElevatedButton.styleFrom(
+              //     backgroundColor: theme.colorScheme.primary,
+              //     foregroundColor: theme.colorScheme.onPrimary,
+              //     padding:
+              //         const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              //     shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(12),
+              //     ),
+              //   ),
+              // ),
+
               ElevatedButton.icon(
-                onPressed: () => _showCreateDialog(context),
-                icon: const Icon(Icons.add, size: 20),
+                onPressed: () =>
+                    _navigateToCreatePage(context), // Navigate to the new page
+                icon: const Icon(Icons.add),
                 label: const Text('Tạo mới'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: theme.colorScheme.primary,
                   foregroundColor: theme.colorScheme.onPrimary,
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -551,7 +567,8 @@ class _HoSoChapNoiPageState extends State<HoSoChapNoiPage> {
             ),
             const SizedBox(width: 16),
             ElevatedButton.icon(
-              onPressed: () => _navigateToCreatePage(context), // Navigate to the new page
+              onPressed: () =>
+                  _navigateToCreatePage(context), // Navigate to the new page
               icon: const Icon(Icons.add),
               label: const Text('Tạo mới'),
               style: ElevatedButton.styleFrom(
@@ -567,6 +584,19 @@ class _HoSoChapNoiPageState extends State<HoSoChapNoiPage> {
           ],
         );
       },
+    );
+  }
+
+  void _navigateToCreatePage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CreateHoSoChapNoiPage(
+          id: widget.id,
+          uvUsername: widget.uvUsername,
+          ntdUsername: widget.ntdUsername,
+        ),
+      ),
     );
   }
 

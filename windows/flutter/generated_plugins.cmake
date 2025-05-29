@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  desktop_window
   file_selector_windows
   flutter_secure_storage_windows
   url_launcher_windows

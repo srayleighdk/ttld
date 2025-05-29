@@ -14,7 +14,7 @@ Future<void> launchPhoneCall(BuildContext context, String phoneNumber) async {
     // Optionally show an error message
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Could not launch call to $phoneNumber'),
+        content: Text('Không thể gửi yêu cầu'),
       ),
     );
   }
