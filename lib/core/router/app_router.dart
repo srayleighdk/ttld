@@ -5,9 +5,9 @@ import 'package:ttld/core/enums/region.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
 import 'package:ttld/features/ds-ld/repositories/ld_repository.dart';
-import 'package:ttld/models/tblHoSoUngVien/tblHoSoUngVien_model.dart';
-import 'package:ttld/models/tblNhaTuyenDung/tblNhaTuyenDung_model.dart';
-import 'package:ttld/models/ntd_tuyendung/ntd_tuyendung_model.dart';
+import 'package:ttld/models/tblHoSoUngVien/tblHoSoUngVien_model.
+import 'package:ttld/models/tblNhaTuyenDung/tblNhaTuyenDung_model.
+import 'package:ttld/models/ntd_tuyendung/ntd_tuyendung_model.
 import 'package:ttld/pages/baocaohoatdong/baocaohoatdong_page.dart';
 import 'package:ttld/pages/danhmuc/danhmuc_page.dart';
 import 'package:ttld/pages/doisoatmau/doisoatmau_page.dart';
@@ -47,6 +47,7 @@ import 'package:ttld/pages/signup/signup.dart';
 import 'package:ttld/pages/splash/spash_page.dart';
 import 'package:ttld/pages/theodoivieclam/theodoivieclam_page.dart';
 import 'package:ttld/pages/thuThapCauLaoDong/m03pli.dart';
+import 'package:ttld/pages/auth/change_password_page.dart'; // Import the new page
 
 class AppRouter {
   final AuthBloc authBloc;
@@ -205,6 +206,16 @@ class AppRouter {
         name: 'splash',
         builder: (context, state) => const SplashPage(),
       ),
+      GoRoute(
+        path: ChangePasswordPage.routePath, // Add the new route here
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          return ChangePasswordPage(
+            userId: extra?['userId'] as String? ?? '',
+            userType: extra?['userType'] as String? ?? '',
+          );
+        },
+      ),
 
       GoRoute(
         path: AdminHomePage.routePath,
@@ -318,7 +329,7 @@ class AppRouter {
           path: '/home',
           builder: (BuildContext context, GoRouterState state) {
             debugPrint(
-                '🏠 Navigating to Home with extra: [38;5;246m${state.extra}[0m');
+                '🏠 Navigating to Home with extra:  [38;5;246m${state.extra} [0m');
             final extra = state.extra as Map<String, dynamic>?;
             final authState = authBloc.state;
             String userId;
