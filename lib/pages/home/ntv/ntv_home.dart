@@ -18,6 +18,7 @@ import 'package:ttld/bloc/kinh_nghiem_lam_viec/kinh_nghiem_lam_viec_bloc.dart';
 import 'package:ttld/repositories/kinh_nghiem_lam_viec_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPreferences
 import 'package:ttld/core/enums/region.dart'; // Import Region enum
+import 'package:ttld/pages/home/ntv/sgdvl_page.dart';
 
 class NTVHomePage extends StatefulWidget {
   final VoidCallback? onProfileTap; // Add callback parameter
@@ -118,7 +119,7 @@ class _NTVHomePageState extends State<NTVHomePage> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _buildActionButtonItem(
-              context, FontAwesomeIcons.store, 'Sàn GDVL', null),
+              context, FontAwesomeIcons.store, 'Sàn GDVL', '/ntv_home/sgdvl'),
           _buildActionButtonItem(
               context, FontAwesomeIcons.magnifyingGlass, 'Tìm Việc', null),
           _buildActionButtonItem(context, FontAwesomeIcons.handshake,

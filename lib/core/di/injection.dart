@@ -13,6 +13,7 @@ import 'package:ttld/bloc/muc_dich_lam_viec/muc_dich_lam_viec_bloc.dart';
 import 'package:ttld/bloc/nganh_nghe/nganh_nghe_chuyennganh_bloc.dart';
 import 'package:ttld/bloc/ngoai_ngu/ngoai_ngu_cubit.dart';
 import 'package:ttld/bloc/nganh_nghe/nganh_nghe_capdo_bloc.dart';
+import 'package:ttld/bloc/sgdvl/sgdvl_bloc.dart';
 import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_bloc.dart';
 import 'package:ttld/bloc/tblNhaTuyenDung/ntd_bloc.dart';
 import 'package:ttld/bloc/tblViecLamUngVien/vieclam_ungvien_bloc.dart';
@@ -54,6 +55,7 @@ import 'package:ttld/core/services/huyen_api_service.dart';
 import 'package:ttld/core/services/nganh_nghe_api_service.dart';
 import 'package:ttld/core/services/ntd_api_service.dart';
 import 'package:ttld/core/services/quocgia_api_service.dart';
+import 'package:ttld/core/services/sgdvl_api_service.dart';
 import 'package:ttld/core/services/thoigianhoatdong_api_service.dart';
 import 'package:ttld/core/services/thoigianlamviec_api_service.dart';
 import 'package:ttld/core/services/tinh_api_service.dart';
@@ -107,6 +109,7 @@ import 'package:ttld/repositories/ngoai_ngu/ngoai_ngu_repository.dart';
 import 'package:ttld/repositories/nguon_thuthap/nguon_thuthap_repository.dart';
 import 'package:ttld/repositories/nguon_vieclam/nguon_vieclam_repository.dart';
 import 'package:ttld/repositories/quocgia/quocgia_repository.dart';
+import 'package:ttld/repositories/sgdvl_repository.dart';
 import 'package:ttld/repositories/tblDmChuyenMon/chuyenmon_repository.dart';
 import 'package:ttld/repositories/tblDmChuyenMon/chuyenmon_repository_impl.dart';
 import 'package:ttld/repositories/tblDmDoiTuongChinhSach/doituong_repository.dart';
@@ -141,6 +144,9 @@ import 'package:ttld/bloc/chapnoi/chapnoi_bloc.dart';
 import 'package:ttld/repositories/kieuchapnoi_repository.dart';
 import 'package:ttld/bloc/kieuchapnoi/kieuchapnoi_cubit.dart';
 import 'package:ttld/core/services/kinh_nghiem_lam_viec_api_service.dart';
+import 'package:ttld/bloc/uv_dk_sgd/uv_dk_sgd_bloc.dart';
+import 'package:ttld/core/services/uv_dk_sgd_api_service.dart';
+import 'package:ttld/repositories/uv_dk_sgd_repository.dart';
 
 final locator = GetIt.instance;
 
@@ -562,4 +568,23 @@ Future<void> setupLocator() async {
       () => KieuChapNoiRepository(locator<ApiClient>()));
   locator.registerFactory(
       () => KieuChapNoiCubit(locator<KieuChapNoiRepository>()));
+
+  // SGDVL
+  locator.registerLazySingleton<SGDVLApiService>(
+      () => SGDVLApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<SGDVLRepository>(() =>
+      SGDVLRepositoryImpl(sgdvlApiService: locator<SGDVLApiService>()));
+  locator.registerLazySingleton(
+      () => SGDVLBloc(sgdvlRepository: locator<SGDVLRepository>()));
+
+  // UvDkSGD
+  locator.registerLazySingleton<UvDkSGDApiService>(
+    () => UvDkSGDApiServiceImpl(locator<ApiClient>().dio),
+  );
+  locator.registerLazySingleton<UvDkSGDRepository>(
+    () => UvDkSGDRepositoryImpl(locator<UvDkSGDApiService>()),
+  );
+  locator.registerFactory<UvDkSGDBloc>(
+    () => UvDkSGDBloc(locator<UvDkSGDRepository>()),
+  );
 }

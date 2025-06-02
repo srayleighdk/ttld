@@ -48,6 +48,7 @@ import 'package:ttld/pages/splash/spash_page.dart';
 import 'package:ttld/pages/theodoivieclam/theodoivieclam_page.dart';
 import 'package:ttld/pages/thuThapCauLaoDong/m03pli.dart';
 import 'package:ttld/pages/auth/change_password_page.dart'; // Import the new page
+import 'package:ttld/pages/home/ntv/sgdvl_page.dart';
 
 class AppRouter {
   final AuthBloc authBloc;
@@ -253,6 +254,10 @@ class AppRouter {
             GoRoute(
               path: '/dang-ky-hoc-nghe',
               builder: (context, state) => const DangKyHocNghePage(),
+            ),
+            GoRoute(
+              path: SGDVLPage.routePath,
+              builder: (context, state) => const SGDVLPage(),
             ),
           ]),
 

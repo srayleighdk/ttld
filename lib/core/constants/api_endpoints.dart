@@ -39,4 +39,6 @@ class ApiEndpoints {
   // Ho so ung vien
   static String get hosoUngVien => '/nghiep-vu/hoso-uv';
   static String get hosoUngVienById => '/nghiep-vu/hoso-uvid';
+
+  static const String sgdvl = '/nghiep-vu/tt-sangd';
 }
