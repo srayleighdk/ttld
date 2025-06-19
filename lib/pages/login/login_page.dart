@@ -34,6 +34,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
+    debugPrint('LoginPage initState called.');
     _checkSession();
   }
 
@@ -50,24 +51,38 @@ class _LoginPageState extends State<LoginPage> {
     final loginTimestamp = prefs.getInt('login_timestamp') ?? 0;
     final sessionDuration = Duration(hours: 24); // 24 hours
 
+    debugPrint('[_checkSession] Retrieved isLoggedIn: $isLoggedIn');
+    debugPrint('[_checkSession] Retrieved loginTimestamp: $loginTimestamp');
+    debugPrint('[_checkSession] Current time: ${DateTime.now().millisecondsSinceEpoch}');
+    debugPrint('[_checkSession] Session duration (ms): ${sessionDuration.inMilliseconds}');
+
     if (isLoggedIn) {
       final now = DateTime.now().millisecondsSinceEpoch;
       if (now - loginTimestamp < sessionDuration.inMilliseconds) {
+        debugPrint('[_checkSession] Session is valid. Attempting navigation.');
         // Session is still valid, navigate to home
         final userId = prefs.getString('userId');
         final userType = prefs.getString('userType');
         final region = prefs.getString('selected_region');
         if (mounted) {
-          context.go('/home', extra: {
-            'userId': userId,
-            'userType': userType,
-            'region': region,
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            context.go('/home', extra: {
+              'userId': userId,
+              'userType': userType,
+              'region': region,
+            });
+            debugPrint('[_checkSession] Navigation to /home triggered via post-frame callback.');
           });
+        } else {
+          debugPrint('[_checkSession] Widget not mounted, cannot navigate.');
         }
       } else {
+        debugPrint('[_checkSession] Session expired. Clearing preferences.');
         // Session expired, clear session
         await prefs.clear();
       }
+    } else {
+      debugPrint('[_checkSession] Not logged in (isLoggedIn is false).');
     }
   }
 
@@ -263,7 +278,7 @@ class _LoginPageState extends State<LoginPage> {
 
             if (state is LoginSuccess) {
               debugPrint(
-                  '🎉 Login successful in page, navigating to /home with userId: [38;5;246m${state.userId}[0m');
+                  '🎉 Login successful in page, navigating to /home with userId:  [38;5;246m${state.userId} [0m');
               ToastUtils.showToastSuccess(
                 context,
                 description: 'Welcome back!',
