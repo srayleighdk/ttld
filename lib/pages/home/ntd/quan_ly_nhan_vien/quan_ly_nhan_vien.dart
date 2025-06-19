@@ -242,7 +242,7 @@ class _QuanLyNhanVienPageState extends State<QuanLyNhanVienPage> {
 
     return Theme(
       data: Theme.of(context).copyWith(
-        cardTheme: CardTheme(
+        cardTheme: CardThemeData( // Changed CardTheme to CardThemeData
           elevation: 0,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
