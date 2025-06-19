@@ -32,10 +32,43 @@ class _LoginPageState extends State<LoginPage> {
   Region _selectedRegion = Region.lamDong;
 
   @override
+  void initState() {
+    super.initState();
+    _checkSession();
+  }
+
+  @override
   void dispose() {
     _userNameController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> _checkSession() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isLoggedIn = prefs.getBool('is_logged_in') ?? false;
+    final loginTimestamp = prefs.getInt('login_timestamp') ?? 0;
+    final sessionDuration = Duration(hours: 24); // 24 hours
+
+    if (isLoggedIn) {
+      final now = DateTime.now().millisecondsSinceEpoch;
+      if (now - loginTimestamp < sessionDuration.inMilliseconds) {
+        // Session is still valid, navigate to home
+        final userId = prefs.getString('userId');
+        final userType = prefs.getString('userType');
+        final region = prefs.getString('selected_region');
+        if (mounted) {
+          context.go('/home', extra: {
+            'userId': userId,
+            'userType': userType,
+            'region': region,
+          });
+        }
+      } else {
+        // Session expired, clear session
+        await prefs.clear();
+      }
+    }
   }
 
   void _handleLogin() async {
@@ -237,9 +270,15 @@ class _LoginPageState extends State<LoginPage> {
                 message: '',
               );
               try {
-                // Save region to SharedPreferences
+                // Save region and session info to SharedPreferences
                 final prefs = await SharedPreferences.getInstance();
                 await prefs.setString('selected_region', _selectedRegion.name);
+                await prefs.setBool('is_logged_in', true);
+                await prefs.setInt(
+                    'login_timestamp', DateTime.now().millisecondsSinceEpoch);
+                await prefs.setString('userId', state.userId?.toString() ?? '');
+                await prefs.setString(
+                    'userType', state.userType?.toString() ?? '');
                 context.go('/home', extra: {
                   'userId': state.userId,
                   'userType': state.userType,
