@@ -53,8 +53,10 @@ class _LoginPageState extends State<LoginPage> {
 
     debugPrint('[_checkSession] Retrieved isLoggedIn: $isLoggedIn');
     debugPrint('[_checkSession] Retrieved loginTimestamp: $loginTimestamp');
-    debugPrint('[_checkSession] Current time: ${DateTime.now().millisecondsSinceEpoch}');
-    debugPrint('[_checkSession] Session duration (ms): ${sessionDuration.inMilliseconds}');
+    debugPrint(
+        '[_checkSession] Current time: ${DateTime.now().millisecondsSinceEpoch}');
+    debugPrint(
+        '[_checkSession] Session duration (ms): ${sessionDuration.inMilliseconds}');
 
     if (isLoggedIn) {
       final now = DateTime.now().millisecondsSinceEpoch;
@@ -71,7 +73,8 @@ class _LoginPageState extends State<LoginPage> {
               'userType': userType,
               'region': region,
             });
-            debugPrint('[_checkSession] Navigation to /home triggered via post-frame callback.');
+            debugPrint(
+                '[_checkSession] Navigation to /home triggered via post-frame callback.');
           });
         } else {
           debugPrint('[_checkSession] Widget not mounted, cannot navigate.');

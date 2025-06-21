@@ -51,7 +51,8 @@ class TrinhDoVanHoaBloc extends Bloc<TrinhDoVanHoaEvent, TrinhDoVanHoaState> {
       if (state is TrinhDoVanHoaLoaded) {
         final updatedTrinhDoVanHoas = (state as TrinhDoVanHoaLoaded)
             .trinhDoVanHoas
-            .map((q) => q.name == trinhDoVanHoa.name ? trinhDoVanHoa : q)
+            .map((q) =>
+                q.displayName == trinhDoVanHoa.displayName ? trinhDoVanHoa : q)
             .toList();
         emit(TrinhDoVanHoaLoaded(trinhDoVanHoas: updatedTrinhDoVanHoas));
       }
@@ -67,7 +68,7 @@ class TrinhDoVanHoaBloc extends Bloc<TrinhDoVanHoaEvent, TrinhDoVanHoaState> {
       if (state is TrinhDoVanHoaLoaded) {
         final updatedTrinhDoVanHoas = (state as TrinhDoVanHoaLoaded)
             .trinhDoVanHoas
-            .where((q) => q.name != event.hocvanTen)
+            .where((q) => q.displayName != event.hocvanTen)
             .toList();
         emit(TrinhDoVanHoaLoaded(trinhDoVanHoas: updatedTrinhDoVanHoas));
       }

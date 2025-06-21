@@ -5,31 +5,39 @@ import 'package:ttld/repositories/thoigianlamviec/thoigianlamviec_repository.dar
 part 'thoigianlamviec_event.dart';
 part 'thoigianlamviec_state.dart';
 
-class ThoiGianLamViecBloc extends Bloc<ThoiGianLamViecEvent, ThoiGianLamViecState> {
+class ThoiGianLamViecBloc
+    extends Bloc<ThoiGianLamViecEvent, ThoiGianLamViecState> {
   final ThoiGianLamViecRepository thoiGianLamViecRepository;
 
-  ThoiGianLamViecBloc({required this.thoiGianLamViecRepository}) : super(ThoiGianLamViecInitial()) {
+  ThoiGianLamViecBloc({required this.thoiGianLamViecRepository})
+      : super(ThoiGianLamViecInitial()) {
     on<LoadThoiGianLamViecs>(_onLoadThoiGianLamViecs);
     on<AddThoiGianLamViec>(_onAddThoiGianLamViec);
     on<UpdateThoiGianLamViec>(_onUpdateThoiGianLamViec);
     on<DeleteThoiGianLamViec>(_onDeleteThoiGianLamViec);
   }
 
-  Future<void> _onLoadThoiGianLamViecs(LoadThoiGianLamViecs event, Emitter<ThoiGianLamViecState> emit) async {
+  Future<void> _onLoadThoiGianLamViecs(
+      LoadThoiGianLamViecs event, Emitter<ThoiGianLamViecState> emit) async {
     emit(ThoiGianLamViecLoading());
     try {
-      final thoiGianLamViecs = await thoiGianLamViecRepository.getThoiGianLamViecs();
+      final thoiGianLamViecs =
+          await thoiGianLamViecRepository.getThoiGianLamViecs();
       emit(ThoiGianLamViecLoaded(thoiGianLamViecs: thoiGianLamViecs));
     } catch (e) {
       emit(ThoiGianLamViecError(message: e.toString()));
     }
   }
 
-  Future<void> _onAddThoiGianLamViec(AddThoiGianLamViec event, Emitter<ThoiGianLamViecState> emit) async {
+  Future<void> _onAddThoiGianLamViec(
+      AddThoiGianLamViec event, Emitter<ThoiGianLamViecState> emit) async {
     try {
-      final thoiGianLamViec = await thoiGianLamViecRepository.addThoiGianLamViec(event.thoiGianLamViec);
+      final thoiGianLamViec = await thoiGianLamViecRepository
+          .addThoiGianLamViec(event.thoiGianLamViec);
       if (state is ThoiGianLamViecLoaded) {
-        final updatedThoiGianLamViecs = List<ThoiGianLamViec>.from((state as ThoiGianLamViecLoaded).thoiGianLamViecs)..add(thoiGianLamViec);
+        final updatedThoiGianLamViecs = List<ThoiGianLamViec>.from(
+            (state as ThoiGianLamViecLoaded).thoiGianLamViecs)
+          ..add(thoiGianLamViec);
         emit(ThoiGianLamViecLoaded(thoiGianLamViecs: updatedThoiGianLamViecs));
       }
     } catch (e) {
@@ -37,11 +45,18 @@ class ThoiGianLamViecBloc extends Bloc<ThoiGianLamViecEvent, ThoiGianLamViecStat
     }
   }
 
-  Future<void> _onUpdateThoiGianLamViec(UpdateThoiGianLamViec event, Emitter<ThoiGianLamViecState> emit) async {
+  Future<void> _onUpdateThoiGianLamViec(
+      UpdateThoiGianLamViec event, Emitter<ThoiGianLamViecState> emit) async {
     try {
-      final thoiGianLamViec = await thoiGianLamViecRepository.updateThoiGianLamViec(event.thoiGianLamViec);
+      final thoiGianLamViec = await thoiGianLamViecRepository
+          .updateThoiGianLamViec(event.thoiGianLamViec);
       if (state is ThoiGianLamViecLoaded) {
-        final updatedThoiGianLamViecs = (state as ThoiGianLamViecLoaded).thoiGianLamViecs.map((q) => q.name == thoiGianLamViec.name ? thoiGianLamViec : q).toList();
+        final updatedThoiGianLamViecs = (state as ThoiGianLamViecLoaded)
+            .thoiGianLamViecs
+            .map((q) => q.displayName == thoiGianLamViec.displayName
+                ? thoiGianLamViec
+                : q)
+            .toList();
         emit(ThoiGianLamViecLoaded(thoiGianLamViecs: updatedThoiGianLamViecs));
       }
     } catch (e) {
@@ -49,11 +64,16 @@ class ThoiGianLamViecBloc extends Bloc<ThoiGianLamViecEvent, ThoiGianLamViecStat
     }
   }
 
-  Future<void> _onDeleteThoiGianLamViec(DeleteThoiGianLamViec event, Emitter<ThoiGianLamViecState> emit) async {
+  Future<void> _onDeleteThoiGianLamViec(
+      DeleteThoiGianLamViec event, Emitter<ThoiGianLamViecState> emit) async {
     try {
-      await thoiGianLamViecRepository.deleteThoiGianLamViec(event.id.toString());
+      await thoiGianLamViecRepository
+          .deleteThoiGianLamViec(event.id.toString());
       if (state is ThoiGianLamViecLoaded) {
-        final updatedThoiGianLamViecs = (state as ThoiGianLamViecLoaded).thoiGianLamViecs.where((q) => q.id != event.id).toList();
+        final updatedThoiGianLamViecs = (state as ThoiGianLamViecLoaded)
+            .thoiGianLamViecs
+            .where((q) => q.id != event.id)
+            .toList();
         emit(ThoiGianLamViecLoaded(thoiGianLamViecs: updatedThoiGianLamViecs));
       }
     } catch (e) {

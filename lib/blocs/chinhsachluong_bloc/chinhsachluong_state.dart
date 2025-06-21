@@ -28,3 +28,8 @@ class ChinhSachLuongOperationFailure extends ChinhSachLuongState {
   final String error;
   ChinhSachLuongOperationFailure(this.error);
 }
+
+class ChinhSachLuongOperationSuccess extends ChinhSachLuongState {
+  final String success;
+  ChinhSachLuongOperationSuccess(this.success);
+}

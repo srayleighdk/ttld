@@ -84,8 +84,8 @@ class _ManagerUserPageState extends State<ManagerUserPage> {
                 onPressed: () => Navigator.pop(context), child: Text("Cancel")),
             ElevatedButton(
               onPressed: () {
-                context.read<GroupBloc>().add(CreateGroup(controller.text));
-                Navigator.pop(context);
+                // context.read<GroupBloc>().add(CreateGroup(controller.text));
+                // Navigator.pop(context);
               },
               child: Text("Create"),
             ),

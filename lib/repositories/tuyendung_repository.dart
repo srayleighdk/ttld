@@ -7,14 +7,33 @@ class TuyenDungRepository {
 
   TuyenDungRepository(this._tuyenDungService);
 
+  // Future<List<NTDTuyenDung>> getTuyenDungList(String? ntdId) async {
+  //   try {
+  //     final response = await _tuyenDungService.getTuyenDungList(ntdId);
+  //     return (response.data['data'] as List)
+  //         .map((json) => NTDTuyenDung.fromJson(json))
+  //         .toList();
+  //   } on DioException catch (e) {
+  //     throw Exception('Failed to get tuyen dung list: ${e.message}');
+  //   }
+  // }
+
+//NOTE: This is for testing waring
   Future<List<NTDTuyenDung>> getTuyenDungList(String? ntdId) async {
     try {
       final response = await _tuyenDungService.getTuyenDungList(ntdId);
-      return (response.data['data'] as List)
-          .map((json) => NTDTuyenDung.fromJson(json))
-          .toList();
+      final data = response.data['data'] as List;
+      return data.map((json) {
+        // Log the raw JSON for debugging
+        print('Processing JSON: $json');
+        return NTDTuyenDung.fromJson(json);
+      }).toList();
     } on DioException catch (e) {
+      print('DioException: ${e.message}, Response: ${e.response?.data}');
       throw Exception('Failed to get tuyen dung list: ${e.message}');
+    } catch (e) {
+      print('Unexpected error: $e');
+      rethrow;
     }
   }
 

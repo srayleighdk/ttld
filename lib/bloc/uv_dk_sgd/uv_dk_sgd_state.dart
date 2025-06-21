@@ -16,4 +16,16 @@ class UvDkSGDError extends UvDkSGDState {
   final String message;
 
   UvDkSGDError(this.message);
+}
+
+class UvDkSGDRegistering extends UvDkSGDState {}
+
+class UvDkSGDRegistered extends UvDkSGDState {
+  final UvDkSGD registration;
+  UvDkSGDRegistered(this.registration);
+}
+
+class UvDkSGDRegistrationError extends UvDkSGDState {
+  final String message;
+  UvDkSGDRegistrationError(this.message);
 } 

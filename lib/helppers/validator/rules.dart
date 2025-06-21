@@ -294,66 +294,6 @@ class NumericRule extends ValidationRule {
   }
 }
 
-/// DATE AGE IS YOUNGER RULE
-class DateAgeIsYoungerRule extends ValidationRule {
-  DateAgeIsYoungerRule(String attribute)
-      : super(signature: "date_age_is_younger", attribute: attribute);
-
-  @override
-  bool handle(Map<String, dynamic> info) {
-    RegExp regExp = RegExp(signature + r':([0-9]+)');
-    String match = regExp.firstMatch(info['rule'])?.group(1) ?? "";
-    int intMatch = int.parse(match);
-    info.dump();
-    description = "The $attribute must be younger than $intMatch years old.";
-    textFieldMessage = "Must be younger than $intMatch years old.";
-    super.handle(info);
-    dynamic date = info['data'];
-    if (date is String) {
-      DateTime? dateParsed = DateTime.tryParse(date);
-      if (dateParsed == null) {
-        NyLogger.error('Date is not valid');
-        return false;
-      }
-      return dateParsed.isAgeYounger(intMatch) ?? false;
-    }
-    if (date is DateTime) {
-      return date.isAgeYounger(intMatch) ?? false;
-    }
-    return false;
-  }
-}
-
-/// DATE AGE IS OLDER RULE
-class DateAgeIsOlderRule extends ValidationRule {
-  DateAgeIsOlderRule(String attribute)
-      : super(signature: "date_age_is_older", attribute: attribute);
-
-  @override
-  bool handle(Map<String, dynamic> info) {
-    RegExp regExp = RegExp(signature + r':([0-9]+)');
-    String match = regExp.firstMatch(info['rule'])?.group(1) ?? "";
-    int intMatch = int.parse(match);
-
-    description = "The $attribute must be older than $intMatch years old.";
-    textFieldMessage = "Must be older than $intMatch years old.";
-    super.handle(info);
-    dynamic date = info['data'];
-    if (date is String) {
-      DateTime? dateParsed = DateTime.tryParse(date);
-      if (dateParsed == null) {
-        NyLogger.error('Date is not valid');
-        return false;
-      }
-      return dateParsed.isAgeOlder(intMatch) ?? false;
-    }
-    if (date is DateTime) {
-      return date.isAgeOlder(intMatch) ?? false;
-    }
-    return false;
-  }
-}
-
 /// REGEX RULE
 class RegexRule extends ValidationRule {
   RegexRule(String attribute)
@@ -374,60 +314,8 @@ class RegexRule extends ValidationRule {
 }
 
 /// DATE IN FUTURE RULE
-class DateInFutureRule extends ValidationRule {
-  DateInFutureRule(String attribute)
-      : super(
-            signature: "date_in_future",
-            description: "The $attribute field must be in the future",
-            textFieldMessage: "Must be in the future");
-
-  @override
-  bool handle(Map<String, dynamic> info) {
-    super.handle(info);
-    dynamic date = info['data'];
-
-    if (date is String) {
-      DateTime? dateParsed = DateTime.tryParse(date);
-      if (dateParsed == null) {
-        return false;
-      }
-      return dateParsed.isInFuture();
-    }
-
-    if (date is DateTime) {
-      return date.isInFuture();
-    }
-    return false;
-  }
-}
 
 /// DATE IN PAST RULE
-class DateInPastRule extends ValidationRule {
-  DateInPastRule(String attribute)
-      : super(
-            signature: "date_in_past",
-            description: "The $attribute field must be in the past",
-            textFieldMessage: "Must not be in the future");
-
-  @override
-  bool handle(Map<String, dynamic> info) {
-    super.handle(info);
-    dynamic date = info['data'];
-
-    if (date is String) {
-      DateTime? dateParsed = DateTime.tryParse(date);
-      if (dateParsed == null) {
-        return false;
-      }
-      return dateParsed.isInPast();
-    }
-
-    if (date is DateTime) {
-      return date.isInPast();
-    }
-    return false;
-  }
-}
 
 /// MAX RULE
 class MaxRule extends ValidationRule {

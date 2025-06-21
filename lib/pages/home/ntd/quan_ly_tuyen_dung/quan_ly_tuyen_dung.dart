@@ -286,7 +286,7 @@ class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
 
     return Theme(
       data: Theme.of(context).copyWith(
-        cardTheme: CardTheme(
+        cardTheme: CardThemeData(
           elevation: 0,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

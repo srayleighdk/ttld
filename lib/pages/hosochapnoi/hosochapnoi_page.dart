@@ -229,7 +229,7 @@ class _HoSoChapNoiPageState extends State<HoSoChapNoiPage> {
                               Expanded(
                                 child: Theme(
                                   data: Theme.of(context).copyWith(
-                                    cardTheme: CardTheme(
+                                    cardTheme: CardThemeData(
                                       elevation: 0,
                                       shape: RoundedRectangleBorder(
                                           borderRadius:

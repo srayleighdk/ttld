@@ -3,6 +3,7 @@ import 'package:ttld/models/uv_dk_sgd/uv_dk_sgd_model.dart';
 
 abstract class UvDkSGDApiService {
   Future<List<UvDkSGD>> getUvDkSGDs(String userId);
+  Future<UvDkSGD> registerForSGDVL(UvDkSGD registration);
 }
 
 class UvDkSGDApiServiceImpl implements UvDkSGDApiService {
@@ -13,29 +14,38 @@ class UvDkSGDApiServiceImpl implements UvDkSGDApiService {
   @override
   Future<List<UvDkSGD>> getUvDkSGDs(String userId) async {
     try {
-      final response = await _dio.get('/nghiep-vu/uv-dkyphien');
-      final dynamic data = response.data;
+      final response = await _dio.get('/nghiep-vu/uv-dkyphien', queryParameters: {
+        'userId': userId,
+      });
       
-      // Log the response for debugging
-      print('API Response: $data');
-      print('Response type: ${data.runtimeType}');
-      
-      // Handle both List and Map responses
-      if (data is List) {
-        print('Processing as direct List response');
-        return data.map((json) => UvDkSGD.fromJson(json)).toList();
-      } else if (data is Map<String, dynamic>) {
-        print('Processing as Map response');
-        // Check for common response structures
-        if (data.containsKey('data') && data['data'] is List) {
-          print('Found data key with List data');
-          return (data['data'] as List).map((json) => UvDkSGD.fromJson(json)).toList();
-        }
+      if (response.data is List) {
+        return (response.data as List).map((json) => UvDkSGD.fromJson(json)).toList();
+      } else if (response.data is Map<String, dynamic> && response.data['data'] is List) {
+        return (response.data['data'] as List).map((json) => UvDkSGD.fromJson(json)).toList();
       }
-      throw Exception('Invalid response format. Expected List or Map with items/data/results key. Received: ${data.runtimeType}');
+      
+      throw Exception('Invalid response format');
     } catch (e) {
-      print('Error details: $e');
       throw Exception('Failed to load UvDkSGD data: $e');
+    }
+  }
+
+  @override
+  Future<UvDkSGD> registerForSGDVL(UvDkSGD registration) async {
+    try {
+      final response = await _dio.post(
+        '/nghiep-vu/uv-dkyphien',
+        data: registration.toJson(),
+      );
+      
+      if (response.data is Map<String, dynamic>) {
+        final data = response.data['data'] ?? response.data;
+        return UvDkSGD.fromJson(data);
+      }
+      
+      throw Exception('Invalid response format');
+    } catch (e) {
+      throw Exception('Failed to register for SGDVL: $e');
     }
   }
 } 

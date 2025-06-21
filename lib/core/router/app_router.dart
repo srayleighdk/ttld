@@ -27,6 +27,7 @@ import 'package:ttld/pages/home/ntv/dang_ky_hoc_nghe_page.dart';
 import 'package:ttld/pages/home/ntv/dang_ky_lam_viec_page.dart';
 import 'package:ttld/pages/home/ntv/dang_ky_tu_van_viec_lam_page.dart';
 import 'package:ttld/pages/home/ntv/ntv_home.dart';
+import 'package:ttld/pages/home/ntv/sgdvl_registration.dart';
 import 'package:ttld/pages/home/ntv/update_ntv/update_ntv_page.dart';
 import 'package:ttld/pages/hosochapnoi/hosochapnoi_page.dart';
 import 'package:ttld/pages/hosocoquan/hosocoquan_page.dart';
@@ -388,6 +389,10 @@ class AppRouter {
         builder: (BuildContext context, GoRouterState state) =>
             const ErrorPage(),
       ),
+      GoRoute(
+        path: SGDVLRegistrationPage.routePath,
+        builder: (context, state) => SGDVLRegistrationPage(),
+      )
     ],
   );
 }

@@ -10,6 +10,7 @@ class UvDkSGDBloc extends Bloc<UvDkSGDEvent, UvDkSGDState> {
 
   UvDkSGDBloc(this._repository) : super(UvDkSGDInitial()) {
     on<FetchUvDkSGDs>(_onFetchUvDkSGDs);
+    on<RegisterForSGDVL>(_onRegisterForSGDVL);
   }
 
   Future<void> _onFetchUvDkSGDs(
@@ -22,6 +23,19 @@ class UvDkSGDBloc extends Bloc<UvDkSGDEvent, UvDkSGDState> {
       emit(UvDkSGDLoaded(uvDkSGDs));
     } catch (e) {
       emit(UvDkSGDError(e.toString()));
+    }
+  }
+
+  Future<void> _onRegisterForSGDVL(
+    RegisterForSGDVL event,
+    Emitter<UvDkSGDState> emit,
+  ) async {
+    emit(UvDkSGDRegistering());
+    try {
+      final registration = await _repository.registerForSGDVL(event.registration);
+      emit(UvDkSGDRegistered(registration));
+    } catch (e) {
+      emit(UvDkSGDRegistrationError(e.toString()));
     }
   }
 }

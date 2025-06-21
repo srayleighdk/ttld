@@ -55,7 +55,6 @@ class MyApp extends StatelessWidget {
               ldRepository: locator<LdRepository>(),
               initialRegion: initialRegion,
             ).router;
-
             return MaterialApp.router(
               debugShowCheckedModeBanner: false,
               title: 'Thị Trường Lao Động',

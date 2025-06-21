@@ -14,7 +14,8 @@ class MucLuongBloc extends Bloc<MucLuongEvent, MucLuongState> {
     on<DeleteMucLuong>(_onDeleteMucLuong);
   }
 
-  Future<void> _onLoadMucLuongs(LoadMucLuongs event, Emitter<MucLuongState> emit) async {
+  Future<void> _onLoadMucLuongs(
+      LoadMucLuongs event, Emitter<MucLuongState> emit) async {
     emit(MucLuongLoading());
     try {
       final mucLuongs = await mucLuongRepository.getMucLuongs();
@@ -24,12 +25,16 @@ class MucLuongBloc extends Bloc<MucLuongEvent, MucLuongState> {
     }
   }
 
-  Future<void> _onCreateMucLuong(CreateMucLuong event, Emitter<MucLuongState> emit) async {
+  Future<void> _onCreateMucLuong(
+      CreateMucLuong event, Emitter<MucLuongState> emit) async {
     try {
-      final createdMucLuong = await mucLuongRepository.addMucLuong(event.mucLuong);
+      final createdMucLuong =
+          await mucLuongRepository.addMucLuong(event.mucLuong);
       // Optionally, reload the list or update the state optimistically
       if (state is MucLuongLoaded) {
-        final updatedMucLuongs = List<MucLuongMM>.from((state as MucLuongLoaded).mucLuongs)..add(createdMucLuong);
+        final updatedMucLuongs =
+            List<MucLuongMM>.from((state as MucLuongLoaded).mucLuongs)
+              ..add(createdMucLuong);
         emit(MucLuongLoaded(mucLuongs: updatedMucLuongs));
       }
     } catch (e) {
@@ -37,13 +42,16 @@ class MucLuongBloc extends Bloc<MucLuongEvent, MucLuongState> {
     }
   }
 
-  Future<void> _onUpdateMucLuong(UpdateMucLuong event, Emitter<MucLuongState> emit) async {
+  Future<void> _onUpdateMucLuong(
+      UpdateMucLuong event, Emitter<MucLuongState> emit) async {
     try {
-      final updatedMucLuong = await mucLuongRepository.updateMucLuong(event.mucLuong);
+      final updatedMucLuong =
+          await mucLuongRepository.updateMucLuong(event.mucLuong);
       // Optionally, reload the list or update the state optimistically
       if (state is MucLuongLoaded) {
-        final updatedMucLuongs = (state as MucLuongLoaded).mucLuongs.map((mucLuong) {
-          return mucLuong.idMucLuong == updatedMucLuong.idMucLuong ? updatedMucLuong : mucLuong;
+        final updatedMucLuongs =
+            (state as MucLuongLoaded).mucLuongs.map((mucLuong) {
+          return mucLuong.id == updatedMucLuong.id ? updatedMucLuong : mucLuong;
         }).toList();
         emit(MucLuongLoaded(mucLuongs: updatedMucLuongs));
       }
@@ -52,12 +60,16 @@ class MucLuongBloc extends Bloc<MucLuongEvent, MucLuongState> {
     }
   }
 
-  Future<void> _onDeleteMucLuong(DeleteMucLuong event, Emitter<MucLuongState> emit) async {
+  Future<void> _onDeleteMucLuong(
+      DeleteMucLuong event, Emitter<MucLuongState> emit) async {
     try {
       await mucLuongRepository.deleteMucLuong(event.id);
       // Optionally, reload the list or update the state optimistically
       if (state is MucLuongLoaded) {
-        final updatedMucLuongs = (state as MucLuongLoaded).mucLuongs.where((mucLuong) => mucLuong.idMucLuong != event.id).toList();
+        final updatedMucLuongs = (state as MucLuongLoaded)
+            .mucLuongs
+            .where((mucLuong) => mucLuong.id != event.id)
+            .toList();
         emit(MucLuongLoaded(mucLuongs: updatedMucLuongs));
       }
     } catch (e) {
