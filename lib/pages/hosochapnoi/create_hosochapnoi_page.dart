@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ttld/bloc/chapnoi/chapnoi_bloc.dart';
+import 'package:ttld/blocs/chapnoi/chapnoi_bloc.dart';
+import 'package:ttld/blocs/tblHoSoUngVien/tblhosoungvien_bloc.dart';
+import 'package:ttld/blocs/tblHoSoUngVien/tblhosoungvien_event.dart';
+import 'package:ttld/blocs/tblHoSoUngVien/tblhosoungvien_state.dart';
+import 'package:ttld/blocs/tuyendung/tuyendung_bloc.dart';
 import 'package:ttld/helppers/map_help.dart';
 import 'package:ttld/models/chapnoi/chapnoi_model.dart';
 import 'package:ttld/core/di/injection.dart';
@@ -10,13 +14,9 @@ import 'package:ttld/widgets/field/custom_picker_map.dart';
 import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
 import 'package:ttld/repositories/tblNhaTuyenDung/ntd_repository.dart';
 import 'package:ttld/models/tblNhaTuyenDung/ntd_picker_model.dart';
-import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_bloc.dart';
-import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_event.dart';
-import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_state.dart';
 import 'package:ttld/models/tblHoSoUngVien/tblHoSoUngVien_model.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
-import 'package:ttld/bloc/tuyendung/tuyendung_bloc.dart';
 import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
 import 'package:ttld/models/chapnoi/chapnoi_picker_items.dart'; // Import picker items
 
@@ -115,29 +115,17 @@ class _CreateHoSoChapNoiPageState extends State<CreateHoSoChapNoiPage> {
   }
 
   void _createChapNoi() {
-    print('Validating form...'); // Debug validation start
-    print(
-        'selectedKieuChapNoi: ${selectedKieuChapNoi?.id}'); // Debug kieu chap noi
     final authState = _authBloc.state;
     final isNTD = authState is AuthAuthenticated && authState.userType == 'ntd';
-    print('isNTD: $isNTD'); // Debug user type
-    print(
-        'selectedHoSoUngVien: ${selectedHoSoUngVien?.id}'); // Debug ho so ung vien
-    print('selectedNTD: ${selectedNTD?.id}'); // Debug NTD
-    print('selectedIdTuyenDung: $selectedIdTuyenDung'); // Debug tuyen dung
-    print('selectedKetQua: $ketQua'); // Debug ket qua
-    print('selectedNgayMuonHs: $selectedNgayMuonHs'); // Debug ngay muon
 
     if (selectedKieuChapNoi == null ||
         (isNTD ? selectedHoSoUngVien == null : selectedNTD == null) ||
         selectedIdTuyenDung == null ||
         ketQua == null ||
         selectedNgayMuonHs == null) {
-      print('Validation failed:'); // Debug validation failure
       if (selectedKieuChapNoi == null) print('- Kiểu chắp nối is missing');
-      if (isNTD && selectedHoSoUngVien == null)
-        print('- Hồ sơ ứng viên is missing');
-      if (!isNTD && selectedNTD == null) print('- Nhà tuyển dụng is missing');
+      if (isNTD && selectedHoSoUngVien == null) if (!isNTD &&
+          selectedNTD == null) print('- Nhà tuyển dụng is missing');
       if (selectedIdTuyenDung == null) print('- Hồ sơ tuyển dụng is missing');
       if (ketQua == null) print('- Kết quả is missing');
       if (selectedNgayMuonHs == null) print('- Ngày mượn hồ sơ is missing');
@@ -161,16 +149,6 @@ class _CreateHoSoChapNoiPageState extends State<CreateHoSoChapNoiPage> {
       ghiChu: ghiChuController.text,
       idKetQua: ketQua ?? 0,
     );
-
-    print('Creating new ChapNoi with data:'); // Debug new ChapNoi data
-    print('idKieuChapNoi: ${newChapNoi.idKieuChapNoi}');
-    print('idUngVien: ${newChapNoi.idUngVien}');
-    print('idDoanhNghiep: ${newChapNoi.idDoanhNghiep}');
-    print('idTuyenDung: ${newChapNoi.idTuyenDung}');
-    print('ngayMuonHs: ${newChapNoi.ngayMuonHs}');
-    print('ngayTraHs: ${newChapNoi.ngayTraHs}');
-    print('ghiChu: ${newChapNoi.ghiChu}');
-    print('idKetQua: ${newChapNoi.idKetQua}');
 
     _chapNoiBloc.add(ChapNoiCreate(newChapNoi));
     Navigator.pop(context); // Navigate back after creation

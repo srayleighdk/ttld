@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ttld/bloc/tuyendung/tuyendung_bloc.dart';
+import 'package:ttld/blocs/tuyendung/tuyendung_bloc.dart';
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/helppers/map_help.dart';
 import 'package:ttld/models/do_tuoi_model.dart';
@@ -13,7 +13,6 @@ import 'package:ttld/models/tblNhaTuyenDung/tblNhaTuyenDung_model.dart';
 import 'package:ttld/models/thoigianlamviec_model.dart';
 import 'package:ttld/models/tinh_thanh_model.dart';
 import 'package:ttld/models/trinh_do_hoc_van_model.dart';
-import 'package:ttld/models/trinh_do_ngoai_ngu_model.dart';
 import 'package:ttld/models/trinh_do_tin_hoc_model.dart';
 import 'package:ttld/widgets/field/custom_checkbox.dart';
 import 'package:ttld/widgets/field/custom_pick_datetime_grok.dart';

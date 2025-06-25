@@ -3,10 +3,10 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/models/ntd_tuyendung/ntd_tuyendung_model.dart';
-import 'package:ttld/bloc/tuyendung/tuyendung_bloc.dart';
+import 'package:ttld/blocs/tuyendung/tuyendung_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ttld/pages/home/ntd/create_tuyen_dung/create_tuyen_dung.dart';
-import 'package:ttld/bloc/tblNhaTuyenDung/ntd_bloc.dart';
+import 'package:ttld/blocs/tblNhaTuyenDung/ntd_bloc.dart';
 import 'package:ttld/models/tblNhaTuyenDung/tblNhaTuyenDung_model.dart';
 
 class QuanLyTuyenDungPage extends StatefulWidget {

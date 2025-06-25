@@ -3,7 +3,6 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:theme_provider/theme_provider.dart';
 import 'package:ttld/helppers/help.dart';
 import 'package:intl/intl.dart' as intl;
-import 'package:ttld/helppers/ny_logger.dart';
 import 'package:ttld/themes/base_theme_config.dart';
 import 'dart:io';
 
@@ -30,18 +29,6 @@ extension NyStr on String? {
 // }
 
 /// Extensions for [Map]
-extension NyMap on Map? {
-  /// dump the value to the console. [tag] is optional.
-  dump({String? tag}) {
-    NyLogger.dump((this ?? "").toString(), tag);
-  }
-
-  /// dump the value to the console and exit the app. [tag] is optional.
-  dd({String? tag}) {
-    NyLogger.dump((this ?? "").toString(), tag);
-    exit(0);
-  }
-}
 
 /// IterableExtension
 extension IterableExtension<T> on Iterable<T> {

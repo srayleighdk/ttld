@@ -8,10 +8,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_bloc.dart';
-import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_event.dart';
-import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_state.dart';
-import 'package:ttld/bloc/tinh_thanh/tinh_thanh_cubit.dart';
+import 'package:ttld/blocs/tblHoSoUngVien/tblhosoungvien_bloc.dart';
+import 'package:ttld/blocs/tblHoSoUngVien/tblhosoungvien_event.dart';
+import 'package:ttld/blocs/tblHoSoUngVien/tblhosoungvien_state.dart';
+import 'package:ttld/blocs/tinh_thanh/tinh_thanh_cubit.dart';
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/core/utils/toast_utils.dart';
 import 'package:ttld/helppers/map_help.dart';
@@ -37,7 +37,6 @@ import 'package:ttld/repositories/dan_toc/dan_toc_repository.dart';
 import 'package:ttld/repositories/hinhthuc_doanhnghiep/hinhthuc_doanhnghiep_repository.dart';
 import 'package:ttld/repositories/muc_luong/muc_luong_repository.dart';
 import 'package:ttld/repositories/nganh_nghe/nganh_nghe_bachoc_repository.dart';
-import 'package:ttld/repositories/nganh_nghe/nganh_nghe_repository.dart';
 import 'package:ttld/repositories/nganh_nghe/nganh_nghe_td_repository.dart';
 import 'package:ttld/repositories/nguon_thuthap/nguon_thuthap_repository.dart';
 import 'package:ttld/repositories/tblDmDoiTuongChinhSach/doituong_repository.dart';
@@ -46,8 +45,7 @@ import 'package:ttld/repositories/trinh_do_hoc_van/trinh_do_hoc_van_repository.d
 import 'package:ttld/repositories/trinh_do_ngoai_ngu/trinh_do_ngoai_ngu_repository.dart';
 import 'package:ttld/repositories/trinh_do_tin_hoc/trinh_do_tin_hoc_repository.dart';
 import 'package:ttld/repositories/trinh_do_van_hoa/trinh_do_van_hoa_repository.dart';
-import 'package:ttld/repositories/tt_tantat/tt_tantat_repository.dart';
-import 'package:ttld/widgets/cascade_location_picker.dart';
+import 'package:ttld/widgets/cascade_location_picker_grok.dart';
 import 'package:ttld/widgets/field/custom_checkbox.dart';
 import 'package:ttld/widgets/field/custom_pick_datetime_grok.dart';
 import 'package:ttld/widgets/field/custom_picker.dart';
@@ -206,7 +204,6 @@ class _CreateHoSoUngVienPageState extends State<CreateHoSoUngVienPage> {
   void initState() {
     _loadNguonThuThap();
     _loadDanToc();
-    _loadTinhTrangTanTat();
     _loadDoiTuong();
     _loadTinhThanh();
     _loadTrinhDoHocVan();
@@ -370,31 +367,6 @@ class _CreateHoSoUngVienPageState extends State<CreateHoSoUngVienPage> {
     } catch (e) {
       // Added stackTrace
       print("Error loading dan toc: $e");
-    }
-  }
-
-  Future<void> _loadTinhTrangTanTat() async {
-    final tinhTrangTanTatRepository = locator<TTTanTatRepository>();
-    try {
-      final tinhTrangTanTats = await tinhTrangTanTatRepository.getTTTanTats();
-
-      if (mounted) {
-        setState(() {
-          _tinhTrangTanTats = tinhTrangTanTats;
-        });
-        if (_uvTinhtrangtantatId != null) {
-          TtTantat? _tinhTrangTanTat = _tinhTrangTanTats
-              .firstWhere((element) => element.id == _uvTinhtrangtantatId);
-          if (_tinhTrangTanTat != null) {
-            setState(() {
-              tinhTrangTanTat = _tinhTrangTanTat;
-            });
-          }
-        }
-      }
-    } catch (e) {
-      // Added stackTrace
-      print("Error loading tinh trang tan tat: $e");
     }
   }
 
@@ -1017,7 +989,7 @@ class _CreateHoSoUngVienPageState extends State<CreateHoSoUngVienPage> {
             validator: 'not_empty',
           ),
           const SizedBox(height: 12.0),
-          CascadeLocationPicker(
+          CascadeLocationPickerGrok(
             initialTinh: _idTinhController.text,
             initialHuyen: _idHuyenController.text,
             initialXa: _idXaController.text,

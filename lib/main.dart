@@ -5,7 +5,6 @@ import 'package:theme_provider/theme_provider.dart';
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/core/router/app_router.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
-import 'package:ttld/features/ds-ld/repositories/ld_repository.dart';
 import 'package:ttld/helppers/help.dart';
 import 'package:ttld/themes/text/app_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -52,7 +51,6 @@ class MyApp extends StatelessWidget {
             // Access AuthBloc directly from GetIt instead of context
             final router = AppRouter(
               authBloc: locator<AuthBloc>(),
-              ldRepository: locator<LdRepository>(),
               initialRegion: initialRegion,
             ).router;
             return MaterialApp.router(

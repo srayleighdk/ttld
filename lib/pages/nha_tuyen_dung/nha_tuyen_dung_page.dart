@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ttld/bloc/tblNhaTuyenDung/ntd_bloc.dart';
+import 'package:ttld/blocs/tblNhaTuyenDung/ntd_bloc.dart';
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/models/tblNhaTuyenDung/tblNhaTuyenDung_model.dart';
 

@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:ttld/core/enums/region.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
-import 'package:ttld/features/ds-ld/repositories/ld_repository.dart';
 import 'package:ttld/models/ntd_tuyendung/ntd_tuyendung_model.dart';
 import 'package:ttld/models/tblHoSoUngVien/tblHoSoUngVien_model.dart';
 import 'package:ttld/models/tblNhaTuyenDung/tblNhaTuyenDung_model.dart';
@@ -39,7 +38,6 @@ import 'package:ttld/pages/hosoungvien/hosoungvien_page.dart';
 import 'package:ttld/pages/laodongkhuyettat/laodongkhuyettat_page.dart';
 import 'package:ttld/pages/loghethong/loghethong_page.dart';
 import 'package:ttld/pages/login/login_page.dart';
-import 'package:ttld/pages/m01tt11/m01tt11.dart';
 import 'package:ttld/pages/phanquyen/phanquyen_page.dart';
 import 'package:ttld/pages/phanquyen/phanquyen_user.dart';
 import 'package:ttld/pages/quantridulieu/quantridulieu_page.dart';
@@ -47,22 +45,17 @@ import 'package:ttld/pages/quantringuoidung/quantringuoidung_page.dart';
 import 'package:ttld/pages/signup/signup.dart';
 import 'package:ttld/pages/splash/spash_page.dart';
 import 'package:ttld/pages/theodoivieclam/theodoivieclam_page.dart';
-import 'package:ttld/pages/thuThapCauLaoDong/m03pli.dart';
 import 'package:ttld/pages/auth/change_password_page.dart'; // Import the new page
 import 'package:ttld/pages/home/ntv/sgdvl_page.dart';
 
 class AppRouter {
   final AuthBloc authBloc;
-  final LdRepository ldRepository;
   final Region initialRegion;
 
   final GlobalKey<NavigatorState> rootNavigatorKey =
       GlobalKey<NavigatorState>();
 
-  AppRouter(
-      {required this.authBloc,
-      required this.ldRepository,
-      required this.initialRegion});
+  AppRouter({required this.authBloc, required this.initialRegion});
 
   late final GoRouter router = GoRouter(
     navigatorKey: rootNavigatorKey,
@@ -87,10 +80,10 @@ class AppRouter {
     initialLocation: '/login',
     routes: [
       // Root route with redirect
-      // GoRoute(
-      //   path: '/',
-      //   redirect: (context, state) => '/login',
-      // ),
+      GoRoute(
+        path: '/',
+        redirect: (context, state) => '/login',
+      ),
       GoRoute(
         path: '/log-he-thong',
         builder: (context, state) =>
@@ -260,6 +253,10 @@ class AppRouter {
               path: SGDVLPage.routePath,
               builder: (context, state) => const SGDVLPage(),
             ),
+            GoRoute(
+              path: SGDVLRegistrationPage.routePath,
+              builder: (context, state) => const SGDVLRegistrationPage(),
+            ),
           ]),
 
       GoRoute(
@@ -272,12 +269,6 @@ class AppRouter {
             builder: (context, state) => const UpdateNTDPage(),
           ),
           GoRoute(
-            path: DangKySuDungLaoDong03PLI.routePath,
-            builder: (context, state) => DangKySuDungLaoDong03PLI(
-              ntd: state.extra as Ntd?,
-            ),
-          ),
-          GoRoute(
             path: '/ho-so-chap-noi',
             builder: (context, state) {
               final extra = state.extra as Map<String, dynamic>?;
@@ -287,11 +278,6 @@ class AppRouter {
               );
             },
           ),
-          GoRoute(
-              path: '/m01tt11',
-              builder: (context, state) => M01TT11Page(
-                    ntd: state.extra as Ntd?,
-                  )),
           GoRoute(
               path: '/create_tuyen_dung',
               builder: (context, state) {
@@ -389,10 +375,7 @@ class AppRouter {
         builder: (BuildContext context, GoRouterState state) =>
             const ErrorPage(),
       ),
-      GoRoute(
-        path: SGDVLRegistrationPage.routePath,
-        builder: (context, state) => SGDVLRegistrationPage(),
-      )
+      // SGDVLRegistrationPage route moved to be a child of /ntv_home
     ],
   );
 }

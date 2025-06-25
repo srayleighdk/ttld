@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_bloc.dart';
-import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_event.dart';
-import 'package:ttld/bloc/tblNhaTuyenDung/ntd_bloc.dart';
-import 'package:ttld/core/di/app_init.dart' show initializeAppData;
+import 'package:ttld/blocs/tblHoSoUngVien/tblhosoungvien_bloc.dart';
+import 'package:ttld/blocs/tblHoSoUngVien/tblhosoungvien_event.dart';
+import 'package:ttld/blocs/tblNhaTuyenDung/ntd_bloc.dart';
+import 'package:ttld/core/di/init/app_init.dart' show initializeAppData;
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/core/enums/region.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';

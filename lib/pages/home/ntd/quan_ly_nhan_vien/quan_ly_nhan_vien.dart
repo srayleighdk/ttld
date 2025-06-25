@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ttld/bloc/biendong/biendong_bloc.dart';
+import 'package:ttld/blocs/biendong/biendong_bloc.dart';
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/models/nhanvien/nhanvien_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -86,7 +86,8 @@ class _QuanLyNhanVienPageState extends State<QuanLyNhanVienPage> {
                         bloc: _bienDongBloc,
                         builder: (context, state) {
                           if (state is BienDongLoading) {
-                            return const Center(child: CircularProgressIndicator());
+                            return const Center(
+                                child: CircularProgressIndicator());
                           }
 
                           if (state is BienDongError) {
@@ -209,7 +210,8 @@ class _QuanLyNhanVienPageState extends State<QuanLyNhanVienPage> {
               borderRadius: BorderRadius.circular(12),
             ),
           ),
-          onPressed: () => context.push('/ntd_home/quan-ly-nhan-vien/create-nhan-vien'),
+          onPressed: () =>
+              context.push('/ntd_home/quan-ly-nhan-vien/create-nhan-vien'),
         ),
       ],
     );
@@ -242,9 +244,11 @@ class _QuanLyNhanVienPageState extends State<QuanLyNhanVienPage> {
 
     return Theme(
       data: Theme.of(context).copyWith(
-        cardTheme: CardThemeData( // Changed CardTheme to CardThemeData
+        cardTheme: CardThemeData(
+          // Changed CardTheme to CardThemeData
           elevation: 0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
         dividerTheme: DividerThemeData(
           color: theme.colorScheme.outlineVariant.withOpacity(0.5),
@@ -390,9 +394,11 @@ class _QuanLyNhanVienPageState extends State<QuanLyNhanVienPage> {
               )),
               DataCell(
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: _getStatusColor(nhanVien.tinhtrangHd ?? '').withOpacity(0.1),
+                    color: _getStatusColor(nhanVien.tinhtrangHd ?? '')
+                        .withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(

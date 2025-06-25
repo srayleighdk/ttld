@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_event.dart';
@@ -31,9 +30,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         ),
       );
 
-      debugPrint('✅ Login API response successful');
-      debugPrint('📦 Response data: ${response.toString()}');
-
       // Update auth state first
       authBloc.add(AuthLoginSuccess(
         token: response.token,
@@ -43,17 +39,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         userType: event.userType,
       ));
 
-      debugPrint('🔐 Auth state update triggered');
-
       // Then emit login success
       emit(LoginSuccess(
         response.id,
         event.userType,
       ));
-
-      debugPrint('🎉 Login success state emitted');
     } catch (e) {
-      debugPrint('❌ Login error: $e');
       emit(LoginFailure(e.toString()));
     }
   }

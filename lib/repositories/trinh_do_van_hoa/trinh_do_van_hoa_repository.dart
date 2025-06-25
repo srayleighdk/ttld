@@ -11,7 +11,7 @@ abstract class TrinhDoVanHoaRepository {
 class TrinhDoVanHoaRepositoryImpl implements TrinhDoVanHoaRepository {
   final TrinhDoVanHoaApiService trinhDoVanHoaApiService;
 
-  TrinhDoVanHoaRepositoryImpl({required this.trinhDoVanHoaApiService});
+  TrinhDoVanHoaRepositoryImpl(this.trinhDoVanHoaApiService);
 
   @override
   Future<List<TrinhDoVanHoa>> getTrinhDoVanHoas() async {
@@ -23,14 +23,18 @@ class TrinhDoVanHoaRepositoryImpl implements TrinhDoVanHoaRepository {
 
   @override
   Future<TrinhDoVanHoa> addTrinhDoVanHoa(TrinhDoVanHoa trinhDoVanHoa) async {
-    final response = await trinhDoVanHoaApiService.postTrinhDoVanHoa(trinhDoVanHoa.toJson());
-    return TrinhDoVanHoa.fromJson(response.data['data'] as Map<String, dynamic>);
+    final response =
+        await trinhDoVanHoaApiService.postTrinhDoVanHoa(trinhDoVanHoa.toJson());
+    return TrinhDoVanHoa.fromJson(
+        response.data['data'] as Map<String, dynamic>);
   }
 
   @override
   Future<TrinhDoVanHoa> updateTrinhDoVanHoa(TrinhDoVanHoa trinhDoVanHoa) async {
-    final response = await trinhDoVanHoaApiService.putTrinhDoVanHoa(trinhDoVanHoa.toJson());
-    return TrinhDoVanHoa.fromJson(response.data['data'] as Map<String, dynamic>);
+    final response =
+        await trinhDoVanHoaApiService.putTrinhDoVanHoa(trinhDoVanHoa.toJson());
+    return TrinhDoVanHoa.fromJson(
+        response.data['data'] as Map<String, dynamic>);
   }
 
   @override

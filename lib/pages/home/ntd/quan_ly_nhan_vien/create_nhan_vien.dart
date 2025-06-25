@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:ttld/bloc/biendong/biendong_bloc.dart';
+import 'package:ttld/blocs/biendong/biendong_bloc.dart';
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/helppers/map_help.dart';
 import 'package:ttld/models/chuc_danh_model.dart';

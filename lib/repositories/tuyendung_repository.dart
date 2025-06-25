@@ -25,14 +25,11 @@ class TuyenDungRepository {
       final data = response.data['data'] as List;
       return data.map((json) {
         // Log the raw JSON for debugging
-        print('Processing JSON: $json');
         return NTDTuyenDung.fromJson(json);
       }).toList();
     } on DioException catch (e) {
-      print('DioException: ${e.message}, Response: ${e.response?.data}');
       throw Exception('Failed to get tuyen dung list: ${e.message}');
     } catch (e) {
-      print('Unexpected error: $e');
       rethrow;
     }
   }

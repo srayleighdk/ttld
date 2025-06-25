@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ttld/bloc/sgdvl/sgdvl_bloc.dart';
-import 'package:ttld/bloc/uv_dk_sgd/uv_dk_sgd_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ttld/blocs/sgdvl/sgdvl_bloc.dart';
+import 'package:ttld/blocs/uv_dk_sgd/uv_dk_sgd_bloc.dart';
+import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/models/sgdvl/sgdvl_model.dart';
 import 'package:ttld/models/uv_dk_sgd/uv_dk_sgd_model.dart';
-import 'package:intl/intl.dart';
+import 'package:ttld/pages/home/ntv/sgdvl_page.dart';
+import 'package:ttld/repositories/sgdvl_repository.dart';
+import 'package:ttld/blocs/tblHoSoUngVien/tblhosoungvien_bloc.dart';
+import 'package:ttld/blocs/tblHoSoUngVien/tblhosoungvien_state.dart';
 
 class SGDVLRegistrationPage extends StatelessWidget {
   const SGDVLRegistrationPage({super.key});
@@ -13,53 +18,73 @@ class SGDVLRegistrationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Đăng ký phiên GDVL'),
-      ),
-      body: MultiBlocListener(
-        listeners: [
-          BlocListener<UvDkSGDBloc, UvDkSGDState>(
-            listener: (context, state) {
-              if (state is UvDkSGDRegistered) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Đăng ký thành công!'),
-                    backgroundColor: Colors.green,
-                  ),
-                );
-              } else if (state is UvDkSGDRegistrationError) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Lỗi: ${state.message}'),
-                    backgroundColor: Colors.red,
-                  ),
-                );
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) =>
+              SGDVLBloc(locator<SGDVLRepository>())..add(LoadSGDVLs()),
+        ),
+        BlocProvider(
+          create: (context) => locator<UvDkSGDBloc>(),
+        ),
+        // Always provide NTVBloc to avoid the error when navigating back
+        BlocProvider<NTVBloc>.value(
+          value: locator<NTVBloc>(),
+        ),
+      ],
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Đăng ký phiên GDVL'),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => context.go('/ntv_home'),
+          ),
+        ),
+        body: MultiBlocListener(
+          listeners: [
+            BlocListener<UvDkSGDBloc, UvDkSGDState>(
+              listener: (context, state) {
+                if (state is UvDkSGDRegistered) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Đăng ký thành công!'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                  // Navigate back to SGDVL page after successful registration
+                  context.go('/ntv_home${SGDVLPage.routePath}');
+                } else if (state is UvDkSGDRegistrationError) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Lỗi: ${state.message}'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              },
+            ),
+          ],
+          child: BlocBuilder<SGDVLBloc, SGDVLState>(
+            builder: (context, state) {
+              if (state is SGDVLInitial) {
+                return const Center(child: CircularProgressIndicator());
               }
+
+              if (state is SGDVLLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (state is SGDVLError) {
+                return Center(child: Text('Error: ${state.message}'));
+              }
+
+              if (state is SGDVLLoaded) {
+                return _buildSGDVLList(context, state.sgdvls);
+              }
+
+              return const Center(child: Text('Unknown state'));
             },
           ),
-        ],
-        child: BlocBuilder<SGDVLBloc, SGDVLState>(
-          builder: (context, state) {
-            if (state is SGDVLInitial) {
-              context.read<SGDVLBloc>().add(LoadSGDVLs());
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            if (state is SGDVLLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            if (state is SGDVLError) {
-              return Center(child: Text('Error: ${state.message}'));
-            }
-
-            if (state is SGDVLLoaded) {
-              return _buildSGDVLList(context, state.sgdvls);
-            }
-
-            return const Center(child: Text('Unknown state'));
-          },
         ),
       ),
     );
@@ -90,7 +115,8 @@ class SGDVLRegistrationPage extends StatelessWidget {
                 _buildInfoRow('Ngày:', sgdvl.pgdNgay),
                 _buildInfoRow('Giờ:', sgdvl.pgdGio),
                 _buildInfoRow('Địa điểm:', sgdvl.pgdDiadiem),
-                _buildInfoRow('Tổng nhu cầu tuyển dụng:', '${sgdvl.tongNhucauTd} người'),
+                _buildInfoRow(
+                    'Tổng nhu cầu tuyển dụng:', '${sgdvl.tongNhucauTd} người'),
                 const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -166,7 +192,8 @@ class SGDVLRegistrationPage extends StatelessWidget {
       modifiredBy: userId,
     );
 
-    context.read<UvDkSGDBloc>().add(RegisterForSGDVL(registration: registration));
+    context
+        .read<UvDkSGDBloc>()
+        .add(RegisterForSGDVL(registration: registration));
   }
 }
-

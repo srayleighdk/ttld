@@ -3,7 +3,6 @@ import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ttld/core/enums/region.dart';
 import 'package:ttld/features/auth/repositories/auth_repository.dart';
@@ -59,22 +58,6 @@ class ApiClient {
         return client;
       };
     }
-
-    _dio.interceptors.add(PrettyDioLogger(
-        requestHeader: true,
-        requestBody: true,
-        responseBody: true,
-        responseHeader: false,
-        error: true,
-        compact: true,
-        maxWidth: 90,
-        enabled: kDebugMode,
-        filter: (options, args) {
-          if (options.path.contains('/posts')) {
-            return false;
-          }
-          return !args.isResponse || !args.hasUint8ListData;
-        }));
   }
 
   Dio get dio => _dio;

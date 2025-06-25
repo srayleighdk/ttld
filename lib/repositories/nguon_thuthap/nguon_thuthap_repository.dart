@@ -11,7 +11,7 @@ abstract class NguonThuThapRepository {
 class NguonThuThapRepositoryImpl implements NguonThuThapRepository {
   final NguonThuThapApiService nguonThuThapApiService;
 
-  NguonThuThapRepositoryImpl({required this.nguonThuThapApiService});
+  NguonThuThapRepositoryImpl(this.nguonThuThapApiService);
 
   @override
   Future<List<NguonThuThap>> getNguonThuThaps() async {
@@ -23,13 +23,15 @@ class NguonThuThapRepositoryImpl implements NguonThuThapRepository {
 
   @override
   Future<NguonThuThap> addNguonThuThap(NguonThuThap nguonThuThap) async {
-    final response = await nguonThuThapApiService.postNguonThuThap(nguonThuThap.toJson());
+    final response =
+        await nguonThuThapApiService.postNguonThuThap(nguonThuThap.toJson());
     return NguonThuThap.fromJson(response.data['data'] as Map<String, dynamic>);
   }
 
   @override
   Future<NguonThuThap> updateNguonThuThap(NguonThuThap nguonThuThap) async {
-    final response = await nguonThuThapApiService.putNguonThuThap(nguonThuThap.toJson());
+    final response =
+        await nguonThuThapApiService.putNguonThuThap(nguonThuThap.toJson());
     return NguonThuThap.fromJson(response.data['data'] as Map<String, dynamic>);
   }
 

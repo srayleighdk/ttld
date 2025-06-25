@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_bloc.dart';
-import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_event.dart';
-import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_state.dart';
+import 'package:ttld/blocs/tblHoSoUngVien/tblhosoungvien_bloc.dart';
+import 'package:ttld/blocs/tblHoSoUngVien/tblhosoungvien_event.dart';
+import 'package:ttld/blocs/tblHoSoUngVien/tblhosoungvien_state.dart';
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
 import 'package:ttld/helppers/help.dart';
 import 'package:ttld/models/tblHoSoUngVien/tblHoSoUngVien_model.dart';
-import 'package:ttld/bloc/tuyendung/tuyendung_bloc.dart';
+import 'package:ttld/blocs/tuyendung/tuyendung_bloc.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:ttld/pages/home/ntd/ntd_tuyendung_info_page.dart';
 import 'package:ttld/repositories/tuyendung_repository.dart';
-import 'package:ttld/bloc/kinh_nghiem_lam_viec/kinh_nghiem_lam_viec_bloc.dart';
+import 'package:ttld/blocs/kinh_nghiem_lam_viec/kinh_nghiem_lam_viec_bloc.dart';
 import 'package:ttld/repositories/kinh_nghiem_lam_viec_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPreferences
 import 'package:ttld/core/enums/region.dart'; // Import Region enum

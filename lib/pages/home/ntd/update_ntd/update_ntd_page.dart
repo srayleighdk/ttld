@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ttld/bloc/tblNhaTuyenDung/ntd_bloc.dart';
+import 'package:ttld/blocs/tblNhaTuyenDung/ntd_bloc.dart';
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/core/utils/toast_utils.dart';
 import 'package:ttld/helppers/map_help.dart';
@@ -10,7 +10,7 @@ import 'package:ttld/models/hinhthuc_doanhnghiep/hinhthuc_doanhnghiep_model.dart
 import 'package:ttld/models/loai_hinh_model.dart';
 import 'package:ttld/models/nganh_nghe_model.dart';
 import 'package:ttld/models/thoigian_hoatdong.dart';
-import 'package:ttld/widgets/cascade_location_picker.dart';
+import 'package:ttld/widgets/cascade_location_picker_grok.dart';
 import 'package:ttld/widgets/field/custom_checkbox.dart';
 import 'package:ttld/widgets/field/custom_picker_map.dart';
 import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
@@ -126,8 +126,11 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
         _ntdEmailController.text = ntd.ntdEmail ?? '';
         _ntdSolaodongController.text = ntd.ntdSolaodong?.toString() ?? '';
         _ntdGioithieuController.text = ntd.ntdGioithieu ?? '';
-        _ntdDiachithanhphoController.text = ntd.ntdDiachithanhpho?.toString() ?? '';
-        maTinh = ntd.ntdDiachithanhpho != null ? int.tryParse(ntd.ntdDiachithanhpho!) : null;
+        _ntdDiachithanhphoController.text =
+            ntd.ntdDiachithanhpho?.toString() ?? '';
+        maTinh = ntd.ntdDiachithanhpho != null
+            ? int.tryParse(ntd.ntdDiachithanhpho!)
+            : null;
         maHuyen = ntd.ntdDiachihuyen;
         maXa = ntd.ntdDiachixaphuong;
         maKCN = ntd.ntdThuockhucongnghiep;
@@ -177,7 +180,8 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
         }
         if (ntdHinhthucdoanhnghiep != null) {
           try {
-            hinhthucDoanhNghiep = locator<List<HinhThucDoanhNghiep>>().firstWhere(
+            hinhthucDoanhNghiep =
+                locator<List<HinhThucDoanhNghiep>>().firstWhere(
               (item) => item.id == ntdHinhthucdoanhnghiep,
               orElse: () => null as HinhThucDoanhNghiep,
             );
@@ -283,7 +287,8 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                             Text(
                               'Vui lòng cập nhật thông tin của bạn',
                               style: theme.textTheme.bodyMedium?.copyWith(
-                                color: theme.colorScheme.onSurface.withAlpha(179),
+                                color:
+                                    theme.colorScheme.onSurface.withAlpha(179),
                               ),
                             ),
                           ],
@@ -563,7 +568,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                             ),
                           ],
                         ),
-                        child: CascadeLocationPicker(
+                        child: CascadeLocationPickerGrok(
                           isNTD: true,
                           initialTinh: maTinh.toString(),
                           initialHuyen: maHuyen,

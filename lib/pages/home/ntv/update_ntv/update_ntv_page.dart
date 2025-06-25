@@ -8,9 +8,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_bloc.dart';
-import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_event.dart';
-import 'package:ttld/bloc/tblHoSoUngVien/tblHoSoUngVien_state.dart';
+import 'package:ttld/blocs/tblHoSoUngVien/tblhosoungvien_bloc.dart';
+import 'package:ttld/blocs/tblHoSoUngVien/tblhosoungvien_event.dart';
+import 'package:ttld/blocs/tblHoSoUngVien/tblhosoungvien_state.dart';
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/core/utils/toast_utils.dart';
 import 'package:ttld/helppers/map_help.dart';
@@ -29,7 +29,7 @@ import 'package:ttld/models/trinh_do_ngoai_ngu_model.dart';
 import 'package:ttld/models/trinh_do_tin_hoc_model.dart';
 import 'package:ttld/models/trinh_do_van_hoa_model.dart';
 import 'package:ttld/models/tttantat/tttantat.dart';
-import 'package:ttld/widgets/cascade_location_picker.dart';
+import 'package:ttld/widgets/cascade_location_picker_grok.dart';
 import 'package:ttld/widgets/field/custom_checkbox.dart';
 import 'package:ttld/widgets/field/custom_pick_datetime_grok.dart';
 import 'package:ttld/widgets/field/custom_picker_map.dart';
@@ -887,7 +887,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
             theme,
             'Địa chỉ',
             [
-              CascadeLocationPicker(
+              CascadeLocationPickerGrok(
                 initialTinh: _idTinhController.text,
                 initialHuyen: _idHuyenController.text,
                 initialXa: _idXaController.text,
