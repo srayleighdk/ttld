@@ -944,7 +944,13 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
               const SizedBox(height: 12), // Reduced spacing
               GenericPicker<NganhNgheTD>(
                 label: 'Ngành nghề',
-                items: locator<List<NganhNgheTD>>(),
+                items: () {
+                  try {
+                    return locator<List<NganhNgheTD>>();
+                  } catch (e) {
+                    return <NganhNgheTD>[];
+                  }
+                }(),
                 initialValue: _uvnvNganhngheId,
                 onChanged: (NganhNgheTD? value) {
                   setState(() {

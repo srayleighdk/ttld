@@ -60,6 +60,9 @@ Future<void> initializeJobData() async {
     }
   } catch (e) {
     debugPrint('Error preloading chuc danh: $e');
+    if (!locator.isRegistered<List<ChucDanhModel>>()) {
+      locator.registerSingleton<List<ChucDanhModel>>([]); // Fallback empty list
+    }
   }
 
   try {
@@ -70,6 +73,9 @@ Future<void> initializeJobData() async {
     }
   } catch (e) {
     debugPrint('Error preloading nganh nghe capdo: $e');
+    if (!locator.isRegistered<List<NganhNgheCapDo>>()) {
+      locator.registerSingleton<List<NganhNgheCapDo>>([]); // Fallback empty list
+    }
   }
 
   try {
@@ -80,6 +86,9 @@ Future<void> initializeJobData() async {
     }
   } catch (e) {
     debugPrint('Error preloading nganh nghe bachoc: $e');
+    if (!locator.isRegistered<List<TrinhDoChuyenMon>>()) {
+      locator.registerSingleton<List<TrinhDoChuyenMon>>([]); // Fallback empty list
+    }
   }
 
   try {
@@ -91,6 +100,9 @@ Future<void> initializeJobData() async {
     }
   } catch (e) {
     debugPrint('Error preloading nganh nghe chuyen nganh: $e');
+    if (!locator.isRegistered<List<NganhNgheChuyenNganh>>()) {
+      locator.registerSingleton<List<NganhNgheChuyenNganh>>([]); // Fallback empty list
+    }
   }
 
   try {
@@ -107,9 +119,14 @@ Future<void> initializeJobData() async {
 
   // Ky Nang Mem
   try {
-    final kyNangMems = await kyNangMemRepository.getKyNangMems();
-    locator.registerSingleton<List<KyNangMemModel>>(kyNangMems);
+    if (!locator.isRegistered<List<KyNangMemModel>>()) {
+      final kyNangMems = await kyNangMemRepository.getKyNangMems();
+      locator.registerSingleton<List<KyNangMemModel>>(kyNangMems);
+    }
   } catch (e) {
     debugPrint('Error preloading ky nang mem: $e');
+    if (!locator.isRegistered<List<KyNangMemModel>>()) {
+      locator.registerSingleton<List<KyNangMemModel>>([]); // Fallback empty list
+    }
   }
 }

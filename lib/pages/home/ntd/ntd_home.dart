@@ -147,184 +147,351 @@ class _NTDHomePageState extends State<NTDHomePage> {
     );
   }
 
-  // Section 1: User Information
+  // Modern user info section with glass effect and enhanced design
   Widget _buildUserInfoSection(BuildContext context, NTDState state) {
     final theme = Theme.of(context);
     if (state is NTDLoadedById) {
       final ntd = state.ntd;
       return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        margin: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
-          color: theme.colorScheme.surface,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: theme.colorScheme.shadow.withAlpha(26),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
+              color: theme.colorScheme.shadow.withAlpha(15),
+              blurRadius: 15,
+              offset: const Offset(0, 5),
             ),
           ],
         ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: LinearGradient(
-                  colors: [
-                    theme.colorScheme.primary,
-                    theme.colorScheme.primary.withAlpha(204),
-                  ],
-                ),
+        child: Material(
+          color: Colors.transparent,
+          child: Ink(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  theme.colorScheme.primary.withOpacity(0.05),
+                  theme.colorScheme.surface,
+                ],
               ),
-              child: ClipOval(
-                child: Container(
-                  width: 60,
-                  height: 60,
-                  color: theme.colorScheme.surface,
-                  child: _avatarBaseUrl.isNotEmpty &&
-                          ntd.imagePath != null &&
-                          ntd.imagePath!.isNotEmpty
-                      ? Image.network(
-                          '$_avatarBaseUrl${ntd.imagePath}', // Use the dynamic URL
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            debugPrint('Error loading avatar: $error');
-                            return Center(
-                              child: Text(
-                                (ntd.ntdTen ?? 'U')[0].toUpperCase(),
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: theme.colorScheme.primary,
-                                ),
-                              ),
-                            );
-                          },
-                        )
-                      : Center(
-                          child: Text(
-                            (ntd.ntdTen ?? 'U')[0].toUpperCase(),
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: theme.colorScheme.primary,
-                            ),
-                          ),
-                        ),
-                ),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: theme.colorScheme.primary.withOpacity(0.1),
+                width: 1,
               ),
             ),
-            const SizedBox(width: 20),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
                 children: [
-                  Text(
-                    'Welcome back,',
-                    style: theme.textTheme.bodyLarge?.copyWith(
-                      color: theme.colorScheme.onSurface.withAlpha(179),
+                  // Avatar with enhanced design
+                  Container(
+                    width: 70,
+                    height: 70,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          theme.colorScheme.primary,
+                          theme.colorScheme.primary.withOpacity(0.7),
+                        ],
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: theme.colorScheme.primary.withOpacity(0.3),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: _avatarBaseUrl.isNotEmpty &&
+                              ntd.imagePath != null &&
+                              ntd.imagePath!.isNotEmpty
+                          ? ClipOval(
+                              child: Image.network(
+                                '$_avatarBaseUrl${ntd.imagePath}',
+                                width: 66,
+                                height: 66,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  debugPrint('Error loading avatar: $error');
+                                  return _buildAvatarFallback(ntd, theme);
+                                },
+                              ),
+                            )
+                          : _buildAvatarFallback(ntd, theme),
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    ntd.ntdTen ?? 'Unknown Company',
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.onSurface,
+                  const SizedBox(width: 16),
+                  // Company info with enhanced typography
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Welcome back,',
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            color: theme.colorScheme.onSurface.withOpacity(0.7),
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          ntd.ntdTen ?? 'Unknown Company',
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: theme.colorScheme.onSurface,
+                            letterSpacing: 0.3,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        if (ntd.ntdDiachichitiet != null) ...[
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              Icon(
+                                FontAwesomeIcons.locationDot,
+                                size: 12,
+                                color: theme.colorScheme.onSurface
+                                    .withOpacity(0.6),
+                              ),
+                              const SizedBox(width: 4),
+                              Expanded(
+                                child: Text(
+                                  ntd.ntdDiachichitiet!,
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: theme.colorScheme.onSurface
+                                        .withOpacity(0.6),
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  // Company status indicator
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.green.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: Colors.green,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          'Active',
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: Colors.green,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
-          ],
+          ),
         ),
       );
     } else if (state is NTDError) {
-      return Center(child: Text('Error: ${state.message}'));
+      return Center(
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.errorContainer.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: theme.colorScheme.error.withOpacity(0.2),
+              width: 1,
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                FontAwesomeIcons.triangleExclamation,
+                size: 48,
+                color: theme.colorScheme.error,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Có lỗi xảy ra',
+                style: theme.textTheme.titleLarge?.copyWith(
+                  color: theme.colorScheme.error,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                state.message,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onErrorContainer,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      );
     } else {
       return const SizedBox.shrink();
     }
   }
 
-  // New section for key action buttons (similar to NTV's action buttons)
+  // Helper method for avatar fallback
+  Widget _buildAvatarFallback(Ntd ntd, ThemeData theme) {
+    return Container(
+      width: 66,
+      height: 66,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: theme.colorScheme.surface,
+      ),
+      child: Center(
+        child: Text(
+          (ntd.ntdTen ?? 'U')[0].toUpperCase(),
+          style: TextStyle(
+            fontSize: 26,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Modern key action buttons section with gradient backgrounds
   Widget _buildKeyActionButtonsSection(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.symmetric(vertical: 16),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: theme.colorScheme.shadow.withAlpha(26),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+            color: theme.colorScheme.shadow.withAlpha(20),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _buildKeyActionButtonItem(context, FontAwesomeIcons.store, 'Sàn GDVL',
-              null), // Added Sàn GDVL button
-          _buildKeyActionButtonItem(context, FontAwesomeIcons.calendarPlus,
-              'Thêm tuyển dụng', '/ntd_home/create_tuyen_dung'),
-          _buildKeyActionButtonItem(context, FontAwesomeIcons.fileImport,
-              'Hồ sơ chắp nối', '/ntd_home/ho-so-chap-noi'),
-          // Add more key actions here if needed
+          _buildKeyActionButtonItem(
+            context,
+            FontAwesomeIcons.buildingUser,
+            'Sàn GDVL',
+            null,
+            [Color(0xFF4A6FFF), Color(0xFF2E5CFF)], // Blue gradient
+          ),
+          _buildKeyActionButtonItem(
+            context,
+            FontAwesomeIcons.plus,
+            'Thêm TD',
+            '/ntd_home/create_tuyen_dung',
+            [Color(0xFF4CAF50), Color(0xFF2E7D32)], // Green gradient
+          ),
+          _buildKeyActionButtonItem(
+            context,
+            FontAwesomeIcons.handshake,
+            'Chắp Nối',
+            '/ntd_home/ho-so-chap-noi',
+            [Color(0xFFFF6B6B), Color(0xFFFF4B4B)], // Red gradient
+          ),
         ],
       ),
     );
   }
 
-  // Helper widget for each key action button item
+  // Modern key action button item with gradient background
   Widget _buildKeyActionButtonItem(
-      BuildContext context, IconData icon, String label, String? route) {
+    BuildContext context,
+    IconData icon,
+    String label,
+    String? route,
+    List<Color> gradientColors,
+  ) {
     final theme = Theme.of(context);
     return Expanded(
-      child: InkWell(
-        onTap: () {
-          if (route != null) {
-            try {
-              if (route == '/ntd_home/ho-so-chap-noi') {
-                context.push(route, extra: {
-                  'tabIndex': 0,
-                });
-              } else {
-                context.push(route);
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: InkWell(
+          onTap: () {
+            if (route != null) {
+              try {
+                if (route == '/ntd_home/ho-so-chap-noi') {
+                  context.push(route, extra: {
+                    'tabIndex': 0,
+                  });
+                } else {
+                  context.push(route);
+                }
+              } catch (e) {
+                debugPrint('Navigation error: $e');
               }
-            } catch (e) {
-              debugPrint('Navigation error: $e');
             }
-          }
-        },
-        borderRadius: BorderRadius.circular(8),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          },
+          borderRadius: BorderRadius.circular(12),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                padding: const EdgeInsets.all(10),
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.red, // Red background as in NTV
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: gradientColors,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: gradientColors[0].withOpacity(0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
-                child: Icon(
-                  icon,
-                  size: 20,
-                  color: Colors.white,
+                child: Center(
+                  child: Icon(
+                    icon,
+                    size: 24,
+                    color: Colors.white,
+                  ),
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 10),
               Text(
                 label,
                 textAlign: TextAlign.center,
-                style: theme.textTheme.labelSmall?.copyWith(
+                style: theme.textTheme.labelMedium?.copyWith(
                   color: theme.colorScheme.onSurface,
-                  fontSize: 11,
+                  fontWeight: FontWeight.w500,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -336,85 +503,126 @@ class _NTDHomePageState extends State<NTDHomePage> {
     );
   }
 
-  // Section 2: Quick Access Buttons (now with fewer items)
+  // Modern quick access section with enhanced design
   Widget _buildQuickAccessSection(BuildContext context) {
     final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Modern section header with gradient accent
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          margin: const EdgeInsets.only(bottom: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: theme.colorScheme.shadow.withAlpha(26),
-                spreadRadius: 1,
-                blurRadius: 8,
-                offset: const Offset(0, 2),
+                color: theme.colorScheme.shadow.withAlpha(15),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
               ),
             ],
           ),
           child: Row(
             children: [
               Container(
-                width: 3,
-                height: 16, // Reduced from 24
+                width: 5,
+                height: 28,
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.primary,
-                  borderRadius: BorderRadius.circular(1.5),
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      theme.colorScheme.primary,
+                      theme.colorScheme.secondary,
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(3),
                 ),
               ),
-              const SizedBox(width: 8), // Reduced from 12
-              Expanded(
-                child: Text(
-                  'Dịch vụ việc làm',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.onSurface,
-                  ),
-                  overflow: TextOverflow.ellipsis,
+              const SizedBox(width: 12),
+              Text(
+                'Dịch vụ tuyển dụng',
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: theme.colorScheme.onSurface,
+                  letterSpacing: 0.3,
                 ),
               ),
             ],
           ),
         ),
-        const SizedBox(height: 8), // Reduced from 16
+
+        // Modern grid of quick access items
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: theme.colorScheme.shadow.withAlpha(26),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
+                color: theme.colorScheme.shadow.withAlpha(15),
+                blurRadius: 15,
+                offset: const Offset(0, 5),
               ),
             ],
+            border: Border.all(
+              color: theme.colorScheme.primary.withOpacity(0.05),
+              width: 1,
+            ),
           ),
           child: GridView.count(
-            crossAxisCount: 4,
+            crossAxisCount: 3, // Changed to 3 for better layout
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             mainAxisSpacing: 16,
             crossAxisSpacing: 16,
-            childAspectRatio: 0.85,
+            childAspectRatio: 0.9, // Adjusted for better proportions
             children: [
-              _buildQuickAccessItem(context, FontAwesomeIcons.solidPenToSquare,
-                  'Cập nhật TT, phiếu TT tuyển dụng', '/update_ntd'),
-              _buildQuickAccessItem(context, FontAwesomeIcons.calendarCheck,
-                  'Quản Lý Tuyển Dụng', '/ntd_home/quan-ly-tuyen-dung'),
-              _buildQuickAccessItem(context, FontAwesomeIcons.calendarCheck,
-                  'Quản Lý Nhân Viên', '/ntd_home/quan-ly-nhan-vien'),
-              _buildQuickAccessItem(context, FontAwesomeIcons.globe,
-                  'TD lao động nước ngoài', null),
-              _buildQuickAccessItem(context, FontAwesomeIcons.envelopeOpenText,
-                  'Thư mời tham gia GDVL', null),
-              _buildQuickAccessItem(context, FontAwesomeIcons.handshake,
-                  'Kết quả kết nối việc làm', null),
+              _buildQuickAccessItem(
+                context,
+                FontAwesomeIcons.solidPenToSquare,
+                'Cập nhật TT\nPhiếu TT tuyển dụng',
+                '/update_ntd',
+                [Color(0xFF4A6FFF), Color(0xFF2E5CFF)], // Blue gradient
+              ),
+              _buildQuickAccessItem(
+                context,
+                FontAwesomeIcons.briefcase,
+                'Quản Lý\nTuyển Dụng',
+                '/ntd_home/quan-ly-tuyen-dung',
+                [Color(0xFF4CAF50), Color(0xFF2E7D32)], // Green gradient
+              ),
+              _buildQuickAccessItem(
+                context,
+                FontAwesomeIcons.users,
+                'Quản Lý\nNhân Viên',
+                '/ntd_home/quan-ly-nhan-vien',
+                [Color(0xFFFF6B6B), Color(0xFFFF4B4B)], // Red gradient
+              ),
+              _buildQuickAccessItem(
+                context,
+                FontAwesomeIcons.globe,
+                'TD lao động\nnước ngoài',
+                null,
+                [Color(0xFFFF9800), Color(0xFFF57C00)], // Orange gradient
+              ),
+              _buildQuickAccessItem(
+                context,
+                FontAwesomeIcons.envelopeOpenText,
+                'Thư mời\ntham gia GDVL',
+                null,
+                [Color(0xFF9C27B0), Color(0xFF7B1FA2)], // Purple gradient
+              ),
+              _buildQuickAccessItem(
+                context,
+                FontAwesomeIcons.chartLine,
+                'Kết quả\nkết nối việc làm',
+                null,
+                [Color(0xFF00BCD4), Color(0xFF0097A7)], // Cyan gradient
+              ),
             ],
           ),
         ),
@@ -476,27 +684,99 @@ class _NTDHomePageState extends State<NTDHomePage> {
     );
   }
 
+  // Modern quick access item with gradient background and improved visuals
   Widget _buildQuickAccessItem(
-      BuildContext context, IconData icon, String label, String? route) {
+    BuildContext context,
+    IconData icon,
+    String label,
+    String? route,
+    List<Color> gradientColors,
+  ) {
     final theme = Theme.of(context);
-    return SizedBox(
-      width: 104,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildQuickAccessButton(context: context, icon: icon, route: route),
-          const SizedBox(height: 2),
-          Text(
-            label,
-            textAlign: TextAlign.center,
-            style: theme.textTheme.labelSmall?.copyWith(
-              color: theme.colorScheme.onSurface,
-              fontSize: 11,
-            ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () {
+          if (route != null) {
+            try {
+              if (route == '/ntd_home/quan-ly-tuyen-dung') {
+                context.push(route, extra: userId);
+              } else if (route == '/ntd_home/quan-ly-nhan-vien') {
+                context.push(route, extra: userId);
+              } else if (route == '/ntd_home/ho-so-chap-noi') {
+                context.push(route, extra: {
+                  'tabIndex': 0,
+                });
+              } else {
+                context.push(route);
+              }
+            } catch (e) {
+              debugPrint('Navigation error: $e');
+            }
+          }
+        },
+        borderRadius: BorderRadius.circular(16),
+        child: Ink(
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.shadow.withAlpha(10),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
-        ],
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Icon with gradient background
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: gradientColors,
+                  ),
+                  borderRadius: BorderRadius.circular(14),
+                  boxShadow: [
+                    BoxShadow(
+                      color: gradientColors[0].withOpacity(0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Icon(
+                    icon,
+                    size: 20,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              // Label with improved typography
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: Text(
+                  label,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: theme.colorScheme.onSurface,
+                    fontWeight: FontWeight.w500,
+                    height: 1.2,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -506,159 +786,318 @@ class _NTDHomePageState extends State<NTDHomePage> {
   //   return '${date.day}/${date.month}/${date.year}';
   // }
 
+  // Modern statistics section with enhanced data table design
   Widget _buildStatisticsSection(BuildContext context, NTVState state) {
+    final theme = Theme.of(context);
+
     if (state is NTVError) {
-      return Center(child: Text(state.message));
+      return Center(
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.errorContainer.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: theme.colorScheme.error.withOpacity(0.2),
+              width: 1,
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                FontAwesomeIcons.triangleExclamation,
+                size: 48,
+                color: theme.colorScheme.error,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Có lỗi xảy ra',
+                style: theme.textTheme.titleLarge?.copyWith(
+                  color: theme.colorScheme.error,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                state.message,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onErrorContainer,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      );
     }
+
     if (state is NTVLoaded) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Modern section header with statistics summary
           Container(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 8, vertical: 4), // Reduced padding
+            margin: const EdgeInsets.only(bottom: 16),
+            padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              borderRadius: BorderRadius.circular(8), // Reduced radius
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  theme.colorScheme.primary.withOpacity(0.05),
+                  theme.colorScheme.surface,
+                ],
+              ),
+              borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
-                  color: Theme.of(context).colorScheme.shadow.withAlpha(20),
-                  spreadRadius: 0,
-                  blurRadius: 4,
-                  offset: const Offset(0, 1),
+                  color: theme.colorScheme.shadow.withAlpha(15),
+                  blurRadius: 15,
+                  offset: const Offset(0, 5),
                 ),
               ],
+              border: Border.all(
+                color: theme.colorScheme.primary.withOpacity(0.1),
+                width: 1,
+              ),
             ),
             child: Row(
               children: [
+                // Icon with gradient background
                 Container(
-                  width: 3, // Reduced width
-                  height: 16, // Reduced height
+                  width: 50,
+                  height: 50,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary,
-                    borderRadius: BorderRadius.circular(1.5),
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        theme.colorScheme.primary,
+                        theme.colorScheme.primary.withOpacity(0.7),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: [
+                      BoxShadow(
+                        color: theme.colorScheme.primary.withOpacity(0.3),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Icon(
+                    FontAwesomeIcons.users,
+                    size: 24,
+                    color: Colors.white,
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 16),
                 Expanded(
-                  child: Text(
-                    'Danh sách người tìm việc',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.onSurface,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Ứng viên tiềm năng',
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: theme.colorScheme.onSurface,
+                          letterSpacing: 0.3,
                         ),
-                    overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '${state.tblHoSoUngViens.length} hồ sơ ứng viên',
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          color: theme.colorScheme.onSurface.withOpacity(0.7),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // View all button
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primary.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Xem tất cả',
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          color: theme.colorScheme.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Icon(
+                        FontAwesomeIcons.angleRight,
+                        size: 12,
+                        color: theme.colorScheme.primary,
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(height: 8),
+
+          // Modern data table with enhanced styling
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surface,
-                borderRadius: BorderRadius.circular(8),
+                color: theme.colorScheme.surface,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: theme.colorScheme.shadow.withAlpha(15),
+                    blurRadius: 15,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
                 border: Border.all(
-                  color: Theme.of(context).colorScheme.outline.withOpacity(0.1),
+                  color: theme.colorScheme.outline.withOpacity(0.05),
                   width: 1,
                 ),
               ),
-              child: DataTable2(
-                columnSpacing: 4, // Reduced spacing
-                horizontalMargin: 8,
-                minWidth: 300, // Reduced minimum width
-                headingRowHeight: 32, // Reduced header height
-                dataRowHeight: 36, // Reduced row height
-                headingTextStyle:
-                    Theme.of(context).textTheme.bodySmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: DataTable2(
+                  columnSpacing: 12,
+                  horizontalMargin: 20,
+                  minWidth: 400,
+                  headingRowHeight: 56,
+                  dataRowHeight: 60,
+                  headingRowColor: MaterialStateProperty.all(
+                    theme.colorScheme.primary.withOpacity(0.05),
+                  ),
+                  columns: [
+                    DataColumn2(
+                      label: Text(
+                        'Họ tên',
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: theme.colorScheme.primary,
+                          letterSpacing: 0.3,
                         ),
-                dividerThickness: 0.5, // Reduced divider thickness
-                columns: [
-                  DataColumn2(
-                    label: Text('Họ tên'),
-                    size: ColumnSize.L,
-                  ),
-                  DataColumn2(
-                    label: Text('Giới tính'),
-                    size: ColumnSize.S,
-                  ),
-                  DataColumn2(
-                    label: Text('Tuổi'),
-                    size: ColumnSize.S,
-                  ),
-                  DataColumn2(
-                    label: Text('Ngành nghề'),
-                    size: ColumnSize.L,
-                  ),
-                ],
-                rows: state.tblHoSoUngViens.map((hoSo) {
-                  return DataRow(
-                    cells: [
-                      DataCell(
-                        Container(
-                          constraints: BoxConstraints(
-                              maxWidth: 80,
-                              minWidth: 80), // Reduced constraints
-                          child: Text(
-                            hoSo.uvHoten ?? 'Chưa có',
-                            style:
-                                Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      fontSize: 11,
-                                    ),
+                      ),
+                      size: ColumnSize.L,
+                    ),
+                    DataColumn2(
+                      label: Text(
+                        'Giới tính',
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: theme.colorScheme.primary,
+                          letterSpacing: 0.3,
+                        ),
+                      ),
+                      size: ColumnSize.S,
+                    ),
+                    DataColumn2(
+                      label: Text(
+                        'Tuổi',
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: theme.colorScheme.primary,
+                          letterSpacing: 0.3,
+                        ),
+                      ),
+                      size: ColumnSize.S,
+                    ),
+                    DataColumn2(
+                      label: Text(
+                        'Ngành nghề',
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: theme.colorScheme.primary,
+                          letterSpacing: 0.3,
+                        ),
+                      ),
+                      size: ColumnSize.L,
+                    ),
+                  ],
+                  rows: state.tblHoSoUngViens.asMap().entries.map((entry) {
+                    final index = entry.key;
+                    final hoSo = entry.value;
+                    final isEven = index % 2 == 0;
+
+                    return DataRow(
+                      color: MaterialStateProperty.all(
+                        isEven
+                            ? Colors.transparent
+                            : theme.colorScheme.primary.withOpacity(0.02),
+                      ),
+                      cells: [
+                        DataCell(
+                          Container(
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            child: Text(
+                              hoSo.uvHoten ?? 'Chưa có',
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: theme.colorScheme.onSurface,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    NTVInfoPage(ntdData: hoSo),
+                              ),
+                            );
+                          },
+                        ),
+                        DataCell(
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: hoSo.uvGioitinh == 1
+                                  ? Colors.blue.withOpacity(0.1)
+                                  : Colors.pink.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              hoSo.uvGioitinh == 1 ? 'Nam' : 'Nữ',
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: hoSo.uvGioitinh == 1
+                                    ? Colors.blue
+                                    : Colors.pink,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
+                        DataCell(
+                          Text(
+                            _calculateAge(hoSo.uvNgaysinh)?.toString() ??
+                                'Chưa có',
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: theme.colorScheme.onSurface,
+                            ),
+                          ),
+                        ),
+                        DataCell(
+                          Text(
+                            hoSo.uvnvNganhnghe ?? 'Chưa có',
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: theme.colorScheme.onSurface,
+                            ),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => NTVInfoPage(ntdData: hoSo),
-                            ),
-                          );
-                        },
-                      ),
-                      DataCell(Container(
-                        constraints: BoxConstraints(
-                            maxWidth: 50, minWidth: 50), // Reduced constraints
-                        child: Text(
-                          hoSo.uvGioitinh == 1 ? 'Nam' : 'Nữ',
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    fontSize: 11,
-                                  ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      )),
-                      DataCell(Container(
-                        constraints: BoxConstraints(
-                            maxWidth: 40, minWidth: 40), // Reduced constraints
-                        child: Text(
-                          _calculateAge(hoSo.uvNgaysinh)?.toString() ??
-                              'Chưa có',
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    fontSize: 11,
-                                  ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      )),
-                      DataCell(Container(
-                        constraints: BoxConstraints(
-                            maxWidth: 70, minWidth: 70), // Reduced constraints
-                        child: Text(
-                          hoSo.uvnvNganhnghe ?? 'Chưa có',
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    fontSize: 11,
-                                  ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      )),
-                    ],
-                  );
-                }).toList(),
+                      ],
+                    );
+                  }).toList(),
+                ),
               ),
             ),
           ),

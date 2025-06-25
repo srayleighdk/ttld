@@ -22,8 +22,8 @@ class ApiClient {
 
     _dio = Dio(
       BaseOptions(
-        baseUrl: initialBaseUrl, // Set initial base URL
-        // baseUrl: 'http://localhost:3003/api',
+        // baseUrl: initialBaseUrl, // Set initial base URL
+        baseUrl: 'http://localhost:3003/api',
         connectTimeout: const Duration(seconds: 30),
         receiveTimeout: const Duration(seconds: 30),
         sendTimeout: const Duration(seconds: 30),

@@ -444,11 +444,24 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
               const SizedBox(height: 16),
               CustomPickerGrok<NganhNgheTD>(
                 label: Text('Ngành nghề tuyển dụng *'),
-                selectedItem: locator<List<NganhNgheTD>>().firstWhere(
-                  (e) => e.id == _tuyenDungData.tdNganhnghe,
-                  orElse: () => NganhNgheTD(id: 0, name: 'Chọn ngành nghề'),
-                ),
-                items: locator<List<NganhNgheTD>>(),
+                selectedItem: () {
+                  try {
+                    final nganhNgheList = locator<List<NganhNgheTD>>();
+                    return nganhNgheList.firstWhere(
+                      (e) => e.id == _tuyenDungData.tdNganhnghe,
+                      orElse: () => NganhNgheTD(id: 0, name: 'Chọn ngành nghề'),
+                    );
+                  } catch (e) {
+                    return NganhNgheTD(id: 0, name: 'Chọn ngành nghề');
+                  }
+                }(),
+                items: () {
+                  try {
+                    return locator<List<NganhNgheTD>>();
+                  } catch (e) {
+                    return <NganhNgheTD>[];
+                  }
+                }(),
                 onChanged: (NganhNgheTD? value) {
                   _tuyenDungData = _tuyenDungData.copyWith(
                     tdNganhnghe: value?.id,

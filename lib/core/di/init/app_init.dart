@@ -7,7 +7,8 @@ import 'package:ttld/core/di/init/user_data_init.dart';
 final locator = GetIt.instance;
 
 Future<void> initializeAppData() async {
-  // Initialize miscellaneous data only
+  // Initialize miscellaneous data and job data
   // Other data initialization might cause duplicate registrations or access unregistered repositories
   await initializeMiscData();
+  await initializeJobData();
 }

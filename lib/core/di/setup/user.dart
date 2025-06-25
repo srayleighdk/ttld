@@ -1,7 +1,7 @@
-import 'package:get_it/get_it.dart';
 import 'package:ttld/blocs/nguon_thuthap/nguon_thuthap_bloc.dart';
 import 'package:ttld/blocs/tblDmDoiTuongChinhSach/doituong_bloc.dart';
 import 'package:ttld/core/api_client.dart';
+import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/blocs/user_role_bloc/user_role_bloc.dart';
 import 'package:ttld/blocs/user/user_bloc.dart';
 import 'package:ttld/core/services/doituongchinhsach_api_service.dart';
@@ -18,7 +18,7 @@ import 'package:ttld/blocs/dan_toc/dan_toc_bloc.dart';
 import 'package:ttld/repositories/dan_toc/dan_toc_repository.dart';
 import 'package:ttld/core/services/dan_toc_api_service.dart';
 
-final locator = GetIt.instance;
+// Using locator from injection.dart
 
 Future<void> setupUserLocator() async {
   // User
@@ -26,7 +26,7 @@ Future<void> setupUserLocator() async {
       () => UserApiService(locator<ApiClient>().dio));
   locator.registerLazySingleton<UserRepository>(
       () => UserRepository(userApiService: locator<UserApiService>()));
-  locator.registerLazySingleton(
+  locator.registerLazySingleton<UserBloc>(
       () => UserBloc(userRepository: locator<UserRepository>()));
 
   // Dan Toc
@@ -34,7 +34,7 @@ Future<void> setupUserLocator() async {
       () => DanTocApiService(locator<ApiClient>().dio));
   locator.registerLazySingleton<DanTocRepository>(() =>
       DanTocRepositoryImpl(danTocApiService: locator<DanTocApiService>()));
-  locator.registerLazySingleton(
+  locator.registerLazySingleton<DanTocBloc>(
       () => DanTocBloc(danTocRepository: locator<DanTocRepository>()));
 
   // Permission Role
@@ -43,7 +43,7 @@ Future<void> setupUserLocator() async {
   locator.registerLazySingleton<UserRoleRepository>(
       () => UserRoleRepository(locator<UserRoleService>()));
   locator
-      .registerLazySingleton(() => UserRoleBloc(locator<UserRoleRepository>()));
+      .registerLazySingleton<UserRoleBloc>(() => UserRoleBloc(locator<UserRoleRepository>()));
 
   // Doi Tuong
   locator.registerLazySingleton<DoiTuongApiService>(
@@ -51,13 +51,13 @@ Future<void> setupUserLocator() async {
   locator.registerLazySingleton<DoiTuongRepository>(
       () => DoiTuongRepositoryImpl(locator<DoiTuongApiService>()));
   locator
-      .registerLazySingleton(() => DoiTuongBloc(locator<DoiTuongRepository>()));
+      .registerLazySingleton<DoiTuongBloc>(() => DoiTuongBloc(locator<DoiTuongRepository>()));
 
   // Nguon Thu Thap
   locator.registerLazySingleton<NguonThuThapApiService>(
       () => NguonThuThapApiService(locator<ApiClient>().dio));
   locator.registerLazySingleton<NguonThuThapRepository>(
       () => NguonThuThapRepositoryImpl(locator<NguonThuThapApiService>()));
-  locator.registerLazySingleton(
+  locator.registerLazySingleton<NguonThuThapBloc>(
       () => NguonThuThapBloc(locator<NguonThuThapRepository>()));
 }

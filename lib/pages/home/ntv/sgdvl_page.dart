@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
 import 'package:ttld/models/uv_dk_sgd/uv_dk_sgd_model.dart';
-import 'package:ttld/pages/home/ntv/sgdvl_registration.dart';
+import 'package:ttld/pages/home/ntv/sgdvl_detail_page.dart';
 import 'package:ttld/repositories/uv_dk_sgd_repository.dart';
 import 'package:ttld/blocs/sgdvl/sgdvl_bloc.dart';
 import 'package:ttld/models/sgdvl/sgdvl_model.dart';
@@ -139,9 +138,7 @@ class SGDVLPage extends StatelessWidget {
                             'Bạn chưa tham gia phiên giao dịch việc làm nào.',
                           );
                         }
-                        final joinedEvents = snapshot.data!
-                            .where((event) => event.isThamgia)
-                            .toList();
+                        final joinedEvents = snapshot.data!;
                         return ListView.separated(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
@@ -161,12 +158,6 @@ class SGDVLPage extends StatelessWidget {
           ),
         ),
       ),
-      // floatingActionButton: FloatingActionButton.extended(
-      //   onPressed: () =>
-      //       context.go('/ntv_home${SGDVLRegistrationPage.routePath}'),
-      //   icon: const Icon(Icons.add_circle_outline),
-      //   label: const Text('Đăng ký phiên giao dịch'),
-      // ),
     );
 
     // If NTVBloc is not available in the context, provide it
@@ -255,64 +246,98 @@ class SGDVLPage extends StatelessWidget {
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         side: BorderSide(color: theme.colorScheme.outline.withOpacity(0.1)),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              sgdvl.pgdTen,
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+      child: InkWell(
+        onTap: () {
+          // Navigate to detail page
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SGDVLDetailPage(sgdvl: sgdvl),
+            ),
+          );
+        },
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Row(
+            children: [
+              // Icon container
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.event,
+                  color: theme.colorScheme.primary,
+                  size: 24,
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
-            _buildInfoRow(
-              context,
-              Icons.calendar_today,
-              'Ngày:',
-              _formatDate(sgdvl.pgdNgay),
-            ),
-            const SizedBox(height: 8),
-            _buildInfoRow(
-              context,
-              Icons.access_time,
-              'Giờ:',
-              sgdvl.pgdGio,
-            ),
-            const SizedBox(height: 8),
-            _buildInfoRow(
-              context,
-              Icons.location_on,
-              'Địa điểm:',
-              sgdvl.pgdDiadiem,
-            ),
-            const SizedBox(height: 8),
-            _buildInfoRow(
-              context,
-              Icons.people,
-              'Nhu cầu tuyển:',
-              '${sgdvl.tongNhucauTd} người',
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Số UV đăng ký: ${sgdvl.soUvDangkyPgd}',
-                  style: theme.textTheme.bodyMedium,
+              const SizedBox(width: 16),
+
+              // Content
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      sgdvl.pgdTen,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.onSurface,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.calendar_today_outlined,
+                          size: 16,
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          _formatDate(sgdvl.pgdNgay),
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Icon(
+                          Icons.access_time_outlined,
+                          size: 16,
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            sgdvl.pgdGio,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                FilledButton.tonal(
-                  onPressed: () =>
-                      context.go('/ntv_home${SGDVLRegistrationPage.routePath}'),
-                  child: const Text('Đăng ký'),
-                ),
-              ],
-            ),
-          ],
+              ),
+
+              // Arrow icon
+              Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -320,96 +345,256 @@ class SGDVLPage extends StatelessWidget {
 
   Widget _buildJoinedEventCard(BuildContext context, UvDkSGD event) {
     final theme = Theme.of(context);
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: theme.colorScheme.outline.withOpacity(0.1)),
+    final isApproved = event.duyet;
+    final isPending = !event.duyet;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            isApproved
+                ? Colors.green.withOpacity(0.05)
+                : Colors.orange.withOpacity(0.05),
+            theme.colorScheme.surface,
+          ],
+        ),
+        border: Border.all(
+          color: isApproved
+              ? Colors.green.withOpacity(0.2)
+              : Colors.orange.withOpacity(0.2),
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: theme.colorScheme.shadow.withOpacity(0.08),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              event.tieude,
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
-            _buildInfoRow(
-              context,
-              Icons.calendar_today,
-              'Ngày đăng ký:',
-              _formatDate(event.ngaydk),
-            ),
-            const SizedBox(height: 8),
-            _buildInfoRow(
-              context,
-              Icons.event,
-              'Ngày diễn ra:',
-              _formatDate(event.ngayPgd),
-            ),
-            const SizedBox(height: 8),
-            _buildInfoRow(
-              context,
-              Icons.email,
-              'Email:',
-              event.email,
-            ),
-            const SizedBox(height: 16),
+            // Header with title and status
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        event.tieude,
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: theme.colorScheme.onSurface,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Đăng ký lúc ${_formatDate(event.ngaydk)}',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 12),
+                // Status badge
                 Container(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
-                    color: event.duyet
-                        ? Colors.green.withOpacity(0.1)
-                        : Colors.orange.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(16),
+                    color: isApproved ? Colors.green : Colors.orange,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: (isApproved ? Colors.green : Colors.orange)
+                            .withOpacity(0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
                   ),
-                  child: Text(
-                    event.duyet ? 'Đã duyệt' : 'Chờ duyệt',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: event.duyet ? Colors.green : Colors.orange,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        isApproved ? Icons.check_circle : Icons.schedule,
+                        size: 16,
+                        color: Colors.white,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        isApproved ? 'Đã duyệt' : 'Chờ duyệt',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
+
+            const SizedBox(height: 20),
+
+            // Event details
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surfaceVariant.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                children: [
+                  _buildModernInfoRow(
+                    context,
+                    Icons.event_outlined,
+                    'Ngày diễn ra',
+                    _formatDate(event.ngayPgd),
+                    theme.colorScheme.primary,
+                  ),
+                  const SizedBox(height: 12),
+                  _buildModernInfoRow(
+                    context,
+                    Icons.email_outlined,
+                    'Email đăng ký',
+                    event.email,
+                    theme.colorScheme.secondary,
+                  ),
+                ],
+              ),
+            ),
+
+            // Additional info if approved
+            if (isApproved) ...[
+              const SizedBox(height: 16),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.green.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Colors.green.withOpacity(0.3),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.info_outline,
+                      color: Colors.green,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Bạn đã được chấp nhận tham gia phiên giao dịch này',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: Colors.green.shade700,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+
+            // Pending info
+            if (isPending) ...[
+              const SizedBox(height: 16),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.orange.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Colors.orange.withOpacity(0.3),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.schedule,
+                      color: Colors.orange,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Đơn đăng ký của bạn đang được xem xét',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: Colors.orange.shade700,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ],
         ),
       ),
     );
   }
 
-  Widget _buildInfoRow(
-      BuildContext context, IconData icon, String label, String value) {
+  Widget _buildModernInfoRow(
+    BuildContext context,
+    IconData icon,
+    String label,
+    String value,
+    Color iconColor,
+  ) {
     final theme = Theme.of(context);
+
     return Row(
       children: [
-        Icon(
-          icon,
-          size: 18,
-          color: theme.colorScheme.primary,
-        ),
-        const SizedBox(width: 8),
-        Text(
-          label,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: iconColor.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(
+            icon,
+            size: 18,
+            color: iconColor,
           ),
         ),
-        const SizedBox(width: 8),
+        const SizedBox(width: 12),
         Expanded(
-          child: Text(
-            value,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w500,
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                value,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
           ),
         ),
       ],

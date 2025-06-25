@@ -24,14 +24,12 @@ mixin _$UvDkSGD {
   int get idPhienGd => throw _privateConstructorUsedError;
   String get ngaydk => throw _privateConstructorUsedError;
   String get ngayPgd => throw _privateConstructorUsedError;
-  String? get listIdDn => throw _privateConstructorUsedError;
   String get tieude => throw _privateConstructorUsedError;
   String? get noidung => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
   String? get filemail => throw _privateConstructorUsedError;
   bool get duyet => throw _privateConstructorUsedError;
   int? get status => throw _privateConstructorUsedError;
-  bool get isThamgia => throw _privateConstructorUsedError;
   int? get displayOrder => throw _privateConstructorUsedError;
   String get createdDate => throw _privateConstructorUsedError;
   String get createdBy => throw _privateConstructorUsedError;
@@ -57,14 +55,12 @@ abstract class $UvDkSGDCopyWith<$Res> {
       int idPhienGd,
       String ngaydk,
       String ngayPgd,
-      String? listIdDn,
       String tieude,
       String? noidung,
       String email,
       String? filemail,
       bool duyet,
       int? status,
-      bool isThamgia,
       int? displayOrder,
       String createdDate,
       String createdBy,
@@ -91,14 +87,12 @@ class _$UvDkSGDCopyWithImpl<$Res, $Val extends UvDkSGD>
     Object? idPhienGd = null,
     Object? ngaydk = null,
     Object? ngayPgd = null,
-    Object? listIdDn = freezed,
     Object? tieude = null,
     Object? noidung = freezed,
     Object? email = null,
     Object? filemail = freezed,
     Object? duyet = null,
     Object? status = freezed,
-    Object? isThamgia = null,
     Object? displayOrder = freezed,
     Object? createdDate = null,
     Object? createdBy = null,
@@ -122,10 +116,6 @@ class _$UvDkSGDCopyWithImpl<$Res, $Val extends UvDkSGD>
           ? _value.ngayPgd
           : ngayPgd // ignore: cast_nullable_to_non_nullable
               as String,
-      listIdDn: freezed == listIdDn
-          ? _value.listIdDn
-          : listIdDn // ignore: cast_nullable_to_non_nullable
-              as String?,
       tieude: null == tieude
           ? _value.tieude
           : tieude // ignore: cast_nullable_to_non_nullable
@@ -150,10 +140,6 @@ class _$UvDkSGDCopyWithImpl<$Res, $Val extends UvDkSGD>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as int?,
-      isThamgia: null == isThamgia
-          ? _value.isThamgia
-          : isThamgia // ignore: cast_nullable_to_non_nullable
-              as bool,
       displayOrder: freezed == displayOrder
           ? _value.displayOrder
           : displayOrder // ignore: cast_nullable_to_non_nullable
@@ -190,14 +176,12 @@ abstract class _$$UvDkSGDImplCopyWith<$Res> implements $UvDkSGDCopyWith<$Res> {
       int idPhienGd,
       String ngaydk,
       String ngayPgd,
-      String? listIdDn,
       String tieude,
       String? noidung,
       String email,
       String? filemail,
       bool duyet,
       int? status,
-      bool isThamgia,
       int? displayOrder,
       String createdDate,
       String createdBy,
@@ -222,14 +206,12 @@ class __$$UvDkSGDImplCopyWithImpl<$Res>
     Object? idPhienGd = null,
     Object? ngaydk = null,
     Object? ngayPgd = null,
-    Object? listIdDn = freezed,
     Object? tieude = null,
     Object? noidung = freezed,
     Object? email = null,
     Object? filemail = freezed,
     Object? duyet = null,
     Object? status = freezed,
-    Object? isThamgia = null,
     Object? displayOrder = freezed,
     Object? createdDate = null,
     Object? createdBy = null,
@@ -253,10 +235,6 @@ class __$$UvDkSGDImplCopyWithImpl<$Res>
           ? _value.ngayPgd
           : ngayPgd // ignore: cast_nullable_to_non_nullable
               as String,
-      listIdDn: freezed == listIdDn
-          ? _value.listIdDn
-          : listIdDn // ignore: cast_nullable_to_non_nullable
-              as String?,
       tieude: null == tieude
           ? _value.tieude
           : tieude // ignore: cast_nullable_to_non_nullable
@@ -281,10 +259,6 @@ class __$$UvDkSGDImplCopyWithImpl<$Res>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as int?,
-      isThamgia: null == isThamgia
-          ? _value.isThamgia
-          : isThamgia // ignore: cast_nullable_to_non_nullable
-              as bool,
       displayOrder: freezed == displayOrder
           ? _value.displayOrder
           : displayOrder // ignore: cast_nullable_to_non_nullable
@@ -317,14 +291,12 @@ class _$UvDkSGDImpl implements _UvDkSGD {
       required this.idPhienGd,
       required this.ngaydk,
       required this.ngayPgd,
-      this.listIdDn,
       required this.tieude,
       this.noidung,
       required this.email,
       this.filemail,
       required this.duyet,
       this.status,
-      required this.isThamgia,
       this.displayOrder,
       required this.createdDate,
       required this.createdBy,
@@ -343,8 +315,6 @@ class _$UvDkSGDImpl implements _UvDkSGD {
   @override
   final String ngayPgd;
   @override
-  final String? listIdDn;
-  @override
   final String tieude;
   @override
   final String? noidung;
@@ -356,8 +326,6 @@ class _$UvDkSGDImpl implements _UvDkSGD {
   final bool duyet;
   @override
   final int? status;
-  @override
-  final bool isThamgia;
   @override
   final int? displayOrder;
   @override
@@ -371,7 +339,7 @@ class _$UvDkSGDImpl implements _UvDkSGD {
 
   @override
   String toString() {
-    return 'UvDkSGD(idUngvien: $idUngvien, idPhienGd: $idPhienGd, ngaydk: $ngaydk, ngayPgd: $ngayPgd, listIdDn: $listIdDn, tieude: $tieude, noidung: $noidung, email: $email, filemail: $filemail, duyet: $duyet, status: $status, isThamgia: $isThamgia, displayOrder: $displayOrder, createdDate: $createdDate, createdBy: $createdBy, modifiredDate: $modifiredDate, modifiredBy: $modifiredBy)';
+    return 'UvDkSGD(idUngvien: $idUngvien, idPhienGd: $idPhienGd, ngaydk: $ngaydk, ngayPgd: $ngayPgd, tieude: $tieude, noidung: $noidung, email: $email, filemail: $filemail, duyet: $duyet, status: $status, displayOrder: $displayOrder, createdDate: $createdDate, createdBy: $createdBy, modifiredDate: $modifiredDate, modifiredBy: $modifiredBy)';
   }
 
   @override
@@ -385,8 +353,6 @@ class _$UvDkSGDImpl implements _UvDkSGD {
                 other.idPhienGd == idPhienGd) &&
             (identical(other.ngaydk, ngaydk) || other.ngaydk == ngaydk) &&
             (identical(other.ngayPgd, ngayPgd) || other.ngayPgd == ngayPgd) &&
-            (identical(other.listIdDn, listIdDn) ||
-                other.listIdDn == listIdDn) &&
             (identical(other.tieude, tieude) || other.tieude == tieude) &&
             (identical(other.noidung, noidung) || other.noidung == noidung) &&
             (identical(other.email, email) || other.email == email) &&
@@ -394,8 +360,6 @@ class _$UvDkSGDImpl implements _UvDkSGD {
                 other.filemail == filemail) &&
             (identical(other.duyet, duyet) || other.duyet == duyet) &&
             (identical(other.status, status) || other.status == status) &&
-            (identical(other.isThamgia, isThamgia) ||
-                other.isThamgia == isThamgia) &&
             (identical(other.displayOrder, displayOrder) ||
                 other.displayOrder == displayOrder) &&
             (identical(other.createdDate, createdDate) ||
@@ -416,14 +380,12 @@ class _$UvDkSGDImpl implements _UvDkSGD {
       idPhienGd,
       ngaydk,
       ngayPgd,
-      listIdDn,
       tieude,
       noidung,
       email,
       filemail,
       duyet,
       status,
-      isThamgia,
       displayOrder,
       createdDate,
       createdBy,
@@ -452,14 +414,12 @@ abstract class _UvDkSGD implements UvDkSGD {
       required final int idPhienGd,
       required final String ngaydk,
       required final String ngayPgd,
-      final String? listIdDn,
       required final String tieude,
       final String? noidung,
       required final String email,
       final String? filemail,
       required final bool duyet,
       final int? status,
-      required final bool isThamgia,
       final int? displayOrder,
       required final String createdDate,
       required final String createdBy,
@@ -477,8 +437,6 @@ abstract class _UvDkSGD implements UvDkSGD {
   @override
   String get ngayPgd;
   @override
-  String? get listIdDn;
-  @override
   String get tieude;
   @override
   String? get noidung;
@@ -490,8 +448,6 @@ abstract class _UvDkSGD implements UvDkSGD {
   bool get duyet;
   @override
   int? get status;
-  @override
-  bool get isThamgia;
   @override
   int? get displayOrder;
   @override

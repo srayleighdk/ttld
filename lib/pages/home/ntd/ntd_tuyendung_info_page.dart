@@ -45,12 +45,20 @@ String getNganhNgheName(dynamic id) {
   // Convert to string if it's an integer
   String stringId = id is int ? id.toString() : id;
 
-  final nganhNgheList = locator<List<NganhNgheTD>>();
+  List<NganhNgheTD> nganhNgheList = [];
+  try {
+    nganhNgheList = locator<List<NganhNgheTD>>();
+  } catch (e) {
+    // If not registered yet, use empty list
+    nganhNgheList = [];
+  }
 
-  final nganhNghe = nganhNgheList.firstWhere(
-    (item) => item.id == stringId,
-    orElse: () => NganhNgheTD(id: stringId, name: 'Chưa có'),
-  );
+  final nganhNghe = nganhNgheList.isNotEmpty 
+    ? nganhNgheList.firstWhere(
+        (item) => item.id == stringId,
+        orElse: () => NganhNgheTD(id: stringId, name: 'Chưa có'),
+      )
+    : NganhNgheTD(id: stringId, name: 'Chưa có');
 
   return nganhNghe.displayName;
 }

@@ -196,44 +196,31 @@ class _HomePageState extends State<HomePage> {
               ? const Center(
                   child: CircularProgressIndicator(),
                 )
-              : IndexedStack(
-                  index: _currentIndex,
-                  children: _pages,
+              : Stack(
+                  children: [
+                    IndexedStack(
+                      index: _currentIndex,
+                      children: _pages,
+                    ),
+                    // Position the navbar at the bottom as an overlay
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: CustomNavigationBar(
+                        currentIndex: _currentIndex,
+                        onDestinationSelected: (index) {
+                          setState(() {
+                            _currentIndex = index;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
                 ),
         ),
       ),
-      bottomNavigationBar: _isInitializing || _role == null || _pages.isEmpty
-          ? null
-          : Theme(
-              data: Theme.of(context).copyWith(
-                navigationBarTheme: NavigationBarThemeData(
-                  labelTextStyle: WidgetStateProperty.all(
-                    TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: theme.colorScheme.onSurface,
-                    ),
-                  ),
-                  iconTheme: WidgetStateProperty.all(
-                    IconThemeData(
-                      color: theme.colorScheme.onSurface,
-                    ),
-                  ),
-                  backgroundColor: theme.colorScheme.surface,
-                  indicatorColor: theme.colorScheme.primary.withAlpha(25),
-                  elevation: 8,
-                  surfaceTintColor: theme.colorScheme.surface,
-                ),
-              ),
-              child: CustomNavigationBar(
-                currentIndex: _currentIndex,
-                onDestinationSelected: (index) {
-                  setState(() {
-                    _currentIndex = index;
-                  });
-                },
-              ),
-            ),
+      // Removed bottomNavigationBar to avoid Scaffold's automatic styling
     );
   }
 }

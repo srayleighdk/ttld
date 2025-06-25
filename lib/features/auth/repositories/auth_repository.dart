@@ -40,8 +40,16 @@ class AuthRepository {
   Future<void> logout() async {
     try {
       await authApiService.logout();
+      // Clear secure storage
       await storage.delete(key: 'token');
+      
+      // Clear all user-related data from SharedPreferences
       await prefs.remove('token');
+      await prefs.remove('userId');
+      await prefs.remove('userName');
+      await prefs.remove('userType');
+      await prefs.setBool('is_logged_in', false);
+      await prefs.remove('login_timestamp');
     } catch (e) {
       throw Exception('Failed to logout: $e');
     }
@@ -53,6 +61,10 @@ class AuthRepository {
     await prefs.setString('userId', response.id.toString());
     await prefs.setString('userName', response.name);
     await prefs.setString('userType', userType);
+    
+    // Set login status and timestamp for session management
+    await prefs.setBool('is_logged_in', true);
+    await prefs.setInt('login_timestamp', DateTime.now().millisecondsSinceEpoch);
   }
 
   bool isAdmin() {
@@ -80,5 +92,17 @@ class AuthRepository {
 
   Future<String> getTokenFromStorage() async {
     return await storage.read(key: 'token') ?? '';
+  }
+  
+  /// Check if user has a valid session
+  bool hasValidSession({Duration? sessionDuration}) {
+    final duration = sessionDuration ?? const Duration(hours: 24); // Default to 24 hours
+    final isLoggedIn = prefs.getBool('is_logged_in') ?? false;
+    final loginTimestamp = prefs.getInt('login_timestamp') ?? 0;
+    
+    if (!isLoggedIn) return false;
+    
+    final now = DateTime.now().millisecondsSinceEpoch;
+    return (now - loginTimestamp) < duration.inMilliseconds;
   }
 }

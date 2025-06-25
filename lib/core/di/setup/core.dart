@@ -1,11 +1,10 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ttld/core/api_client.dart';
-
-final locator = GetIt.instance;
+import 'package:ttld/core/di/injection.dart'; // Import locator from central location
 
 Future<void> setupCoreLocator() async {
+  // This function needs to be async because of SharedPreferences.getInstance()
   // Register SharedPreferences as a singleton only if not already registered:
   if (!locator.isRegistered<SharedPreferences>()) {
     final prefs = await SharedPreferences.getInstance();

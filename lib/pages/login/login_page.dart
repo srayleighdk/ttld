@@ -7,12 +7,12 @@ import 'package:ttld/core/utils/toast_utils.dart';
 import 'package:ttld/features/auth/bloc/login_bloc.dart';
 import 'package:ttld/features/auth/bloc/login_event.dart';
 import 'package:ttld/core/enums/region.dart'; // Import Region enum
+import 'package:ttld/features/auth/repositories/auth_repository.dart';
 import 'package:ttld/features/auth/bloc/login_state.dart';
 import 'package:ttld/features/auth/enums/user_type.dart';
 import 'package:ttld/helppers/help.dart';
 import 'package:ttld/pages/signup/signup.dart';
 import 'package:ttld/core/api_client.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -46,46 +46,35 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _checkSession() async {
-    final prefs = await SharedPreferences.getInstance();
-    final isLoggedIn = prefs.getBool('is_logged_in') ?? false;
-    final loginTimestamp = prefs.getInt('login_timestamp') ?? 0;
+    final authRepository = locator<AuthRepository>();
     final sessionDuration = Duration(hours: 24); // 24 hours
 
-    debugPrint('[_checkSession] Retrieved isLoggedIn: $isLoggedIn');
-    debugPrint('[_checkSession] Retrieved loginTimestamp: $loginTimestamp');
-    debugPrint(
-        '[_checkSession] Current time: ${DateTime.now().millisecondsSinceEpoch}');
-    debugPrint(
-        '[_checkSession] Session duration (ms): ${sessionDuration.inMilliseconds}');
+    debugPrint('[_checkSession] Checking if session is valid');
 
-    if (isLoggedIn) {
-      final now = DateTime.now().millisecondsSinceEpoch;
-      if (now - loginTimestamp < sessionDuration.inMilliseconds) {
-        debugPrint('[_checkSession] Session is valid. Attempting navigation.');
-        // Session is still valid, navigate to home
-        final userId = prefs.getString('userId');
-        final userType = prefs.getString('userType');
-        final region = prefs.getString('selected_region');
-        if (mounted) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            context.go('/home', extra: {
-              'userId': userId,
-              'userType': userType,
-              'region': region,
-            });
-            debugPrint(
-                '[_checkSession] Navigation to /home triggered via post-frame callback.');
+    if (authRepository.hasValidSession(sessionDuration: sessionDuration)) {
+      debugPrint('[_checkSession] Session is valid. Attempting navigation.');
+
+      // Session is still valid, navigate to home
+      final userId = authRepository.getUserId();
+      final userType = authRepository.prefs.getString('userType');
+      final region = authRepository.prefs.getString('selected_region');
+
+      if (mounted) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          context.go('/home', extra: {
+            'userId': userId,
+            'userType': userType,
+            'region': region,
           });
-        } else {
-          debugPrint('[_checkSession] Widget not mounted, cannot navigate.');
-        }
+          debugPrint(
+              '[_checkSession] Navigation to /home triggered via post-frame callback.');
+        });
       } else {
-        debugPrint('[_checkSession] Session expired. Clearing preferences.');
-        // Session expired, clear session
-        await prefs.clear();
+        debugPrint('[_checkSession] Widget not mounted, cannot navigate.');
       }
     } else {
-      debugPrint('[_checkSession] Not logged in (isLoggedIn is false).');
+      debugPrint('[_checkSession] No valid session found.');
+      // No need to clear data as it's already invalid or non-existent
     }
   }
 
@@ -288,15 +277,11 @@ class _LoginPageState extends State<LoginPage> {
                 message: '',
               );
               try {
-                // Save region and session info to SharedPreferences
-                final prefs = await SharedPreferences.getInstance();
-                await prefs.setString('selected_region', _selectedRegion.name);
-                await prefs.setBool('is_logged_in', true);
-                await prefs.setInt(
-                    'login_timestamp', DateTime.now().millisecondsSinceEpoch);
-                await prefs.setString('userId', state.userId?.toString() ?? '');
-                await prefs.setString(
-                    'userType', state.userType?.toString() ?? '');
+                // Save region to SharedPreferences
+                final authRepository = locator<AuthRepository>();
+                await authRepository.prefs
+                    .setString('selected_region', _selectedRegion.name);
+                // Note: is_logged_in and login_timestamp are already set in AuthRepository.saveUserDataToPrefs
                 context.go('/home', extra: {
                   'userId': state.userId,
                   'userType': state.userType,

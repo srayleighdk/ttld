@@ -10,14 +10,12 @@ class UvDkSGD with _$UvDkSGD {
     required int idPhienGd,
     required String ngaydk,
     required String ngayPgd,
-    String? listIdDn,
     required String tieude,
     String? noidung,
     required String email,
     String? filemail,
     required bool duyet,
     int? status,
-    required bool isThamgia,
     int? displayOrder,
     required String createdDate,
     required String createdBy,
@@ -25,5 +23,7 @@ class UvDkSGD with _$UvDkSGD {
     required String modifiredBy,
   }) = _UvDkSGD;
 
-  factory UvDkSGD.fromJson(Map<String, dynamic> json) => _$UvDkSGDFromJson(json);
-} 
+  factory UvDkSGD.fromJson(Map<String, dynamic> json) =>
+      _$UvDkSGDFromJson(json);
+}
+

@@ -1,3 +1,20 @@
 ### Example POST request
-POST http://localhost:3003/api/user/group
+POST https://api.example.com/data
 Content-Type: application/json
+Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNiIsIm5hbWUiOiJRdeG6o24gdHLhu4siLCJpYXQiOjE3NTA4Nzk0OTUsImV4cCI6MTc1MzQ3MTQ5NX0.4siehQxdpw_xTsTsLAjGvQ-aG7pPY2pmaVfkF2Msoqo"
+
+{
+  "idUngvien": "string",
+  "idPhienGd": 0,
+  "ngaydk": "2025-06-25T19:23:49.262Z",
+  "ngayPgd": "2025-06-25T19:23:49.262Z",
+  "listIdDn": "string",
+  "tieude": "string",
+  "noidung": "string",
+  "email": "string",
+  "filemail": "string",
+  "duyet": false,
+  "status": 0,
+  "isThamgia": false,
+  "displayOrder": 0
+}
