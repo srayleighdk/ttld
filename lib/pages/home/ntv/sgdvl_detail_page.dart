@@ -9,7 +9,7 @@ import 'package:ttld/pages/home/ntv/sgdvl_registration.dart';
 
 class SGDVLDetailPage extends StatelessWidget {
   static const String routePath = '/sgdvl-detail';
-  
+
   final SGDVL sgdvl;
 
   const SGDVLDetailPage({
@@ -20,7 +20,7 @@ class SGDVLDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -62,10 +62,11 @@ class SGDVLDetailPage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    
+
                     // Status badge
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
                       decoration: BoxDecoration(
                         color: theme.colorScheme.primary,
                         borderRadius: BorderRadius.circular(20),
@@ -82,7 +83,7 @@ class SGDVLDetailPage extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             // Details section
             Padding(
               padding: const EdgeInsets.all(24.0),
@@ -114,9 +115,9 @@ class SGDVLDetailPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Statistics card
                   _buildInfoCard(
                     context,
@@ -142,11 +143,11 @@ class SGDVLDetailPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Notes card (if available)
-                  if (sgdvl.ghichu.isNotEmpty)
+                  if (sgdvl.ghichu!.isNotEmpty)
                     _buildInfoCard(
                       context,
                       'Ghi chú',
@@ -154,7 +155,7 @@ class SGDVLDetailPage extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: Text(
-                            sgdvl.ghichu,
+                            sgdvl.ghichu!,
                             style: theme.textTheme.bodyLarge?.copyWith(
                               height: 1.6,
                             ),
@@ -168,7 +169,7 @@ class SGDVLDetailPage extends StatelessWidget {
           ],
         ),
       ),
-      
+
       // Fixed bottom button
       bottomNavigationBar: Container(
         padding: const EdgeInsets.all(24.0),
@@ -202,7 +203,7 @@ class SGDVLDetailPage extends StatelessWidget {
                   ),
                 );
               }
-              
+
               return SizedBox(
                 width: double.infinity,
                 height: 56,
@@ -212,7 +213,8 @@ class SGDVLDetailPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => SGDVLRegistrationPage(sgdvl: sgdvl),
+                        builder: (context) =>
+                            SGDVLRegistrationPage(sgdvl: sgdvl),
                       ),
                     );
                   },
@@ -232,9 +234,10 @@ class SGDVLDetailPage extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoCard(BuildContext context, String title, List<Widget> children) {
+  Widget _buildInfoCard(
+      BuildContext context, String title, List<Widget> children) {
     final theme = Theme.of(context);
-    
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -278,7 +281,7 @@ class SGDVLDetailPage extends StatelessWidget {
     String value,
   ) {
     final theme = Theme.of(context);
-    
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
@@ -332,3 +335,4 @@ class SGDVLDetailPage extends StatelessWidget {
     }
   }
 }
+

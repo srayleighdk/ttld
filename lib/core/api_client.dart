@@ -2,16 +2,16 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
-import 'package:get_it/get_it.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ttld/core/enums/region.dart';
-import 'package:ttld/features/auth/repositories/auth_repository.dart';
 import 'package:ttld/helppers/help.dart'; // Assuming getEnv is here
 
 class ApiClient {
   late final Dio _dio;
-  final getIt = GetIt.instance;
   final SharedPreferences _prefs;
+  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
   ApiClient(this._prefs) {
     // Load base URL from SharedPreferences on initialization
@@ -37,7 +37,8 @@ class ApiClient {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          final token = await getIt<AuthRepository>().getTokenFromStorage();
+          // Get token directly from secure storage instead of through AuthRepository
+          final token = await _secureStorage.read(key: 'token') ?? '';
           options.headers['Authorization'] = 'Bearer $token';
           return handler.next(options);
         },
@@ -49,6 +50,8 @@ class ApiClient {
         },
       ),
     );
+
+    dio.interceptors.add(PrettyDioLogger());
 
     if (!kIsWeb) {
       (_dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {

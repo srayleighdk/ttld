@@ -1,4 +1,4 @@
-part of 'sgdvl_bloc.dart';
+// This file contains SGDVL events
 
 abstract class SGDVLEvent {}
 

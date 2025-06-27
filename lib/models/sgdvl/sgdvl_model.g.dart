@@ -33,15 +33,15 @@ _$SGDVLImpl _$$SGDVLImplFromJson(Map<String, dynamic> json) => _$SGDVLImpl(
       soUvThamgiaPgd: (json['soUvThamgiaPgd'] as num).toInt(),
       soUvDuoctuvan: (json['soUvDuoctuvan'] as num).toInt(),
       soUvDuocPv: (json['soUvDuocPv'] as num).toInt(),
-      soUvDatsotuyen: (json['soUvDatsotuyen'] as num).toInt(),
+      soUvDatsotuyen: (json['soUvDatsotuyen'] as num?)?.toInt(),
       trongdoUvNu: (json['trongdoUvNu'] as num).toInt(),
       soLdCotrinhdoDatsotuyen: (json['soLdCotrinhdoDatsotuyen'] as num).toInt(),
       soLdptDatsotuyen: (json['soLdptDatsotuyen'] as num).toInt(),
       soLDhenphongvan: (json['soLDhenphongvan'] as num).toInt(),
       songuoiDkxkld: (json['songuoiDkxkld'] as num).toInt(),
-      soketnoiThanhcong: (json['soketnoiThanhcong'] as num?)?.toInt(),
-      ghichu: json['ghichu'] as String,
-      matinh: json['matinh'] as String?,
+      soketnoiThanhcong: json['soketnoiThanhcong'],
+      ghichu: json['ghichu'] as String?,
+      matinh: json['matinh'] as String,
     );
 
 Map<String, dynamic> _$$SGDVLImplToJson(_$SGDVLImpl instance) =>

@@ -7,6 +7,7 @@ import 'package:ttld/core/di/setup/industry.dart';
 import 'package:ttld/core/di/setup/employment.dart';
 import 'package:ttld/core/di/setup/profile.dart';
 import 'package:ttld/core/di/setup/misc.dart';
+import 'package:ttld/core/di/setup/dn_dk_pgd.dart';
 
 // Export the locator so it can be imported from a single place
 final locator = GetIt.instance;
@@ -17,7 +18,7 @@ Future<void> setupLocator() async {
   if (_isLocatorSetup) {
     return; // Prevent duplicate setup
   }
-  
+
   try {
     await setupCoreLocator();
     await setupAuthLocator();
@@ -27,6 +28,7 @@ Future<void> setupLocator() async {
     await setupEmploymentLocator();
     await setupProfileLocator();
     await setupMiscLocator();
+    await setupDnDkPgdLocator(locator);
     _isLocatorSetup = true;
   } catch (e) {
     print('Error setting up dependency injection: $e');

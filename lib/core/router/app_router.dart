@@ -28,6 +28,7 @@ import 'package:ttld/pages/home/ntv/dang_ky_tu_van_viec_lam_page.dart';
 import 'package:ttld/pages/home/ntv/ntv_home.dart';
 import 'package:ttld/pages/home/ntv/sgdvl_registration.dart';
 import 'package:ttld/pages/home/ntv/update_ntv/update_ntv_page.dart';
+import 'package:ttld/pages/home/ntv/tim_viec_page.dart';
 import 'package:ttld/pages/hosochapnoi/hosochapnoi_page.dart';
 import 'package:ttld/pages/hosocoquan/hosocoquan_page.dart';
 import 'package:ttld/pages/hosodoangnghiep/hosodoangnghiep_page.dart';
@@ -47,6 +48,8 @@ import 'package:ttld/pages/splash/spash_page.dart';
 import 'package:ttld/pages/theodoivieclam/theodoivieclam_page.dart';
 import 'package:ttld/pages/auth/change_password_page.dart'; // Import the new page
 import 'package:ttld/pages/home/ntv/sgdvl_page.dart';
+import 'package:ttld/pages/home/ntv/chap_noi_page.dart';
+import 'package:ttld/pages/home/ntd/sgdvl_ntd_page.dart';
 
 class AppRouter {
   final AuthBloc authBloc;
@@ -229,13 +232,7 @@ class AppRouter {
             ),
             GoRoute(
               path: '/ho-so-chap-noi',
-              builder: (context, state) {
-                final extra = state.extra as Map<String, dynamic>?;
-                return HoSoChapNoiPage(
-                  id: extra?['id'] as String?,
-                  uvUsername: extra?['uvUsername'] as String?,
-                );
-              },
+              builder: (context, state) => const ChapNoiPage(),
             ),
             GoRoute(
               path: '/dang-ky-lam-viec',
@@ -256,6 +253,10 @@ class AppRouter {
             GoRoute(
               path: SGDVLRegistrationPage.routePath,
               builder: (context, state) => const SGDVLRegistrationPage(),
+            ),
+            GoRoute(
+              path: TimViecPage.routePath,
+              builder: (context, state) => const TimViecPage(),
             ),
           ]),
 
@@ -306,6 +307,10 @@ class AppRouter {
               )
             ],
           ),
+          GoRoute(
+            path: SGDVLNTDPage.routePath,
+            builder: (context, state) => const SGDVLNTDPage(),
+          ),
         ],
       ),
       GoRoute(
@@ -320,8 +325,6 @@ class AppRouter {
       GoRoute(
           path: '/home',
           builder: (BuildContext context, GoRouterState state) {
-            debugPrint(
-                '🏠 Navigating to Home with extra:  [38;5;246m${state.extra} [0m');
             final extra = state.extra as Map<String, dynamic>?;
             final authState = authBloc.state;
             String userId;

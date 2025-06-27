@@ -115,6 +115,9 @@ class _QuanLyTuyenDungPageState extends State<QuanLyTuyenDungPage> {
                               child: CircularProgressIndicator(),
                             ),
                             loaded: (list) => _buildDataTable(list),
+                            creating: (tuyenDung, isValidated) => const Center(
+                              child: CircularProgressIndicator(),
+                            ),
                             error: (message) => Center(
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,

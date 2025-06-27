@@ -1,9 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ttld/models/sgdvl/sgdvl_model.dart';
 import 'package:ttld/repositories/sgdvl_repository.dart';
-
-part 'sgdvl_event.dart';
-part 'sgdvl_state.dart';
+import 'package:ttld/blocs/sgdvl/sgdvl_event.dart';
+import 'package:ttld/blocs/sgdvl/sgdvl_state.dart';
 
 class SGDVLBloc extends Bloc<SGDVLEvent, SGDVLState> {
   final SGDVLRepository _repository;

@@ -128,7 +128,7 @@ class _NTVHomePageState extends State<NTVHomePage> {
             context,
             FontAwesomeIcons.magnifyingGlass,
             'Tìm Việc',
-            null,
+            '/ntv_home/tim-viec',
             [Color(0xFFFF6B6B), Color(0xFFFF4B4B)], // Red gradient
           ),
           _buildActionButtonItem(

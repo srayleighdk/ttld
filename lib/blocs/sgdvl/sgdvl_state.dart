@@ -1,4 +1,5 @@
-part of 'sgdvl_bloc.dart';
+// This file contains SGDVL states
+import 'package:ttld/models/sgdvl/sgdvl_model.dart';
 
 abstract class SGDVLState {}
 

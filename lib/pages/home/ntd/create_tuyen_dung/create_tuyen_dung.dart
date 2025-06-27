@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ttld/blocs/tuyendung/tuyendung_bloc.dart';
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/helppers/map_help.dart';
@@ -19,7 +20,21 @@ import 'package:ttld/widgets/field/custom_pick_datetime_grok.dart';
 import 'package:ttld/widgets/field/custom_picker_grok.dart';
 import 'package:ttld/widgets/field/custom_picker_map.dart';
 import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
-import 'package:ttld/widgets/reuseable_widgets/stepper_page.dart';
+
+// Step data class for better organization
+class StepData {
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  bool isCompleted;
+
+  StepData({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    this.isCompleted = false,
+  });
+}
 
 class CreateTuyenDungPage extends StatefulWidget {
   final Ntd? ntd;
@@ -37,55 +52,41 @@ class CreateTuyenDungPage extends StatefulWidget {
   State<CreateTuyenDungPage> createState() => _CreateTuyenDungPageState();
 }
 
-class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
-  final Map<int, GlobalKey<FormState>> _formKeys = {
-    0: GlobalKey<FormState>(),
-    1: GlobalKey<FormState>(),
-    2: GlobalKey<FormState>(),
-  };
-  final TextEditingController _nganhKhacController = TextEditingController();
-  final TextEditingController _luongKhoiDiemController =
-      TextEditingController();
-  final TextEditingController _soLuongTuyenController = TextEditingController();
-  final TextEditingController _quyenLoiController = TextEditingController();
-  final TextEditingController _moTaCongViecController =
-      TextEditingController(text: 'Làm việc đúng chuyên môn kỹ thuật');
+class _CreateTuyenDungPageState extends State<CreateTuyenDungPage>
+    with TickerProviderStateMixin {
+  // Animation controllers
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
 
-  final TextEditingController _tdTieudeController = TextEditingController();
-  final TextEditingController _tdChucDanhController = TextEditingController();
-  final TextEditingController _tdNganhkhacController = TextEditingController();
-  final TextEditingController _tdSoluongController = TextEditingController();
-  final TextEditingController _tdMotacongviecController =
+  // Page controller for smooth transitions
+  late PageController _pageController;
+  int _currentStep = 0;
+
+  // Form keys for validation
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  // Text controllers with organized naming
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _positionController = TextEditingController();
+  final TextEditingController _otherIndustryController =
       TextEditingController();
-  final TextEditingController _tdQuyenloiController = TextEditingController(
-      text:
-          'CHI TIẾT VUI LÒNG LIÊN HỆ Trung Tâm Dịch Vụ Việc Làm Bình Định - Số 215 Trần Hưng Đạo, TP. Quy Nhơn, tỉnh Bình Định. Điện Thoại: (0256) 3 646 509. Fax: (0256) 3 646 509. Email: pvl@vieclambinhdinh.gov.vn');
-  final TextEditingController _tdGhichuController = TextEditingController(
-      text:
-          'Đơn xin việc, sơ yếu lý lịch, bản photo giấy khám sức khỏe, hộ khẩu, CMND, bằng cấp có liên quan và 1 ảnh (3x4): ghi thông tin: Họ tên, ngày tháng năm sinh, nơi sinh, trình độ … mặt sau ảnh.');
-  final TextEditingController _tdLuongkhoidiemController =
+  final TextEditingController _quantityController = TextEditingController();
+  final TextEditingController _salaryController = TextEditingController();
+  final TextEditingController _jobDescriptionController =
       TextEditingController();
-  final TextEditingController _tdNoinophosoController =
+  final TextEditingController _benefitsController = TextEditingController();
+  final TextEditingController _requirementsController = TextEditingController();
+  final TextEditingController _heightRequirementController =
+      TextEditingController();
+  final TextEditingController _applicationLocationController =
       TextEditingController(text: 'TRUNG TÂM DỊCH VỤ VIỆC LÀM BÌNH ĐỊNH');
-  final TextEditingController _tdHosobaogomController = TextEditingController(
+  final TextEditingController _documentsRequiredController = TextEditingController(
       text:
-          'Đơn xin việc, sơ yếu lý lịch, bản photo giấy khám sức khỏe, hộ khẩu, CMND, bằng cấp có liên quan và 1 ảnh (3x4): ghi thông tin: Họ tên, ngày tháng năm sinh, nơi sinh, trình độ … mặt sau ảnh.');
-  final TextEditingController _tdYeuCauChieuCaoController =
-      TextEditingController();
-  final TextEditingController _tdYeucauKinhnghiemController =
-      TextEditingController();
-  final TextEditingController _tdYeucauTuoiMinController =
-      TextEditingController();
-  final TextEditingController _tdYeucauTuoiMaxController =
-      TextEditingController();
-  final TextEditingController _doanhNghiepYeuCauController =
-      TextEditingController();
-  final TextEditingController _idKynangController = TextEditingController();
-  final TextEditingController _idHinhthucLvController = TextEditingController();
-  final TextEditingController _tdYeuCauNgoaiNguController =
-      TextEditingController();
-  final TextEditingController _tdMotayeucauController = TextEditingController();
+          'Đơn xin việc, sơ yếu lý lịch, bản photo giấy khám sức khỏe, hộ khẩu, CMND, bằng cấp có liên quan và 1 ảnh (3x4)');
+  final TextEditingController _notesController = TextEditingController();
 
+  // Data model
   late NTDTuyenDung _tuyenDungData = widget.tuyenDung ??
       NTDTuyenDung(
         idTuyenDung: null,
@@ -146,99 +147,153 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
         mucLuong: '',
       );
 
-  List<String> steps = [
-    'Thông tin\ntuyển dụng',
-    'Yêu cầu\ntuyển dụng',
-    'Thông tin\nhồ sơ',
+  // Step definitions with icons and descriptions
+  final List<StepData> _steps = [
+    StepData(
+      title: 'Thông tin cơ bản',
+      subtitle: 'Tiêu đề, vị trí, ngành nghề',
+      icon: Icons.work_outline,
+      isCompleted: false,
+    ),
+    StepData(
+      title: 'Yêu cầu ứng viên',
+      subtitle: 'Học vấn, kinh nghiệm, kỹ năng',
+      icon: Icons.person_search_outlined,
+      isCompleted: false,
+    ),
+    StepData(
+      title: 'Thông tin hồ sơ',
+      subtitle: 'Thời hạn, tài liệu, liên hệ',
+      icon: Icons.description_outlined,
+      isCompleted: false,
+    ),
   ];
+
+  // Loading state
+  bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    print('CreateTuyenDungPage initState');
-    print('Received NTD: ${widget.ntd?.idDoanhNghiep} - ${widget.ntd?.ntdTen}');
+    _initializeAnimations();
+    _initializePageController();
+    // _validateNTDData();
+    _initializeFormData();
+  }
 
-    final idDoanhNghiep = widget.ntd?.idDoanhNghiep;
-    print('idDoanhNghiep: $idDoanhNghiep');
+  void _initializeAnimations() {
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
 
-    if (widget.ntd == null || idDoanhNghiep == null || idDoanhNghiep.isEmpty) {
-      print('Invalid NTD data in CreateTuyenDungPage');
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) return;
-        Navigator.of(context).pop();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Vui lòng đăng nhập lại để tạo bài tuyển dụng.'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      });
-      return;
-    }
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
 
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0.0, 0.3),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeOutCubic,
+    ));
+
+    _animationController.forward();
+  }
+
+  void _initializePageController() {
+    _pageController = PageController();
+  }
+
+  // void _validateNTDData() {
+  //   final idDoanhNghiep = widget.ntd?.idDoanhNghiep;
+  //
+  //   if (widget.ntd == null || idDoanhNghiep == null || idDoanhNghiep.isEmpty) {
+  //     WidgetsBinding.instance.addPostFrameCallback((_) {
+  //       if (!mounted) return;
+  //       _showErrorAndExit('Vui lòng đăng nhập lại để tạo bài tuyển dụng.');
+  //     });
+  //     return;
+  //   }
+  // }
+
+  void _initializeFormData() {
     if (widget.tuyenDung != null) {
-      print('Initializing from existing tuyenDung data');
       _tuyenDungData = widget.tuyenDung!;
-      _initializeControllersFromData();
-    } else {
-      print(
-          'Initializing new tuyenDung data with idDoanhNghiep: $idDoanhNghiep');
+      _populateControllersFromData();
     }
   }
 
-  void _initializeControllersFromData() {
-    _tdTieudeController.text = _tuyenDungData.tdTieude ?? '';
-    _tdChucDanhController.text = _tuyenDungData.tdChucDanh?.toString() ?? '';
-    _tdNganhkhacController.text = _tuyenDungData.tdNganhkhac ?? '';
-    _tdSoluongController.text = _tuyenDungData.tdSoluong?.toString() ?? '';
-    _tdMotacongviecController.text = _tuyenDungData.tdMotacongviec ?? '';
-    _tdMotayeucauController.text = _tuyenDungData.tdMotayeucau ?? '';
-    _tdQuyenloiController.text = _tuyenDungData.tdQuyenloi ?? '';
-    _tdGhichuController.text = _tuyenDungData.tdGhichu ?? '';
-    _tdLuongkhoidiemController.text =
-        _tuyenDungData.tdLuongkhoidiem?.toString() ?? '';
-    _tdNoinophosoController.text = _tuyenDungData.tdNoinophoso ?? '';
-    _tdHosobaogomController.text = _tuyenDungData.tdHosobaogom ?? '';
-    _tdYeuCauChieuCaoController.text =
+  void _showErrorAndExit(String message) {
+    Navigator.of(context).pop();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    _pageController.dispose();
+    _disposeControllers();
+    super.dispose();
+  }
+
+  void _disposeControllers() {
+    _titleController.dispose();
+    _positionController.dispose();
+    _otherIndustryController.dispose();
+    _quantityController.dispose();
+    _salaryController.dispose();
+    _jobDescriptionController.dispose();
+    _benefitsController.dispose();
+    _requirementsController.dispose();
+    _heightRequirementController.dispose();
+    _applicationLocationController.dispose();
+    _documentsRequiredController.dispose();
+    _notesController.dispose();
+  }
+
+  void _populateControllersFromData() {
+    _titleController.text = _tuyenDungData.tdTieude ?? '';
+    _positionController.text = _tuyenDungData.tdChucDanh?.toString() ?? '';
+    _otherIndustryController.text = _tuyenDungData.tdNganhkhac ?? '';
+    _quantityController.text = _tuyenDungData.tdSoluong?.toString() ?? '';
+    _salaryController.text = _tuyenDungData.tdLuongkhoidiem?.toString() ?? '';
+    _jobDescriptionController.text = _tuyenDungData.tdMotacongviec ?? '';
+    _benefitsController.text = _tuyenDungData.tdQuyenloi ?? '';
+    _requirementsController.text = _tuyenDungData.tdMotayeucau ?? '';
+    _heightRequirementController.text =
         _tuyenDungData.tdYeuCauChieuCao?.toString() ?? '';
-    _tdYeucauKinhnghiemController.text =
-        _tuyenDungData.tdYeucauKinhnghiem?.toString() ?? '';
-    _tdYeucauTuoiMinController.text =
-        _tuyenDungData.tdYeucauTuoiMin?.toString() ?? '';
-    _tdYeucauTuoiMaxController.text =
-        _tuyenDungData.tdYeucauTuoiMax?.toString() ?? '';
-    _doanhNghiepYeuCauController.text = _tuyenDungData.doanhNghiepYeuCau ?? '';
-    _idKynangController.text = _tuyenDungData.idKynang ?? '';
-    _idHinhthucLvController.text = _tuyenDungData.idHinhthucLv ?? '';
-    _tdYeuCauNgoaiNguController.text = _tuyenDungData.tdYeuCauNgoaiNgu ?? '';
+    _applicationLocationController.text = _tuyenDungData.tdNoinophoso ?? '';
+    _documentsRequiredController.text = _tuyenDungData.tdHosobaogom ?? '';
+    _notesController.text = _tuyenDungData.tdGhichu ?? '';
   }
 
   void _updateTuyenDungData() {
     _tuyenDungData = _tuyenDungData.copyWith(
-      tdTieude: _tdTieudeController.text,
-      tdChucDanh: int.tryParse(_tdChucDanhController.text) ?? 0,
-      tdNganhkhac: _tdNganhkhacController.text,
-      tdSoluong: int.tryParse(_tdSoluongController.text) ?? 0,
-      tdMotacongviec: _tdMotacongviecController.text,
-      tdMotayeucau: _tdMotayeucauController.text,
-      tdQuyenloi: _tdQuyenloiController.text,
-      tdGhichu: _tdGhichuController.text,
-      tdLuongkhoidiem: int.tryParse(_tdLuongkhoidiemController.text) ?? 0,
-      tdNoinophoso: _tdNoinophosoController.text,
-      tdHosobaogom: _tdHosobaogomController.text,
-      tdYeuCauChieuCao: int.tryParse(_tdYeuCauChieuCaoController.text) ?? 0,
-      tdYeucauKinhnghiem: int.tryParse(_tdYeucauKinhnghiemController.text) ?? 0,
-      tdYeucauTuoiMin: int.tryParse(_tdYeucauTuoiMinController.text) ?? 0,
-      tdYeucauTuoiMax: int.tryParse(_tdYeucauTuoiMaxController.text) ?? 0,
-      doanhNghiepYeuCau: _doanhNghiepYeuCauController.text,
-      idKynang:
-          _idKynangController.text.isEmpty ? null : _idKynangController.text,
-      idHinhthucLv: _idHinhthucLvController.text.isEmpty
-          ? null
-          : _idHinhthucLvController.text,
-      tdYeuCauNgoaiNgu: _tdYeuCauNgoaiNguController.text.isEmpty
-          ? null
-          : _tdYeuCauNgoaiNguController.text,
+      tdTieude: _titleController.text,
+      tdChucDanh: int.tryParse(_positionController.text) ?? 0,
+      tdNganhkhac: _otherIndustryController.text,
+      tdSoluong: int.tryParse(_quantityController.text) ?? 0,
+      tdLuongkhoidiem: int.tryParse(_salaryController.text) ?? 0,
+      tdMotacongviec: _jobDescriptionController.text,
+      tdQuyenloi: _benefitsController.text,
+      tdMotayeucau: _requirementsController.text,
+      tdYeuCauChieuCao: int.tryParse(_heightRequirementController.text) ?? 0,
+      tdNoinophoso: _applicationLocationController.text,
+      tdHosobaogom: _documentsRequiredController.text,
+      tdGhichu: _notesController.text,
       idDoanhNghiep: widget.ntd?.idDoanhNghiep ?? '',
       tdIdDoanhnghiep: widget.ntd?.idDoanhNghiep ?? '',
       createdDate: DateTime.now(),
@@ -252,41 +307,84 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
     );
   }
 
-  bool _validateForms() {
-    bool isValid = true;
-    List<String> missingFields = [];
-
-    // Validate each form that is currently built
-    for (var entry in _formKeys.entries) {
-      final formKey = entry.value;
-      if (formKey.currentState == null) {
-        print('Form ${entry.key} is not built yet');
-        continue;
-      }
-
-      if (!formKey.currentState!.validate()) {
-        print('Form ${entry.key} validation failed');
-        isValid = false;
+  // Navigation methods
+  void _nextStep() {
+    if (_currentStep < _steps.length - 1) {
+      if (_validateCurrentStep()) {
+        setState(() {
+          _steps[_currentStep].isCompleted = true;
+          _currentStep++;
+        });
+        _pageController.nextPage(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+        HapticFeedback.lightImpact();
       }
     }
+  }
 
-    // Check text fields
-    if (_tdTieudeController.text.isEmpty)
+  void _previousStep() {
+    if (_currentStep > 0) {
+      setState(() {
+        _currentStep--;
+      });
+      _pageController.previousPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+      HapticFeedback.lightImpact();
+    }
+  }
+
+  void _goToStep(int step) {
+    if (step >= 0 && step < _steps.length) {
+      setState(() {
+        _currentStep = step;
+      });
+      _pageController.animateToPage(
+        step,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+      HapticFeedback.lightImpact();
+    }
+  }
+
+  bool _validateCurrentStep() {
+    switch (_currentStep) {
+      case 0:
+        return _validateStep1();
+      case 1:
+        return _validateStep2();
+      case 2:
+        return _validateStep3();
+      default:
+        return true;
+    }
+  }
+
+  bool _validateStep1() {
+    List<String> missingFields = [];
+
+    if (_titleController.text.trim().isEmpty) {
       missingFields.add('Tiêu đề tuyển dụng');
-    if (_tdChucDanhController.text.isEmpty)
+    }
+    if (_positionController.text.trim().isEmpty) {
       missingFields.add('Vị trí tuyển dụng');
-    if (_tdSoluongController.text.isEmpty) missingFields.add('Số lượng tuyển');
-    if (_tdLuongkhoidiemController.text.isEmpty)
+    }
+    if (_quantityController.text.trim().isEmpty) {
+      missingFields.add('Số lượng tuyển');
+    }
+    if (_salaryController.text.trim().isEmpty) {
       missingFields.add('Lương khởi điểm');
-    if (_tdMotacongviecController.text.isEmpty)
+    }
+    if (_jobDescriptionController.text.trim().isEmpty) {
       missingFields.add('Mô tả công việc');
-    if (_tdQuyenloiController.text.isEmpty) missingFields.add('Quyền lợi');
-    if (_tdNoinophosoController.text.isEmpty)
-      missingFields.add('Nơi nộp hồ sơ');
-    if (_tdHosobaogomController.text.isEmpty)
-      missingFields.add('Hồ sơ bao gồm');
-
-    // Check picker fields
+    }
+    if (_benefitsController.text.trim().isEmpty) {
+      missingFields.add('Quyền lợi');
+    }
     if (_tuyenDungData.tdNganhnghe == null || _tuyenDungData.tdNganhnghe == 0) {
       missingFields.add('Ngành nghề');
     }
@@ -298,6 +396,17 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
         _tuyenDungData.tdThoigianlamviec == 0) {
       missingFields.add('Thời gian làm việc');
     }
+
+    if (missingFields.isNotEmpty) {
+      _showValidationError('Bước 1: ${missingFields.join(', ')}');
+      return false;
+    }
+    return true;
+  }
+
+  bool _validateStep2() {
+    List<String> missingFields = [];
+
     if (_tuyenDungData.tdYeuCauHocVan == null ||
         _tuyenDungData.tdYeuCauHocVan == 0) {
       missingFields.add('Trình độ học vấn');
@@ -315,293 +424,549 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
     }
 
     if (missingFields.isNotEmpty) {
-      print('Missing fields: ${missingFields.join(', ')}');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-              'Vui lòng điền đầy đủ thông tin: ${missingFields.join(', ')}'),
-          backgroundColor: Colors.red,
-          duration: const Duration(seconds: 5),
-        ),
-      );
-      isValid = false;
+      _showValidationError('Bước 2: ${missingFields.join(', ')}');
+      return false;
     }
-
-    return isValid;
+    return true;
   }
 
-  void _submitForm() {
-    print('Submitting form...');
-    print('Title: ${_tdTieudeController.text}');
-    print('Position: ${_tdChucDanhController.text}');
-    print('Industry: ${_tuyenDungData.tdNganhnghe}');
-    print('Location: ${_tuyenDungData.tdNoilamviec}');
-    print('Working time: ${_tuyenDungData.tdThoigianlamviec}');
-    print('Education: ${_tuyenDungData.tdYeuCauHocVan}');
-    print('Professional level: ${_tuyenDungData.idBacHoc}');
-    print('IT skills: ${_tuyenDungData.tdYeuCauTinHoc}');
-    print('Work experience: ${_tuyenDungData.idKinhnghiem}');
-    print('Skills: ${_tuyenDungData.idKynang}');
-    print('Work form: ${_tuyenDungData.idHinhthucLv}');
-    print('Employer ID: ${widget.ntd?.idDoanhNghiep}');
+  bool _validateStep3() {
+    List<String> missingFields = [];
 
-    if (!_validateForms()) {
+    if (_applicationLocationController.text.trim().isEmpty) {
+      missingFields.add('Nơi nộp hồ sơ');
+    }
+    if (_documentsRequiredController.text.trim().isEmpty) {
+      missingFields.add('Hồ sơ bao gồm');
+    }
+
+    if (missingFields.isNotEmpty) {
+      _showValidationError('Bước 3: ${missingFields.join(', ')}');
+      return false;
+    }
+    return true;
+  }
+
+  bool _validateAllSteps() {
+    return _validateStep1() && _validateStep2() && _validateStep3();
+  }
+
+  void _showValidationError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Vui lòng điền đầy đủ thông tin: $message'),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        duration: const Duration(seconds: 4),
+      ),
+    );
+  }
+
+  Future<void> _submitForm() async {
+    if (!_validateAllSteps()) {
       return;
     }
 
-    _updateTuyenDungData();
-
-    final bloc = locator<TuyenDungBloc>();
-    if (widget.isEdit) {
-      bloc.add(TuyenDungEvent.update(_tuyenDungData));
-    } else {
-      bloc.add(TuyenDungEvent.create(_tuyenDungData));
-    }
-
-    // Wait for the creation to complete and refresh the list
-    Future.delayed(const Duration(milliseconds: 500), () {
-      bloc.add(TuyenDungEvent.fetchList(widget.ntd?.idDoanhNghiep));
+    setState(() {
+      _isLoading = true;
     });
 
-    Navigator.of(context).pop();
+    try {
+      _updateTuyenDungData();
+
+      final bloc = locator<TuyenDungBloc>();
+      if (widget.isEdit) {
+        bloc.add(TuyenDungEvent.update(_tuyenDungData));
+      } else {
+        bloc.add(TuyenDungEvent.create(_tuyenDungData));
+      }
+
+      // Show success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(widget.isEdit
+              ? 'Cập nhật bài tuyển dụng thành công!'
+              : 'Tạo bài tuyển dụng thành công!'),
+          backgroundColor: Colors.green,
+          behavior: SnackBarBehavior.floating,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
+      );
+
+      // Wait for the creation to complete and refresh the list
+      await Future.delayed(const Duration(milliseconds: 500));
+      bloc.add(TuyenDungEvent.fetchList(widget.ntd?.idDoanhNghiep));
+
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Có lỗi xảy ra: $e'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return Scaffold(
-      extendBodyBehindAppBar: true,
-      backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        title: Text(
-          widget.isEdit ? 'Chỉnh sửa tuyển dụng' : 'Thêm tuyển dụng mới',
-          style: theme.textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: theme.colorScheme.onSurface,
-          ),
-        ),
-        centerTitle: true,
-        elevation: 2,
-        backgroundColor: theme.colorScheme.surface,
-        scrolledUnderElevation: 1.0,
-        iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
-      ),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              theme.colorScheme.primary.withAlpha(100),
-              theme.colorScheme.surface.withOpacity(0.8),
+      backgroundColor: theme.colorScheme.surface,
+      appBar: _buildAppBar(theme),
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: SlideTransition(
+          position: _slideAnimation,
+          child: Column(
+            children: [
+              _buildStepIndicator(theme),
+              Expanded(
+                child: PageView(
+                  controller: _pageController,
+                  onPageChanged: (index) {
+                    setState(() {
+                      _currentStep = index;
+                    });
+                  },
+                  children: [
+                    _buildStep1(theme),
+                    _buildStep2(theme),
+                    _buildStep3(theme),
+                  ],
+                ),
+              ),
+              _buildNavigationButtons(theme),
             ],
-            stops: const [0.0, 1.0],
-          ),
-        ),
-        child: SafeArea(
-          child: StepperPage(
-            steps: steps,
-            stepContents: [_buildStep1(), _buildStep2(), _buildStep3()],
-            onSubmit: _submitForm,
-            submitButtonText: widget.isEdit ? 'Cập nhật' : 'Tạo mới',
-            backgroundColor: Colors.transparent,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildStep1() {
-    final theme = Theme.of(context);
-    return Form(
-      key: _formKeys[0],
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+  PreferredSizeWidget _buildAppBar(ThemeData theme) {
+    return AppBar(
+      elevation: 0,
+      backgroundColor: theme.colorScheme.surface,
+      foregroundColor: theme.colorScheme.onSurface,
+      title: Column(
         children: [
-          _buildFormSection(
-            theme,
-            'Thông tin cơ bản',
-            [
-              CustomTextField(
-                labelText: 'Tiêu đề tuyển dụng',
-                controller: _tdTieudeController,
-                hintText: 'Nhập tiêu đề tuyển dụng',
-                validator: 'not_empty',
-                onChanged: (value) => _updateTuyenDungData(),
-              ),
-              const SizedBox(height: 16),
-              CustomTextField(
-                labelText: 'Vị trí tuyển dụng',
-                controller: _tdChucDanhController,
-                hintText: 'Nhập vị trí tuyển dụng',
-                validator: 'not_empty',
-                onChanged: (value) => _updateTuyenDungData(),
-              ),
-              const SizedBox(height: 16),
-              CustomPickerGrok<NganhNgheTD>(
-                label: Text('Ngành nghề tuyển dụng *'),
-                selectedItem: () {
-                  try {
-                    final nganhNgheList = locator<List<NganhNgheTD>>();
-                    return nganhNgheList.firstWhere(
-                      (e) => e.id == _tuyenDungData.tdNganhnghe,
-                      orElse: () => NganhNgheTD(id: 0, name: 'Chọn ngành nghề'),
-                    );
-                  } catch (e) {
-                    return NganhNgheTD(id: 0, name: 'Chọn ngành nghề');
-                  }
-                }(),
-                items: () {
-                  try {
-                    return locator<List<NganhNgheTD>>();
-                  } catch (e) {
-                    return <NganhNgheTD>[];
-                  }
-                }(),
-                onChanged: (NganhNgheTD? value) {
-                  _tuyenDungData = _tuyenDungData.copyWith(
-                    tdNganhnghe: value?.id,
-                  );
-                  _updateTuyenDungData();
-                },
-                displayItemBuilder: (NganhNgheTD? value) =>
-                    '${value?.displayName}',
-                validator: (NganhNgheTD? value) {
-                  if (value == null || value.id == 0)
-                    return 'Chọn ngành nghề tuyển dụng';
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              CustomTextField(
-                labelText: 'Ngành khác',
-                controller: _tdNganhkhacController,
-                hintText: 'Nhập ngành khác nếu có',
-                onChanged: (value) => _updateTuyenDungData(),
-              ),
-            ],
+          Text(
+            widget.isEdit ? 'Chỉnh sửa tuyển dụng' : 'Tạo bài tuyển dụng',
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
           ),
-          _buildFormSection(
-            theme,
-            'Địa điểm và thời gian',
-            [
-              CustomPickerGrok<TinhThanhModel>(
-                label: Text('Nơi làm việc *'),
-                selectedItem: locator<List<TinhThanhModel>>().firstWhere(
-                  (e) => e.id == _tuyenDungData.tdNoilamviec,
-                  orElse: () =>
-                      TinhThanhModel(tpId: 0, tpTen: 'Chọn nơi làm việc'),
+          Text(
+            'Bước ${_currentStep + 1} / ${_steps.length}',
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurface.withOpacity(0.6),
+            ),
+          ),
+        ],
+      ),
+      centerTitle: true,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back_ios),
+        onPressed: () => Navigator.of(context).pop(),
+      ),
+    );
+  }
+
+  Widget _buildStepIndicator(ThemeData theme) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      child: Row(
+        children: List.generate(_steps.length, (index) {
+          final step = _steps[index];
+          final isActive = index == _currentStep;
+          final isCompleted = step.isCompleted;
+
+          return Expanded(
+            child: GestureDetector(
+              onTap: () => _goToStep(index),
+              child: Container(
+                margin:
+                    EdgeInsets.only(right: index < _steps.length - 1 ? 8 : 0),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        // Step circle
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: isCompleted
+                                ? Colors.green
+                                : isActive
+                                    ? theme.colorScheme.primary
+                                    : theme.colorScheme.outline
+                                        .withOpacity(0.3),
+                          ),
+                          child: Icon(
+                            isCompleted ? Icons.check : step.icon,
+                            color: isCompleted || isActive
+                                ? Colors.white
+                                : theme.colorScheme.outline,
+                            size: 20,
+                          ),
+                        ),
+                        // Progress line
+                        if (index < _steps.length - 1)
+                          Expanded(
+                            child: Container(
+                              height: 2,
+                              margin: const EdgeInsets.symmetric(horizontal: 8),
+                              color: isCompleted
+                                  ? Colors.green
+                                  : theme.colorScheme.outline.withOpacity(0.3),
+                            ),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      step.title,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        fontWeight:
+                            isActive ? FontWeight.bold : FontWeight.normal,
+                        color: isActive
+                            ? theme.colorScheme.primary
+                            : theme.colorScheme.onSurface.withOpacity(0.6),
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    Text(
+                      step.subtitle,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        fontSize: 10,
+                        color: theme.colorScheme.onSurface.withOpacity(0.4),
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                 ),
-                items: locator<List<TinhThanhModel>>(),
-                onChanged: (TinhThanhModel? value) {
-                  _tuyenDungData = _tuyenDungData.copyWith(
-                    tdNoilamviec: value?.id,
-                  );
-                  _updateTuyenDungData();
-                },
-                displayItemBuilder: (TinhThanhModel? value) =>
-                    '${value?.displayName}',
-                validator: (TinhThanhModel? value) {
-                  if (value == null || value.id == 0)
-                    return 'Chọn nơi làm việc';
-                  return null;
-                },
               ),
-              const SizedBox(height: 16),
-              CustomPickerGrok<ThoiGianLamViec>(
-                label: Text('Thời gian làm việc *'),
-                selectedItem: locator<List<ThoiGianLamViec>>().firstWhere(
-                  (e) => e.id == _tuyenDungData.tdThoigianlamviec,
-                  orElse: () => ThoiGianLamViec(
-                    id: 0,
-                    name: 'Chọn thời gian',
-                    idhinhthuclamviec: '0',
-                    displayOrder: 0,
-                    status: true,
+            ),
+          );
+        }),
+      ),
+    );
+  }
+
+  Widget _buildNavigationButtons(ThemeData theme) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        boxShadow: [
+          BoxShadow(
+            color: theme.colorScheme.shadow.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, -2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          if (_currentStep > 0)
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: _previousStep,
+                icon: const Icon(Icons.arrow_back),
+                label: const Text('Quay lại'),
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                items: locator<List<ThoiGianLamViec>>(),
-                onChanged: (ThoiGianLamViec? value) {
-                  if (value == null) return;
-                  _tuyenDungData = _tuyenDungData.copyWith(
-                    tdThoigianlamviec: value.id,
-                  );
-                  _updateTuyenDungData();
-                },
-                displayItemBuilder: (ThoiGianLamViec? value) =>
-                    '${value?.displayName}',
-                validator: (ThoiGianLamViec? value) {
-                  if (value == null || value.id == 0) return 'Chọn thời gian';
-                  return null;
-                },
               ),
-            ],
-          ),
-          _buildFormSection(
-            theme,
-            'Thông tin lương và số lượng',
-            [
-              CustomTextField.numberGrok(
-                labelText: 'Lương khởi điểm',
-                controller: _tdLuongkhoidiemController,
-                hintText: 'Lương khởi điểm',
-                validator: 'not_empty',
-                onChanged: (value) => _updateTuyenDungData(),
+            ),
+          if (_currentStep > 0) const SizedBox(width: 16),
+          Expanded(
+            flex: 2,
+            child: ElevatedButton.icon(
+              onPressed: _isLoading
+                  ? null
+                  : _currentStep < _steps.length - 1
+                      ? _nextStep
+                      : _submitForm,
+              icon: _isLoading
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : Icon(_currentStep < _steps.length - 1
+                      ? Icons.arrow_forward
+                      : Icons.check),
+              label: Text(_currentStep < _steps.length - 1
+                  ? 'Tiếp theo'
+                  : widget.isEdit
+                      ? 'Cập nhật'
+                      : 'Tạo mới'),
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                backgroundColor: theme.colorScheme.primary,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
-              const SizedBox(height: 16),
-              CustomTextField.numberGrok(
-                labelText: 'Số lượng tuyển',
-                controller: _tdSoluongController,
-                hintText: 'Số lượng tuyển',
-                validator: 'not_empty',
-                onChanged: (value) => _updateTuyenDungData(),
-              ),
-            ],
-          ),
-          _buildFormSection(
-            theme,
-            'Mô tả và quyền lợi',
-            [
-              CustomTextField.textArea(
-                labelText: 'Quyền lợi',
-                hintText: 'Ví dụ: bảo hiểm, chế độ, phúc lợi',
-                controller: _tdQuyenloiController,
-                validator: 'not_empty',
-                onChanged: (value) => _updateTuyenDungData(),
-              ),
-              const SizedBox(height: 16),
-              CustomTextField.textArea(
-                labelText: 'Mô tả công việc',
-                controller: _tdMotacongviecController,
-                validator: 'not_empty',
-                onChanged: (value) => _updateTuyenDungData(),
-              ),
-            ],
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildStep2() {
-    final theme = Theme.of(context);
-    return Form(
-      key: _formKeys[1],
+  Widget _buildStep1(ThemeData theme) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(20),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _buildModernCard(
+              theme,
+              'Thông tin cơ bản',
+              Icons.work_outline,
+              [
+                CustomTextField(
+                  labelText: 'Tiêu đề tuyển dụng',
+                  controller: _titleController,
+                  hintText: 'Nhập tiêu đề tuyển dụng',
+                  validator: 'not_empty',
+                  onChanged: (value) => _updateTuyenDungData(),
+                ),
+                const SizedBox(height: 16),
+                CustomTextField(
+                  labelText: 'Vị trí tuyển dụng',
+                  controller: _positionController,
+                  hintText: 'Nhập vị trí tuyển dụng',
+                  validator: 'not_empty',
+                  onChanged: (value) => _updateTuyenDungData(),
+                ),
+                const SizedBox(height: 16),
+                CustomPickerGrok<NganhNgheTD>(
+                  label: const Text('Ngành nghề tuyển dụng *'),
+                  selectedItem: () {
+                    try {
+                      final nganhNgheList = locator<List<NganhNgheTD>>();
+                      return nganhNgheList.firstWhere(
+                        (e) => e.id == _tuyenDungData.tdNganhnghe,
+                        orElse: () =>
+                            NganhNgheTD(id: 0, name: 'Chọn ngành nghề'),
+                      );
+                    } catch (e) {
+                      return NganhNgheTD(id: 0, name: 'Chọn ngành nghề');
+                    }
+                  }(),
+                  items: () {
+                    try {
+                      return locator<List<NganhNgheTD>>();
+                    } catch (e) {
+                      return <NganhNgheTD>[];
+                    }
+                  }(),
+                  onChanged: (NganhNgheTD? value) {
+                    _tuyenDungData = _tuyenDungData.copyWith(
+                      tdNganhnghe: value?.id,
+                    );
+                    _updateTuyenDungData();
+                  },
+                  displayItemBuilder: (NganhNgheTD? value) =>
+                      '${value?.displayName}',
+                ),
+                const SizedBox(height: 16),
+                CustomTextField(
+                  labelText: 'Ngành khác (tùy chọn)',
+                  controller: _otherIndustryController,
+                  hintText: 'Nhập ngành khác nếu có',
+                  onChanged: (value) => _updateTuyenDungData(),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            _buildModernCard(
+              theme,
+              'Địa điểm và thời gian',
+              Icons.location_on_outlined,
+              [
+                CustomPickerGrok<TinhThanhModel>(
+                  label: const Text('Nơi làm việc *'),
+                  selectedItem: () {
+                    try {
+                      return locator<List<TinhThanhModel>>().firstWhere(
+                        (e) => e.id == _tuyenDungData.tdNoilamviec,
+                        orElse: () =>
+                            TinhThanhModel(tpId: 0, tpTen: 'Chọn nơi làm việc'),
+                      );
+                    } catch (e) {
+                      return TinhThanhModel(
+                          tpId: 0, tpTen: 'Chọn nơi làm việc');
+                    }
+                  }(),
+                  items: () {
+                    try {
+                      return locator<List<TinhThanhModel>>();
+                    } catch (e) {
+                      return <TinhThanhModel>[];
+                    }
+                  }(),
+                  onChanged: (TinhThanhModel? value) {
+                    _tuyenDungData = _tuyenDungData.copyWith(
+                      tdNoilamviec: value?.id,
+                    );
+                    _updateTuyenDungData();
+                  },
+                  displayItemBuilder: (TinhThanhModel? value) =>
+                      '${value?.displayName}',
+                ),
+                const SizedBox(height: 16),
+                CustomPickerGrok<ThoiGianLamViec>(
+                  label: const Text('Thời gian làm việc *'),
+                  selectedItem: () {
+                    try {
+                      return locator<List<ThoiGianLamViec>>().firstWhere(
+                        (e) => e.id == _tuyenDungData.tdThoigianlamviec,
+                        orElse: () => ThoiGianLamViec(
+                          id: 0,
+                          name: 'Chọn thời gian',
+                          idhinhthuclamviec: '0',
+                          displayOrder: 0,
+                          status: true,
+                        ),
+                      );
+                    } catch (e) {
+                      return ThoiGianLamViec(
+                        id: 0,
+                        name: 'Chọn thời gian',
+                        idhinhthuclamviec: '0',
+                        displayOrder: 0,
+                        status: true,
+                      );
+                    }
+                  }(),
+                  items: () {
+                    try {
+                      return locator<List<ThoiGianLamViec>>();
+                    } catch (e) {
+                      return <ThoiGianLamViec>[];
+                    }
+                  }(),
+                  onChanged: (ThoiGianLamViec? value) {
+                    if (value == null) return;
+                    _tuyenDungData = _tuyenDungData.copyWith(
+                      tdThoigianlamviec: value.id,
+                    );
+                    _updateTuyenDungData();
+                  },
+                  displayItemBuilder: (ThoiGianLamViec? value) =>
+                      '${value?.displayName}',
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            _buildModernCard(
+              theme,
+              'Lương và số lượng',
+              Icons.monetization_on_outlined,
+              [
+                CustomTextField.numberGrok(
+                  labelText: 'Lương khởi điểm (VNĐ)',
+                  controller: _salaryController,
+                  hintText: 'Nhập mức lương khởi điểm',
+                  validator: 'not_empty',
+                  onChanged: (value) => _updateTuyenDungData(),
+                ),
+                const SizedBox(height: 16),
+                CustomTextField.numberGrok(
+                  labelText: 'Số lượng tuyển',
+                  controller: _quantityController,
+                  hintText: 'Nhập số lượng cần tuyển',
+                  validator: 'not_empty',
+                  onChanged: (value) => _updateTuyenDungData(),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            _buildModernCard(
+              theme,
+              'Mô tả công việc',
+              Icons.description_outlined,
+              [
+                CustomTextField.textArea(
+                  labelText: 'Mô tả công việc',
+                  controller: _jobDescriptionController,
+                  hintText: 'Mô tả chi tiết về công việc, trách nhiệm...',
+                  validator: 'not_empty',
+                  onChanged: (value) => _updateTuyenDungData(),
+                ),
+                const SizedBox(height: 16),
+                CustomTextField.textArea(
+                  labelText: 'Quyền lợi',
+                  hintText: 'Mô tả quyền lợi: bảo hiểm, chế độ, phúc lợi...',
+                  controller: _benefitsController,
+                  validator: 'not_empty',
+                  onChanged: (value) => _updateTuyenDungData(),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStep2(ThemeData theme) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _buildFormSection(
+          _buildModernCard(
             theme,
             'Yêu cầu học vấn',
+            Icons.school_outlined,
             [
               CustomPickerGrok<TrinhDoHocVan>(
-                label: Text('Trình độ văn hóa'),
-                selectedItem: null,
-                items: locator<List<TrinhDoHocVan>>(),
+                label: const Text('Trình độ văn hóa *'),
+                selectedItem: () {
+                  try {
+                    return locator<List<TrinhDoHocVan>>().firstWhere(
+                      (e) => e.id == _tuyenDungData.tdYeuCauHocVan,
+                      orElse: () => TrinhDoHocVan(id: 0, name: 'Chọn trình độ'),
+                    );
+                  } catch (e) {
+                    return TrinhDoHocVan(id: 0, name: 'Chọn trình độ');
+                  }
+                }(),
+                items: () {
+                  try {
+                    return locator<List<TrinhDoHocVan>>();
+                  } catch (e) {
+                    return <TrinhDoHocVan>[];
+                  }
+                }(),
                 onChanged: (TrinhDoHocVan? value) {
                   _tuyenDungData = _tuyenDungData.copyWith(
                     tdYeuCauHocVan: value?.id,
@@ -610,16 +975,28 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
                 },
                 displayItemBuilder: (TrinhDoHocVan? value) =>
                     '${value?.displayName}',
-                validator: (TrinhDoHocVan? value) {
-                  if (value == null) return 'Chọn trình độ văn hóa';
-                  return null;
-                },
               ),
               const SizedBox(height: 16),
               CustomPickerGrok<TrinhDoChuyenMon>(
-                label: Text('Trình độ chuyên môn'),
-                selectedItem: null,
-                items: locator<List<TrinhDoChuyenMon>>(),
+                label: const Text('Trình độ chuyên môn *'),
+                selectedItem: () {
+                  try {
+                    return locator<List<TrinhDoChuyenMon>>().firstWhere(
+                      (e) => e.id == _tuyenDungData.idBacHoc,
+                      orElse: () =>
+                          TrinhDoChuyenMon(id: '', name: 'Chọn trình độ'),
+                    );
+                  } catch (e) {
+                    return TrinhDoChuyenMon(id: '', name: 'Chọn trình độ');
+                  }
+                }(),
+                items: () {
+                  try {
+                    return locator<List<TrinhDoChuyenMon>>();
+                  } catch (e) {
+                    return <TrinhDoChuyenMon>[];
+                  }
+                }(),
                 onChanged: (TrinhDoChuyenMon? value) {
                   _tuyenDungData = _tuyenDungData.copyWith(
                     idBacHoc: value?.id,
@@ -628,21 +1005,35 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
                 },
                 displayItemBuilder: (TrinhDoChuyenMon? value) =>
                     '${value?.displayName}',
-                validator: (TrinhDoChuyenMon? value) {
-                  if (value == null) return 'Chọn trình độ chuyên môn';
-                  return null;
-                },
               ),
             ],
           ),
-          _buildFormSection(
+          const SizedBox(height: 20),
+          _buildModernCard(
             theme,
             'Yêu cầu kỹ năng',
+            Icons.computer_outlined,
             [
               CustomPickerGrok<TrinhDoTinHoc>(
-                label: Text('Trình độ tin học'),
-                selectedItem: null,
-                items: locator<List<TrinhDoTinHoc>>(),
+                label: const Text('Trình độ tin học *'),
+                selectedItem: () {
+                  try {
+                    return locator<List<TrinhDoTinHoc>>().firstWhere(
+                      (e) => e.id == _tuyenDungData.tdYeuCauTinHoc,
+                      orElse: () =>
+                          TrinhDoTinHoc(id: '', name: 'Chọn trình độ'),
+                    );
+                  } catch (e) {
+                    return TrinhDoTinHoc(id: '', name: 'Chọn trình độ');
+                  }
+                }(),
+                items: () {
+                  try {
+                    return locator<List<TrinhDoTinHoc>>();
+                  } catch (e) {
+                    return <TrinhDoTinHoc>[];
+                  }
+                }(),
                 onChanged: (TrinhDoTinHoc? value) {
                   _tuyenDungData = _tuyenDungData.copyWith(
                     tdYeuCauTinHoc: value?.id,
@@ -651,16 +1042,29 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
                 },
                 displayItemBuilder: (TrinhDoTinHoc? value) =>
                     '${value?.displayName}',
-                validator: (TrinhDoTinHoc? value) {
-                  if (value == null) return 'Chọn trình độ tin học';
-                  return null;
-                },
               ),
               const SizedBox(height: 16),
               CustomPickerGrok<KinhNghiemLamViec>(
-                label: Text('Kinh nghiệm làm việc'),
-                selectedItem: null,
-                items: locator<List<KinhNghiemLamViec>>(),
+                label: const Text('Kinh nghiệm làm việc *'),
+                selectedItem: () {
+                  try {
+                    return locator<List<KinhNghiemLamViec>>().firstWhere(
+                      (e) => e.id.toString() == _tuyenDungData.idKinhnghiem,
+                      orElse: () => KinhNghiemLamViec(
+                          id: '0', displayName: 'Chọn kinh nghiệm'),
+                    );
+                  } catch (e) {
+                    return KinhNghiemLamViec(
+                        id: '0', displayName: 'Chọn kinh nghiệm');
+                  }
+                }(),
+                items: () {
+                  try {
+                    return locator<List<KinhNghiemLamViec>>();
+                  } catch (e) {
+                    return <KinhNghiemLamViec>[];
+                  }
+                }(),
                 onChanged: (KinhNghiemLamViec? value) {
                   _tuyenDungData = _tuyenDungData.copyWith(
                     idKinhnghiem: value?.id.toString(),
@@ -669,21 +1073,19 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
                 },
                 displayItemBuilder: (KinhNghiemLamViec? value) =>
                     '${value?.displayName}',
-                validator: (KinhNghiemLamViec? value) {
-                  if (value == null) return 'Chọn kinh nghiệm';
-                  return null;
-                },
               ),
             ],
           ),
-          _buildFormSection(
+          const SizedBox(height: 20),
+          _buildModernCard(
             theme,
             'Yêu cầu cá nhân',
+            Icons.person_outline,
             [
               CustomPickerMap(
-                label: Text('Giới tính'),
+                label: const Text('Giới tính'),
                 items: gioiTinhOptions,
-                selectedItem: -1,
+                selectedItem: _tuyenDungData.tdYeuCauGioiTinh ?? -1,
                 onChanged: (gioiTinh) {
                   _tuyenDungData = _tuyenDungData.copyWith(
                     tdYeuCauGioiTinh: gioiTinh!,
@@ -694,15 +1096,31 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
               const SizedBox(height: 16),
               CustomTextField.numberGrok(
                 labelText: 'Chiều cao (cm)',
-                controller: _tdYeuCauChieuCaoController,
-                hintText: 'Nhập chiều cao yêu cầu',
+                controller: _heightRequirementController,
+                hintText: 'Nhập chiều cao yêu cầu (tùy chọn)',
                 onChanged: (value) => _updateTuyenDungData(),
               ),
               const SizedBox(height: 16),
               CustomPickerGrok<DoTuoi>(
-                label: Text('Độ tuổi'),
-                selectedItem: null,
-                items: locator<List<DoTuoi>>(),
+                label: const Text('Độ tuổi'),
+                selectedItem: () {
+                  try {
+                    return locator<List<DoTuoi>>().firstWhere(
+                      (e) => e.id == _tuyenDungData.idDoTuoi,
+                      orElse: () =>
+                          DoTuoi(idDoTuoi: 0, tenDoTuoi: 'Chọn độ tuổi'),
+                    );
+                  } catch (e) {
+                    return DoTuoi(idDoTuoi: 0, tenDoTuoi: 'Chọn độ tuổi');
+                  }
+                }(),
+                items: () {
+                  try {
+                    return locator<List<DoTuoi>>();
+                  } catch (e) {
+                    return <DoTuoi>[];
+                  }
+                }(),
                 onChanged: (DoTuoi? value) {
                   _tuyenDungData = _tuyenDungData.copyWith(
                     idDoTuoi: value?.id,
@@ -710,21 +1128,34 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
                   _updateTuyenDungData();
                 },
                 displayItemBuilder: (DoTuoi? value) => '${value?.displayName}',
-                validator: (DoTuoi? value) {
-                  if (value == null) return 'Chọn độ tuổi';
-                  return null;
-                },
               ),
             ],
           ),
-          _buildFormSection(
+          const SizedBox(height: 20),
+          _buildModernCard(
             theme,
             'Thông tin bổ sung',
+            Icons.info_outline,
             [
               CustomPickerGrok<DoiTuong>(
-                label: Text('Đối tượng chính sách'),
-                selectedItem: null,
-                items: locator<List<DoiTuong>>(),
+                label: const Text('Đối tượng chính sách'),
+                selectedItem: () {
+                  try {
+                    return locator<List<DoiTuong>>().firstWhere(
+                      (e) => e.id == _tuyenDungData.idDoituongCs,
+                      orElse: () => DoiTuong(id: 0, name: 'Chọn đối tượng'),
+                    );
+                  } catch (e) {
+                    return DoiTuong(id: 0, name: 'Chọn đối tượng');
+                  }
+                }(),
+                items: () {
+                  try {
+                    return locator<List<DoiTuong>>();
+                  } catch (e) {
+                    return <DoiTuong>[];
+                  }
+                }(),
                 onChanged: (DoiTuong? value) {
                   _tuyenDungData = _tuyenDungData.copyWith(
                     idDoituongCs: value?.id,
@@ -733,16 +1164,29 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
                 },
                 displayItemBuilder: (DoiTuong? value) =>
                     '${value?.displayName}',
-                validator: (DoiTuong? value) {
-                  if (value == null) return 'Chọn đối tượng';
-                  return null;
-                },
               ),
               const SizedBox(height: 16),
               CustomPickerGrok<MucLuongMM>(
-                label: Text('Mức lương'),
-                selectedItem: null,
-                items: locator<List<MucLuongMM>>(),
+                label: const Text('Mức lương'),
+                selectedItem: () {
+                  try {
+                    return locator<List<MucLuongMM>>().firstWhere(
+                      (e) => e.id == _tuyenDungData.idMucLuong,
+                      orElse: () => MucLuongMM(
+                          idMucLuong: 0, tenMucLuong: 'Chọn mức lương'),
+                    );
+                  } catch (e) {
+                    return MucLuongMM(
+                        idMucLuong: 0, tenMucLuong: 'Chọn mức lương');
+                  }
+                }(),
+                items: () {
+                  try {
+                    return locator<List<MucLuongMM>>();
+                  } catch (e) {
+                    return <MucLuongMM>[];
+                  }
+                }(),
                 onChanged: (MucLuongMM? value) {
                   _tuyenDungData = _tuyenDungData.copyWith(
                     idMucLuong: value?.id,
@@ -751,10 +1195,13 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
                 },
                 displayItemBuilder: (MucLuongMM? value) =>
                     '${value?.displayName}',
-                validator: (MucLuongMM? value) {
-                  if (value == null) return 'Chọn mức lương';
-                  return null;
-                },
+              ),
+              const SizedBox(height: 16),
+              CustomTextField.textArea(
+                labelText: 'Yêu cầu khác',
+                controller: _requirementsController,
+                hintText: 'Mô tả các yêu cầu khác (tùy chọn)',
+                onChanged: (value) => _updateTuyenDungData(),
               ),
             ],
           ),
@@ -763,16 +1210,16 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
     );
   }
 
-  Widget _buildStep3() {
-    final theme = Theme.of(context);
-    return Form(
-      key: _formKeys[2],
+  Widget _buildStep3(ThemeData theme) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _buildFormSection(
+          _buildModernCard(
             theme,
             'Thời gian nhận hồ sơ',
+            Icons.schedule_outlined,
             [
               CustomPickDateTimeGrok(
                 labelText: 'Ngày bắt đầu nhận hồ sơ',
@@ -806,14 +1253,16 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
               ),
             ],
           ),
-          _buildFormSection(
+          const SizedBox(height: 20),
+          _buildModernCard(
             theme,
             'Thông tin nộp hồ sơ',
+            Icons.folder_outlined,
             [
               CustomTextField(
                 labelText: 'Nơi nộp hồ sơ',
                 hintText: 'Địa chỉ nộp hồ sơ',
-                controller: _tdNoinophosoController,
+                controller: _applicationLocationController,
                 validator: 'not_empty',
                 onChanged: (value) => _updateTuyenDungData(),
               ),
@@ -821,20 +1270,22 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
               CustomTextField.textArea(
                 labelText: 'Hồ sơ bao gồm',
                 hintText: 'Danh sách hồ sơ cần nộp',
-                controller: _tdHosobaogomController,
+                controller: _documentsRequiredController,
                 validator: 'not_empty',
                 onChanged: (value) => _updateTuyenDungData(),
               ),
             ],
           ),
-          _buildFormSection(
+          const SizedBox(height: 20),
+          _buildModernCard(
             theme,
             'Ghi chú bổ sung',
+            Icons.note_outlined,
             [
               CustomTextField.textArea(
                 labelText: 'Ghi chú',
-                hintText: 'Ghi chú bổ sung',
-                controller: _tdGhichuController,
+                hintText: 'Ghi chú bổ sung (tùy chọn)',
+                controller: _notesController,
                 onChanged: (value) => _updateTuyenDungData(),
               ),
             ],
@@ -844,67 +1295,70 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage> {
     );
   }
 
-  Widget _buildFormSection(
-      ThemeData theme, String title, List<Widget> children) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        _buildSectionHeader(theme, title),
-        const SizedBox(height: 16),
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surface,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: theme.colorScheme.shadow.withAlpha(13),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: children,
-          ),
-        ),
-        const SizedBox(height: 24),
-      ],
-    );
-  }
-
-  Widget _buildSectionHeader(ThemeData theme, String title) {
+  Widget _buildModernCard(
+    ThemeData theme,
+    String title,
+    IconData icon,
+    List<Widget> children,
+  ) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: theme.colorScheme.shadow.withAlpha(26),
-            spreadRadius: 1,
-            blurRadius: 10,
-            offset: const Offset(0, 2),
+            color: theme.colorScheme.shadow.withOpacity(0.08),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
           ),
         ],
+        border: Border.all(
+          color: theme.colorScheme.outline.withOpacity(0.1),
+          width: 1,
+        ),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 4,
-            height: 24,
+            padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: theme.colorScheme.primary,
-              borderRadius: BorderRadius.circular(2),
+              color: theme.colorScheme.primary.withOpacity(0.05),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(16),
+                topRight: Radius.circular(16),
+              ),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primary.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    icon,
+                    color: theme.colorScheme.primary,
+                    size: 20,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  title,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(width: 12),
-          Text(
-            title,
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: theme.colorScheme.onSurface,
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: children,
             ),
           ),
         ],

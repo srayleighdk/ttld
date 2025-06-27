@@ -1,14 +1,14 @@
 import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
 
 class DoTuoi extends GenericPickerItem {
-  final int displayOrder;
-  final bool status;
+  int? displayOrder;
+  bool? status;
 
   DoTuoi({
     required int idDoTuoi,
     required String tenDoTuoi,
-    required this.displayOrder,
-    required this.status,
+    this.displayOrder,
+    this.status,
   }) : super(id: idDoTuoi, displayName: tenDoTuoi);
 
   factory DoTuoi.fromJson(Map<String, dynamic> json) {

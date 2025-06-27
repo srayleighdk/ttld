@@ -117,26 +117,21 @@ class _NTDHomePageState extends State<NTDHomePage> {
                     ntd = ntdState.ntd;
                   }
 
-                  return Column(
-                    children: [
-                      // Top section with user info and quick access
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildUserInfoSection(context, ntdState),
-                          const SizedBox(height: 12.0),
-                          _buildKeyActionButtonsSection(context), // NEW SECTION
-                          const SizedBox(
-                              height: 12.0), // Spacing after new section
-                          _buildQuickAccessSection(context),
-                        ],
-                      ),
-                      const SizedBox(height: 12.0), // Reduced from 32.0
-                      // Statistics section
-                      Expanded(
-                        child: _buildStatisticsSection(context, ntvState),
-                      ),
-                    ],
+                  return SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildUserInfoSection(context, ntdState),
+                        const SizedBox(height: 12.0),
+                        _buildKeyActionButtonsSection(context),
+                        const SizedBox(height: 12.0),
+                        _buildQuickAccessSection(context),
+                        const SizedBox(height: 12.0),
+                        _buildStatisticsSection(context, ntvState),
+                        const SizedBox(
+                            height: 100), // Add bottom padding for navbar
+                      ],
+                    ),
                   );
                 },
               );
@@ -405,7 +400,7 @@ class _NTDHomePageState extends State<NTDHomePage> {
             context,
             FontAwesomeIcons.buildingUser,
             'Sàn GDVL',
-            null,
+            '/ntd_home/sgdvl',
             [Color(0xFF4A6FFF), Color(0xFF2E5CFF)], // Blue gradient
           ),
           _buildKeyActionButtonItem(
@@ -948,156 +943,154 @@ class _NTDHomePageState extends State<NTDHomePage> {
           ),
 
           // Modern data table with enhanced styling
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: theme.colorScheme.surface,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: theme.colorScheme.shadow.withAlpha(15),
-                    blurRadius: 15,
-                    offset: const Offset(0, 5),
+          Container(
+            height: 400, // Fixed height for scrollable content
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surface,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: theme.colorScheme.shadow.withAlpha(15),
+                  blurRadius: 15,
+                  offset: const Offset(0, 5),
+                ),
+              ],
+              border: Border.all(
+                color: theme.colorScheme.outline.withOpacity(0.05),
+                width: 1,
+              ),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: DataTable2(
+                columnSpacing: 12,
+                horizontalMargin: 20,
+                minWidth: 400,
+                headingRowHeight: 56,
+                dataRowHeight: 60,
+                headingRowColor: MaterialStateProperty.all(
+                  theme.colorScheme.primary.withOpacity(0.05),
+                ),
+                columns: [
+                  DataColumn2(
+                    label: Text(
+                      'Họ tên',
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: theme.colorScheme.primary,
+                        letterSpacing: 0.3,
+                      ),
+                    ),
+                    size: ColumnSize.L,
+                  ),
+                  DataColumn2(
+                    label: Text(
+                      'Giới tính',
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: theme.colorScheme.primary,
+                        letterSpacing: 0.3,
+                      ),
+                    ),
+                    size: ColumnSize.S,
+                  ),
+                  DataColumn2(
+                    label: Text(
+                      'Tuổi',
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: theme.colorScheme.primary,
+                        letterSpacing: 0.3,
+                      ),
+                    ),
+                    size: ColumnSize.S,
+                  ),
+                  DataColumn2(
+                    label: Text(
+                      'Ngành nghề',
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: theme.colorScheme.primary,
+                        letterSpacing: 0.3,
+                      ),
+                    ),
+                    size: ColumnSize.L,
                   ),
                 ],
-                border: Border.all(
-                  color: theme.colorScheme.outline.withOpacity(0.05),
-                  width: 1,
-                ),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: DataTable2(
-                  columnSpacing: 12,
-                  horizontalMargin: 20,
-                  minWidth: 400,
-                  headingRowHeight: 56,
-                  dataRowHeight: 60,
-                  headingRowColor: MaterialStateProperty.all(
-                    theme.colorScheme.primary.withOpacity(0.05),
-                  ),
-                  columns: [
-                    DataColumn2(
-                      label: Text(
-                        'Họ tên',
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: theme.colorScheme.primary,
-                          letterSpacing: 0.3,
-                        ),
-                      ),
-                      size: ColumnSize.L,
-                    ),
-                    DataColumn2(
-                      label: Text(
-                        'Giới tính',
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: theme.colorScheme.primary,
-                          letterSpacing: 0.3,
-                        ),
-                      ),
-                      size: ColumnSize.S,
-                    ),
-                    DataColumn2(
-                      label: Text(
-                        'Tuổi',
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: theme.colorScheme.primary,
-                          letterSpacing: 0.3,
-                        ),
-                      ),
-                      size: ColumnSize.S,
-                    ),
-                    DataColumn2(
-                      label: Text(
-                        'Ngành nghề',
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: theme.colorScheme.primary,
-                          letterSpacing: 0.3,
-                        ),
-                      ),
-                      size: ColumnSize.L,
-                    ),
-                  ],
-                  rows: state.tblHoSoUngViens.asMap().entries.map((entry) {
-                    final index = entry.key;
-                    final hoSo = entry.value;
-                    final isEven = index % 2 == 0;
+                rows: state.tblHoSoUngViens.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final hoSo = entry.value;
+                  final isEven = index % 2 == 0;
 
-                    return DataRow(
-                      color: MaterialStateProperty.all(
-                        isEven
-                            ? Colors.transparent
-                            : theme.colorScheme.primary.withOpacity(0.02),
-                      ),
-                      cells: [
-                        DataCell(
-                          Container(
-                            padding: const EdgeInsets.symmetric(vertical: 8),
-                            child: Text(
-                              hoSo.uvHoten ?? 'Chưa có',
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: theme.colorScheme.onSurface,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    NTVInfoPage(ntdData: hoSo),
-                              ),
-                            );
-                          },
-                        ),
-                        DataCell(
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: hoSo.uvGioitinh == 1
-                                  ? Colors.blue.withOpacity(0.1)
-                                  : Colors.pink.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              hoSo.uvGioitinh == 1 ? 'Nam' : 'Nữ',
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: hoSo.uvGioitinh == 1
-                                    ? Colors.blue
-                                    : Colors.pink,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        ),
-                        DataCell(
-                          Text(
-                            _calculateAge(hoSo.uvNgaysinh)?.toString() ??
-                                'Chưa có',
+                  return DataRow(
+                    color: MaterialStateProperty.all(
+                      isEven
+                          ? Colors.transparent
+                          : theme.colorScheme.primary.withOpacity(0.02),
+                    ),
+                    cells: [
+                      DataCell(
+                        Container(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: Text(
+                            hoSo.uvHoten ?? 'Chưa có',
                             style: theme.textTheme.bodyMedium?.copyWith(
-                              color: theme.colorScheme.onSurface,
-                            ),
-                          ),
-                        ),
-                        DataCell(
-                          Text(
-                            hoSo.uvnvNganhnghe ?? 'Chưa có',
-                            style: theme.textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
                               color: theme.colorScheme.onSurface,
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                      ],
-                    );
-                  }).toList(),
-                ),
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => NTVInfoPage(ntdData: hoSo),
+                            ),
+                          );
+                        },
+                      ),
+                      DataCell(
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: hoSo.uvGioitinh == 1
+                                ? Colors.blue.withOpacity(0.1)
+                                : Colors.pink.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            hoSo.uvGioitinh == 1 ? 'Nam' : 'Nữ',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: hoSo.uvGioitinh == 1
+                                  ? Colors.blue
+                                  : Colors.pink,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Text(
+                          _calculateAge(hoSo.uvNgaysinh)?.toString() ??
+                              'Chưa có',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.onSurface,
+                          ),
+                        ),
+                      ),
+                      DataCell(
+                        Text(
+                          hoSo.uvnvNganhnghe ?? 'Chưa có',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.onSurface,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  );
+                }).toList(),
               ),
             ),
           ),

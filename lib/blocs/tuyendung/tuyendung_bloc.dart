@@ -14,6 +14,7 @@ class TuyenDungBloc extends Bloc<TuyenDungEvent, TuyenDungState> {
     on<FetchTuyenDungList>(_onFetchTuyenDungList);
     on<CreateTuyenDung>(_onCreateTuyenDung);
     on<UpdateTuyenDung>(_onUpdateTuyenDung);
+    on<UpdateTuyenDungForm>(_onUpdateTuyenDungForm);
     on<DeleteTuyenDung>(_onDeleteTuyenDung);
   }
 
@@ -63,6 +64,18 @@ class TuyenDungBloc extends Bloc<TuyenDungEvent, TuyenDungState> {
       emit(TuyenDungLoaded(updatedList));
     } catch (e) {
       emit(TuyenDungError(e.toString()));
+    }
+  }
+
+  
+
+  Future<void> _onUpdateTuyenDungForm(
+    UpdateTuyenDungForm event,
+    Emitter<TuyenDungState> emit,
+  ) async {
+    if (state is CreateTuyenDungState) {
+      final currentState = state as CreateTuyenDungState;
+      emit(currentState.copyWith(tuyenDung: event.tuyenDung));
     }
   }
 

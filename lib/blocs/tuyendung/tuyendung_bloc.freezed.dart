@@ -21,6 +21,7 @@ mixin _$TuyenDungEvent {
     required TResult Function(String? ntdId) fetchList,
     required TResult Function(NTDTuyenDung tuyenDung) create,
     required TResult Function(NTDTuyenDung tuyenDung) update,
+    required TResult Function(NTDTuyenDung tuyenDung) updateForm,
     required TResult Function(String idTuyenDung, String? userId) delete,
   }) =>
       throw _privateConstructorUsedError;
@@ -29,6 +30,7 @@ mixin _$TuyenDungEvent {
     TResult? Function(String? ntdId)? fetchList,
     TResult? Function(NTDTuyenDung tuyenDung)? create,
     TResult? Function(NTDTuyenDung tuyenDung)? update,
+    TResult? Function(NTDTuyenDung tuyenDung)? updateForm,
     TResult? Function(String idTuyenDung, String? userId)? delete,
   }) =>
       throw _privateConstructorUsedError;
@@ -37,6 +39,7 @@ mixin _$TuyenDungEvent {
     TResult Function(String? ntdId)? fetchList,
     TResult Function(NTDTuyenDung tuyenDung)? create,
     TResult Function(NTDTuyenDung tuyenDung)? update,
+    TResult Function(NTDTuyenDung tuyenDung)? updateForm,
     TResult Function(String idTuyenDung, String? userId)? delete,
     required TResult orElse(),
   }) =>
@@ -46,6 +49,7 @@ mixin _$TuyenDungEvent {
     required TResult Function(FetchTuyenDungList value) fetchList,
     required TResult Function(CreateTuyenDung value) create,
     required TResult Function(UpdateTuyenDung value) update,
+    required TResult Function(UpdateTuyenDungForm value) updateForm,
     required TResult Function(DeleteTuyenDung value) delete,
   }) =>
       throw _privateConstructorUsedError;
@@ -54,6 +58,7 @@ mixin _$TuyenDungEvent {
     TResult? Function(FetchTuyenDungList value)? fetchList,
     TResult? Function(CreateTuyenDung value)? create,
     TResult? Function(UpdateTuyenDung value)? update,
+    TResult? Function(UpdateTuyenDungForm value)? updateForm,
     TResult? Function(DeleteTuyenDung value)? delete,
   }) =>
       throw _privateConstructorUsedError;
@@ -62,6 +67,7 @@ mixin _$TuyenDungEvent {
     TResult Function(FetchTuyenDungList value)? fetchList,
     TResult Function(CreateTuyenDung value)? create,
     TResult Function(UpdateTuyenDung value)? update,
+    TResult Function(UpdateTuyenDungForm value)? updateForm,
     TResult Function(DeleteTuyenDung value)? delete,
     required TResult orElse(),
   }) =>
@@ -161,6 +167,7 @@ class _$FetchTuyenDungListImpl implements FetchTuyenDungList {
     required TResult Function(String? ntdId) fetchList,
     required TResult Function(NTDTuyenDung tuyenDung) create,
     required TResult Function(NTDTuyenDung tuyenDung) update,
+    required TResult Function(NTDTuyenDung tuyenDung) updateForm,
     required TResult Function(String idTuyenDung, String? userId) delete,
   }) {
     return fetchList(ntdId);
@@ -172,6 +179,7 @@ class _$FetchTuyenDungListImpl implements FetchTuyenDungList {
     TResult? Function(String? ntdId)? fetchList,
     TResult? Function(NTDTuyenDung tuyenDung)? create,
     TResult? Function(NTDTuyenDung tuyenDung)? update,
+    TResult? Function(NTDTuyenDung tuyenDung)? updateForm,
     TResult? Function(String idTuyenDung, String? userId)? delete,
   }) {
     return fetchList?.call(ntdId);
@@ -183,6 +191,7 @@ class _$FetchTuyenDungListImpl implements FetchTuyenDungList {
     TResult Function(String? ntdId)? fetchList,
     TResult Function(NTDTuyenDung tuyenDung)? create,
     TResult Function(NTDTuyenDung tuyenDung)? update,
+    TResult Function(NTDTuyenDung tuyenDung)? updateForm,
     TResult Function(String idTuyenDung, String? userId)? delete,
     required TResult orElse(),
   }) {
@@ -198,6 +207,7 @@ class _$FetchTuyenDungListImpl implements FetchTuyenDungList {
     required TResult Function(FetchTuyenDungList value) fetchList,
     required TResult Function(CreateTuyenDung value) create,
     required TResult Function(UpdateTuyenDung value) update,
+    required TResult Function(UpdateTuyenDungForm value) updateForm,
     required TResult Function(DeleteTuyenDung value) delete,
   }) {
     return fetchList(this);
@@ -209,6 +219,7 @@ class _$FetchTuyenDungListImpl implements FetchTuyenDungList {
     TResult? Function(FetchTuyenDungList value)? fetchList,
     TResult? Function(CreateTuyenDung value)? create,
     TResult? Function(UpdateTuyenDung value)? update,
+    TResult? Function(UpdateTuyenDungForm value)? updateForm,
     TResult? Function(DeleteTuyenDung value)? delete,
   }) {
     return fetchList?.call(this);
@@ -220,6 +231,7 @@ class _$FetchTuyenDungListImpl implements FetchTuyenDungList {
     TResult Function(FetchTuyenDungList value)? fetchList,
     TResult Function(CreateTuyenDung value)? create,
     TResult Function(UpdateTuyenDung value)? update,
+    TResult Function(UpdateTuyenDungForm value)? updateForm,
     TResult Function(DeleteTuyenDung value)? delete,
     required TResult orElse(),
   }) {
@@ -328,6 +340,7 @@ class _$CreateTuyenDungImpl implements CreateTuyenDung {
     required TResult Function(String? ntdId) fetchList,
     required TResult Function(NTDTuyenDung tuyenDung) create,
     required TResult Function(NTDTuyenDung tuyenDung) update,
+    required TResult Function(NTDTuyenDung tuyenDung) updateForm,
     required TResult Function(String idTuyenDung, String? userId) delete,
   }) {
     return create(tuyenDung);
@@ -339,6 +352,7 @@ class _$CreateTuyenDungImpl implements CreateTuyenDung {
     TResult? Function(String? ntdId)? fetchList,
     TResult? Function(NTDTuyenDung tuyenDung)? create,
     TResult? Function(NTDTuyenDung tuyenDung)? update,
+    TResult? Function(NTDTuyenDung tuyenDung)? updateForm,
     TResult? Function(String idTuyenDung, String? userId)? delete,
   }) {
     return create?.call(tuyenDung);
@@ -350,6 +364,7 @@ class _$CreateTuyenDungImpl implements CreateTuyenDung {
     TResult Function(String? ntdId)? fetchList,
     TResult Function(NTDTuyenDung tuyenDung)? create,
     TResult Function(NTDTuyenDung tuyenDung)? update,
+    TResult Function(NTDTuyenDung tuyenDung)? updateForm,
     TResult Function(String idTuyenDung, String? userId)? delete,
     required TResult orElse(),
   }) {
@@ -365,6 +380,7 @@ class _$CreateTuyenDungImpl implements CreateTuyenDung {
     required TResult Function(FetchTuyenDungList value) fetchList,
     required TResult Function(CreateTuyenDung value) create,
     required TResult Function(UpdateTuyenDung value) update,
+    required TResult Function(UpdateTuyenDungForm value) updateForm,
     required TResult Function(DeleteTuyenDung value) delete,
   }) {
     return create(this);
@@ -376,6 +392,7 @@ class _$CreateTuyenDungImpl implements CreateTuyenDung {
     TResult? Function(FetchTuyenDungList value)? fetchList,
     TResult? Function(CreateTuyenDung value)? create,
     TResult? Function(UpdateTuyenDung value)? update,
+    TResult? Function(UpdateTuyenDungForm value)? updateForm,
     TResult? Function(DeleteTuyenDung value)? delete,
   }) {
     return create?.call(this);
@@ -387,6 +404,7 @@ class _$CreateTuyenDungImpl implements CreateTuyenDung {
     TResult Function(FetchTuyenDungList value)? fetchList,
     TResult Function(CreateTuyenDung value)? create,
     TResult Function(UpdateTuyenDung value)? update,
+    TResult Function(UpdateTuyenDungForm value)? updateForm,
     TResult Function(DeleteTuyenDung value)? delete,
     required TResult orElse(),
   }) {
@@ -495,6 +513,7 @@ class _$UpdateTuyenDungImpl implements UpdateTuyenDung {
     required TResult Function(String? ntdId) fetchList,
     required TResult Function(NTDTuyenDung tuyenDung) create,
     required TResult Function(NTDTuyenDung tuyenDung) update,
+    required TResult Function(NTDTuyenDung tuyenDung) updateForm,
     required TResult Function(String idTuyenDung, String? userId) delete,
   }) {
     return update(tuyenDung);
@@ -506,6 +525,7 @@ class _$UpdateTuyenDungImpl implements UpdateTuyenDung {
     TResult? Function(String? ntdId)? fetchList,
     TResult? Function(NTDTuyenDung tuyenDung)? create,
     TResult? Function(NTDTuyenDung tuyenDung)? update,
+    TResult? Function(NTDTuyenDung tuyenDung)? updateForm,
     TResult? Function(String idTuyenDung, String? userId)? delete,
   }) {
     return update?.call(tuyenDung);
@@ -517,6 +537,7 @@ class _$UpdateTuyenDungImpl implements UpdateTuyenDung {
     TResult Function(String? ntdId)? fetchList,
     TResult Function(NTDTuyenDung tuyenDung)? create,
     TResult Function(NTDTuyenDung tuyenDung)? update,
+    TResult Function(NTDTuyenDung tuyenDung)? updateForm,
     TResult Function(String idTuyenDung, String? userId)? delete,
     required TResult orElse(),
   }) {
@@ -532,6 +553,7 @@ class _$UpdateTuyenDungImpl implements UpdateTuyenDung {
     required TResult Function(FetchTuyenDungList value) fetchList,
     required TResult Function(CreateTuyenDung value) create,
     required TResult Function(UpdateTuyenDung value) update,
+    required TResult Function(UpdateTuyenDungForm value) updateForm,
     required TResult Function(DeleteTuyenDung value) delete,
   }) {
     return update(this);
@@ -543,6 +565,7 @@ class _$UpdateTuyenDungImpl implements UpdateTuyenDung {
     TResult? Function(FetchTuyenDungList value)? fetchList,
     TResult? Function(CreateTuyenDung value)? create,
     TResult? Function(UpdateTuyenDung value)? update,
+    TResult? Function(UpdateTuyenDungForm value)? updateForm,
     TResult? Function(DeleteTuyenDung value)? delete,
   }) {
     return update?.call(this);
@@ -554,6 +577,7 @@ class _$UpdateTuyenDungImpl implements UpdateTuyenDung {
     TResult Function(FetchTuyenDungList value)? fetchList,
     TResult Function(CreateTuyenDung value)? create,
     TResult Function(UpdateTuyenDung value)? update,
+    TResult Function(UpdateTuyenDungForm value)? updateForm,
     TResult Function(DeleteTuyenDung value)? delete,
     required TResult orElse(),
   }) {
@@ -574,6 +598,179 @@ abstract class UpdateTuyenDung implements TuyenDungEvent {
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$UpdateTuyenDungImplCopyWith<_$UpdateTuyenDungImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$UpdateTuyenDungFormImplCopyWith<$Res> {
+  factory _$$UpdateTuyenDungFormImplCopyWith(_$UpdateTuyenDungFormImpl value,
+          $Res Function(_$UpdateTuyenDungFormImpl) then) =
+      __$$UpdateTuyenDungFormImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({NTDTuyenDung tuyenDung});
+
+  $NTDTuyenDungCopyWith<$Res> get tuyenDung;
+}
+
+/// @nodoc
+class __$$UpdateTuyenDungFormImplCopyWithImpl<$Res>
+    extends _$TuyenDungEventCopyWithImpl<$Res, _$UpdateTuyenDungFormImpl>
+    implements _$$UpdateTuyenDungFormImplCopyWith<$Res> {
+  __$$UpdateTuyenDungFormImplCopyWithImpl(_$UpdateTuyenDungFormImpl _value,
+      $Res Function(_$UpdateTuyenDungFormImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of TuyenDungEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? tuyenDung = null,
+  }) {
+    return _then(_$UpdateTuyenDungFormImpl(
+      null == tuyenDung
+          ? _value.tuyenDung
+          : tuyenDung // ignore: cast_nullable_to_non_nullable
+              as NTDTuyenDung,
+    ));
+  }
+
+  /// Create a copy of TuyenDungEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $NTDTuyenDungCopyWith<$Res> get tuyenDung {
+    return $NTDTuyenDungCopyWith<$Res>(_value.tuyenDung, (value) {
+      return _then(_value.copyWith(tuyenDung: value));
+    });
+  }
+}
+
+/// @nodoc
+
+class _$UpdateTuyenDungFormImpl implements UpdateTuyenDungForm {
+  const _$UpdateTuyenDungFormImpl(this.tuyenDung);
+
+  @override
+  final NTDTuyenDung tuyenDung;
+
+  @override
+  String toString() {
+    return 'TuyenDungEvent.updateForm(tuyenDung: $tuyenDung)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$UpdateTuyenDungFormImpl &&
+            (identical(other.tuyenDung, tuyenDung) ||
+                other.tuyenDung == tuyenDung));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, tuyenDung);
+
+  /// Create a copy of TuyenDungEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$UpdateTuyenDungFormImplCopyWith<_$UpdateTuyenDungFormImpl> get copyWith =>
+      __$$UpdateTuyenDungFormImplCopyWithImpl<_$UpdateTuyenDungFormImpl>(
+          this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String? ntdId) fetchList,
+    required TResult Function(NTDTuyenDung tuyenDung) create,
+    required TResult Function(NTDTuyenDung tuyenDung) update,
+    required TResult Function(NTDTuyenDung tuyenDung) updateForm,
+    required TResult Function(String idTuyenDung, String? userId) delete,
+  }) {
+    return updateForm(tuyenDung);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String? ntdId)? fetchList,
+    TResult? Function(NTDTuyenDung tuyenDung)? create,
+    TResult? Function(NTDTuyenDung tuyenDung)? update,
+    TResult? Function(NTDTuyenDung tuyenDung)? updateForm,
+    TResult? Function(String idTuyenDung, String? userId)? delete,
+  }) {
+    return updateForm?.call(tuyenDung);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String? ntdId)? fetchList,
+    TResult Function(NTDTuyenDung tuyenDung)? create,
+    TResult Function(NTDTuyenDung tuyenDung)? update,
+    TResult Function(NTDTuyenDung tuyenDung)? updateForm,
+    TResult Function(String idTuyenDung, String? userId)? delete,
+    required TResult orElse(),
+  }) {
+    if (updateForm != null) {
+      return updateForm(tuyenDung);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(FetchTuyenDungList value) fetchList,
+    required TResult Function(CreateTuyenDung value) create,
+    required TResult Function(UpdateTuyenDung value) update,
+    required TResult Function(UpdateTuyenDungForm value) updateForm,
+    required TResult Function(DeleteTuyenDung value) delete,
+  }) {
+    return updateForm(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(FetchTuyenDungList value)? fetchList,
+    TResult? Function(CreateTuyenDung value)? create,
+    TResult? Function(UpdateTuyenDung value)? update,
+    TResult? Function(UpdateTuyenDungForm value)? updateForm,
+    TResult? Function(DeleteTuyenDung value)? delete,
+  }) {
+    return updateForm?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(FetchTuyenDungList value)? fetchList,
+    TResult Function(CreateTuyenDung value)? create,
+    TResult Function(UpdateTuyenDung value)? update,
+    TResult Function(UpdateTuyenDungForm value)? updateForm,
+    TResult Function(DeleteTuyenDung value)? delete,
+    required TResult orElse(),
+  }) {
+    if (updateForm != null) {
+      return updateForm(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class UpdateTuyenDungForm implements TuyenDungEvent {
+  const factory UpdateTuyenDungForm(final NTDTuyenDung tuyenDung) =
+      _$UpdateTuyenDungFormImpl;
+
+  NTDTuyenDung get tuyenDung;
+
+  /// Create a copy of TuyenDungEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$UpdateTuyenDungFormImplCopyWith<_$UpdateTuyenDungFormImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -658,6 +855,7 @@ class _$DeleteTuyenDungImpl implements DeleteTuyenDung {
     required TResult Function(String? ntdId) fetchList,
     required TResult Function(NTDTuyenDung tuyenDung) create,
     required TResult Function(NTDTuyenDung tuyenDung) update,
+    required TResult Function(NTDTuyenDung tuyenDung) updateForm,
     required TResult Function(String idTuyenDung, String? userId) delete,
   }) {
     return delete(idTuyenDung, userId);
@@ -669,6 +867,7 @@ class _$DeleteTuyenDungImpl implements DeleteTuyenDung {
     TResult? Function(String? ntdId)? fetchList,
     TResult? Function(NTDTuyenDung tuyenDung)? create,
     TResult? Function(NTDTuyenDung tuyenDung)? update,
+    TResult? Function(NTDTuyenDung tuyenDung)? updateForm,
     TResult? Function(String idTuyenDung, String? userId)? delete,
   }) {
     return delete?.call(idTuyenDung, userId);
@@ -680,6 +879,7 @@ class _$DeleteTuyenDungImpl implements DeleteTuyenDung {
     TResult Function(String? ntdId)? fetchList,
     TResult Function(NTDTuyenDung tuyenDung)? create,
     TResult Function(NTDTuyenDung tuyenDung)? update,
+    TResult Function(NTDTuyenDung tuyenDung)? updateForm,
     TResult Function(String idTuyenDung, String? userId)? delete,
     required TResult orElse(),
   }) {
@@ -695,6 +895,7 @@ class _$DeleteTuyenDungImpl implements DeleteTuyenDung {
     required TResult Function(FetchTuyenDungList value) fetchList,
     required TResult Function(CreateTuyenDung value) create,
     required TResult Function(UpdateTuyenDung value) update,
+    required TResult Function(UpdateTuyenDungForm value) updateForm,
     required TResult Function(DeleteTuyenDung value) delete,
   }) {
     return delete(this);
@@ -706,6 +907,7 @@ class _$DeleteTuyenDungImpl implements DeleteTuyenDung {
     TResult? Function(FetchTuyenDungList value)? fetchList,
     TResult? Function(CreateTuyenDung value)? create,
     TResult? Function(UpdateTuyenDung value)? update,
+    TResult? Function(UpdateTuyenDungForm value)? updateForm,
     TResult? Function(DeleteTuyenDung value)? delete,
   }) {
     return delete?.call(this);
@@ -717,6 +919,7 @@ class _$DeleteTuyenDungImpl implements DeleteTuyenDung {
     TResult Function(FetchTuyenDungList value)? fetchList,
     TResult Function(CreateTuyenDung value)? create,
     TResult Function(UpdateTuyenDung value)? update,
+    TResult Function(UpdateTuyenDungForm value)? updateForm,
     TResult Function(DeleteTuyenDung value)? delete,
     required TResult orElse(),
   }) {
@@ -749,6 +952,8 @@ mixin _$TuyenDungState {
     required TResult Function() loading,
     required TResult Function(List<NTDTuyenDung> tuyenDungList) loaded,
     required TResult Function(String message) error,
+    required TResult Function(NTDTuyenDung tuyenDung, bool isValidated)
+        creating,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -757,6 +962,7 @@ mixin _$TuyenDungState {
     TResult? Function()? loading,
     TResult? Function(List<NTDTuyenDung> tuyenDungList)? loaded,
     TResult? Function(String message)? error,
+    TResult? Function(NTDTuyenDung tuyenDung, bool isValidated)? creating,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -765,6 +971,7 @@ mixin _$TuyenDungState {
     TResult Function()? loading,
     TResult Function(List<NTDTuyenDung> tuyenDungList)? loaded,
     TResult Function(String message)? error,
+    TResult Function(NTDTuyenDung tuyenDung, bool isValidated)? creating,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -774,6 +981,7 @@ mixin _$TuyenDungState {
     required TResult Function(TuyenDungLoading value) loading,
     required TResult Function(TuyenDungLoaded value) loaded,
     required TResult Function(TuyenDungError value) error,
+    required TResult Function(CreateTuyenDungState value) creating,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -782,6 +990,7 @@ mixin _$TuyenDungState {
     TResult? Function(TuyenDungLoading value)? loading,
     TResult? Function(TuyenDungLoaded value)? loaded,
     TResult? Function(TuyenDungError value)? error,
+    TResult? Function(CreateTuyenDungState value)? creating,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -790,6 +999,7 @@ mixin _$TuyenDungState {
     TResult Function(TuyenDungLoading value)? loading,
     TResult Function(TuyenDungLoaded value)? loaded,
     TResult Function(TuyenDungError value)? error,
+    TResult Function(CreateTuyenDungState value)? creating,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -861,6 +1071,8 @@ class _$TuyenDungInitialImpl implements TuyenDungInitial {
     required TResult Function() loading,
     required TResult Function(List<NTDTuyenDung> tuyenDungList) loaded,
     required TResult Function(String message) error,
+    required TResult Function(NTDTuyenDung tuyenDung, bool isValidated)
+        creating,
   }) {
     return initial();
   }
@@ -872,6 +1084,7 @@ class _$TuyenDungInitialImpl implements TuyenDungInitial {
     TResult? Function()? loading,
     TResult? Function(List<NTDTuyenDung> tuyenDungList)? loaded,
     TResult? Function(String message)? error,
+    TResult? Function(NTDTuyenDung tuyenDung, bool isValidated)? creating,
   }) {
     return initial?.call();
   }
@@ -883,6 +1096,7 @@ class _$TuyenDungInitialImpl implements TuyenDungInitial {
     TResult Function()? loading,
     TResult Function(List<NTDTuyenDung> tuyenDungList)? loaded,
     TResult Function(String message)? error,
+    TResult Function(NTDTuyenDung tuyenDung, bool isValidated)? creating,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -898,6 +1112,7 @@ class _$TuyenDungInitialImpl implements TuyenDungInitial {
     required TResult Function(TuyenDungLoading value) loading,
     required TResult Function(TuyenDungLoaded value) loaded,
     required TResult Function(TuyenDungError value) error,
+    required TResult Function(CreateTuyenDungState value) creating,
   }) {
     return initial(this);
   }
@@ -909,6 +1124,7 @@ class _$TuyenDungInitialImpl implements TuyenDungInitial {
     TResult? Function(TuyenDungLoading value)? loading,
     TResult? Function(TuyenDungLoaded value)? loaded,
     TResult? Function(TuyenDungError value)? error,
+    TResult? Function(CreateTuyenDungState value)? creating,
   }) {
     return initial?.call(this);
   }
@@ -920,6 +1136,7 @@ class _$TuyenDungInitialImpl implements TuyenDungInitial {
     TResult Function(TuyenDungLoading value)? loading,
     TResult Function(TuyenDungLoaded value)? loaded,
     TResult Function(TuyenDungError value)? error,
+    TResult Function(CreateTuyenDungState value)? creating,
     required TResult orElse(),
   }) {
     if (initial != null) {
@@ -978,6 +1195,8 @@ class _$TuyenDungLoadingImpl implements TuyenDungLoading {
     required TResult Function() loading,
     required TResult Function(List<NTDTuyenDung> tuyenDungList) loaded,
     required TResult Function(String message) error,
+    required TResult Function(NTDTuyenDung tuyenDung, bool isValidated)
+        creating,
   }) {
     return loading();
   }
@@ -989,6 +1208,7 @@ class _$TuyenDungLoadingImpl implements TuyenDungLoading {
     TResult? Function()? loading,
     TResult? Function(List<NTDTuyenDung> tuyenDungList)? loaded,
     TResult? Function(String message)? error,
+    TResult? Function(NTDTuyenDung tuyenDung, bool isValidated)? creating,
   }) {
     return loading?.call();
   }
@@ -1000,6 +1220,7 @@ class _$TuyenDungLoadingImpl implements TuyenDungLoading {
     TResult Function()? loading,
     TResult Function(List<NTDTuyenDung> tuyenDungList)? loaded,
     TResult Function(String message)? error,
+    TResult Function(NTDTuyenDung tuyenDung, bool isValidated)? creating,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -1015,6 +1236,7 @@ class _$TuyenDungLoadingImpl implements TuyenDungLoading {
     required TResult Function(TuyenDungLoading value) loading,
     required TResult Function(TuyenDungLoaded value) loaded,
     required TResult Function(TuyenDungError value) error,
+    required TResult Function(CreateTuyenDungState value) creating,
   }) {
     return loading(this);
   }
@@ -1026,6 +1248,7 @@ class _$TuyenDungLoadingImpl implements TuyenDungLoading {
     TResult? Function(TuyenDungLoading value)? loading,
     TResult? Function(TuyenDungLoaded value)? loaded,
     TResult? Function(TuyenDungError value)? error,
+    TResult? Function(CreateTuyenDungState value)? creating,
   }) {
     return loading?.call(this);
   }
@@ -1037,6 +1260,7 @@ class _$TuyenDungLoadingImpl implements TuyenDungLoading {
     TResult Function(TuyenDungLoading value)? loading,
     TResult Function(TuyenDungLoaded value)? loaded,
     TResult Function(TuyenDungError value)? error,
+    TResult Function(CreateTuyenDungState value)? creating,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -1131,6 +1355,8 @@ class _$TuyenDungLoadedImpl implements TuyenDungLoaded {
     required TResult Function() loading,
     required TResult Function(List<NTDTuyenDung> tuyenDungList) loaded,
     required TResult Function(String message) error,
+    required TResult Function(NTDTuyenDung tuyenDung, bool isValidated)
+        creating,
   }) {
     return loaded(tuyenDungList);
   }
@@ -1142,6 +1368,7 @@ class _$TuyenDungLoadedImpl implements TuyenDungLoaded {
     TResult? Function()? loading,
     TResult? Function(List<NTDTuyenDung> tuyenDungList)? loaded,
     TResult? Function(String message)? error,
+    TResult? Function(NTDTuyenDung tuyenDung, bool isValidated)? creating,
   }) {
     return loaded?.call(tuyenDungList);
   }
@@ -1153,6 +1380,7 @@ class _$TuyenDungLoadedImpl implements TuyenDungLoaded {
     TResult Function()? loading,
     TResult Function(List<NTDTuyenDung> tuyenDungList)? loaded,
     TResult Function(String message)? error,
+    TResult Function(NTDTuyenDung tuyenDung, bool isValidated)? creating,
     required TResult orElse(),
   }) {
     if (loaded != null) {
@@ -1168,6 +1396,7 @@ class _$TuyenDungLoadedImpl implements TuyenDungLoaded {
     required TResult Function(TuyenDungLoading value) loading,
     required TResult Function(TuyenDungLoaded value) loaded,
     required TResult Function(TuyenDungError value) error,
+    required TResult Function(CreateTuyenDungState value) creating,
   }) {
     return loaded(this);
   }
@@ -1179,6 +1408,7 @@ class _$TuyenDungLoadedImpl implements TuyenDungLoaded {
     TResult? Function(TuyenDungLoading value)? loading,
     TResult? Function(TuyenDungLoaded value)? loaded,
     TResult? Function(TuyenDungError value)? error,
+    TResult? Function(CreateTuyenDungState value)? creating,
   }) {
     return loaded?.call(this);
   }
@@ -1190,6 +1420,7 @@ class _$TuyenDungLoadedImpl implements TuyenDungLoaded {
     TResult Function(TuyenDungLoading value)? loading,
     TResult Function(TuyenDungLoaded value)? loaded,
     TResult Function(TuyenDungError value)? error,
+    TResult Function(CreateTuyenDungState value)? creating,
     required TResult orElse(),
   }) {
     if (loaded != null) {
@@ -1285,6 +1516,8 @@ class _$TuyenDungErrorImpl implements TuyenDungError {
     required TResult Function() loading,
     required TResult Function(List<NTDTuyenDung> tuyenDungList) loaded,
     required TResult Function(String message) error,
+    required TResult Function(NTDTuyenDung tuyenDung, bool isValidated)
+        creating,
   }) {
     return error(message);
   }
@@ -1296,6 +1529,7 @@ class _$TuyenDungErrorImpl implements TuyenDungError {
     TResult? Function()? loading,
     TResult? Function(List<NTDTuyenDung> tuyenDungList)? loaded,
     TResult? Function(String message)? error,
+    TResult? Function(NTDTuyenDung tuyenDung, bool isValidated)? creating,
   }) {
     return error?.call(message);
   }
@@ -1307,6 +1541,7 @@ class _$TuyenDungErrorImpl implements TuyenDungError {
     TResult Function()? loading,
     TResult Function(List<NTDTuyenDung> tuyenDungList)? loaded,
     TResult Function(String message)? error,
+    TResult Function(NTDTuyenDung tuyenDung, bool isValidated)? creating,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -1322,6 +1557,7 @@ class _$TuyenDungErrorImpl implements TuyenDungError {
     required TResult Function(TuyenDungLoading value) loading,
     required TResult Function(TuyenDungLoaded value) loaded,
     required TResult Function(TuyenDungError value) error,
+    required TResult Function(CreateTuyenDungState value) creating,
   }) {
     return error(this);
   }
@@ -1333,6 +1569,7 @@ class _$TuyenDungErrorImpl implements TuyenDungError {
     TResult? Function(TuyenDungLoading value)? loading,
     TResult? Function(TuyenDungLoaded value)? loaded,
     TResult? Function(TuyenDungError value)? error,
+    TResult? Function(CreateTuyenDungState value)? creating,
   }) {
     return error?.call(this);
   }
@@ -1344,6 +1581,7 @@ class _$TuyenDungErrorImpl implements TuyenDungError {
     TResult Function(TuyenDungLoading value)? loading,
     TResult Function(TuyenDungLoaded value)? loaded,
     TResult Function(TuyenDungError value)? error,
+    TResult Function(CreateTuyenDungState value)? creating,
     required TResult orElse(),
   }) {
     if (error != null) {
@@ -1363,4 +1601,190 @@ abstract class TuyenDungError implements TuyenDungState {
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$TuyenDungErrorImplCopyWith<_$TuyenDungErrorImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$CreateTuyenDungStateImplCopyWith<$Res> {
+  factory _$$CreateTuyenDungStateImplCopyWith(_$CreateTuyenDungStateImpl value,
+          $Res Function(_$CreateTuyenDungStateImpl) then) =
+      __$$CreateTuyenDungStateImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({NTDTuyenDung tuyenDung, bool isValidated});
+
+  $NTDTuyenDungCopyWith<$Res> get tuyenDung;
+}
+
+/// @nodoc
+class __$$CreateTuyenDungStateImplCopyWithImpl<$Res>
+    extends _$TuyenDungStateCopyWithImpl<$Res, _$CreateTuyenDungStateImpl>
+    implements _$$CreateTuyenDungStateImplCopyWith<$Res> {
+  __$$CreateTuyenDungStateImplCopyWithImpl(_$CreateTuyenDungStateImpl _value,
+      $Res Function(_$CreateTuyenDungStateImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of TuyenDungState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? tuyenDung = null,
+    Object? isValidated = null,
+  }) {
+    return _then(_$CreateTuyenDungStateImpl(
+      null == tuyenDung
+          ? _value.tuyenDung
+          : tuyenDung // ignore: cast_nullable_to_non_nullable
+              as NTDTuyenDung,
+      isValidated: null == isValidated
+          ? _value.isValidated
+          : isValidated // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+
+  /// Create a copy of TuyenDungState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $NTDTuyenDungCopyWith<$Res> get tuyenDung {
+    return $NTDTuyenDungCopyWith<$Res>(_value.tuyenDung, (value) {
+      return _then(_value.copyWith(tuyenDung: value));
+    });
+  }
+}
+
+/// @nodoc
+
+class _$CreateTuyenDungStateImpl implements CreateTuyenDungState {
+  const _$CreateTuyenDungStateImpl(this.tuyenDung, {this.isValidated = false});
+
+  @override
+  final NTDTuyenDung tuyenDung;
+  @override
+  @JsonKey()
+  final bool isValidated;
+
+  @override
+  String toString() {
+    return 'TuyenDungState.creating(tuyenDung: $tuyenDung, isValidated: $isValidated)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$CreateTuyenDungStateImpl &&
+            (identical(other.tuyenDung, tuyenDung) ||
+                other.tuyenDung == tuyenDung) &&
+            (identical(other.isValidated, isValidated) ||
+                other.isValidated == isValidated));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, tuyenDung, isValidated);
+
+  /// Create a copy of TuyenDungState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$CreateTuyenDungStateImplCopyWith<_$CreateTuyenDungStateImpl>
+      get copyWith =>
+          __$$CreateTuyenDungStateImplCopyWithImpl<_$CreateTuyenDungStateImpl>(
+              this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() loading,
+    required TResult Function(List<NTDTuyenDung> tuyenDungList) loaded,
+    required TResult Function(String message) error,
+    required TResult Function(NTDTuyenDung tuyenDung, bool isValidated)
+        creating,
+  }) {
+    return creating(tuyenDung, isValidated);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initial,
+    TResult? Function()? loading,
+    TResult? Function(List<NTDTuyenDung> tuyenDungList)? loaded,
+    TResult? Function(String message)? error,
+    TResult? Function(NTDTuyenDung tuyenDung, bool isValidated)? creating,
+  }) {
+    return creating?.call(tuyenDung, isValidated);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function(List<NTDTuyenDung> tuyenDungList)? loaded,
+    TResult Function(String message)? error,
+    TResult Function(NTDTuyenDung tuyenDung, bool isValidated)? creating,
+    required TResult orElse(),
+  }) {
+    if (creating != null) {
+      return creating(tuyenDung, isValidated);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(TuyenDungInitial value) initial,
+    required TResult Function(TuyenDungLoading value) loading,
+    required TResult Function(TuyenDungLoaded value) loaded,
+    required TResult Function(TuyenDungError value) error,
+    required TResult Function(CreateTuyenDungState value) creating,
+  }) {
+    return creating(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(TuyenDungInitial value)? initial,
+    TResult? Function(TuyenDungLoading value)? loading,
+    TResult? Function(TuyenDungLoaded value)? loaded,
+    TResult? Function(TuyenDungError value)? error,
+    TResult? Function(CreateTuyenDungState value)? creating,
+  }) {
+    return creating?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(TuyenDungInitial value)? initial,
+    TResult Function(TuyenDungLoading value)? loading,
+    TResult Function(TuyenDungLoaded value)? loaded,
+    TResult Function(TuyenDungError value)? error,
+    TResult Function(CreateTuyenDungState value)? creating,
+    required TResult orElse(),
+  }) {
+    if (creating != null) {
+      return creating(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class CreateTuyenDungState implements TuyenDungState {
+  const factory CreateTuyenDungState(final NTDTuyenDung tuyenDung,
+      {final bool isValidated}) = _$CreateTuyenDungStateImpl;
+
+  NTDTuyenDung get tuyenDung;
+  bool get isValidated;
+
+  /// Create a copy of TuyenDungState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$CreateTuyenDungStateImplCopyWith<_$CreateTuyenDungStateImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

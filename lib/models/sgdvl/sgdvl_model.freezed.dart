@@ -46,15 +46,15 @@ mixin _$SGDVL {
   int get soUvThamgiaPgd => throw _privateConstructorUsedError;
   int get soUvDuoctuvan => throw _privateConstructorUsedError;
   int get soUvDuocPv => throw _privateConstructorUsedError;
-  int get soUvDatsotuyen => throw _privateConstructorUsedError;
+  int? get soUvDatsotuyen => throw _privateConstructorUsedError;
   int get trongdoUvNu => throw _privateConstructorUsedError;
   int get soLdCotrinhdoDatsotuyen => throw _privateConstructorUsedError;
   int get soLdptDatsotuyen => throw _privateConstructorUsedError;
   int get soLDhenphongvan => throw _privateConstructorUsedError;
   int get songuoiDkxkld => throw _privateConstructorUsedError;
-  int? get soketnoiThanhcong => throw _privateConstructorUsedError;
-  String get ghichu => throw _privateConstructorUsedError;
-  String? get matinh => throw _privateConstructorUsedError;
+  dynamic get soketnoiThanhcong => throw _privateConstructorUsedError;
+  String? get ghichu => throw _privateConstructorUsedError;
+  String get matinh => throw _privateConstructorUsedError;
 
   /// Serializes this SGDVL to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -97,15 +97,15 @@ abstract class $SGDVLCopyWith<$Res> {
       int soUvThamgiaPgd,
       int soUvDuoctuvan,
       int soUvDuocPv,
-      int soUvDatsotuyen,
+      int? soUvDatsotuyen,
       int trongdoUvNu,
       int soLdCotrinhdoDatsotuyen,
       int soLdptDatsotuyen,
       int soLDhenphongvan,
       int songuoiDkxkld,
-      int? soketnoiThanhcong,
-      String ghichu,
-      String? matinh});
+      dynamic soketnoiThanhcong,
+      String? ghichu,
+      String matinh});
 }
 
 /// @nodoc
@@ -149,15 +149,15 @@ class _$SGDVLCopyWithImpl<$Res, $Val extends SGDVL>
     Object? soUvThamgiaPgd = null,
     Object? soUvDuoctuvan = null,
     Object? soUvDuocPv = null,
-    Object? soUvDatsotuyen = null,
+    Object? soUvDatsotuyen = freezed,
     Object? trongdoUvNu = null,
     Object? soLdCotrinhdoDatsotuyen = null,
     Object? soLdptDatsotuyen = null,
     Object? soLDhenphongvan = null,
     Object? songuoiDkxkld = null,
     Object? soketnoiThanhcong = freezed,
-    Object? ghichu = null,
-    Object? matinh = freezed,
+    Object? ghichu = freezed,
+    Object? matinh = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -264,10 +264,10 @@ class _$SGDVLCopyWithImpl<$Res, $Val extends SGDVL>
           ? _value.soUvDuocPv
           : soUvDuocPv // ignore: cast_nullable_to_non_nullable
               as int,
-      soUvDatsotuyen: null == soUvDatsotuyen
+      soUvDatsotuyen: freezed == soUvDatsotuyen
           ? _value.soUvDatsotuyen
           : soUvDatsotuyen // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       trongdoUvNu: null == trongdoUvNu
           ? _value.trongdoUvNu
           : trongdoUvNu // ignore: cast_nullable_to_non_nullable
@@ -291,15 +291,15 @@ class _$SGDVLCopyWithImpl<$Res, $Val extends SGDVL>
       soketnoiThanhcong: freezed == soketnoiThanhcong
           ? _value.soketnoiThanhcong
           : soketnoiThanhcong // ignore: cast_nullable_to_non_nullable
-              as int?,
-      ghichu: null == ghichu
+              as dynamic,
+      ghichu: freezed == ghichu
           ? _value.ghichu
           : ghichu // ignore: cast_nullable_to_non_nullable
-              as String,
-      matinh: freezed == matinh
+              as String?,
+      matinh: null == matinh
           ? _value.matinh
           : matinh // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
     ) as $Val);
   }
 }
@@ -338,15 +338,15 @@ abstract class _$$SGDVLImplCopyWith<$Res> implements $SGDVLCopyWith<$Res> {
       int soUvThamgiaPgd,
       int soUvDuoctuvan,
       int soUvDuocPv,
-      int soUvDatsotuyen,
+      int? soUvDatsotuyen,
       int trongdoUvNu,
       int soLdCotrinhdoDatsotuyen,
       int soLdptDatsotuyen,
       int soLDhenphongvan,
       int songuoiDkxkld,
-      int? soketnoiThanhcong,
-      String ghichu,
-      String? matinh});
+      dynamic soketnoiThanhcong,
+      String? ghichu,
+      String matinh});
 }
 
 /// @nodoc
@@ -388,15 +388,15 @@ class __$$SGDVLImplCopyWithImpl<$Res>
     Object? soUvThamgiaPgd = null,
     Object? soUvDuoctuvan = null,
     Object? soUvDuocPv = null,
-    Object? soUvDatsotuyen = null,
+    Object? soUvDatsotuyen = freezed,
     Object? trongdoUvNu = null,
     Object? soLdCotrinhdoDatsotuyen = null,
     Object? soLdptDatsotuyen = null,
     Object? soLDhenphongvan = null,
     Object? songuoiDkxkld = null,
     Object? soketnoiThanhcong = freezed,
-    Object? ghichu = null,
-    Object? matinh = freezed,
+    Object? ghichu = freezed,
+    Object? matinh = null,
   }) {
     return _then(_$SGDVLImpl(
       id: null == id
@@ -503,10 +503,10 @@ class __$$SGDVLImplCopyWithImpl<$Res>
           ? _value.soUvDuocPv
           : soUvDuocPv // ignore: cast_nullable_to_non_nullable
               as int,
-      soUvDatsotuyen: null == soUvDatsotuyen
+      soUvDatsotuyen: freezed == soUvDatsotuyen
           ? _value.soUvDatsotuyen
           : soUvDatsotuyen // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       trongdoUvNu: null == trongdoUvNu
           ? _value.trongdoUvNu
           : trongdoUvNu // ignore: cast_nullable_to_non_nullable
@@ -530,15 +530,15 @@ class __$$SGDVLImplCopyWithImpl<$Res>
       soketnoiThanhcong: freezed == soketnoiThanhcong
           ? _value.soketnoiThanhcong
           : soketnoiThanhcong // ignore: cast_nullable_to_non_nullable
-              as int?,
-      ghichu: null == ghichu
+              as dynamic,
+      ghichu: freezed == ghichu
           ? _value.ghichu
           : ghichu // ignore: cast_nullable_to_non_nullable
-              as String,
-      matinh: freezed == matinh
+              as String?,
+      matinh: null == matinh
           ? _value.matinh
           : matinh // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
     ));
   }
 }
@@ -573,15 +573,15 @@ class _$SGDVLImpl implements _SGDVL {
       required this.soUvThamgiaPgd,
       required this.soUvDuoctuvan,
       required this.soUvDuocPv,
-      required this.soUvDatsotuyen,
+      this.soUvDatsotuyen,
       required this.trongdoUvNu,
       required this.soLdCotrinhdoDatsotuyen,
       required this.soLdptDatsotuyen,
       required this.soLDhenphongvan,
       required this.songuoiDkxkld,
       this.soketnoiThanhcong,
-      required this.ghichu,
-      this.matinh});
+      this.ghichu,
+      required this.matinh});
 
   factory _$SGDVLImpl.fromJson(Map<String, dynamic> json) =>
       _$$SGDVLImplFromJson(json);
@@ -639,7 +639,7 @@ class _$SGDVLImpl implements _SGDVL {
   @override
   final int soUvDuocPv;
   @override
-  final int soUvDatsotuyen;
+  final int? soUvDatsotuyen;
   @override
   final int trongdoUvNu;
   @override
@@ -651,11 +651,11 @@ class _$SGDVLImpl implements _SGDVL {
   @override
   final int songuoiDkxkld;
   @override
-  final int? soketnoiThanhcong;
+  final dynamic soketnoiThanhcong;
   @override
-  final String ghichu;
+  final String? ghichu;
   @override
-  final String? matinh;
+  final String matinh;
 
   @override
   String toString() {
@@ -726,8 +726,8 @@ class _$SGDVLImpl implements _SGDVL {
                 other.soLDhenphongvan == soLDhenphongvan) &&
             (identical(other.songuoiDkxkld, songuoiDkxkld) ||
                 other.songuoiDkxkld == songuoiDkxkld) &&
-            (identical(other.soketnoiThanhcong, soketnoiThanhcong) ||
-                other.soketnoiThanhcong == soketnoiThanhcong) &&
+            const DeepCollectionEquality()
+                .equals(other.soketnoiThanhcong, soketnoiThanhcong) &&
             (identical(other.ghichu, ghichu) || other.ghichu == ghichu) &&
             (identical(other.matinh, matinh) || other.matinh == matinh));
   }
@@ -768,7 +768,7 @@ class _$SGDVLImpl implements _SGDVL {
         soLdptDatsotuyen,
         soLDhenphongvan,
         songuoiDkxkld,
-        soketnoiThanhcong,
+        const DeepCollectionEquality().hash(soketnoiThanhcong),
         ghichu,
         matinh
       ]);
@@ -817,15 +817,15 @@ abstract class _SGDVL implements SGDVL {
       required final int soUvThamgiaPgd,
       required final int soUvDuoctuvan,
       required final int soUvDuocPv,
-      required final int soUvDatsotuyen,
+      final int? soUvDatsotuyen,
       required final int trongdoUvNu,
       required final int soLdCotrinhdoDatsotuyen,
       required final int soLdptDatsotuyen,
       required final int soLDhenphongvan,
       required final int songuoiDkxkld,
-      final int? soketnoiThanhcong,
-      required final String ghichu,
-      final String? matinh}) = _$SGDVLImpl;
+      final dynamic soketnoiThanhcong,
+      final String? ghichu,
+      required final String matinh}) = _$SGDVLImpl;
 
   factory _SGDVL.fromJson(Map<String, dynamic> json) = _$SGDVLImpl.fromJson;
 
@@ -882,7 +882,7 @@ abstract class _SGDVL implements SGDVL {
   @override
   int get soUvDuocPv;
   @override
-  int get soUvDatsotuyen;
+  int? get soUvDatsotuyen;
   @override
   int get trongdoUvNu;
   @override
@@ -894,11 +894,11 @@ abstract class _SGDVL implements SGDVL {
   @override
   int get songuoiDkxkld;
   @override
-  int? get soketnoiThanhcong;
+  dynamic get soketnoiThanhcong;
   @override
-  String get ghichu;
+  String? get ghichu;
   @override
-  String? get matinh;
+  String get matinh;
 
   /// Create a copy of SGDVL
   /// with the given fields replaced by the non-null parameter values.

@@ -7,6 +7,8 @@ import 'package:ttld/models/uv_dk_sgd/uv_dk_sgd_model.dart';
 import 'package:ttld/pages/home/ntv/sgdvl_detail_page.dart';
 import 'package:ttld/repositories/uv_dk_sgd_repository.dart';
 import 'package:ttld/blocs/sgdvl/sgdvl_bloc.dart';
+import 'package:ttld/blocs/sgdvl/sgdvl_event.dart';
+import 'package:ttld/blocs/sgdvl/sgdvl_state.dart';
 import 'package:ttld/models/sgdvl/sgdvl_model.dart';
 import 'package:ttld/blocs/tblHoSoUngVien/tblhosoungvien_bloc.dart';
 

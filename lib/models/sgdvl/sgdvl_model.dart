@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 part 'sgdvl_model.freezed.dart';
 part 'sgdvl_model.g.dart';
@@ -32,17 +33,16 @@ class SGDVL with _$SGDVL {
     required int soUvThamgiaPgd,
     required int soUvDuoctuvan,
     required int soUvDuocPv,
-    required int soUvDatsotuyen,
+    int? soUvDatsotuyen,
     required int trongdoUvNu,
     required int soLdCotrinhdoDatsotuyen,
     required int soLdptDatsotuyen,
     required int soLDhenphongvan,
     required int songuoiDkxkld,
-    int? soketnoiThanhcong,
-    required String ghichu,
-    String? matinh,
+    dynamic soketnoiThanhcong,
+    String? ghichu,
+    required String matinh,
   }) = _SGDVL;
 
   factory SGDVL.fromJson(Map<String, dynamic> json) => _$SGDVLFromJson(json);
 }
-

@@ -1,14 +1,14 @@
 import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
 
 class MucLuongMM extends GenericPickerItem {
-  final int displayOrder;
-  final bool status;
+  int? displayOrder;
+  bool? status;
 
   MucLuongMM({
     required int idMucLuong,
     required String tenMucLuong,
-    required this.displayOrder,
-    required this.status,
+    this.displayOrder,
+    this.status,
   }) : super(id: idMucLuong, displayName: tenMucLuong);
 
   factory MucLuongMM.fromJson(Map<String, dynamic> json) {

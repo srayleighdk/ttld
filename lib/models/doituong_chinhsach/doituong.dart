@@ -1,14 +1,14 @@
 import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
 
 class DoiTuong extends GenericPickerItem {
-  final int displayOrder;
-  final bool status;
+  int? displayOrder;
+  bool? status;
 
   DoiTuong({
     required super.id,
     required String name,
-    required this.displayOrder,
-    required this.status,
+    this.displayOrder,
+    this.status,
   }) : super(displayName: name);
 
   factory DoiTuong.fromJson(Map<String, dynamic> json) {

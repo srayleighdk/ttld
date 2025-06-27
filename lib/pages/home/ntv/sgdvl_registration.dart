@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ttld/blocs/sgdvl/sgdvl_bloc.dart';
+import 'package:ttld/blocs/sgdvl/sgdvl_event.dart';
+import 'package:ttld/blocs/sgdvl/sgdvl_state.dart';
 import 'package:ttld/blocs/uv_dk_sgd/uv_dk_sgd_bloc.dart';
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
