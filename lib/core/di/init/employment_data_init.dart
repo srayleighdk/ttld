@@ -31,22 +31,9 @@ Future<void> initializeEmploymentData() async {
   final hinhThucLamViecRepository = locator<HinhThucLamViecRepository>();
   final thoiGianLamViecRepository = locator<ThoiGianLamViecRepository>();
 
-  // Muc Luong
-  try {
-    final mucLuongs = await mucLuongRepository.getMucLuongs();
-    locator.registerSingleton<List<MucLuongMM>>(mucLuongs);
-  } catch (e) {
-    debugPrint('Error preloading muc luong: $e');
-  }
+  
 
-  // Doi Tuong Chinh Sach
-  try {
-    final doiTuongChinhSaches =
-        await doiTuongChinhSachRepository.getDoiTuongs();
-    locator.registerSingleton<List<DoiTuong>>(doiTuongChinhSaches);
-  } catch (e) {
-    debugPrint('Error preloading doi tuong chinh sach: $e');
-  }
+  
 
   // Muc Dich Lam Viec
   try {
@@ -98,12 +85,5 @@ Future<void> initializeEmploymentData() async {
     debugPrint('Error preloading hinh thuc lam viec: $e');
   }
 
-  // Thoi gian lam viec
-  try {
-    final thoiGianLamViecs =
-        await thoiGianLamViecRepository.getThoiGianLamViecs();
-    locator.registerSingleton<List<ThoiGianLamViec>>(thoiGianLamViecs);
-  } catch (e) {
-    debugPrint('Error preloading thoi gian lam viec: $e');
-  }
+  
 }

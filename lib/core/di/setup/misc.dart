@@ -32,6 +32,9 @@ import 'package:ttld/repositories/hinh_thuc_loai_hinh/hinh_thuc_loai_hinh_reposi
 import 'package:ttld/core/services/hinh_thuc_loai_hinh_api_service.dart';
 import 'package:ttld/services/api/ky_nang_mem_api_service.dart';
 import 'package:ttld/blocs/tinh_thanh/tinh_thanh_cubit.dart';
+import 'package:ttld/blocs/tinh_trangvl/tinh_trangvl_bloc.dart';
+import 'package:ttld/repositories/tinh_trangvl/tinh_trangvl_repository.dart';
+import 'package:ttld/core/services/tinh_trangvl_api_service.dart';
 
 final locator = GetIt.instance;
 
@@ -120,4 +123,12 @@ Future<void> setupMiscLocator() async {
       () => GroupRepository(userRepository: locator<UserRepository>()));
   locator.registerLazySingleton(
       () => GroupBloc(groupRepository: locator<GroupRepository>()));
+
+  // Tinh Trang Viec Lam
+  locator.registerLazySingleton<TinhTrangVLApiService>(
+      () => TinhTrangVLApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<TinhTrangVLRepository>(() =>
+      TinhTrangVLRepositoryImpl(tinhTrangVLApiService: locator<TinhTrangVLApiService>()));
+  locator.registerLazySingleton<TinhTrangVLBloc>(
+      () => TinhTrangVLBloc(tinhTrangVLRepository: locator<TinhTrangVLRepository>()));
 }

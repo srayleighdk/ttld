@@ -50,6 +50,7 @@ import 'package:ttld/pages/auth/change_password_page.dart'; // Import the new pa
 import 'package:ttld/pages/home/ntv/sgdvl_page.dart';
 import 'package:ttld/pages/home/ntv/chap_noi_page.dart';
 import 'package:ttld/pages/home/ntd/sgdvl_ntd_page.dart';
+import 'package:ttld/pages/home/ntd/chap_noi_ntd_page.dart';
 
 class AppRouter {
   final AuthBloc authBloc;
@@ -271,13 +272,7 @@ class AppRouter {
           ),
           GoRoute(
             path: '/ho-so-chap-noi',
-            builder: (context, state) {
-              final extra = state.extra as Map<String, dynamic>?;
-              return HoSoChapNoiPage(
-                id: extra?['id'] as String?,
-                ntdUsername: extra?['ntdUsername'] as String?,
-              );
-            },
+            builder: (context, state) => const ChapNoiNTDPage(),
           ),
           GoRoute(
               path: '/create_tuyen_dung',

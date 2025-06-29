@@ -6,19 +6,21 @@ class TuyenDungApiService {
 
   TuyenDungApiService(this._dio);
 
-  Future<Response> getTuyenDungList(String? ntdId) async {
-    // return _dio
-    //     .get('/nghiep-vu/tuyendung', queryParameters: {'idDoanhNghiep': ntdId});
+  Future<Response> getTuyenDungList(String? ntdId, {String? idUv}) async {
     try {
+      // Build query parameters
+      final queryParams = <String, dynamic>{};
+      if (ntdId != null) {
+        queryParams['idDoanhNghiep'] = ntdId;
+      }
+      if (idUv != null) {
+        queryParams['idUv'] = idUv;
+      }
+
       final response = await _dio.get(
         '/nghiep-vu/tuyendung',
-        queryParameters: {'idDoanhNghiep': ntdId},
+        queryParameters: queryParams,
       );
-      // Decode the response body to handle UTF-8 issues
-      // String decodedBody =
-      //     utf8.decode(response.data.toString().codeUnits, allowMalformed: true);
-      // response.data =
-      //     jsonDecode(decodedBody); // Replace raw data with decoded JSON
       return response;
     } on DioException catch (e) {
       throw Exception('Failed to fetch tuyen dung: ${e.message}');

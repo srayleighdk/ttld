@@ -4,6 +4,7 @@ import 'package:ttld/blocs/trinh_do_hoc_van/trinh_do_hoc_van_bloc.dart';
 import 'package:ttld/blocs/trinh_do_ngoai_ngu/trinh_do_ngoai_ngu_bloc.dart';
 import 'package:ttld/blocs/trinh_do_tin_hoc/trinh_do_tin_hoc_bloc.dart';
 import 'package:ttld/blocs/trinh_do_van_hoa/trinh_do_van_hoa_bloc.dart';
+import 'package:ttld/blocs/tt_tantat/tt_tantat_bloc.dart';
 import 'package:ttld/core/api_client.dart';
 import 'package:ttld/blocs/tblNhaTuyenDung/ntd_bloc.dart';
 import 'package:ttld/blocs/tblViecLamUngVien/vieclam_ungvien_bloc.dart';
@@ -14,6 +15,7 @@ import 'package:ttld/core/services/trinh_do_hoc_van_api_service.dart';
 import 'package:ttld/core/services/trinh_do_ngoai_ngu_api_service.dart';
 import 'package:ttld/core/services/trinh_do_tin_hoc_api_service.dart';
 import 'package:ttld/core/services/trinh_do_van_hoa_api_service.dart';
+import 'package:ttld/core/services/tt_tantat_api_service.dart';
 import 'package:ttld/core/services/vieclam_ungvien_api_service.dart';
 import 'package:ttld/pages/hosoungvien/bloc/hosoungvien_bloc.dart';
 import 'package:ttld/repositories/tblHoSoUngVien/ntv_repository.dart';
@@ -25,6 +27,9 @@ import 'package:ttld/repositories/trinh_do_hoc_van/trinh_do_hoc_van_repository.d
 import 'package:ttld/repositories/trinh_do_ngoai_ngu/trinh_do_ngoai_ngu_repository.dart';
 import 'package:ttld/repositories/trinh_do_tin_hoc/trinh_do_tin_hoc_repository.dart';
 import 'package:ttld/repositories/trinh_do_van_hoa/trinh_do_van_hoa_repository.dart';
+import 'package:ttld/repositories/tt_tantat/tt_tantat_repository.dart';
+import 'package:ttld/repositories/tt_tantat/tt_tantat_repository_impl.dart'
+    show TtTantatRepositoryImpl;
 
 final locator = GetIt.instance;
 
@@ -86,4 +91,12 @@ Future<void> setupProfileLocator() async {
       () => TrinhDoVanHoaRepositoryImpl(locator<TrinhDoVanHoaApiService>()));
   locator.registerLazySingleton(
       () => TrinhDoVanHoaBloc(locator<TrinhDoVanHoaRepository>()));
+
+  // TtTantat
+  locator.registerLazySingleton<TTTanTatApiService>(
+      () => TTTanTatApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<TtTantatRepository>(
+      () => TtTantatRepositoryImpl(locator<TTTanTatApiService>()));
+  locator
+      .registerLazySingleton(() => TtTantatBloc(locator<TtTantatRepository>()));
 }

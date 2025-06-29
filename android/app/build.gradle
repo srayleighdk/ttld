@@ -5,10 +5,12 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+def keystorePropertiesFile = rootProject.file('keystore.properties')
 def keystoreProperties = new Properties()
-def keystorePropertiesFile = rootProject.file('key.properties')
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+} else {
+    throw new GradleException("keystore.properties file not found at ${keystorePropertiesFile}")
 }
 
 android {
@@ -16,13 +18,13 @@ android {
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
+compileOptions {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
+        jvmTarget = JavaVersion.VERSION_21
     }
 
     defaultConfig {
@@ -44,18 +46,18 @@ android {
     //             debugSymbolLevel 'FULL' 
     //         }
     //         signingConfig = signingConfigs.release
-    //         minifyEnabled false
-    //         shrinkResources false
+    //         minifyEnabled true
+    //         shrinkResources true
     //         proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     //     }
     // }
 
     signingConfigs {
         release {
-        keyAlias keystoreProperties['keyAlias']
-        keyPassword keystoreProperties['keyPassword']
-        storeFile file(keystoreProperties['storeFile'])
-        storePassword keystoreProperties['storePassword']
+						storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
         }
     }
     buildTypes {

@@ -83,7 +83,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
               ),
             )
           : ListView.builder(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 117.0), // Added bottom padding for navigation bar
               itemCount: _notifications.length,
               itemBuilder: (context, index) {
                 final notification = _notifications[index];

@@ -67,7 +67,7 @@ class _CascadeLocationPickerGrokState extends State<CascadeLocationPickerGrok> {
   }
 
   Future<void> _initializeTinh() async {
-    final tinhBloc = BlocProvider.of<TinhBloc>(context);
+    final tinhBloc = locator<TinhBloc>();
     tinhBloc.add(LoadTinhs());
 
     if (widget.initialTinh != null) {

@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+// import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ttld/core/enums/region.dart';
 import 'package:ttld/helppers/help.dart'; // Assuming getEnv is here
@@ -28,7 +28,7 @@ class ApiClient {
         receiveTimeout: const Duration(seconds: 30),
         sendTimeout: const Duration(seconds: 30),
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json; charset=utf-8',
           'Accept': 'application/json',
         },
       ),
@@ -51,7 +51,7 @@ class ApiClient {
       ),
     );
 
-    dio.interceptors.add(PrettyDioLogger());
+    // dio.interceptors.add(PrettyDioLogger());
 
     if (!kIsWeb) {
       (_dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {

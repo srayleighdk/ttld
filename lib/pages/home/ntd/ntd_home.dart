@@ -968,7 +968,7 @@ class _NTDHomePageState extends State<NTDHomePage> {
                 minWidth: 400,
                 headingRowHeight: 56,
                 dataRowHeight: 60,
-                headingRowColor: MaterialStateProperty.all(
+                headingRowColor: WidgetStateProperty.all(
                   theme.colorScheme.primary.withOpacity(0.05),
                 ),
                 columns: [
@@ -1023,7 +1023,7 @@ class _NTDHomePageState extends State<NTDHomePage> {
                   final isEven = index % 2 == 0;
 
                   return DataRow(
-                    color: MaterialStateProperty.all(
+                    color: WidgetStateProperty.all(
                       isEven
                           ? Colors.transparent
                           : theme.colorScheme.primary.withOpacity(0.02),

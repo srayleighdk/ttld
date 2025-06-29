@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:http_parser/http_parser.dart';
@@ -17,7 +18,7 @@ import 'package:ttld/features/auth/bloc/auth_state.dart';
 import 'package:ttld/features/auth/repositories/auth_repository.dart';
 import 'package:ttld/helppers/help.dart';
 import 'package:dio/dio.dart';
-import 'package:go_router/go_router.dart'; // Import go_router
+import 'package:go_router/go_router.dart';
 
 class ProfilePage extends StatefulWidget {
   final String userId;
@@ -158,30 +159,37 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Scaffold(
+      extendBodyBehindAppBar: true,
       backgroundColor: Colors.transparent,
       body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
+        width: double.infinity,
+        height: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              theme.colorScheme.primary.withAlpha(25),
-              theme.colorScheme.surface,
+              colorScheme.primary.withValues(alpha: 0.1),
+              colorScheme.surface,
             ],
           ),
         ),
         child: SafeArea(
           child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 117.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _buildProfileHeader(),
-                const SizedBox(height: 16),
+                _buildModernProfileHeader(theme),
+                const SizedBox(height: 24),
                 _buildUserInfoSection(),
-                const SizedBox(height: 16),
-                _buildSettingsCards(),
+                // const SizedBox(height: 24),
+                // _buildQuickActionsSection(theme),
+                const SizedBox(height: 24),
+                _buildSettingsSection(theme),
               ],
             ),
           ),
@@ -190,75 +198,117 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildProfileHeader() {
-    final theme = Theme.of(context);
+  Widget _buildModernProfileHeader(ThemeData theme) {
+    final colorScheme = theme.colorScheme;
+
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 32),
-      child: Column(
-        children: [
-          Stack(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: theme.colorScheme.primary,
-                    width: 4,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: theme.colorScheme.shadow.withAlpha(26),
-                      spreadRadius: 1,
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: CircleAvatar(
-                  radius: 65,
-                  backgroundColor: theme.colorScheme.surface,
-                  backgroundImage: _avatarImage != null
-                      ? FileImage(_avatarImage!)
-                      : (locator<AuthBloc>().state is AuthAuthenticated &&
-                              (locator<AuthBloc>().state as AuthAuthenticated)
-                                      .avatarUrl !=
-                                  null
-                          ? NetworkImage(
-                              '${getEnv('URL_AVATAR')}${(locator<AuthBloc>().state as AuthAuthenticated).avatarUrl}')
-                          : const AssetImage(
-                              'assets/default_avatar.png')) as ImageProvider,
-                ),
-              ),
-              Positioned(
-                bottom: 0,
-                right: 0,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.primary,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: theme.colorScheme.shadow.withAlpha(51),
-                        spreadRadius: 1,
-                        blurRadius: 5,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: IconButton(
-                    icon: Icon(Icons.camera_alt,
-                        color: theme.colorScheme.onPrimary, size: 20),
-                    onPressed: _pickAvatar,
-                    constraints:
-                        const BoxConstraints.tightFor(width: 40, height: 40),
-                    padding: EdgeInsets.zero,
-                  ),
-                ),
-              ),
-            ],
+      padding: const EdgeInsets.all(32),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            colorScheme.primary,
+            colorScheme.primary.withValues(alpha: 0.8),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.primary.withValues(alpha: 0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
+      child: Center(
+        child: _buildAvatarSection(theme),
+      ),
+    );
+  }
+
+  Widget _buildAvatarSection(ThemeData theme) {
+    final colorScheme = theme.colorScheme;
+
+    // Check if we have an avatar image
+    final bool hasAvatar = _avatarImage != null ||
+        (locator<AuthBloc>().state is AuthAuthenticated &&
+            (locator<AuthBloc>().state as AuthAuthenticated).avatarUrl != null);
+
+    return Stack(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: Colors.white,
+              width: 4,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.2),
+                blurRadius: 15,
+                offset: const Offset(0, 5),
+              ),
+            ],
+          ),
+          child: CircleAvatar(
+            radius: 60,
+            backgroundColor: Colors.white,
+            backgroundImage: hasAvatar
+                ? (_avatarImage != null
+                        ? FileImage(_avatarImage!)
+                        : NetworkImage(
+                            '${getEnv('URL_AVATAR')}${(locator<AuthBloc>().state as AuthAuthenticated).avatarUrl}'))
+                    as ImageProvider
+                : null,
+            child: !hasAvatar
+                ? Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: colorScheme.primary.withValues(alpha: 0.1),
+                    ),
+                    child: FaIcon(
+                      FontAwesomeIcons.user,
+                      size: 50,
+                      color: colorScheme.primary.withValues(alpha: 0.7),
+                    ),
+                  )
+                : null,
+          ),
+        ),
+        Positioned(
+          bottom: 4,
+          right: 4,
+          child: Container(
+            decoration: BoxDecoration(
+              color: colorScheme.primary,
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: Colors.white,
+                width: 3,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.2),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: IconButton(
+              icon: const FaIcon(
+                FontAwesomeIcons.camera,
+                color: Colors.white,
+                size: 16,
+              ),
+              onPressed: _pickAvatar,
+              constraints: const BoxConstraints.tightFor(width: 40, height: 40),
+              padding: EdgeInsets.zero,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -325,75 +375,122 @@ class _ProfilePageState extends State<ProfilePage> {
     required String id,
   }) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
+        color: colorScheme.surface,
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: theme.colorScheme.shadow.withAlpha(26),
-            spreadRadius: 1,
-            blurRadius: 10,
-            offset: const Offset(0, 2),
+            color: colorScheme.shadow.withValues(alpha: 0.1),
+            blurRadius: 15,
+            offset: const Offset(0, 5),
           ),
         ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(height: 16),
-          Text(
-            name,
-            style: theme.textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: theme.colorScheme.onSurface,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primary.withAlpha(25),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              type,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.primary,
-                fontWeight: FontWeight.w500,
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: colorScheme.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: FaIcon(
+                  FontAwesomeIcons.idCard,
+                  color: colorScheme.primary,
+                  size: 20,
+                ),
               ),
-            ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Thông Tin Tài Khoản',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: colorScheme.onSurface,
+                      ),
+                    ),
+                    Text(
+                      'Chi tiết thông tin cá nhân',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurface.withValues(alpha: 0.7),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
+          const SizedBox(height: 20),
+          _buildModernInfoRow(FontAwesomeIcons.user, 'Họ và tên', name, theme),
           const SizedBox(height: 16),
-          const Divider(height: 1),
-          _buildInfoRow(Icons.email_outlined, email),
-          _buildInfoRow(Icons.badge_outlined, 'ID: $id'),
-          const SizedBox(height: 8),
+          _buildModernInfoRow(FontAwesomeIcons.envelope, 'Email', email, theme),
+          const SizedBox(height: 16),
+          _buildModernInfoRow(
+              FontAwesomeIcons.userTag, 'Loại tài khoản', type, theme),
+          const SizedBox(height: 16),
+          _buildModernInfoRow(FontAwesomeIcons.hashtag, 'ID', id, theme),
         ],
       ),
     );
   }
 
-  Widget _buildInfoRow(IconData icon, String text) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+  Widget _buildModernInfoRow(
+      IconData icon, String label, String value, ThemeData theme) {
+    final colorScheme = theme.colorScheme;
+
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: colorScheme.outline.withValues(alpha: 0.2),
+        ),
+      ),
       child: Row(
         children: [
-          Icon(
-            icon,
-            size: 22,
-            color: theme.colorScheme.onSurface.withAlpha(179),
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: colorScheme.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: FaIcon(
+              icon,
+              size: 16,
+              color: colorScheme.primary,
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: Text(
-              text,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withAlpha(179),
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurface.withValues(alpha: 0.7),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  value,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: colorScheme.onSurface,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -401,27 +498,246 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildSettingsCards() {
+  Widget _buildQuickActionsSection(ThemeData theme) {
+    final colorScheme = theme.colorScheme;
+
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        color: colorScheme.surface,
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 10,
-            offset: const Offset(0, 2),
+            color: colorScheme.shadow.withValues(alpha: 0.1),
+            blurRadius: 15,
+            offset: const Offset(0, 5),
           ),
         ],
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSettingItem(
-            icon: Icons.lock_outline,
-            title: 'Đổi Mật Khẩu',
-            onTap: () {
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: colorScheme.secondary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: FaIcon(
+                  FontAwesomeIcons.bolt,
+                  color: colorScheme.secondary,
+                  size: 20,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Thao Tác Nhanh',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: colorScheme.onSurface,
+                      ),
+                    ),
+                    Text(
+                      'Các tính năng thường dùng',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurface.withValues(alpha: 0.7),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              Expanded(
+                child: _buildQuickActionButton(
+                  theme,
+                  'Cập Nhật\nHồ Sơ',
+                  FontAwesomeIcons.userEdit,
+                  Colors.blue,
+                  () {
+                    // Navigate to profile update
+                    if (widget.userType.toLowerCase() == 'ntv') {
+                      context.push('/update_ntv/${widget.userId}');
+                    } else if (widget.userType.toLowerCase() == 'ntd') {
+                      context.push('/update_ntd/${widget.userId}');
+                    }
+                  },
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _buildQuickActionButton(
+                  theme,
+                  'Đổi Mật\nKhẩu',
+                  FontAwesomeIcons.lock,
+                  Colors.orange,
+                  () {
+                    context.push(
+                      '/change_password',
+                      extra: {
+                        'userId': widget.userId,
+                        'userType': widget.userType,
+                      },
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _buildQuickActionButton(
+                  theme,
+                  'Thông Báo',
+                  FontAwesomeIcons.bell,
+                  Colors.green,
+                  () {
+                    // Navigate to notifications settings
+                  },
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuickActionButton(
+    ThemeData theme,
+    String title,
+    IconData icon,
+    Color color,
+    VoidCallback onTap,
+  ) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: color.withValues(alpha: 0.3),
+            width: 1,
+          ),
+        ),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: FaIcon(
+                icon,
+                color: color,
+                size: 20,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodySmall?.copyWith(
+                fontWeight: FontWeight.w600,
+                color: color,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSettingsSection(ThemeData theme) {
+    final colorScheme = theme.colorScheme;
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.shadow.withValues(alpha: 0.1),
+            blurRadius: 15,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: colorScheme.tertiary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: FaIcon(
+                  FontAwesomeIcons.gear,
+                  color: colorScheme.tertiary,
+                  size: 20,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Cài Đặt & Hỗ Trợ',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: colorScheme.onSurface,
+                      ),
+                    ),
+                    Text(
+                      'Quản lý tài khoản và hỗ trợ',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurface.withValues(alpha: 0.7),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          _buildModernSettingItem(
+            theme,
+            FontAwesomeIcons.userGear,
+            'Cài Đặt Tài Khoản',
+            'Quản lý thông tin cá nhân',
+            Colors.blue,
+            () {
+              if (widget.userType.toLowerCase() == 'ntv') {
+                context.push('/update_ntv/${widget.userId}');
+              } else if (widget.userType.toLowerCase() == 'ntd') {
+                context.push('/update_ntd/${widget.userId}');
+              }
+            },
+          ),
+          const SizedBox(height: 12),
+          _buildModernSettingItem(
+            theme,
+            FontAwesomeIcons.shield,
+            'Bảo Mật',
+            'Đổi mật khẩu và cài đặt bảo mật',
+            Colors.orange,
+            () {
               context.push(
                 '/change_password',
                 extra: {
@@ -431,80 +747,183 @@ class _ProfilePageState extends State<ProfilePage> {
               );
             },
           ),
-          const Divider(height: 1, indent: 56),
-          _buildSettingItem(
-            icon: Icons.notifications_outlined,
-            title: 'Cài Đặt Thông Báo',
-            onTap: () {
+          const SizedBox(height: 12),
+          _buildModernSettingItem(
+            theme,
+            FontAwesomeIcons.bell,
+            'Thông Báo',
+            'Cài đặt thông báo và nhắc nhở',
+            Colors.green,
+            () {
               // Navigate to notification settings
             },
           ),
-          const Divider(height: 1, indent: 56),
-          _buildSettingItem(
-            icon: Icons.help_outline,
-            title: 'Trợ Giúp & Hỗ Trợ',
-            onTap: () {
+          const SizedBox(height: 12),
+          _buildModernSettingItem(
+            theme,
+            FontAwesomeIcons.circleQuestion,
+            'Trợ Giúp & Hỗ Trợ',
+            'Hướng dẫn sử dụng và liên hệ hỗ trợ',
+            Colors.purple,
+            () {
               // Navigate to help & support
             },
           ),
-          const Divider(height: 1, indent: 56),
-          _buildSettingItem(
-            icon: Icons.logout,
-            title: 'Đăng Xuất',
-            color: Colors.red,
-            onTap: () {
-              _handleLogout(context);
-            },
+          const SizedBox(height: 20),
+          const Divider(),
+          const SizedBox(height: 12),
+          _buildModernSettingItem(
+            theme,
+            FontAwesomeIcons.rightFromBracket,
+            'Đăng Xuất',
+            'Thoát khỏi tài khoản hiện tại',
+            Colors.red,
+            () => _showLogoutDialog(context),
+            isDestructive: true,
           ),
         ],
       ),
     );
   }
 
-  Widget _buildSettingItem({
-    required IconData icon,
-    required String title,
-    required VoidCallback onTap,
-    Color? color,
+  Widget _buildModernSettingItem(
+    ThemeData theme,
+    IconData icon,
+    String title,
+    String subtitle,
+    Color color,
+    VoidCallback onTap, {
+    bool isDestructive = false,
   }) {
+    final colorScheme = theme.colorScheme;
+
     return InkWell(
       onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: isDestructive
+              ? color.withValues(alpha: 0.05)
+              : colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isDestructive
+                ? color.withValues(alpha: 0.2)
+                : colorScheme.outline.withValues(alpha: 0.2),
+          ),
+        ),
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: (color ?? Theme.of(context).colorScheme.primary)
-                    .withOpacity(0.1), // Corrected from withValues
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(
+              child: FaIcon(
                 icon,
-                size: 24,
-                color: color ?? Theme.of(context).colorScheme.primary,
+                size: 18,
+                color: color,
               ),
             ),
             const SizedBox(width: 16),
             Expanded(
-              child: Text(
-                title,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: color ?? Colors.black87,
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: isDestructive ? color : colorScheme.onSurface,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: isDestructive
+                          ? color.withValues(alpha: 0.7)
+                          : colorScheme.onSurface.withValues(alpha: 0.7),
+                    ),
+                  ),
+                ],
               ),
             ),
-            Icon(
-              Icons.arrow_forward_ios,
-              size: 16,
-              color: Colors.grey[400],
+            FaIcon(
+              FontAwesomeIcons.chevronRight,
+              size: 14,
+              color: isDestructive
+                  ? color
+                  : colorScheme.onSurface.withValues(alpha: 0.5),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          title: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.red.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const FaIcon(
+                  FontAwesomeIcons.rightFromBracket,
+                  color: Colors.red,
+                  size: 20,
+                ),
+              ),
+              const SizedBox(width: 12),
+              const Text('Đăng Xuất'),
+            ],
+          ),
+          content: const Text(
+            'Bạn có chắc chắn muốn đăng xuất khỏi tài khoản không?',
+            style: TextStyle(fontSize: 16),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                'Hủy',
+                style: TextStyle(
+                  color: colorScheme.onSurface.withValues(alpha: 0.7),
+                ),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _handleLogout(context);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: const Text('Đăng Xuất'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

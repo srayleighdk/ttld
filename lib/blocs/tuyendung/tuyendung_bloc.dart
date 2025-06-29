@@ -24,7 +24,8 @@ class TuyenDungBloc extends Bloc<TuyenDungEvent, TuyenDungState> {
   ) async {
     emit(TuyenDungLoading());
     try {
-      final tuyenDungList = await _repository.getTuyenDungList(event.ntdId);
+      final tuyenDungList =
+          await _repository.getTuyenDungList(event.ntdId, idUv: event.idUv);
       emit(TuyenDungLoaded(tuyenDungList));
     } catch (e) {
       emit(TuyenDungError(e.toString()));
@@ -66,8 +67,6 @@ class TuyenDungBloc extends Bloc<TuyenDungEvent, TuyenDungState> {
       emit(TuyenDungError(e.toString()));
     }
   }
-
-  
 
   Future<void> _onUpdateTuyenDungForm(
     UpdateTuyenDungForm event,

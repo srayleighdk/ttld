@@ -19,9 +19,11 @@ class TuyenDungRepository {
   // }
 
 //NOTE: This is for testing waring
-  Future<List<NTDTuyenDung>> getTuyenDungList(String? ntdId) async {
+  Future<List<NTDTuyenDung>> getTuyenDungList(String? ntdId,
+      {String? idUv}) async {
     try {
-      final response = await _tuyenDungService.getTuyenDungList(ntdId);
+      final response =
+          await _tuyenDungService.getTuyenDungList(ntdId, idUv: idUv);
       final data = response.data['data'] as List;
       return data.map((json) {
         // Log the raw JSON for debugging

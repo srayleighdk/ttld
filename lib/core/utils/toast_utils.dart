@@ -5,20 +5,6 @@ import 'package:ttld/core/utils/toast_enums.dart';
 import 'package:ttld/core/utils/toast_notification.dart';
 
 class ToastUtils {
-  // static void showSuccessToast(
-  //   BuildContext context, {
-  //   required String message,
-  //   Duration? duration,
-  // }) {
-  //   showToast(
-  //     context,
-  //     message: message ,
-  //     icon: const FaIcon(FontAwesomeIcons.circleCheck, color: Colors.white),
-  //     backgroundColor: Colors.green,
-  //     duration: duration,
-  //   );
-  // }
-
   static void showToastSuccess(BuildContext context,
       {String? title,
       required String description,
@@ -40,8 +26,6 @@ class ToastUtils {
         style: style ?? ToastNotificationStyleType.danger);
   }
 
-  /// Displays a Toast message containing "Warning" for the title, you
-  /// only need to provide a [description].
   static void showToastWarning(BuildContext context,
       {String? title,
       required String description,
@@ -52,8 +36,6 @@ class ToastUtils {
         style: style ?? ToastNotificationStyleType.warning);
   }
 
-  /// Displays a Toast message containing "Info" for the title, you
-  /// only need to provide a [description].
   static void showToastInfo(BuildContext context,
       {String? title,
       required String description,
@@ -64,8 +46,6 @@ class ToastUtils {
         style: style ?? ToastNotificationStyleType.info);
   }
 
-  /// Displays a Toast message containing "Error" for the title, you
-  /// only need to provide a [description].
   static void showToastDanger(BuildContext context,
       {String? title,
       required String description,
@@ -76,8 +56,6 @@ class ToastUtils {
         style: style ?? ToastNotificationStyleType.danger);
   }
 
-  /// Displays a Toast message containing "Oops" for the title, you
-  /// only need to provide a [description].
   static void showToastOops(BuildContext context,
       {String? title,
       required String description,
@@ -101,6 +79,43 @@ class ToastUtils {
       description: description,
       icon: icon,
       duration: duration,
+    );
+  }
+
+  // Convenience methods for common toast types
+  static void showSuccessToast(BuildContext context, String message) {
+    showToast(
+      context,
+      title: "Success",
+      description: message,
+      style: ToastNotificationStyleType.success,
+    );
+  }
+
+  static void showErrorToast(BuildContext context, String message) {
+    showToast(
+      context,
+      title: "Error",
+      description: message,
+      style: ToastNotificationStyleType.danger,
+    );
+  }
+
+  static void showInfoToast(BuildContext context, String message) {
+    showToast(
+      context,
+      title: "Info",
+      description: message,
+      style: ToastNotificationStyleType.info,
+    );
+  }
+
+  static void showWarningToast(BuildContext context, String message) {
+    showToast(
+      context,
+      title: "Warning",
+      description: message,
+      style: ToastNotificationStyleType.warning,
     );
   }
 }

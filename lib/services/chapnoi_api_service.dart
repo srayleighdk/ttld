@@ -50,10 +50,16 @@ class ChapNoiApiService {
       ChapNoiModel chapNoi) async {
     final url = '/nghiep-vu/chapnoi';
     try {
+      // Log the request payload for debugging
+      print('Creating ChapNoi with payload: ${chapNoi.toJson()}');
+
       final response = await _dio.post(
         url,
         data: chapNoi.toJson(),
       );
+
+      print('Response status code: ${response.statusCode}');
+      print('Response data: ${response.data}');
 
       if (response.statusCode == 201 || response.statusCode == 200) {
         return ApiResponseObject.fromJson(

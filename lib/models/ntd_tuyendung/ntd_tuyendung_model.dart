@@ -65,19 +65,5 @@ class NTDTuyenDung with _$NTDTuyenDung {
   }) = _NTDTuyenDung;
 
   factory NTDTuyenDung.fromJson(Map<String, dynamic> json) =>
-      _$NTDTuyenDungFromJson(
-        // Sanitize tdMotacongviec before passing to generated deserializer
-        <String, dynamic>{
-          ...json,
-          'tdMotacongviec': _sanitizeString(json['tdMotacongviec']?.toString()),
-        },
-      );
-
-  static String? _sanitizeString(String? input) {
-    if (input == null) return null;
-    // Replace non-ASCII characters or invalid sequences
-    return input.replaceAll(RegExp(r'[^\x00-\x7F]'), '');
-    // Alternatively, keep valid UTF-8 characters but replace malformed ones
-    // return utf8.decode(input.runes.toList(), allowMalformed: true);
-  }
+      _$NTDTuyenDungFromJson(json);
 }

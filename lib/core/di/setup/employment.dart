@@ -82,4 +82,6 @@ Future<void> setupEmploymentLocator() async {
       () => HinhThucLamViecRepository(locator<HinhThucLamViecApiService>()));
   locator.registerLazySingleton(
       () => HinhThucLamViecBloc(locator<HinhThucLamViecRepository>()));
+
+  
 }

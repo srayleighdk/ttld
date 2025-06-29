@@ -18,7 +18,6 @@ import 'package:ttld/blocs/kinh_nghiem_lam_viec/kinh_nghiem_lam_viec_bloc.dart';
 import 'package:ttld/repositories/kinh_nghiem_lam_viec_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPreferences
 import 'package:ttld/core/enums/region.dart'; // Import Region enum
-import 'package:ttld/pages/home/ntv/sgdvl_page.dart';
 
 class NTVHomePage extends StatefulWidget {
   final VoidCallback? onProfileTap; // Add callback parameter

@@ -17,6 +17,7 @@ import 'package:ttld/pages/home/ntv/ntv_home.dart';
 import 'package:ttld/pages/home/profile_page.dart';
 import 'package:ttld/pages/home/lien_he_page.dart';
 import 'package:ttld/widgets/logout_button.dart';
+import 'package:ttld/widgets/common/custom_app_bar.dart';
 
 enum UserRole { admin, ntd, ntv }
 
@@ -87,22 +88,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _wrapWithAppBar({required String title, required Widget child}) {
-    final theme = Theme.of(context);
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.transparent,
-      appBar: AppBar(
+      appBar: CustomAppBar(
+        title: title,
         elevation: 2,
-        backgroundColor: theme.colorScheme.surface,
-        scrolledUnderElevation: 1.0,
-        title: Text(
-          title,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: theme.colorScheme.onSurface,
-          ),
-        ),
-        iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
         actions: [
           LogoutButton(),
         ],

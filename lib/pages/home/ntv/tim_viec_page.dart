@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -14,6 +15,12 @@ import 'package:ttld/repositories/nganh_nghe/nganh_nghe_repository.dart';
 import 'package:ttld/repositories/tinh/tinh_repository.dart';
 import 'package:ttld/pages/home/ntd/ntd_tuyendung_info_page.dart';
 import 'package:ttld/models/ntd_tuyendung/ntd_tuyendung_model.dart';
+import 'package:ttld/widgets/common/custom_app_bar.dart';
+import 'package:ttld/features/auth/bloc/auth_bloc.dart';
+import 'package:ttld/features/auth/bloc/auth_state.dart';
+import 'package:ttld/blocs/chapnoi/chapnoi_bloc.dart';
+import 'package:ttld/models/chapnoi/chapnoi_model.dart';
+import 'package:ttld/core/utils/toast_utils.dart';
 
 class TimViecPage extends StatefulWidget {
   const TimViecPage({super.key});
@@ -29,9 +36,17 @@ class _TimViecPageState extends State<TimViecPage> {
   late final KinhNghiemLamViecBloc _kinhNghiemBloc;
   late final NganhNgheBloc _nganhNgheBloc;
   late final TinhBloc _tinhBloc;
+  late final AuthBloc _authBloc;
+  late final ChapNoiBloc _chapNoiBloc;
+  // Track active subscriptions for cleanup
+  final List<StreamSubscription> _activeSubscriptions = [];
 
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
+
+  // Current user info
+  String? _currentUserId;
+  String? _currentUserType;
 
   // Filter states
   String? _selectedKinhNghiem;
@@ -73,10 +88,37 @@ class _TimViecPageState extends State<TimViecPage> {
     _nganhNgheBloc =
         NganhNgheBloc(nganhNgheRepository: locator<NganhNgheRepository>());
     _tinhBloc = TinhBloc(tinhRepository: locator<TinhRepository>());
+    _authBloc = locator<AuthBloc>();
+    _chapNoiBloc = locator<ChapNoiBloc>();
+
+    // Get current user info
+    _getCurrentUserInfo();
+  }
+
+  void _getCurrentUserInfo() {
+    final authState = _authBloc.state;
+    if (authState is AuthAuthenticated) {
+      _currentUserId = authState.userId;
+      _currentUserType = authState.userType;
+
+      // Debug logging
+      debugPrint(
+          'TimViecPage: Current user - ID: $_currentUserId, Type: $_currentUserType');
+    } else {
+      debugPrint('TimViecPage: User not authenticated');
+    }
   }
 
   void _loadInitialData() {
-    _tuyenDungBloc.add(FetchTuyenDungList(null));
+    // Pass the current user ID (idUV) for NTV users
+    if (_currentUserType == 'ntv' && _currentUserId != null) {
+      _tuyenDungBloc.add(FetchTuyenDungList(null, idUv: _currentUserId));
+      print('TimViecPage: FetchTuyenDungList with idUV: $_currentUserId');
+    } else {
+      // Fallback for other user types or when user ID is not available
+      _tuyenDungBloc.add(FetchTuyenDungList(null));
+    }
+
     _kinhNghiemBloc.add(FetchKinhNghiemLamViecList());
     _nganhNgheBloc.add(LoadNganhNghes());
     _tinhBloc.add(LoadTinhs());
@@ -88,15 +130,28 @@ class _TimViecPageState extends State<TimViecPage> {
     _kinhNghiemBloc.close();
     _nganhNgheBloc.close();
     _tinhBloc.close();
+    // Don't close _chapNoiBloc here as it's managed by the locator
+    // and might be needed by other pages
+    
+    // Cancel any active subscriptions
+    for (var subscription in _activeSubscriptions) {
+      subscription.cancel();
+    }
+    _activeSubscriptions.clear();
+    
     _searchController.dispose();
     _searchFocusNode.dispose();
     super.dispose();
   }
 
   void _performSearch() {
-    // For now, we'll get all jobs and filter them client-side
-    // In a real implementation, you might want to add server-side search to the API
-    _tuyenDungBloc.add(FetchTuyenDungList(null));
+    // Perform search with current user ID for NTV users
+    if (_currentUserType == 'ntv' && _currentUserId != null) {
+      _tuyenDungBloc.add(FetchTuyenDungList(null, idUv: _currentUserId));
+    } else {
+      // Fallback for other user types or when user ID is not available
+      _tuyenDungBloc.add(FetchTuyenDungList(null));
+    }
   }
 
   void _clearFilters() {
@@ -108,17 +163,115 @@ class _TimViecPageState extends State<TimViecPage> {
       _isRemoteWork = false;
       _searchController.clear();
     });
+    // Refresh data after clearing filters
+    _performSearch();
   }
 
   void _applyFilters() {
     setState(() {
       // Trigger rebuild with new filters
     });
+    // Optionally refresh data when filters change
+    _performSearch();
   }
 
   String _formatDate(DateTime? date) {
     if (date == null) return 'Chưa có';
     return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+  }
+  
+  String _formatDateForAPI(DateTime dateTime) {
+    // Format: "2025-06-26T17:00:00.000Z"
+    final utcDate = dateTime.toUtc();
+    final isoString = utcDate.toIso8601String();
+    
+    // If the ISO string already has milliseconds, use it
+    if (isoString.contains('.')) {
+      return isoString;
+    } else {
+      // Add milliseconds if not present
+      return "${isoString.split('Z')[0]}.000Z";
+    }
+  }
+
+  void _quickApplyForJob(NTDTuyenDung job) async {
+    if (_currentUserType != 'ntv' || _currentUserId == null) {
+      ToastUtils.showErrorToast(
+        context,
+        'Bạn cần đăng nhập với tài khoản ứng viên để ứng tuyển',
+      );
+      return;
+    }
+
+    if (job.idTuyenDung == null || job.idDoanhNghiep == null) {
+      ToastUtils.showErrorToast(
+        context,
+        'Không thể ứng tuyển: Thiếu thông tin tuyển dụng',
+      );
+      return;
+    }
+
+    try {
+      // Format date to match API expectation: "2025-06-26T17:00:00.000Z"
+      final now = DateTime.now().toUtc();
+      final formattedDate = _formatDateForAPI(now);
+      
+      final chapNoi = ChapNoiModel(
+        idKieuChapNoi: 'GGT', // Use proper connection type code (Giấy giới thiệu)
+        idUngVien: _currentUserId!,
+        idDoanhNghiep: job.idDoanhNghiep.toString(),
+        idTuyenDung: job.idTuyenDung!,
+        ngayMuonHs: formattedDate,
+        ngayTraHs: '', // Empty string as per API structure
+        ghiChu: 'Ứng tuyển nhanh từ danh sách việc làm',
+        idKetQua: 0, // Pending status
+        displayOrder: 0, // Default display order
+      );
+
+      // Create a StreamSubscription variable that will be properly cleaned up
+      StreamSubscription? streamSubscription;
+      
+      // Define the listener function
+      void handleState(state) {
+        if (state is ChapNoiListLoaded) {
+          if (mounted) {
+            ToastUtils.showSuccessToast(
+              context,
+              'Ứng tuyển thành công! Hồ sơ của bạn đã được gửi đến nhà tuyển dụng.',
+            );
+          }
+          
+          // Cancel subscription after handling the response
+          streamSubscription?.cancel();
+          streamSubscription = null;
+        } else if (state is ChapNoiError) {
+          if (mounted) {
+            ToastUtils.showErrorToast(
+              context,
+              'Ứng tuyển thất bại: ${state.message}',
+            );
+          }
+          
+          // Cancel subscription after handling the error
+          streamSubscription?.cancel();
+          streamSubscription = null;
+        }
+      }
+      
+      // Assign the subscription and track it
+      streamSubscription = _chapNoiBloc.stream.listen(handleState);
+      if (streamSubscription != null) {
+        _activeSubscriptions.add(streamSubscription!);
+      }
+      
+      // Dispatch the event after setting up the listener
+      _chapNoiBloc.add(ChapNoiCreate(chapNoi));
+    } catch (e) {
+      ToastUtils.showErrorToast(
+        context,
+        'Có lỗi xảy ra khi ứng tuyển: $e',
+      );
+    }
   }
 
   List<NTDTuyenDung> _filterJobs(List<NTDTuyenDung> jobs) {
@@ -178,17 +331,9 @@ class _TimViecPageState extends State<TimViecPage> {
 
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
-      appBar: AppBar(
+      appBar: CustomAppBar(
+        title: 'Tìm Việc Làm',
         elevation: 0,
-        backgroundColor: Colors.transparent,
-        foregroundColor: theme.colorScheme.onSurface,
-        title: Text(
-          'Tìm Việc Làm',
-          style: theme.textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.w700,
-            color: theme.colorScheme.onSurface,
-          ),
-        ),
         actions: [
           IconButton(
             onPressed: () => setState(() => _showFilters = !_showFilters),
@@ -710,7 +855,7 @@ class _TimViecPageState extends State<TimViecPage> {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () {
+          onTap: _currentUserType == 'ntv' ? null : () {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => NTDInfoPage(
@@ -837,6 +982,88 @@ class _TimViecPageState extends State<TimViecPage> {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ],
+
+                // Action buttons for NTV users
+                if (_currentUserType == 'ntv') ...[
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () => _quickApplyForJob(job),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: theme.colorScheme.primary,
+                            foregroundColor: theme.colorScheme.onPrimary,
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            elevation: 0,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                FontAwesomeIcons.paperPlane,
+                                size: 14,
+                                color: theme.colorScheme.onPrimary,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Ứng tuyển',
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: theme.colorScheme.onPrimary,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      OutlinedButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => NTDInfoPage(
+                                ntdData: {
+                                  'tuyendungId': job.idTuyenDung,
+                                  'tuyendung': job.tdTieude ?? '',
+                                  'soLuong': job.tdSoluong.toString(),
+                                  'gioiTinh': job.tdYeuCauGioiTinh,
+                                  'trinhDo': job.tdYeuCauHocVan ?? '',
+                                  'nganhNghe': job.tdNganhnghe ?? '',
+                                  'motaCongViec': job.tdMotacongviec ?? '',
+                                  'ngayNhanHoSo': job.ngayNhanHoSo ?? '',
+                                  'tenNTD': job.tdTieude ?? '',
+                                  'address': job.noiLamviec ?? '',
+                                  'idDoanhNghiep': job.idDoanhNghiep.toString(),
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: theme.colorScheme.primary,
+                          side: BorderSide(
+                            color: theme.colorScheme.primary,
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: Text(
+                          'Chi tiết',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.primary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ],
             ),
           ),
@@ -874,4 +1101,3 @@ class _TimViecPageState extends State<TimViecPage> {
     );
   }
 }
-

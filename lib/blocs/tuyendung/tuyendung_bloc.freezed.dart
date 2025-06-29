@@ -18,7 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$TuyenDungEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String? ntdId) fetchList,
+    required TResult Function(String? ntdId, String? idUv) fetchList,
     required TResult Function(NTDTuyenDung tuyenDung) create,
     required TResult Function(NTDTuyenDung tuyenDung) update,
     required TResult Function(NTDTuyenDung tuyenDung) updateForm,
@@ -27,7 +27,7 @@ mixin _$TuyenDungEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String? ntdId)? fetchList,
+    TResult? Function(String? ntdId, String? idUv)? fetchList,
     TResult? Function(NTDTuyenDung tuyenDung)? create,
     TResult? Function(NTDTuyenDung tuyenDung)? update,
     TResult? Function(NTDTuyenDung tuyenDung)? updateForm,
@@ -36,7 +36,7 @@ mixin _$TuyenDungEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String? ntdId)? fetchList,
+    TResult Function(String? ntdId, String? idUv)? fetchList,
     TResult Function(NTDTuyenDung tuyenDung)? create,
     TResult Function(NTDTuyenDung tuyenDung)? update,
     TResult Function(NTDTuyenDung tuyenDung)? updateForm,
@@ -101,7 +101,7 @@ abstract class _$$FetchTuyenDungListImplCopyWith<$Res> {
           $Res Function(_$FetchTuyenDungListImpl) then) =
       __$$FetchTuyenDungListImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String? ntdId});
+  $Res call({String? ntdId, String? idUv});
 }
 
 /// @nodoc
@@ -118,11 +118,16 @@ class __$$FetchTuyenDungListImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? ntdId = freezed,
+    Object? idUv = freezed,
   }) {
     return _then(_$FetchTuyenDungListImpl(
       freezed == ntdId
           ? _value.ntdId
           : ntdId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      idUv: freezed == idUv
+          ? _value.idUv
+          : idUv // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
   }
@@ -131,14 +136,16 @@ class __$$FetchTuyenDungListImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$FetchTuyenDungListImpl implements FetchTuyenDungList {
-  const _$FetchTuyenDungListImpl(this.ntdId);
+  const _$FetchTuyenDungListImpl(this.ntdId, {this.idUv});
 
   @override
   final String? ntdId;
+  @override
+  final String? idUv;
 
   @override
   String toString() {
-    return 'TuyenDungEvent.fetchList(ntdId: $ntdId)';
+    return 'TuyenDungEvent.fetchList(ntdId: $ntdId, idUv: $idUv)';
   }
 
   @override
@@ -146,11 +153,12 @@ class _$FetchTuyenDungListImpl implements FetchTuyenDungList {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$FetchTuyenDungListImpl &&
-            (identical(other.ntdId, ntdId) || other.ntdId == ntdId));
+            (identical(other.ntdId, ntdId) || other.ntdId == ntdId) &&
+            (identical(other.idUv, idUv) || other.idUv == idUv));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, ntdId);
+  int get hashCode => Object.hash(runtimeType, ntdId, idUv);
 
   /// Create a copy of TuyenDungEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -164,31 +172,31 @@ class _$FetchTuyenDungListImpl implements FetchTuyenDungList {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String? ntdId) fetchList,
+    required TResult Function(String? ntdId, String? idUv) fetchList,
     required TResult Function(NTDTuyenDung tuyenDung) create,
     required TResult Function(NTDTuyenDung tuyenDung) update,
     required TResult Function(NTDTuyenDung tuyenDung) updateForm,
     required TResult Function(String idTuyenDung, String? userId) delete,
   }) {
-    return fetchList(ntdId);
+    return fetchList(ntdId, idUv);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String? ntdId)? fetchList,
+    TResult? Function(String? ntdId, String? idUv)? fetchList,
     TResult? Function(NTDTuyenDung tuyenDung)? create,
     TResult? Function(NTDTuyenDung tuyenDung)? update,
     TResult? Function(NTDTuyenDung tuyenDung)? updateForm,
     TResult? Function(String idTuyenDung, String? userId)? delete,
   }) {
-    return fetchList?.call(ntdId);
+    return fetchList?.call(ntdId, idUv);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String? ntdId)? fetchList,
+    TResult Function(String? ntdId, String? idUv)? fetchList,
     TResult Function(NTDTuyenDung tuyenDung)? create,
     TResult Function(NTDTuyenDung tuyenDung)? update,
     TResult Function(NTDTuyenDung tuyenDung)? updateForm,
@@ -196,7 +204,7 @@ class _$FetchTuyenDungListImpl implements FetchTuyenDungList {
     required TResult orElse(),
   }) {
     if (fetchList != null) {
-      return fetchList(ntdId);
+      return fetchList(ntdId, idUv);
     }
     return orElse();
   }
@@ -243,10 +251,11 @@ class _$FetchTuyenDungListImpl implements FetchTuyenDungList {
 }
 
 abstract class FetchTuyenDungList implements TuyenDungEvent {
-  const factory FetchTuyenDungList(final String? ntdId) =
+  const factory FetchTuyenDungList(final String? ntdId, {final String? idUv}) =
       _$FetchTuyenDungListImpl;
 
   String? get ntdId;
+  String? get idUv;
 
   /// Create a copy of TuyenDungEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -337,7 +346,7 @@ class _$CreateTuyenDungImpl implements CreateTuyenDung {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String? ntdId) fetchList,
+    required TResult Function(String? ntdId, String? idUv) fetchList,
     required TResult Function(NTDTuyenDung tuyenDung) create,
     required TResult Function(NTDTuyenDung tuyenDung) update,
     required TResult Function(NTDTuyenDung tuyenDung) updateForm,
@@ -349,7 +358,7 @@ class _$CreateTuyenDungImpl implements CreateTuyenDung {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String? ntdId)? fetchList,
+    TResult? Function(String? ntdId, String? idUv)? fetchList,
     TResult? Function(NTDTuyenDung tuyenDung)? create,
     TResult? Function(NTDTuyenDung tuyenDung)? update,
     TResult? Function(NTDTuyenDung tuyenDung)? updateForm,
@@ -361,7 +370,7 @@ class _$CreateTuyenDungImpl implements CreateTuyenDung {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String? ntdId)? fetchList,
+    TResult Function(String? ntdId, String? idUv)? fetchList,
     TResult Function(NTDTuyenDung tuyenDung)? create,
     TResult Function(NTDTuyenDung tuyenDung)? update,
     TResult Function(NTDTuyenDung tuyenDung)? updateForm,
@@ -510,7 +519,7 @@ class _$UpdateTuyenDungImpl implements UpdateTuyenDung {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String? ntdId) fetchList,
+    required TResult Function(String? ntdId, String? idUv) fetchList,
     required TResult Function(NTDTuyenDung tuyenDung) create,
     required TResult Function(NTDTuyenDung tuyenDung) update,
     required TResult Function(NTDTuyenDung tuyenDung) updateForm,
@@ -522,7 +531,7 @@ class _$UpdateTuyenDungImpl implements UpdateTuyenDung {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String? ntdId)? fetchList,
+    TResult? Function(String? ntdId, String? idUv)? fetchList,
     TResult? Function(NTDTuyenDung tuyenDung)? create,
     TResult? Function(NTDTuyenDung tuyenDung)? update,
     TResult? Function(NTDTuyenDung tuyenDung)? updateForm,
@@ -534,7 +543,7 @@ class _$UpdateTuyenDungImpl implements UpdateTuyenDung {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String? ntdId)? fetchList,
+    TResult Function(String? ntdId, String? idUv)? fetchList,
     TResult Function(NTDTuyenDung tuyenDung)? create,
     TResult Function(NTDTuyenDung tuyenDung)? update,
     TResult Function(NTDTuyenDung tuyenDung)? updateForm,
@@ -683,7 +692,7 @@ class _$UpdateTuyenDungFormImpl implements UpdateTuyenDungForm {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String? ntdId) fetchList,
+    required TResult Function(String? ntdId, String? idUv) fetchList,
     required TResult Function(NTDTuyenDung tuyenDung) create,
     required TResult Function(NTDTuyenDung tuyenDung) update,
     required TResult Function(NTDTuyenDung tuyenDung) updateForm,
@@ -695,7 +704,7 @@ class _$UpdateTuyenDungFormImpl implements UpdateTuyenDungForm {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String? ntdId)? fetchList,
+    TResult? Function(String? ntdId, String? idUv)? fetchList,
     TResult? Function(NTDTuyenDung tuyenDung)? create,
     TResult? Function(NTDTuyenDung tuyenDung)? update,
     TResult? Function(NTDTuyenDung tuyenDung)? updateForm,
@@ -707,7 +716,7 @@ class _$UpdateTuyenDungFormImpl implements UpdateTuyenDungForm {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String? ntdId)? fetchList,
+    TResult Function(String? ntdId, String? idUv)? fetchList,
     TResult Function(NTDTuyenDung tuyenDung)? create,
     TResult Function(NTDTuyenDung tuyenDung)? update,
     TResult Function(NTDTuyenDung tuyenDung)? updateForm,
@@ -852,7 +861,7 @@ class _$DeleteTuyenDungImpl implements DeleteTuyenDung {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String? ntdId) fetchList,
+    required TResult Function(String? ntdId, String? idUv) fetchList,
     required TResult Function(NTDTuyenDung tuyenDung) create,
     required TResult Function(NTDTuyenDung tuyenDung) update,
     required TResult Function(NTDTuyenDung tuyenDung) updateForm,
@@ -864,7 +873,7 @@ class _$DeleteTuyenDungImpl implements DeleteTuyenDung {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String? ntdId)? fetchList,
+    TResult? Function(String? ntdId, String? idUv)? fetchList,
     TResult? Function(NTDTuyenDung tuyenDung)? create,
     TResult? Function(NTDTuyenDung tuyenDung)? update,
     TResult? Function(NTDTuyenDung tuyenDung)? updateForm,
@@ -876,7 +885,7 @@ class _$DeleteTuyenDungImpl implements DeleteTuyenDung {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String? ntdId)? fetchList,
+    TResult Function(String? ntdId, String? idUv)? fetchList,
     TResult Function(NTDTuyenDung tuyenDung)? create,
     TResult Function(NTDTuyenDung tuyenDung)? update,
     TResult Function(NTDTuyenDung tuyenDung)? updateForm,

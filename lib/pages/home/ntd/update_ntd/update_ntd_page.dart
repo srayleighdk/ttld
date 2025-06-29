@@ -10,11 +10,15 @@ import 'package:ttld/models/hinhthuc_doanhnghiep/hinhthuc_doanhnghiep_model.dart
 import 'package:ttld/models/loai_hinh_model.dart';
 import 'package:ttld/models/nganh_nghe_model.dart';
 import 'package:ttld/models/thoigian_hoatdong.dart';
-import 'package:ttld/widgets/cascade_location_picker_grok.dart';
-import 'package:ttld/widgets/field/custom_checkbox.dart';
-import 'package:ttld/widgets/field/custom_picker_map.dart';
-import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
-import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
+import 'package:ttld/pages/home/ntd/update_ntd/widgets/account_info_section.dart';
+import 'package:ttld/pages/home/ntd/update_ntd/widgets/contact_info_section.dart';
+import 'package:ttld/pages/home/ntd/update_ntd/widgets/company_info_section.dart';
+import 'package:ttld/pages/home/ntd/update_ntd/widgets/status_and_activity_section.dart';
+import 'package:ttld/pages/home/ntd/update_ntd/widgets/company_type_section.dart';
+import 'package:ttld/pages/home/ntd/update_ntd/widgets/location_section.dart';
+import 'package:ttld/pages/home/ntd/update_ntd/widgets/contact_details_section.dart';
+import 'package:ttld/pages/home/ntd/update_ntd/widgets/display_settings_section.dart';
+import 'package:ttld/pages/home/ntd/update_ntd/widgets/notification_settings_section.dart';
 
 class UpdateNTDPage extends StatefulWidget {
   static const routePath = '/update_ntd';
@@ -59,7 +63,8 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
   bool _ntdhtEmail = false;
   bool _ntdhtAddress = false;
 
-  String? _ntdId = TextEditingController().text;
+  final _ntdIdController = TextEditingController();
+  String? get _ntdId => _ntdIdController.text;
 
   bool _newletterSubscription = false;
   bool _jobsletterSubscription = false;
@@ -232,22 +237,25 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
           child: BlocListener<NTDBloc, NTDState>(
             bloc: locator<NTDBloc>(),
             listener: (context, state) {
-              debugPrint('👂 NTD state: ${state.runtimeType}');
               if (state is NTDLoaded) {
-                debugPrint('✅ NTD loaded, popping screen');
-                Navigator.pop(context);
-                debugPrint('🚪 Screen popped');
+                // Schedule navigation for the next frame to ensure proper cleanup
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  Navigator.pop(context);
+                });
               }
               if (state is NTDError) {
-                debugPrint('❌ NTD error: ${state.message}');
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text(state.message)),
                 );
               }
               if (state is NTDSuccess) {
-                ToastUtils.showToastSuccess(context,
-                    message: state.message, description: 'Cập nhật thành công');
-                context.go('/ntd_home');
+                // Schedule navigation for the next frame to ensure proper cleanup
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  ToastUtils.showToastSuccess(context,
+                      message: state.message,
+                      description: 'Cập nhật thành công');
+                  context.go('/ntd_home');
+                });
               }
             },
             child: SingleChildScrollView(
@@ -299,363 +307,206 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                       // Account Information Section
                       _buildSectionHeader(theme, 'Thông tin tài khoản'),
                       const SizedBox(height: 8),
-                      Container(
-                        padding: const EdgeInsets.all(12.0),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.surface,
-                          borderRadius: BorderRadius.circular(8.0),
-                          boxShadow: [
-                            BoxShadow(
-                              color: theme.colorScheme.shadow.withAlpha(26),
-                              spreadRadius: 1,
-                              blurRadius: 5,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CustomTextField.email(
-                              controller: _ntdEmailController,
-                            ),
-                            const SizedBox(height: 8),
-                            CustomTextField(
-                              labelText: "Mã số thuế",
-                              controller: _mstController,
-                              hintText: 'Mã số thuế',
-                            ),
-                            const SizedBox(height: 8),
-                            CustomTextField(
-                              labelText: "Username",
-                              controller: _usernameController,
-                              hintText: 'Username',
-                            ),
-                            const SizedBox(height: 8),
-                            CustomTextField.password(
-                              controller: _passwordController,
-                            ),
-                            const SizedBox(height: 8),
-                            CustomTextField(
-                              labelText: "Mã NTD",
-                              controller: _ntdMadnController,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter NTD Madn';
-                                }
-                                return null;
-                              },
-                              hintText: 'Mã NTD',
-                            ),
-                          ],
-                        ),
+                      AccountInfoSection(
+                        usernameController: _usernameController,
+                        passwordController: _passwordController,
+                        ntdMadnController: _ntdMadnController,
+                        ntdEmailController: _ntdEmailController,
+                        mstController: _mstController,
+                        theme: theme,
                       ),
                       const SizedBox(height: 16),
 
                       // Contact Information Section
                       _buildSectionHeader(theme, 'Thông tin người liên hệ'),
                       const SizedBox(height: 16),
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.surface,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: theme.colorScheme.shadow.withAlpha(26),
-                              spreadRadius: 1,
-                              blurRadius: 10,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CustomTextField(
-                              labelText: "Tên người liên hệ",
-                              controller: _ntdNguoilienheController,
-                              hintText: 'Tên người liên hệ',
-                            ),
-                            const SizedBox(height: 16),
-                            GenericPicker<ChucDanhModel>(
-                              label: "Chức vụ người liên hệ",
-                              items: locator<List<ChucDanhModel>>(),
-                              initialValue: ntdChucvu,
-                              onChanged: (ChucDanhModel? value) {
-                                setState(() {
-                                  ntdChucvu = value?.id;
-                                  chucDanh = value;
-                                });
-                              },
-                              // displayItemBuilder is handled by GenericPicker (expects item.displayName)
-                            ),
-                          ],
-                        ),
+                      ContactInfoSection(
+                        ntdNguoilienheController: _ntdNguoilienheController,
+                        ntdChucvu: ntdChucvu,
+                        onChucDanhChanged: (value) {
+                          setState(() {
+                            ntdChucvu = value?.id;
+                            chucDanh = value;
+                          });
+                        },
+                        theme: theme,
                       ),
                       const SizedBox(height: 32),
 
                       // Company Information Section
                       _buildSectionHeader(theme, 'Thông tin doanh nghiệp'),
                       const SizedBox(height: 16),
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.surface,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: theme.colorScheme.shadow.withAlpha(26),
-                              spreadRadius: 1,
-                              blurRadius: 10,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CustomTextField(
-                              labelText: "Tên nhà tuyển dụng",
-                              controller: _ntdTenController,
-                              hintText: 'Tên nhà tuyển dụng',
-                            ),
-                            const SizedBox(height: 16),
-                            CustomTextField(
-                              labelText: "Tên viết tắt",
-                              controller: _ntdTentatController,
-                              hintText: 'Tên viết tắt',
-                            ),
-                            const SizedBox(height: 16),
-                            CustomPickerMap(
-                              label: const Text("Loại doanh nghiệp"),
-                              items: loaiDoanhNgiepOptions,
-                              selectedItem: ntdLoai,
-                              onChanged: (ntdLoai) {
-                                setState(() {
-                                  this.ntdLoai = ntdLoai;
-                                });
-                              },
-                            ),
-                            const SizedBox(height: 16),
-                            GenericPicker<NganhNgheKT>(
-                              initialValue: idNganhKinhTe,
-                              items: locator<List<NganhNgheKT>>(),
-                              onChanged: (NganhNgheKT? value) {
-                                idNganhKinhTe = value!.id.toString();
-                              },
-                              label: 'Ngành nghề chính',
-                            ),
-                          ],
-                        ),
+                      CompanyInfoSection(
+                        ntdTenController: _ntdTenController,
+                        ntdTentatController: _ntdTentatController,
+                        ntdLoai: ntdLoai,
+                        onNtdLoaiChanged: (value) {
+                          setState(() {
+                            ntdLoai = value;
+                          });
+                        },
+                        idNganhKinhTe: idNganhKinhTe,
+                        onNganhKinhTeChanged: (value) {
+                          setState(() {
+                            idNganhKinhTe = value?.id.toString();
+                          });
+                        },
+                        theme: theme,
                       ),
                       const SizedBox(height: 32),
 
                       // Status and Activity Section
                       _buildSectionHeader(theme, 'Trạng thái và hoạt động'),
                       const SizedBox(height: 16),
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.surface,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: theme.colorScheme.shadow.withAlpha(26),
-                              spreadRadius: 1,
-                              blurRadius: 10,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CustomPickerMap<int>(
-                              label: const Text("Trạng thái"),
-                              items: statusOptions,
-                              selectedItem: idStatus,
-                              onChanged: (int? value) {
-                                setState(() {
-                                  idStatus = value;
-                                });
-                              },
-                              hint: 'Chọn trạng thái',
-                            ),
-                            const SizedBox(height: 16),
-                            CustomPickerMap<int>(
-                              label: const Text("Thời gian hoạt động"),
-                              items: thoiGianHoatDongOptions,
-                              selectedItem: idThoiGianHoatDong,
-                              onChanged: (int? value) {
-                                setState(() {
-                                  idThoiGianHoatDong = value;
-                                });
-                              },
-                              hint: 'Chọn thời gian hoạt động',
-                            ),
-                          ],
-                        ),
+                      StatusAndActivitySection(
+                        idStatus: idStatus,
+                        onStatusChanged: (value) {
+                          setState(() {
+                            idStatus = value;
+                          });
+                        },
+                        idThoiGianHoatDong: idThoiGianHoatDong,
+                        onThoiGianHoatDongChanged: (value) {
+                          setState(() {
+                            idThoiGianHoatDong = value;
+                          });
+                        },
+                        theme: theme,
                       ),
                       const SizedBox(height: 32),
 
                       // Company Type Section
                       _buildSectionHeader(theme, 'Loại hình doanh nghiệp'),
                       const SizedBox(height: 16),
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.surface,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: theme.colorScheme.shadow.withAlpha(26),
-                              spreadRadius: 1,
-                              blurRadius: 10,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            GenericPicker<HinhThucDoanhNghiep>(
-                              label: "Hình thức doanh nghiệp",
-                              items: locator<List<HinhThucDoanhNghiep>>(),
-                              initialValue: ntdHinhthucdoanhnghiep,
-                              onChanged: (HinhThucDoanhNghiep? value) {
-                                setState(() {
-                                  ntdHinhthucdoanhnghiep = value?.id;
-                                  hinhthucDoanhNghiep = value;
-                                });
-                              },
-                              // displayItemBuilder is handled by GenericPicker (expects item.displayName)
-                              // Ensure HinhThucDoanhNghiep has a 'displayName' property or getter (e.g., returning item.name)
-                            ),
-                            const SizedBox(height: 16),
-                            GenericPicker<LoaiHinh>(
-                              label: "Loại hình doanh nghiệp",
-                              items: locator<List<LoaiHinh>>(),
-                              initialValue: idLoaiHinhDoanhNghiep,
-                              onChanged: (LoaiHinh? value) {
-                                setState(() {
-                                  idLoaiHinhDoanhNghiep = value?.id;
-                                  loaihinh = value;
-                                });
-                              },
-                              // displayItemBuilder is handled by GenericPicker (expects item.displayName)
-                              // Ensure LoaiHinh has a 'displayName' property or getter (e.g., returning item.name)
-                            ),
-                          ],
-                        ),
+                      CompanyTypeSection(
+                        ntdHinhthucdoanhnghiep: ntdHinhthucdoanhnghiep,
+                        onHinhThucDoanhNghiepChanged: (value) {
+                          setState(() {
+                            ntdHinhthucdoanhnghiep = value?.id;
+                            hinhthucDoanhNghiep = value;
+                          });
+                        },
+                        idLoaiHinhDoanhNghiep: idLoaiHinhDoanhNghiep,
+                        onLoaiHinhChanged: (value) {
+                          setState(() {
+                            idLoaiHinhDoanhNghiep = value?.id;
+                            loaihinh = value;
+                          });
+                        },
+                        theme: theme,
                       ),
                       const SizedBox(height: 32),
 
                       // Location Section
                       _buildSectionHeader(theme, 'Địa chỉ'),
                       const SizedBox(height: 16),
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.surface,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: theme.colorScheme.shadow.withAlpha(26),
-                              spreadRadius: 1,
-                              blurRadius: 10,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: CascadeLocationPickerGrok(
-                          isNTD: true,
-                          initialTinh: maTinh.toString(),
-                          initialHuyen: maHuyen,
-                          initialXa: maXa,
-                          initialKCN: maKCN.toString(),
-                          addressDetailController: _ntdDiachichitietController,
-                          onTinhChanged: (tinh) {
-                            setState(() {
-                              _selectedTinh = tinh?.tentinh;
-                              maTinh = int.tryParse(tinh?.matinh ?? '');
-                            });
-                          },
-                          onHuyenChanged: (huyen) {
-                            setState(() {
-                              _selectedHuyen = huyen?.tenhuyen;
-                              maHuyen = huyen?.mahuyen;
-                            });
-                          },
-                          onXaChanged: (xa) {
-                            setState(() {
-                              _selectedXa = xa?.tenxa;
-                              maXa = xa?.maxa;
-                            });
-                          },
-                          onKCNChanged: (kcn) {
-                            setState(() {
-                              _selectedKCN = kcn?.displayName;
-                              maKCN = kcn?.id;
-                            });
-                          },
-                        ),
+                      LocationSection(
+                        initialTinh: maTinh.toString(),
+                        initialHuyen: maHuyen,
+                        initialXa: maXa,
+                        initialKCN: maKCN.toString(),
+                        addressDetailController: _ntdDiachichitietController,
+                        onTinhChanged: (tinh) {
+                          setState(() {
+                            _selectedTinh = tinh?.tentinh;
+                            maTinh = int.tryParse(tinh?.matinh ?? '');
+                          });
+                        },
+                        onHuyenChanged: (huyen) {
+                          setState(() {
+                            _selectedHuyen = huyen?.tenhuyen;
+                            maHuyen = huyen?.mahuyen;
+                          });
+                        },
+                        onXaChanged: (xa) {
+                          setState(() {
+                            _selectedXa = xa?.tenxa;
+                            maXa = xa?.maxa;
+                          });
+                        },
+                        onKCNChanged: (kcn) {
+                          setState(() {
+                            _selectedKCN = kcn?.displayName;
+                            maKCN = kcn?.id;
+                          });
+                        },
+                        theme: theme,
                       ),
                       const SizedBox(height: 32),
 
                       // Contact Details Section
                       _buildSectionHeader(theme, 'Thông tin liên hệ'),
                       const SizedBox(height: 16),
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.surface,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: theme.colorScheme.shadow.withAlpha(26),
-                              spreadRadius: 1,
-                              blurRadius: 10,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CustomTextField(
-                              labelText: "Website",
-                              controller: _ntdWebsiteController,
-                              hintText: 'Website',
-                            ),
-                            const SizedBox(height: 16),
-                            CustomTextField(
-                              labelText: "Fax",
-                              controller: _ntdFaxController,
-                              hintText: 'Fax',
-                            ),
-                            const SizedBox(height: 16),
-                            CustomTextField(
-                              labelText: "Điện thoại",
-                              controller: _ntdDienthoaiController,
-                              hintText: 'Điện thoại',
-                              keyboardType: TextInputType.number,
-                            ),
-                          ],
-                        ),
+                      ContactDetailsSection(
+                        ntdWebsiteController: _ntdWebsiteController,
+                        ntdFaxController: _ntdFaxController,
+                        ntdDienthoaiController: _ntdDienthoaiController,
+                        theme: theme,
                       ),
                       const SizedBox(height: 32),
 
                       // Display Settings Section
                       _buildSectionHeader(theme, 'Cài đặt hiển thị'),
                       const SizedBox(height: 16),
-                      _buildDisplaySettings(theme),
+                      DisplaySettingsSection(
+                        ntdhtNlh: _ntdhtNlh,
+                        onNtdhtNlhChanged: (value) {
+                          setState(() {
+                            _ntdhtNlh = value ?? false;
+                          });
+                        },
+                        ntdhtTelephone: _ntdhtTelephone,
+                        onNtdhtTelephoneChanged: (value) {
+                          setState(() {
+                            _ntdhtTelephone = value ?? false;
+                          });
+                        },
+                        ntdhtWeb: _ntdhtWeb,
+                        onNtdhtWebChanged: (value) {
+                          setState(() {
+                            _ntdhtWeb = value ?? false;
+                          });
+                        },
+                        ntdhtFax: _ntdhtFax,
+                        onNtdhtFaxChanged: (value) {
+                          setState(() {
+                            _ntdhtFax = value ?? false;
+                          });
+                        },
+                        ntdhtEmail: _ntdhtEmail,
+                        onNtdhtEmailChanged: (value) {
+                          setState(() {
+                            _ntdhtEmail = value ?? false;
+                          });
+                        },
+                        ntdhtAddress: _ntdhtAddress,
+                        onNtdhtAddressChanged: (value) {
+                          setState(() {
+                            _ntdhtAddress = value ?? false;
+                          });
+                        },
+                        theme: theme,
+                      ),
                       const SizedBox(height: 32),
 
                       // Notification Settings Section
                       _buildSectionHeader(theme, 'Cài đặt thông báo'),
                       const SizedBox(height: 16),
-                      _buildNotificationSettings(theme),
+                      NotificationSettingsSection(
+                        newletterSubscription: _newletterSubscription,
+                        onNewletterSubscriptionChanged: (value) {
+                          setState(() {
+                            _newletterSubscription = value ?? false;
+                          });
+                        },
+                        jobsletterSubscription: _jobsletterSubscription,
+                        onJobsletterSubscriptionChanged: (value) {
+                          setState(() {
+                            _jobsletterSubscription = value ?? false;
+                          });
+                        },
+                        theme: theme,
+                      ),
                       const SizedBox(height: 32),
 
                       // Submit Button
@@ -664,7 +515,7 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
                         height: 48,
                         child: ElevatedButton(
                           onPressed: () {
-                            if (_formKey.currentState!.validate()) {
+                            if (mounted && _formKey.currentState!.validate()) {
                               _handleUpdate();
                             }
                           },
@@ -735,164 +586,67 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
     );
   }
 
-  Widget _buildDisplaySettings(ThemeData theme) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: theme.colorScheme.shadow.withAlpha(26),
-            spreadRadius: 1,
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CustomCheckbox(
-            label: "Người liên hệ",
-            value: _ntdhtNlh,
-            onChanged: (bool? value) {
-              setState(() {
-                _ntdhtNlh = value ?? false;
-              });
-            },
-          ),
-          CustomCheckbox(
-            label: "Số điện thoại",
-            value: _ntdhtTelephone,
-            onChanged: (bool? value) {
-              setState(() {
-                _ntdhtTelephone = value ?? false;
-              });
-            },
-          ),
-          CustomCheckbox(
-            label: "Website",
-            value: _ntdhtWeb,
-            onChanged: (bool? value) {
-              setState(() {
-                _ntdhtWeb = value ?? false;
-              });
-            },
-          ),
-          CustomCheckbox(
-            label: "Fax",
-            value: _ntdhtFax,
-            onChanged: (bool? value) {
-              setState(() {
-                _ntdhtFax = value ?? false;
-              });
-            },
-          ),
-          CustomCheckbox(
-            label: "Email",
-            value: _ntdhtEmail,
-            onChanged: (bool? value) {
-              setState(() {
-                _ntdhtEmail = value ?? false;
-              });
-            },
-          ),
-          CustomCheckbox(
-            label: "Địa chỉ",
-            value: _ntdhtAddress,
-            onChanged: (bool? value) {
-              setState(() {
-                _ntdhtAddress = value ?? false;
-              });
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNotificationSettings(ThemeData theme) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: theme.colorScheme.shadow.withAlpha(26),
-            spreadRadius: 1,
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CustomCheckbox(
-            label: "Đăng ký nhận bản tin",
-            value: _newletterSubscription,
-            onChanged: (bool? value) {
-              setState(() {
-                _newletterSubscription = value ?? false;
-              });
-            },
-          ),
-          const SizedBox(height: 12),
-          CustomCheckbox(
-            label: "Đăng ký nhận bản tin việc làm",
-            value: _jobsletterSubscription,
-            onChanged: (bool? value) {
-              setState(() {
-                _jobsletterSubscription = value ?? false;
-              });
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
   void _handleUpdate() {
+    // Don't proceed if widget is disposed
+    if (!mounted) return;
+
     final ntdBloc = locator<NTDBloc>();
     if (ntdBloc.state is NTDLoadedById) {
       final originalNtd = (ntdBloc.state as NTDLoadedById).ntd;
       if (originalNtd != null) {
+        // Capture all controller values first
+        final username = _usernameController.text;
+        final password = _passwordController.text;
+        final ntdMadn = _ntdMadnController.text;
+        final ntdTentat = _ntdTentatController.text;
+        final ntdTen = _ntdTenController.text;
+        final mst = _mstController.text;
+        final ntdSolaodong = _ntdSolaodongController.text;
+        final ntdGioithieu = _ntdGioithieuController.text;
+        final ntdDiachichitiet = _ntdDiachichitietController.text;
+        final ntdNguoilienhe = _ntdNguoilienheController.text;
+        final ntdDienthoai = _ntdDienthoaiController.text;
+        final ntdFax = _ntdFaxController.text;
+        final ntdEmail = _ntdEmailController.text;
+        final ntdWebsite = _ntdWebsiteController.text;
+        final ntdNamthanhlap = _ntdNamthanhlapController.text;
+        final ntdLinhvuchoatdong = _ntdLinhvuchoatdongController.text;
+        final nongThonThanhThi = _nongThonThanhThiController.text;
+
         final updatedNtd = originalNtd.copyWith(
-          username: _usernameController.text,
-          password: _passwordController.text,
-          ntdMadn: _ntdMadnController.text,
-          ntdTentat: _ntdTentatController.text,
-          ntdTen: _ntdTenController.text,
-          mst: _mstController.text,
-          ntdSolaodong: int.tryParse(_ntdSolaodongController.text),
-          ntdGioithieu: _ntdGioithieuController.text,
+          username: username,
+          password: password,
+          ntdMadn: ntdMadn,
+          ntdTentat: ntdTentat,
+          ntdTen: ntdTen,
+          mst: mst,
+          ntdSolaodong: int.tryParse(ntdSolaodong),
+          ntdGioithieu: ntdGioithieu,
           ntdThuockhucongnghiep: maKCN,
           ntdDiachithanhpho: maTinh.toString(),
           ntdDiachihuyen: maHuyen,
           ntdDiachixaphuong: maXa,
-          ntdDiachichitiet: _ntdDiachichitietController.text,
-          ntdNguoilienhe: _ntdNguoilienheController.text,
+          ntdDiachichitiet: ntdDiachichitiet,
+          ntdNguoilienhe: ntdNguoilienhe,
           ntdChucvu: chucDanh?.id,
-          ntdDienthoai: _ntdDienthoaiController.text,
-          ntdFax: _ntdFaxController.text,
-          ntdEmail: _ntdEmailController.text,
-          ntdWebsite: _ntdWebsiteController.text,
+          ntdDienthoai: ntdDienthoai,
+          ntdFax: ntdFax,
+          ntdEmail: ntdEmail,
+          ntdWebsite: ntdWebsite,
           ntdQuocgia: ntdQuocgia?.toString(),
-          ntdNamthanhlap: int.tryParse(_ntdNamthanhlapController.text),
-          ntdLinhvuchoatdong: _ntdLinhvuchoatdongController.text,
+          ntdNamthanhlap: int.tryParse(ntdNamthanhlap),
+          ntdLinhvuchoatdong: ntdLinhvuchoatdong,
           ntdhtNlh: _ntdhtNlh,
           ntdhtTelephone: _ntdhtTelephone,
           ntdhtWeb: _ntdhtWeb,
           ntdhtFax: _ntdhtFax,
           ntdhtEmail: _ntdhtEmail,
           ntdhtAddress: _ntdhtAddress,
-          ntdId: _ntdId,
+          ntdId: _ntdIdController.text,
           newsletterSubscription: _newletterSubscription,
           jobsletterSubscription: _jobsletterSubscription,
           ntdLoai: ntdLoai,
-          nongThonThanhThi: _nongThonThanhThiController.text,
+          nongThonThanhThi: nongThonThanhThi,
           idLoaiHinhDoanhNghiep: idLoaiHinhDoanhNghiep,
           idNganhKinhTe: idNganhKinhTe,
           idThoiGianHoatDong: idThoiGianHoatDong,
@@ -901,7 +655,11 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
           ntdTenHuyen: _selectedHuyen,
           ntdTenXa: _selectedXa,
         );
-        locator<NTDBloc>().add(NTDUpdate(updatedNtd));
+
+        // Only add the event if the widget is still mounted
+        if (mounted) {
+          ntdBloc.add(NTDUpdate(updatedNtd));
+        }
       }
     }
   }
@@ -929,11 +687,8 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
     _ntdNamthanhlapController.dispose();
     _ntdLinhvuchoatdongController.dispose();
     _nongThonThanhThiController.dispose();
-    _ntdSolaodongController.dispose();
     _ntdThuockhucongnghiepController.dispose();
-    _ntdWebsiteController.dispose();
-    _ntdFaxController.dispose();
-    _ntdEmailController.dispose();
+    _ntdIdController.dispose();
 
     super.dispose();
   }

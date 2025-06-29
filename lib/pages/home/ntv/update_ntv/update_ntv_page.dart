@@ -13,28 +13,23 @@ import 'package:ttld/blocs/tblHoSoUngVien/tblhosoungvien_event.dart';
 import 'package:ttld/blocs/tblHoSoUngVien/tblhosoungvien_state.dart';
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/core/utils/toast_utils.dart';
-import 'package:ttld/helppers/map_help.dart';
 import 'package:ttld/models/chuc_danh_model.dart';
 import 'package:ttld/models/dan_toc_model.dart';
 import 'package:ttld/models/doituong_chinhsach/doituong.dart';
 import 'package:ttld/models/hinhthuc_doanhnghiep/hinhthuc_doanhnghiep_model.dart';
 import 'package:ttld/models/muc_luong_mm.dart';
-import 'package:ttld/models/nganh_nghe_bachoc.dart';
-import 'package:ttld/models/nganh_nghe_td_model.dart';
 import 'package:ttld/models/nguon_thuthap_model.dart';
-import 'package:ttld/models/tblHoSoUngVien/tblHoSoUngVien_model.dart';
 import 'package:ttld/models/thoigianlamviec_model.dart';
 import 'package:ttld/models/tinh_thanh_model.dart';
 import 'package:ttld/models/trinh_do_ngoai_ngu_model.dart';
 import 'package:ttld/models/trinh_do_tin_hoc_model.dart';
 import 'package:ttld/models/trinh_do_van_hoa_model.dart';
 import 'package:ttld/models/tttantat/tttantat.dart';
-import 'package:ttld/widgets/cascade_location_picker_grok.dart';
-import 'package:ttld/widgets/field/custom_checkbox.dart';
-import 'package:ttld/widgets/field/custom_pick_datetime_grok.dart';
-import 'package:ttld/widgets/field/custom_picker_map.dart';
-import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
-import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
+import 'package:ttld/models/tblHoSoUngVien/tblHoSoUngVien_model.dart';
+import 'package:ttld/pages/home/ntv/update_ntv/step1_personal_info.dart';
+import 'package:ttld/pages/home/ntv/update_ntv/step2_display_settings.dart';
+import 'package:ttld/pages/home/ntv/update_ntv/step3_job_preferences.dart';
+import 'package:ttld/pages/home/ntv/update_ntv/step4_confirmation.dart';
 
 class UpdateNTVPage extends StatefulWidget {
   final TblHoSoUngVienModel? hoSoUngVien;
@@ -140,12 +135,8 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
   DoiTuong? doiTuongChinhSach;
   TinhThanhModel? tinhThanh;
   TinhThanhModel? tinhThanhmm;
-  // TrinhDoHocVan? trinhDoHocVan; // This was unused
   TrinhDoTinHoc? trinhDoTinHoc;
   TrinhDoNgoaiNgu? trinhDoNgoaiNgu;
-  // NganhNgheKT? nganhNghe; // This was unused
-  TrinhDoChuyenMon? nganhNgheBacHoc;
-  NganhNgheTD? nganhNgheTD;
   ChucDanhModel? chucDanh;
   MucLuongMM? mucLuong;
   ThoiGianLamViec? thoigianlamviec;
@@ -284,21 +275,15 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
           );
         }
       }
-
-      // Initialize other model instances similarly...
-      // Add proper error handling for each initialization
     } catch (e) {
       print('Error initializing model instances: $e');
     }
   }
 
-// Data loading functions are removed as GenericPickers will use locator directly.
-
-// Pick a file
   Future<void> _pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ['pdf', 'doc', 'docx'], // Restrict to specific types
+      allowedExtensions: ['pdf', 'doc', 'docx'],
     );
     if (result != null && result.files.single.path != null) {
       setState(() {
@@ -307,11 +292,9 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
     }
   }
 
-  // Pick an image
   Future<void> _pickImage() async {
     final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(
-        source: ImageSource.gallery); // Or ImageSource.camera
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         _selectedImage = File(pickedFile.path);
@@ -377,8 +360,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
               children: [
                 // Progress Indicator
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 8), // Reduced padding
+                  padding: const EdgeInsets.symmetric(vertical: 8),
                   decoration: BoxDecoration(
                     color: theme.colorScheme.surface,
                     boxShadow: [
@@ -400,7 +382,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                 // Form Content
                 Expanded(
                   child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(16), // Reduced padding
+                    padding: const EdgeInsets.all(16),
                     child: Container(
                       decoration: BoxDecoration(
                         color: theme.colorScheme.surface,
@@ -413,7 +395,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                           ),
                         ],
                       ),
-                      padding: const EdgeInsets.all(16), // Reduced padding
+                      padding: const EdgeInsets.all(16),
                       child: _buildCurrentStep(),
                     ),
                   ),
@@ -440,8 +422,8 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
         children: [
           // Step number circle
           Container(
-            width: 28, // Reduced size
-            height: 28, // Reduced size
+            width: 28,
+            height: 28,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               gradient: isCurrent
@@ -479,7 +461,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
               ),
             ),
           ),
-          const SizedBox(height: 4), // Reduced spacing
+          const SizedBox(height: 4),
           // Step title
           Text(
             _steps[index],
@@ -501,13 +483,130 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
   Widget _buildCurrentStep() {
     switch (_currentStep) {
       case 0:
-        return buildStep1();
+        return Step1PersonalInfo(
+          formKey: _formKeys[0]!,
+          emailController: _emailController,
+          usernameController: _usernameController,
+          passwordController: _passwordController,
+          hotenController: _hotenController,
+          dienthoaiController: _dienthoaiController,
+          cmndController: _cmndController,
+          uvnoicapController: _uvnoicapController,
+          diachichitietController: _diachichitietController,
+          uvchieucaoController: _uvchieucaoController,
+          uvcannangController: _uvcannangController,
+          idTinhController: _idTinhController,
+          idHuyenController: _idHuyenController,
+          idXaController: _idXaController,
+          uvngaysinhController: _uvngaysinhController,
+          uvNgaycap: _uvNgaycap,
+          uvGioitinh: _uvGioitinh,
+          uvHonnhanId: _uvHonnhanId,
+          idDanToc: _idDanToc,
+          uvTinhtrangtantatId: _uvTinhtrangtantatId,
+          uvDoiTuongChingSachId: _uvDoiTuongChingSachId,
+          idThanhPho: _idThanhPho,
+          uvcmTrinhdoId: _uvcmTrinhdoId,
+          idNguonThuThap: _idNguonThuThap != null
+              ? int.tryParse(_idNguonThuThap.toString())
+              : null,
+          onNgaysinhChanged: (value) =>
+              setState(() => _uvngaysinhController = value),
+          onNgaycapChanged: (value) => setState(() => _uvNgaycap = value),
+          onGioitinhChanged: (value) => setState(() => _uvGioitinh = value),
+          onHonnhanChanged: (value) => setState(() => _uvHonnhanId = value),
+          onNguonThuThapChanged: (value) => setState(() {
+            _idNguonThuThap = value?.id;
+            nguonThuThap = value;
+          }),
+          onDanTocChanged: (value) => setState(() {
+            _idDanToc = value?.id;
+            danToc = value;
+          }),
+          onTinhTrangTanTatChanged: (value) => setState(() {
+            _uvTinhtrangtantatId = value?.id;
+            tinhTrangTanTat = value;
+          }),
+          onDoiTuongChinhSachChanged: (value) => setState(() {
+            _uvDoiTuongChingSachId = value?.id;
+            doiTuongChinhSach = value;
+          }),
+          onThanhPhoChanged: (value) => setState(() {
+            _idThanhPho = value?.id;
+            tinhThanh = value;
+          }),
+          onTrinhDoVanHoaChanged: (value) => setState(() {
+            _uvcmTrinhdoId = value?.id;
+            trinhDoVanHoa = value;
+          }),
+          onLocationChanged: (tinh, huyen, xa) => setState(() {
+            if (tinh != null) _idTinhController.text = tinh;
+            if (huyen != null) _idHuyenController.text = huyen;
+            if (xa != null) _idXaController.text = xa;
+          }),
+        );
       case 1:
-        return buildStep2();
+        return Step2DisplaySettings(
+          formKey: _formKeys[1]!,
+          uvhtEmail: _uvhtEmail,
+          uvhtAddress: _uvhtAddress,
+          uvhtTelephone: _uvhtTelephone,
+          newletterSubscription: _newletterSubscription,
+          jobsletterSubscription: _jobsletterSubscription,
+          selectedFile: _selectedFile,
+          selectedImage: _selectedImage,
+          onUvhtEmailChanged: (value) => setState(() => _uvhtEmail = value),
+          onUvhtAddressChanged: (value) => setState(() => _uvhtAddress = value),
+          onUvhtTelephoneChanged: (value) =>
+              setState(() => _uvhtTelephone = value),
+          onNewletterSubscriptionChanged: (value) =>
+              setState(() => _newletterSubscription = value),
+          onJobsletterSubscriptionChanged: (value) =>
+              setState(() => _jobsletterSubscription = value),
+          onPickFile: _pickFile,
+          onPickImage: _pickImage,
+        );
       case 2:
-        return buildStep3();
+        return Step3JobPreferences(
+          formKey: _formKeys[2]!,
+          cvMongMuonController: _cvMongMuonController,
+          uvnvTienluong: _uvnvTienluong,
+          uvcmCongviechientaiController: _uvcmCongviechientaiController,
+          uvcmKynangController: _uvcmKynangController,
+          uvGhichuController: _uvGhichuController,
+          uvnvNoilamviecController: _uvnvNoilamviecController,
+          uvnvVitrimongmuonId: _uvnvVitrimongmuonId,
+          idMucluong: _idMucluong,
+          uvnvThoigianId: _uvnvThoigianId,
+          uvnvHinhthuccongtyId: _uvnvHinhthuccongtyId,
+          onChucDanhChanged: (value) => setState(() {
+            chucDanh = value;
+            _uvnvVitrimongmuonId = value?.id;
+          }),
+          onMucLuongChanged: (value) => setState(() {
+            _idMucluong = value?.id;
+            mucLuong = value;
+          }),
+          onThoiGianLamViecChanged: (value) => setState(() {
+            _uvnvThoigianId = value?.id;
+            thoigianlamviec = value;
+          }),
+          onHinhThucDoanhNghiepChanged: (value) => setState(() {
+            _uvnvHinhthuccongtyId = value?.id;
+            hinhthucdoanhnghiep = value;
+          }),
+          onTinhThanhMMChanged: (value) => setState(() {
+            _uvnvNoilamviecController.text = value?.id.toString() ?? '';
+            tinhThanhmm = value;
+          }),
+        );
       case 3:
-        return _buildConfirmationForm();
+        return Step4Confirmation(
+          formKey: _formKeys[3]!,
+          hoten: _hotenController.text,
+          email: _emailController.text,
+          onSubmit: _submitForm,
+        );
       default:
         return Container();
     }
@@ -601,798 +700,6 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSectionHeader(ThemeData theme, String title) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-          horizontal: 12, vertical: 8), // Reduced padding
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(12), // Slightly smaller radius
-        boxShadow: [
-          BoxShadow(
-            color: theme.colorScheme.shadow.withAlpha(26),
-            spreadRadius: 1,
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 4,
-            height: 24,
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primary,
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-          const SizedBox(width: 8), // Reduced spacing
-          Text(
-            title,
-            style: theme.textTheme.titleMedium?.copyWith(
-              // Reduced font size
-              fontWeight: FontWeight.bold,
-              color: theme.colorScheme.onSurface,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFormSection(
-      ThemeData theme, String title, List<Widget> children) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        _buildSectionHeader(theme, title),
-        const SizedBox(height: 12), // Reduced spacing
-        Container(
-          padding: const EdgeInsets.all(12), // Reduced padding
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surface,
-            borderRadius: BorderRadius.circular(12), // Slightly smaller radius
-            boxShadow: [
-              BoxShadow(
-                color: theme.colorScheme.shadow.withAlpha(13),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: children,
-          ),
-        ),
-        const SizedBox(height: 16), // Reduced spacing
-      ],
-    );
-  }
-
-  Widget buildStep1() {
-    final theme = Theme.of(context);
-    return Form(
-      key: _formKeys[0],
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          _buildFormSection(
-            theme,
-            'Thông tin tài khoản',
-            [
-              CustomTextField.email(
-                controller: _emailController,
-                validator: 'email',
-              ),
-              const SizedBox(height: 12), // Reduced spacing
-              CustomTextField(
-                labelText: 'Tên đăng nhập',
-                hintText: 'Tên đăng nhập',
-                controller: _usernameController,
-                validator: 'not_empty',
-              ),
-              const SizedBox(height: 12), // Reduced spacing
-              CustomTextField.password(
-                controller: _passwordController,
-                validator: 'not_empty',
-              ),
-            ],
-          ),
-          _buildFormSection(
-            theme,
-            'Thông tin cá nhân',
-            [
-              CustomTextField(
-                labelText: 'Họ và tên',
-                hintText: 'Họ và tên',
-                controller: _hotenController,
-                validator: 'not_empty',
-              ),
-              const SizedBox(height: 12), // Reduced spacing
-              CustomPickDateTimeGrok(
-                hintText: 'Ngày sinh',
-                initialValue: _uvngaysinhController,
-                validator: (DateTime? value) {
-                  if (value == null) {
-                    return 'Ngày sinh không được để trống';
-                  }
-                  return null;
-                },
-                onChanged: (String? value) {
-                  setState(() {
-                    _uvngaysinhController = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 12), // Reduced spacing
-              GenericPicker<NguonThuThap>(
-                label: 'Nguồn thu thập',
-                items: locator<List<NguonThuThap>>(),
-                initialValue: _idNguonThuThap,
-                onChanged: (NguonThuThap? value) {
-                  setState(() {
-                    _idNguonThuThap = value?.id;
-                    nguonThuThap = value;
-                  });
-                },
-              ),
-            ],
-          ),
-          _buildFormSection(
-            theme,
-            'Thông tin chi tiết',
-            [
-              Row(
-                children: [
-                  Expanded(
-                    child: CustomPickerMap(
-                      label: Text('Giới tính'),
-                      items: gioiTinhOptions,
-                      selectedItem: _uvGioitinh,
-                      onChanged: (gioiTinh) {
-                        setState(() {
-                          _uvGioitinh = gioiTinh;
-                        });
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: 12), // Reduced spacing
-                  Expanded(
-                    child: CustomPickerMap(
-                      label: Text('Hôn nhân'),
-                      items: hoNhanOptions,
-                      selectedItem: _uvHonnhanId,
-                      onChanged: (hoNhan) {
-                        setState(() {
-                          _uvHonnhanId = hoNhan;
-                        });
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12), // Reduced spacing
-              CustomTextField(
-                labelText: 'Số CCCD',
-                controller: _cmndController,
-                validator: 'not_empty',
-                hintText: 'Số CCCD',
-              ),
-              const SizedBox(height: 12), // Reduced spacing
-              Row(
-                children: [
-                  Expanded(
-                    child: CustomPickDateTimeGrok(
-                      initialValue: _uvNgaycap,
-                      onChanged: (value) {
-                        setState(() {
-                          _uvNgaycap = value;
-                        });
-                      },
-                      hintText: 'Ngày cấp',
-                    ),
-                  ),
-                  const SizedBox(width: 12), // Reduced spacing
-                  Expanded(
-                    child: CustomTextField(
-                      labelText: 'Nơi cấp',
-                      hintText: 'Nơi cấp',
-                      controller: _uvnoicapController,
-                      validator: 'not_empty',
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12), // Reduced spacing
-              CustomTextField(
-                labelText: 'Số điện thoại',
-                hintText: 'Số điện thoại',
-                controller: _dienthoaiController,
-                validator: 'not_empty',
-              ),
-            ],
-          ),
-          _buildFormSection(
-            theme,
-            'Thông tin bổ sung',
-            [
-              GenericPicker<DanToc>(
-                label: 'Dân Tộc',
-                items: locator<List<DanToc>>(),
-                initialValue: _idDanToc,
-                onChanged: (DanToc? value) {
-                  setState(() {
-                    _idDanToc = value?.id;
-                    danToc = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 12), // Reduced spacing
-              GenericPicker<TtTantat>(
-                label: 'Tình trạng tàn tật',
-                items: locator<List<TtTantat>>(),
-                initialValue: _uvTinhtrangtantatId,
-                onChanged: (TtTantat? value) {
-                  setState(() {
-                    _uvTinhtrangtantatId = value?.id;
-                    tinhTrangTanTat = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 12), // Reduced spacing
-              GenericPicker<DoiTuong>(
-                label: 'Đối tượng chính sách',
-                items: locator<List<DoiTuong>>(),
-                initialValue: _uvDoiTuongChingSachId,
-                onChanged: (DoiTuong? value) {
-                  setState(() {
-                    _uvDoiTuongChingSachId = value?.id;
-                    doiTuongChinhSach = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 12), // Reduced spacing
-              Row(
-                children: [
-                  Expanded(
-                    child: CustomTextField(
-                      labelText: 'Chiều cao (cm)',
-                      hintText: 'Chiều cao (cm)',
-                      controller: _uvchieucaoController,
-                      validator: 'not_empty',
-                    ),
-                  ),
-                  const SizedBox(width: 12), // Reduced spacing
-                  Expanded(
-                    child: CustomTextField(
-                      labelText: 'Cân nặng (kg)',
-                      hintText: 'Cân nặng (kg)',
-                      controller: _uvcannangController,
-                      validator: 'not_empty',
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          _buildFormSection(
-            theme,
-            'Địa chỉ',
-            [
-              CascadeLocationPickerGrok(
-                initialTinh: _idTinhController.text,
-                initialHuyen: _idHuyenController.text,
-                initialXa: _idXaController.text,
-                onTinhChanged: (tinh) {
-                  setState(() {
-                    _selectedTinh = tinh?.tentinh;
-                    _idTinhController.text = tinh?.matinh ?? '';
-                  });
-                },
-                onHuyenChanged: (huyen) {
-                  setState(() {
-                    _selectedHuyen = huyen?.tenhuyen;
-                    _idHuyenController.text = huyen?.mahuyen ?? '';
-                  });
-                },
-                onXaChanged: (xa) {
-                  setState(() {
-                    _selectedXa = xa?.tenxa;
-                    _idXaController.text = xa?.maxa ?? '';
-                  });
-                },
-                isNTD: false,
-                addressDetailController: _diachichitietController,
-              ),
-              const SizedBox(height: 12), // Reduced spacing
-              GenericPicker<TinhThanhModel>(
-                label: 'Thành phố nơi làm việc',
-                items: locator<List<TinhThanhModel>>(),
-                initialValue: _idThanhPho,
-                onChanged: (TinhThanhModel? value) {
-                  setState(() {
-                    _idThanhPho = value?.id;
-                    tinhThanh = value;
-                  });
-                },
-              ),
-            ],
-          ),
-          _buildFormSection(
-            theme,
-            'Trình độ chuyên môn',
-            [
-              GenericPicker<TrinhDoVanHoa>(
-                label: 'Trình độ văn hóa',
-                items: locator<List<TrinhDoVanHoa>>(),
-                initialValue: _uvcmTrinhdoId,
-                onChanged: (TrinhDoVanHoa? value) {
-                  setState(() {
-                    _uvcmTrinhdoId = value?.id;
-                    trinhDoVanHoa = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 12), // Reduced spacing
-              GenericPicker<NganhNgheTD>(
-                label: 'Ngành nghề',
-                items: () {
-                  try {
-                    return locator<List<NganhNgheTD>>();
-                  } catch (e) {
-                    return <NganhNgheTD>[];
-                  }
-                }(),
-                initialValue: _uvnvNganhngheId,
-                onChanged: (NganhNgheTD? value) {
-                  setState(() {
-                    _uvnvNganhngheId = value?.id;
-                    nganhNgheTD = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 12), // Reduced spacing
-              GenericPicker<TrinhDoChuyenMon>(
-                label: 'Trình độ chuyên môn',
-                items: locator<List<TrinhDoChuyenMon>>(),
-                initialValue: _idBacHocController.text,
-                onChanged: (TrinhDoChuyenMon? value) {
-                  setState(() {
-                    _idBacHocController.text = value?.id.toString() ?? '';
-                    nganhNgheBacHoc = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 12), // Reduced spacing
-              CustomTextField.number(
-                labelText: 'Kinh nghiệm',
-                hintText: 'Kinh nghiệm (tháng)',
-                controller: _uvcmKinhnghiem,
-                validator: 'not_empty',
-              ),
-            ],
-          ),
-          _buildFormSection(
-            theme,
-            'Kỹ năng',
-            [
-              GenericPicker<TrinhDoNgoaiNgu>(
-                label: 'Trình độ ngoại ngữ',
-                items: locator<List<TrinhDoNgoaiNgu>>(),
-                initialValue: _uvcmTrinhdongoainguController.text,
-                onChanged: (TrinhDoNgoaiNgu? value) {
-                  setState(() {
-                    _uvcmTrinhdongoainguController.text =
-                        value?.id.toString() ?? '';
-                    trinhDoNgoaiNgu = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 12), // Reduced spacing
-              GenericPicker<TrinhDoTinHoc>(
-                label: 'Trình độ tin học',
-                items: locator<List<TrinhDoTinHoc>>(),
-                initialValue: _uvcmTrinhdotinhocController.text,
-                onChanged: (TrinhDoTinHoc? value) {
-                  setState(() {
-                    _uvcmTrinhdotinhocController.text =
-                        value?.id.toString() ?? '';
-                    trinhDoTinHoc = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 12), // Reduced spacing
-              CustomTextField(
-                labelText: 'Bằng cấp khác',
-                hintText: 'Bằng cấp khác',
-                controller: _uvcmBangcapController,
-              ),
-              const SizedBox(height: 12), // Reduced spacing
-              CustomCheckbox(
-                label: 'Có Bảo Hiểm thất nghiệp',
-                value: _coBhtn ?? false,
-                onChanged: (bool? value) {
-                  setState(() {
-                    _coBhtn = value;
-                  });
-                },
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget buildStep2() {
-    final theme = Theme.of(context);
-    return Form(
-      key: _formKeys[1],
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          _buildFormSection(
-            theme,
-            'Hiển thị thông tin',
-            [
-              CustomCheckbox(
-                label: 'Email',
-                value: _uvhtEmail ?? false,
-                onChanged: (bool? value) {
-                  setState(() {
-                    _uvhtEmail = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 12),
-              CustomCheckbox(
-                label: 'Địa chỉ',
-                value: _uvhtAddress ?? false,
-                onChanged: (bool? value) {
-                  setState(() {
-                    _uvhtAddress = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 12),
-              CustomCheckbox(
-                label: 'Số điện thoại',
-                value: _uvhtTelephone ?? false,
-                onChanged: (bool? value) {
-                  setState(() {
-                    _uvhtTelephone = value;
-                  });
-                },
-              ),
-            ],
-          ),
-          _buildFormSection(
-            theme,
-            'Đăng ký nhận thông báo',
-            [
-              CustomCheckbox(
-                label: 'Đăng ký nhận bản tin',
-                value: _newletterSubscription ?? false,
-                onChanged: (bool? value) {
-                  setState(() {
-                    _newletterSubscription = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 12),
-              CustomCheckbox(
-                label: 'Đăng ký nhận thông báo việc làm',
-                value: _jobsletterSubscription ?? false,
-                onChanged: (bool? value) {
-                  setState(() {
-                    _jobsletterSubscription = value;
-                  });
-                },
-              ),
-            ],
-          ),
-          _buildFormSection(
-            theme,
-            'Tài liệu đính kèm',
-            [
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.surface,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                      color: theme.colorScheme.outline.withOpacity(0.5)),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'CV của bạn',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8), // Reduced spacing
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            _selectedFile != null
-                                ? _selectedFile!.path.split('/').last
-                                : 'Chưa chọn file',
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12), // Reduced spacing
-                        ElevatedButton.icon(
-                          onPressed: _pickFile,
-                          icon: Icon(Icons.upload_file,
-                              size: 16), // Reduced icon size
-                          label: Text('Chọn File CV'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: theme.colorScheme.primary,
-                            foregroundColor: theme.colorScheme.onPrimary,
-                            padding: const EdgeInsets.symmetric(
-                                // Reduced padding
-                                horizontal: 12,
-                                vertical: 8),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16), // Reduced spacing
-              Container(
-                padding: const EdgeInsets.all(12), // Reduced padding
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.surface,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                      color: theme.colorScheme.outline.withOpacity(0.5)),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Ảnh đại diện',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8), // Reduced spacing
-                    Row(
-                      children: [
-                        if (_selectedImage != null)
-                          Container(
-                            width: 80, // Reduced size
-                            height: 80, // Reduced size
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              image: DecorationImage(
-                                image: FileImage(_selectedImage!),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          )
-                        else
-                          Container(
-                            width: 80, // Reduced size
-                            height: 80, // Reduced size
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.surfaceVariant,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Icon(
-                              Icons.person_outline,
-                              size: 32, // Reduced icon size
-                              color: theme.colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                        const SizedBox(width: 12), // Reduced spacing
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ElevatedButton.icon(
-                                onPressed: _pickImage,
-                                icon: Icon(Icons.photo_library,
-                                    size: 16), // Reduced icon size
-                                label: Text('Chọn Ảnh'),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: theme.colorScheme.primary,
-                                  foregroundColor: theme.colorScheme.onPrimary,
-                                  padding: const EdgeInsets.symmetric(
-                                      // Reduced padding
-                                      horizontal: 12,
-                                      vertical: 8),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                              ),
-                              if (_selectedImage != null) ...[
-                                const SizedBox(height: 4), // Reduced spacing
-                                Text(
-                                  _selectedImage!.path.split('/').last,
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                    color: theme.colorScheme.onSurfaceVariant,
-                                  ),
-                                ),
-                              ],
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget buildStep3() {
-    final theme = Theme.of(context);
-    return Form(
-      key: _formKeys[2],
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          _buildFormSection(
-            theme,
-            'Việc làm mong muốn',
-            [
-              CustomTextField(
-                labelText: 'Việc làm mong muốn',
-                hintText: 'Việc làm mong muốn',
-                controller: _cvMongMuonController,
-                validator: 'not_empty',
-              ),
-              const SizedBox(height: 12), // Reduced spacing
-              GenericPicker<ChucDanhModel>(
-                label: 'Chức vụ mong muốn',
-                items: locator<List<ChucDanhModel>>(),
-                initialValue: _uvnvVitrimongmuonId,
-                onChanged: (ChucDanhModel? value) {
-                  setState(() {
-                    chucDanh = value;
-                    _uvnvVitrimongmuonId = value?.id;
-                  });
-                },
-              ),
-            ],
-          ),
-          _buildFormSection(
-            theme,
-            'Thông tin lương',
-            [
-              GenericPicker<MucLuongMM>(
-                label: 'Mức lương mong muốn',
-                items: locator<List<MucLuongMM>>(),
-                initialValue: _idMucluong,
-                onChanged: (MucLuongMM? value) {
-                  setState(() {
-                    _idMucluong = value?.id;
-                    mucLuong = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 12), // Reduced spacing
-              CustomTextField.number(
-                allowDecimals: true,
-                hintText: 'Lương khởi điểm',
-                controller: _uvnvTienluong,
-                validator: 'not_empty',
-                labelText: 'Lương khởi điểm',
-              ),
-            ],
-          ),
-          _buildFormSection(
-            theme,
-            'Thời gian và hình thức làm việc',
-            [
-              GenericPicker<ThoiGianLamViec>(
-                label: 'Thời gian làm việc mong muốn',
-                items: locator<List<ThoiGianLamViec>>(),
-                initialValue: _uvnvThoigianId,
-                onChanged: (ThoiGianLamViec? value) {
-                  setState(() {
-                    _uvnvThoigianId = value?.id;
-                    thoigianlamviec = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 12), // Reduced spacing
-              GenericPicker<HinhThucDoanhNghiep>(
-                label: 'Hình thức công ty mong muốn',
-                items: locator<List<HinhThucDoanhNghiep>>(),
-                initialValue: _uvnvHinhthuccongtyId,
-                onChanged: (HinhThucDoanhNghiep? value) {
-                  setState(() {
-                    _uvnvHinhthuccongtyId = value?.id;
-                    hinhthucdoanhnghiep = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 12), // Reduced spacing
-              GenericPicker<TinhThanhModel>(
-                label: 'Thành phố mong muốn',
-                items: locator<List<TinhThanhModel>>(),
-                initialValue: _uvnvNoilamviecController.text,
-                onChanged: (TinhThanhModel? value) {
-                  setState(() {
-                    _uvnvNoilamviecController.text = value?.id.toString() ?? '';
-                    tinhThanhmm = value;
-                  });
-                },
-              ),
-            ],
-          ),
-          _buildFormSection(
-            theme,
-            'Kinh nghiệm và kỹ năng',
-            [
-              CustomTextField.textArea(
-                labelText: 'Công việc đã làm',
-                hintText: 'Công việc đã làm',
-                minLines: 3,
-                maxLines: 5,
-                controller: _uvcmCongviechientaiController,
-                validator: 'not_empty',
-              ),
-              const SizedBox(height: 12), // Reduced spacing
-              CustomTextField.textArea(
-                labelText: 'Kỹ năng',
-                hintText: 'Kỹ năng',
-                minLines: 3,
-                maxLines: 5,
-                controller: _uvcmKynangController,
-              ),
-              const SizedBox(height: 12), // Reduced spacing
-              CustomTextField.textArea(
-                labelText: 'Ghi chú',
-                hintText: 'Ghi chú',
-                minLines: 3,
-                maxLines: 5,
-                controller: _uvGhichuController,
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildConfirmationForm() {
-    return Form(
-      key: _formKeys[3],
-      child: Column(
-        children: [
-          // Display summary of entered information
-          Text('Họ tên: ${_hotenController.text}'),
-          Text('Email: ${_emailController.text}'),
-          // Add other summary fields...
-          ElevatedButton(
-            onPressed: _submitForm,
-            child: Text('Xác nhận và Lưu'),
           ),
         ],
       ),
@@ -1541,7 +848,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                 contentType: MediaType('image', 'png'),
               ),
           });
-          if (!mounted) return; // Prevent action if widget is disposed
+          if (!mounted) return;
           locator<NTVBloc>().add(UpdateTblHoSoUngVien(updatedNtv.id, formData));
         } else {
           print("Invalid state: ${ntvBloc.state}");
