@@ -58,8 +58,8 @@ class CompanyInfoSection extends StatelessWidget {
             hint: 'Tên viết tắt',
           ),
           const SizedBox(height: 16),
-          CustomPickerMap(
-            label: const Text("Loại doanh nghiệp"),
+          ModernPickerMap(
+            label: "Loại doanh nghiệp",
             items: loaiDoanhNgiepOptions,
             selectedItem: ntdLoai,
             onChanged: onNtdLoaiChanged,
