@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ttld/models/chuc_danh_model.dart';
+import 'package:ttld/widgets/form/modern_text_field.dart';
 import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
 import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
 import 'package:ttld/core/di/injection.dart';
@@ -37,10 +38,10 @@ class ContactInfoSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CustomTextField(
-            labelText: "Tên người liên hệ",
+          ModernTextField(
+            label: "Tên người liên hệ",
             controller: ntdNguoilienheController,
-            hintText: 'Tên người liên hệ',
+            hint: 'Tên người liên hệ',
           ),
           const SizedBox(height: 16),
           GenericPicker<ChucDanhModel>(

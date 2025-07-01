@@ -3,6 +3,7 @@ import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/helppers/map_help.dart';
 import 'package:ttld/models/nganh_nghe_model.dart';
 import 'package:ttld/widgets/field/custom_picker_map.dart';
+import 'package:ttld/widgets/form/modern_text_field.dart';
 import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
 import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
 
@@ -45,16 +46,16 @@ class CompanyInfoSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CustomTextField(
-            labelText: "Tên nhà tuyển dụng",
+          ModernTextField(
+            label: "Tên nhà tuyển dụng",
             controller: ntdTenController,
-            hintText: 'Tên nhà tuyển dụng',
+            hint: 'Tên nhà tuyển dụng',
           ),
           const SizedBox(height: 16),
-          CustomTextField(
-            labelText: "Tên viết tắt",
+          ModernTextField(
+            label: "Tên viết tắt",
             controller: ntdTentatController,
-            hintText: 'Tên viết tắt',
+            hint: 'Tên viết tắt',
           ),
           const SizedBox(height: 16),
           CustomPickerMap(
@@ -64,7 +65,7 @@ class CompanyInfoSection extends StatelessWidget {
             onChanged: onNtdLoaiChanged,
           ),
           const SizedBox(height: 16),
-          GenericPicker<NganhNgheKT>(
+          ModernPicker<NganhNgheKT>(
             initialValue: idNganhKinhTe,
             items: locator<List<NganhNgheKT>>(),
             onChanged: onNganhKinhTeChanged,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
+import 'package:ttld/widgets/form/modern_text_field.dart';
 
 class AccountInfoSection extends StatelessWidget {
   final TextEditingController usernameController;
@@ -38,37 +38,38 @@ class AccountInfoSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CustomTextField.email(
+          ModernTextField.email(
             controller: ntdEmailController,
-          ),
-          const SizedBox(height: 8),
-          CustomTextField(
-            labelText: "Username",
-            controller: usernameController,
-            hintText: 'Username',
             readOnly: true,
           ),
           const SizedBox(height: 8),
-          CustomTextField(
-            labelText: "Mã số thuế",
+          ModernTextField(
+            label: "Username",
+            controller: usernameController,
+            hint: 'Username',
+            readOnly: true,
+          ),
+          const SizedBox(height: 8),
+          ModernTextField(
+            label: "Mã số thuế",
             controller: mstController,
-            hintText: 'Mã số thuế',
+            hint: 'Mã số thuế',
           ),
           // const SizedBox(height: 8),
-          // CustomTextField.password(
+          // ModernTextField.password(
           //   controller: passwordController,
           // ),
           const SizedBox(height: 8),
-          CustomTextField(
-            labelText: "Mã NTD",
+          ModernTextField(
+            label: "Mã NTD",
             controller: ntdMadnController,
-            validator: (value) {
+            customValidator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter NTD Madn';
               }
               return null;
             },
-            hintText: 'Mã NTD',
+            hint: 'Mã NTD',
           ),
         ],
       ),

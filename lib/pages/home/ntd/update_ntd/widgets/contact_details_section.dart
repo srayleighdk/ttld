@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ttld/widgets/form/modern_text_field.dart';
 import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
 
 class ContactDetailsSection extends StatelessWidget {
@@ -34,23 +35,22 @@ class ContactDetailsSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CustomTextField(
-            labelText: "Website",
+          ModernTextField(
+            label: "Website",
             controller: ntdWebsiteController,
-            hintText: 'Website',
+            hint: 'Website',
           ),
           const SizedBox(height: 16),
-          CustomTextField(
-            labelText: "Fax",
+          ModernTextField(
+            label: "Fax",
             controller: ntdFaxController,
-            hintText: 'Fax',
+            hint: 'Fax',
           ),
           const SizedBox(height: 16),
-          CustomTextField(
-            labelText: "Điện thoại",
+          ModernTextField.number(
+            label: "Điện thoại",
             controller: ntdDienthoaiController,
-            hintText: 'Điện thoại',
-            keyboardType: TextInputType.number,
+            hint: 'Điện thoại',
           ),
         ],
       ),

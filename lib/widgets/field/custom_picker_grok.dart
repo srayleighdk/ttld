@@ -1,6 +1,9 @@
-// custom_picker.dart
+// custom_picker_grok.dart
 import 'package:flutter/material.dart';
+import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
 
+/// This class is maintained for backward compatibility.
+/// New code should use ModernPicker directly.
 class CustomPickerGrok<T> extends StatelessWidget {
   final List<T> items;
   final T? selectedItem;
@@ -25,58 +28,73 @@ class CustomPickerGrok<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FormField<T>(
-      validator: validator,
-      initialValue: selectedItem,
-      builder: (FormFieldState<T> state) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              DropdownMenu<T>(
-                key: ValueKey('${items.length}_${selectedItem?.hashCode}'),
-                label: label,
-                initialSelection: selectedItem,
-                onSelected: (T? value) {
-                  onChanged(value);
-                  state.didChange(value);
-                },
-                dropdownMenuEntries: items.map((T item) {
-                  return DropdownMenuEntry<T>(
-                    value: item,
-                    label: displayItemBuilder != null
-                        ? displayItemBuilder!(item)
-                        : item.toString(),
-                  );
-                }).toList(),
-                hintText: hint,
-                expandedInsets: EdgeInsets.zero,
-                menuHeight: 500,
-                trailingIcon: isLoading
-                    ? SizedBox(
-                        width: 20.0,
-                        height: 20.0,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2.0,
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.grey),
-                        ),
-                      )
-                    : null,
-              ),
-              if (state.hasError)
-                Padding(
-                  padding: const EdgeInsets.only(left: 16, top: 4),
-                  child: Text(
-                    state.errorText ?? '',
-                    style: TextStyle(color: Colors.red.shade700, fontSize: 12),
-                  ),
-                ),
-            ],
-          ),
+    // Convert items to GenericPickerItem if they aren't already
+    final List<_WrappedItem<T>> wrappedItems = items.map((item) {
+      if (item is GenericPickerItem) {
+        return _WrappedItem<T>(
+          item: item,
+          id: (item as GenericPickerItem).id,
+          displayName: (item as GenericPickerItem).displayName,
         );
+      } else {
+        return _WrappedItem<T>(
+          item: item,
+          id: item.hashCode,
+          displayName: displayItemBuilder != null 
+              ? displayItemBuilder!(item) 
+              : item.toString(),
+        );
+      }
+    }).toList();
+
+    // Find the selected item in the wrapped items
+    _WrappedItem<T>? wrappedSelectedItem;
+    if (selectedItem != null) {
+      wrappedSelectedItem = wrappedItems.firstWhere(
+        (wrappedItem) => wrappedItem.item == selectedItem,
+        orElse: () => _WrappedItem<T>(
+          item: selectedItem as T, // Cast to non-nullable T since we've checked it's not null
+          id: selectedItem.hashCode,
+          displayName: displayItemBuilder != null 
+              ? displayItemBuilder!(selectedItem) 
+              : selectedItem.toString(),
+        ),
+      );
+    }
+
+    return ModernPicker<_WrappedItem<T>>(
+      label: label != null ? (label is Text ? (label as Text).data : null) : null,
+      hint: hint,
+      items: wrappedItems,
+      initialValue: wrappedSelectedItem?.id,
+      onChanged: (value) {
+        onChanged(value != null ? value.item : null);
       },
+      validator: validator != null 
+          ? (value) => validator!(value != null ? value.item : null) 
+          : null,
+      isLoading: isLoading,
+      prefixIcon: label is! Text ? label : null,
     );
   }
+}
+
+/// A wrapper class to convert any type to a GenericPickerItem
+class _WrappedItem<T> extends GenericPickerItem {
+  final T item;
+
+  _WrappedItem({
+    required this.item,
+    required dynamic id,
+    required String displayName,
+  }) : super(id: id, displayName: displayName);
+  
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is _WrappedItem<T> && other.item == item;
+  }
+
+  @override
+  int get hashCode => item.hashCode;
 }

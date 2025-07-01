@@ -19,6 +19,9 @@ import 'package:ttld/pages/home/ntd/update_ntd/widgets/location_section.dart';
 import 'package:ttld/pages/home/ntd/update_ntd/widgets/contact_details_section.dart';
 import 'package:ttld/pages/home/ntd/update_ntd/widgets/display_settings_section.dart';
 import 'package:ttld/pages/home/ntd/update_ntd/widgets/notification_settings_section.dart';
+import 'package:ttld/widgets/common/custom_app_bar.dart';
+import 'package:ttld/themes/colors/color_style.dart';
+import 'package:theme_provider/theme_provider.dart';
 
 class UpdateNTDPage extends StatefulWidget {
   static const routePath = '/update_ntd';
@@ -212,25 +215,31 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorStyles =
+        ThemeProvider.themeOf(context).data.extension<ColorStyles>();
+
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: theme.colorScheme.surface,
-        title: Text('Cập nhật thông tin',
-            style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
-        centerTitle: true,
-        iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
+      backgroundColor: colorStyles?.background ?? theme.colorScheme.surface,
+      appBar: CustomAppBar(
+        title: 'Cập nhật thông tin',
+        automaticallyImplyLeading: true,
+        backgroundColor:
+            colorStyles?.appBarBackground ?? theme.colorScheme.primary,
+        foregroundColor:
+            colorStyles?.appBarPrimaryContent ?? theme.colorScheme.onPrimary,
+        elevation: 0,
       ),
       body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
             colors: [
-              theme.colorScheme.primary.withAlpha(25),
-              theme.colorScheme.surface,
+              (colorStyles?.primaryAccent ?? theme.colorScheme.primary)
+                  .withOpacity(0.03),
+              colorStyles?.background ?? theme.colorScheme.surface,
             ],
+            stops: const [0.0, 0.3],
           ),
         ),
         child: SafeArea(
@@ -238,309 +247,317 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
             bloc: locator<NTDBloc>(),
             listener: (context, state) {
               if (state is NTDLoaded) {
-                // Schedule navigation for the next frame to ensure proper cleanup
                 WidgetsBinding.instance.addPostFrameCallback((_) {
-                  Navigator.pop(context);
+                  if (mounted) Navigator.pop(context);
                 });
               }
               if (state is NTDError) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(state.message)),
+                  SnackBar(
+                    content: Text(state.message),
+                    backgroundColor: theme.colorScheme.error,
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
                 );
               }
               if (state is NTDSuccess) {
-                // Schedule navigation for the next frame to ensure proper cleanup
                 WidgetsBinding.instance.addPostFrameCallback((_) {
-                  ToastUtils.showToastSuccess(context,
+                  if (mounted) {
+                    ToastUtils.showToastSuccess(
+                      context,
                       message: state.message,
-                      description: 'Cập nhật thành công');
-                  context.go('/ntd_home');
+                      description: 'Cập nhật thành công',
+                    );
+                    context.go('/ntd_home');
+                  }
                 });
               }
             },
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Header Section
-                      Container(
-                        padding: const EdgeInsets.all(12.0),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.surface,
-                          borderRadius: BorderRadius.circular(12.0),
-                          boxShadow: [
-                            BoxShadow(
-                              color: theme.colorScheme.shadow.withAlpha(26),
-                              spreadRadius: 1,
-                              blurRadius: 5,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Cập nhật thông tin',
-                              style: theme.textTheme.titleLarge?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: theme.colorScheme.primary,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'Vui lòng cập nhật thông tin của bạn',
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                color:
-                                    theme.colorScheme.onSurface.withAlpha(179),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 16),
+            child: CustomScrollView(
+              slivers: [
+                // Header Section
+                SliverToBoxAdapter(
+                  child: _buildHeaderSection(theme, colorStyles),
+                ),
 
-                      // Account Information Section
-                      _buildSectionHeader(theme, 'Thông tin tài khoản'),
-                      const SizedBox(height: 8),
-                      AccountInfoSection(
-                        usernameController: _usernameController,
-                        passwordController: _passwordController,
-                        ntdMadnController: _ntdMadnController,
-                        ntdEmailController: _ntdEmailController,
-                        mstController: _mstController,
-                        theme: theme,
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Contact Information Section
-                      _buildSectionHeader(theme, 'Thông tin người liên hệ'),
-                      const SizedBox(height: 16),
-                      ContactInfoSection(
-                        ntdNguoilienheController: _ntdNguoilienheController,
-                        ntdChucvu: ntdChucvu,
-                        onChucDanhChanged: (value) {
-                          setState(() {
-                            ntdChucvu = value?.id;
-                            chucDanh = value;
-                          });
-                        },
-                        theme: theme,
-                      ),
-                      const SizedBox(height: 32),
-
-                      // Company Information Section
-                      _buildSectionHeader(theme, 'Thông tin doanh nghiệp'),
-                      const SizedBox(height: 16),
-                      CompanyInfoSection(
-                        ntdTenController: _ntdTenController,
-                        ntdTentatController: _ntdTentatController,
-                        ntdLoai: ntdLoai,
-                        onNtdLoaiChanged: (value) {
-                          setState(() {
-                            ntdLoai = value;
-                          });
-                        },
-                        idNganhKinhTe: idNganhKinhTe,
-                        onNganhKinhTeChanged: (value) {
-                          setState(() {
-                            idNganhKinhTe = value?.id.toString();
-                          });
-                        },
-                        theme: theme,
-                      ),
-                      const SizedBox(height: 32),
-
-                      // Status and Activity Section
-                      _buildSectionHeader(theme, 'Trạng thái và hoạt động'),
-                      const SizedBox(height: 16),
-                      StatusAndActivitySection(
-                        idStatus: idStatus,
-                        onStatusChanged: (value) {
-                          setState(() {
-                            idStatus = value;
-                          });
-                        },
-                        idThoiGianHoatDong: idThoiGianHoatDong,
-                        onThoiGianHoatDongChanged: (value) {
-                          setState(() {
-                            idThoiGianHoatDong = value;
-                          });
-                        },
-                        theme: theme,
-                      ),
-                      const SizedBox(height: 32),
-
-                      // Company Type Section
-                      _buildSectionHeader(theme, 'Loại hình doanh nghiệp'),
-                      const SizedBox(height: 16),
-                      CompanyTypeSection(
-                        ntdHinhthucdoanhnghiep: ntdHinhthucdoanhnghiep,
-                        onHinhThucDoanhNghiepChanged: (value) {
-                          setState(() {
-                            ntdHinhthucdoanhnghiep = value?.id;
-                            hinhthucDoanhNghiep = value;
-                          });
-                        },
-                        idLoaiHinhDoanhNghiep: idLoaiHinhDoanhNghiep,
-                        onLoaiHinhChanged: (value) {
-                          setState(() {
-                            idLoaiHinhDoanhNghiep = value?.id;
-                            loaihinh = value;
-                          });
-                        },
-                        theme: theme,
-                      ),
-                      const SizedBox(height: 32),
-
-                      // Location Section
-                      _buildSectionHeader(theme, 'Địa chỉ'),
-                      const SizedBox(height: 16),
-                      LocationSection(
-                        initialTinh: maTinh.toString(),
-                        initialHuyen: maHuyen,
-                        initialXa: maXa,
-                        initialKCN: maKCN.toString(),
-                        addressDetailController: _ntdDiachichitietController,
-                        onTinhChanged: (tinh) {
-                          setState(() {
-                            _selectedTinh = tinh?.tentinh;
-                            maTinh = int.tryParse(tinh?.matinh ?? '');
-                          });
-                        },
-                        onHuyenChanged: (huyen) {
-                          setState(() {
-                            _selectedHuyen = huyen?.tenhuyen;
-                            maHuyen = huyen?.mahuyen;
-                          });
-                        },
-                        onXaChanged: (xa) {
-                          setState(() {
-                            _selectedXa = xa?.tenxa;
-                            maXa = xa?.maxa;
-                          });
-                        },
-                        onKCNChanged: (kcn) {
-                          setState(() {
-                            _selectedKCN = kcn?.displayName;
-                            maKCN = kcn?.id;
-                          });
-                        },
-                        theme: theme,
-                      ),
-                      const SizedBox(height: 32),
-
-                      // Contact Details Section
-                      _buildSectionHeader(theme, 'Thông tin liên hệ'),
-                      const SizedBox(height: 16),
-                      ContactDetailsSection(
-                        ntdWebsiteController: _ntdWebsiteController,
-                        ntdFaxController: _ntdFaxController,
-                        ntdDienthoaiController: _ntdDienthoaiController,
-                        theme: theme,
-                      ),
-                      const SizedBox(height: 32),
-
-                      // Display Settings Section
-                      _buildSectionHeader(theme, 'Cài đặt hiển thị'),
-                      const SizedBox(height: 16),
-                      DisplaySettingsSection(
-                        ntdhtNlh: _ntdhtNlh,
-                        onNtdhtNlhChanged: (value) {
-                          setState(() {
-                            _ntdhtNlh = value ?? false;
-                          });
-                        },
-                        ntdhtTelephone: _ntdhtTelephone,
-                        onNtdhtTelephoneChanged: (value) {
-                          setState(() {
-                            _ntdhtTelephone = value ?? false;
-                          });
-                        },
-                        ntdhtWeb: _ntdhtWeb,
-                        onNtdhtWebChanged: (value) {
-                          setState(() {
-                            _ntdhtWeb = value ?? false;
-                          });
-                        },
-                        ntdhtFax: _ntdhtFax,
-                        onNtdhtFaxChanged: (value) {
-                          setState(() {
-                            _ntdhtFax = value ?? false;
-                          });
-                        },
-                        ntdhtEmail: _ntdhtEmail,
-                        onNtdhtEmailChanged: (value) {
-                          setState(() {
-                            _ntdhtEmail = value ?? false;
-                          });
-                        },
-                        ntdhtAddress: _ntdhtAddress,
-                        onNtdhtAddressChanged: (value) {
-                          setState(() {
-                            _ntdhtAddress = value ?? false;
-                          });
-                        },
-                        theme: theme,
-                      ),
-                      const SizedBox(height: 32),
-
-                      // Notification Settings Section
-                      _buildSectionHeader(theme, 'Cài đặt thông báo'),
-                      const SizedBox(height: 16),
-                      NotificationSettingsSection(
-                        newletterSubscription: _newletterSubscription,
-                        onNewletterSubscriptionChanged: (value) {
-                          setState(() {
-                            _newletterSubscription = value ?? false;
-                          });
-                        },
-                        jobsletterSubscription: _jobsletterSubscription,
-                        onJobsletterSubscriptionChanged: (value) {
-                          setState(() {
-                            _jobsletterSubscription = value ?? false;
-                          });
-                        },
-                        theme: theme,
-                      ),
-                      const SizedBox(height: 32),
-
-                      // Submit Button
-                      SizedBox(
-                        width: double.infinity,
-                        height: 48,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (mounted && _formKey.currentState!.validate()) {
-                              _handleUpdate();
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: theme.colorScheme.primary,
-                            foregroundColor: theme.colorScheme.onPrimary,
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                // Form Content
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  sliver: SliverToBoxAdapter(
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          // Account Information Section
+                          _buildFormSection(
+                            theme: theme,
+                            colorStyles: colorStyles,
+                            title: 'Thông tin tài khoản',
+                            icon: Icons.account_circle_outlined,
+                            child: AccountInfoSection(
+                              usernameController: _usernameController,
+                              passwordController: _passwordController,
+                              ntdMadnController: _ntdMadnController,
+                              ntdEmailController: _ntdEmailController,
+                              mstController: _mstController,
+                              theme: theme,
                             ),
                           ),
-                          child: const Text(
-                            'Cập nhật',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
+
+                          const SizedBox(height: 24),
+
+                          // Contact Information Section
+                          _buildFormSection(
+                            theme: theme,
+                            colorStyles: colorStyles,
+                            title: 'Thông tin người liên hệ',
+                            icon: Icons.person_outline,
+                            child: ContactInfoSection(
+                              ntdNguoilienheController:
+                                  _ntdNguoilienheController,
+                              ntdChucvu: ntdChucvu,
+                              onChucDanhChanged: (value) {
+                                setState(() {
+                                  ntdChucvu = value?.id;
+                                  chucDanh = value;
+                                });
+                              },
+                              theme: theme,
                             ),
                           ),
-                        ),
+
+                          const SizedBox(height: 24),
+
+                          // Company Information Section
+                          _buildFormSection(
+                            theme: theme,
+                            colorStyles: colorStyles,
+                            title: 'Thông tin doanh nghiệp',
+                            icon: Icons.business_outlined,
+                            child: CompanyInfoSection(
+                              ntdTenController: _ntdTenController,
+                              ntdTentatController: _ntdTentatController,
+                              ntdLoai: ntdLoai,
+                              onNtdLoaiChanged: (value) {
+                                setState(() {
+                                  ntdLoai = value;
+                                });
+                              },
+                              idNganhKinhTe: idNganhKinhTe,
+                              onNganhKinhTeChanged: (value) {
+                                setState(() {
+                                  idNganhKinhTe = value?.id.toString();
+                                });
+                              },
+                              theme: theme,
+                            ),
+                          ),
+
+                          const SizedBox(height: 24),
+
+                          // Status and Activity Section
+                          _buildFormSection(
+                            theme: theme,
+                            colorStyles: colorStyles,
+                            title: 'Trạng thái và hoạt động',
+                            icon: Icons.timeline_outlined,
+                            child: StatusAndActivitySection(
+                              idStatus: idStatus,
+                              onStatusChanged: (value) {
+                                setState(() {
+                                  idStatus = value;
+                                });
+                              },
+                              idThoiGianHoatDong: idThoiGianHoatDong,
+                              onThoiGianHoatDongChanged: (value) {
+                                setState(() {
+                                  idThoiGianHoatDong = value;
+                                });
+                              },
+                              theme: theme,
+                            ),
+                          ),
+
+                          const SizedBox(height: 24),
+
+                          // Company Type Section
+                          _buildFormSection(
+                            theme: theme,
+                            colorStyles: colorStyles,
+                            title: 'Loại hình doanh nghiệp',
+                            icon: Icons.category_outlined,
+                            child: CompanyTypeSection(
+                              ntdHinhthucdoanhnghiep: ntdHinhthucdoanhnghiep,
+                              onHinhThucDoanhNghiepChanged: (value) {
+                                setState(() {
+                                  ntdHinhthucdoanhnghiep = value?.id;
+                                  hinhthucDoanhNghiep = value;
+                                });
+                              },
+                              idLoaiHinhDoanhNghiep: idLoaiHinhDoanhNghiep,
+                              onLoaiHinhChanged: (value) {
+                                setState(() {
+                                  idLoaiHinhDoanhNghiep = value?.id;
+                                  loaihinh = value;
+                                });
+                              },
+                              theme: theme,
+                            ),
+                          ),
+
+                          const SizedBox(height: 24),
+
+                          // Location Section
+                          _buildFormSection(
+                            theme: theme,
+                            colorStyles: colorStyles,
+                            title: 'Địa chỉ',
+                            icon: Icons.location_on_outlined,
+                            child: LocationSection(
+                              initialTinh: maTinh.toString(),
+                              initialHuyen: maHuyen,
+                              initialXa: maXa,
+                              initialKCN: maKCN.toString(),
+                              addressDetailController:
+                                  _ntdDiachichitietController,
+                              onTinhChanged: (tinh) {
+                                setState(() {
+                                  _selectedTinh = tinh?.tentinh;
+                                  maTinh = int.tryParse(tinh?.matinh ?? '');
+                                });
+                              },
+                              onHuyenChanged: (huyen) {
+                                setState(() {
+                                  _selectedHuyen = huyen?.tenhuyen;
+                                  maHuyen = huyen?.mahuyen;
+                                });
+                              },
+                              onXaChanged: (xa) {
+                                setState(() {
+                                  _selectedXa = xa?.tenxa;
+                                  maXa = xa?.maxa;
+                                });
+                              },
+                              onKCNChanged: (kcn) {
+                                setState(() {
+                                  _selectedKCN = kcn?.displayName;
+                                  maKCN = kcn?.id;
+                                });
+                              },
+                              theme: theme,
+                            ),
+                          ),
+
+                          const SizedBox(height: 24),
+
+                          // Contact Details Section
+                          _buildFormSection(
+                            theme: theme,
+                            colorStyles: colorStyles,
+                            title: 'Thông tin liên hệ',
+                            icon: Icons.contact_phone_outlined,
+                            child: ContactDetailsSection(
+                              ntdWebsiteController: _ntdWebsiteController,
+                              ntdFaxController: _ntdFaxController,
+                              ntdDienthoaiController: _ntdDienthoaiController,
+                              theme: theme,
+                            ),
+                          ),
+
+                          const SizedBox(height: 24),
+
+                          // Display Settings Section
+                          _buildFormSection(
+                            theme: theme,
+                            colorStyles: colorStyles,
+                            title: 'Cài đặt hiển thị',
+                            icon: Icons.visibility_outlined,
+                            child: DisplaySettingsSection(
+                              ntdhtNlh: _ntdhtNlh,
+                              onNtdhtNlhChanged: (value) {
+                                setState(() {
+                                  _ntdhtNlh = value ?? false;
+                                });
+                              },
+                              ntdhtTelephone: _ntdhtTelephone,
+                              onNtdhtTelephoneChanged: (value) {
+                                setState(() {
+                                  _ntdhtTelephone = value ?? false;
+                                });
+                              },
+                              ntdhtWeb: _ntdhtWeb,
+                              onNtdhtWebChanged: (value) {
+                                setState(() {
+                                  _ntdhtWeb = value ?? false;
+                                });
+                              },
+                              ntdhtFax: _ntdhtFax,
+                              onNtdhtFaxChanged: (value) {
+                                setState(() {
+                                  _ntdhtFax = value ?? false;
+                                });
+                              },
+                              ntdhtEmail: _ntdhtEmail,
+                              onNtdhtEmailChanged: (value) {
+                                setState(() {
+                                  _ntdhtEmail = value ?? false;
+                                });
+                              },
+                              ntdhtAddress: _ntdhtAddress,
+                              onNtdhtAddressChanged: (value) {
+                                setState(() {
+                                  _ntdhtAddress = value ?? false;
+                                });
+                              },
+                              theme: theme,
+                            ),
+                          ),
+
+                          const SizedBox(height: 24),
+
+                          // Notification Settings Section
+                          _buildFormSection(
+                            theme: theme,
+                            colorStyles: colorStyles,
+                            title: 'Cài đặt thông báo',
+                            icon: Icons.notifications_outlined,
+                            child: NotificationSettingsSection(
+                              newletterSubscription: _newletterSubscription,
+                              onNewletterSubscriptionChanged: (value) {
+                                setState(() {
+                                  _newletterSubscription = value ?? false;
+                                });
+                              },
+                              jobsletterSubscription: _jobsletterSubscription,
+                              onJobsletterSubscriptionChanged: (value) {
+                                setState(() {
+                                  _jobsletterSubscription = value ?? false;
+                                });
+                              },
+                              theme: theme,
+                            ),
+                          ),
+
+                          const SizedBox(height: 32),
+                        ],
                       ),
-                      const SizedBox(height: 16),
-                    ],
+                    ),
                   ),
                 ),
-              ),
+
+                // Submit Button Section
+                SliverToBoxAdapter(
+                  child: _buildSubmitSection(theme, colorStyles),
+                ),
+
+                // Bottom padding
+                const SliverToBoxAdapter(
+                  child: SizedBox(height: 32),
+                ),
+              ],
             ),
           ),
         ),
@@ -548,38 +565,210 @@ class _UpdateNTDPageState extends State<UpdateNTDPage> {
     );
   }
 
-  Widget _buildSectionHeader(ThemeData theme, String title) {
+  /// Builds the header section with app branding and description
+  Widget _buildHeaderSection(ThemeData theme, ColorStyles? colorStyles) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
+        color: colorStyles?.surfaceBackground ?? theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: theme.colorScheme.shadow.withAlpha(26),
-            spreadRadius: 1,
-            blurRadius: 10,
+            color: (colorStyles?.content ?? theme.colorScheme.onSurface)
+                .withOpacity(0.08),
+            spreadRadius: 0,
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color:
+                      (colorStyles?.primaryAccent ?? theme.colorScheme.primary)
+                          .withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  Icons.edit_outlined,
+                  color:
+                      colorStyles?.primaryAccent ?? theme.colorScheme.primary,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Cập nhật thông tin',
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color:
+                            colorStyles?.content ?? theme.colorScheme.onSurface,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Vui lòng cập nhật thông tin doanh nghiệp của bạn',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: (colorStyles?.content ??
+                                theme.colorScheme.onSurface)
+                            .withOpacity(0.7),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Builds a form section with consistent styling
+  Widget _buildFormSection({
+    required ThemeData theme,
+    required ColorStyles? colorStyles,
+    required String title,
+    required IconData icon,
+    required Widget child,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: colorStyles?.surfaceBackground ?? theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: (colorStyles?.content ?? theme.colorScheme.onSurface)
+                .withOpacity(0.06),
+            spreadRadius: 0,
+            blurRadius: 16,
             offset: const Offset(0, 2),
           ),
         ],
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Section Header
           Container(
-            width: 4,
-            height: 24,
+            padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: theme.colorScheme.primary,
-              borderRadius: BorderRadius.circular(2),
+              color: (colorStyles?.primaryAccent ?? theme.colorScheme.primary)
+                  .withOpacity(0.05),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(16),
+                topRight: Radius.circular(16),
+              ),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color:
+                        colorStyles?.primaryAccent ?? theme.colorScheme.primary,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    icon,
+                    color: colorStyles?.appBarPrimaryContent ??
+                        theme.colorScheme.onPrimary,
+                    size: 20,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color:
+                          colorStyles?.content ?? theme.colorScheme.onSurface,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(width: 12),
-          Text(
-            title,
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: theme.colorScheme.onSurface,
+          // Section Content
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: child,
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Builds the submit button section
+  Widget _buildSubmitSection(ThemeData theme, ColorStyles? colorStyles) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          SizedBox(
+            width: double.infinity,
+            height: 56,
+            child: ElevatedButton(
+              onPressed: () {
+                if (mounted && _formKey.currentState!.validate()) {
+                  _handleUpdate();
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    colorStyles?.buttonBackground ?? theme.colorScheme.primary,
+                foregroundColor:
+                    colorStyles?.buttonContent ?? theme.colorScheme.onPrimary,
+                elevation: 0,
+                shadowColor: Colors.transparent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ).copyWith(
+                elevation: MaterialStateProperty.resolveWith<double>(
+                  (Set<MaterialState> states) {
+                    if (states.contains(MaterialState.pressed)) return 0;
+                    return 2;
+                  },
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.save_outlined, size: 20),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Cập nhật thông tin',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: colorStyles?.buttonContent ??
+                          theme.colorScheme.onPrimary,
+                    ),
+                  ),
+                ],
+              ),
             ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'Thông tin sẽ được xem xét và cập nhật trong hệ thống',
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: (colorStyles?.content ?? theme.colorScheme.onSurface)
+                  .withOpacity(0.6),
+            ),
+            textAlign: TextAlign.center,
           ),
         ],
       ),
