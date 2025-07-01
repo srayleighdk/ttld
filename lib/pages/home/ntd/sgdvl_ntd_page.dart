@@ -225,11 +225,15 @@ class _SGDVLNTDPageState extends State<SGDVLNTDPage> {
                         size: 16,
                       ),
                       const SizedBox(width: 8),
-                      Text(
-                        'Doanh nghiệp: ${state.ntd!.ntdTen ?? 'Chưa có tên'}',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
+                      Expanded(
+                        child: Text(
+                          'Doanh nghiệp: ${state.ntd!.ntdTen ?? 'Chưa có tên'}',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
                         ),
                       ),
                     ],
@@ -550,10 +554,13 @@ class _SGDVLNTDPageState extends State<SGDVLNTDPage> {
                 color: theme.colorScheme.onSurface.withOpacity(0.6),
               ),
               const SizedBox(width: 8),
-              Text(
-                'Ngày: ${_formatDate(session.pgdNgay)}',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurface.withOpacity(0.7),
+              Expanded(
+                child: Text(
+                  'Ngày: ${_formatDate(session.pgdNgay)}',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurface.withOpacity(0.7),
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               const SizedBox(width: 16),
@@ -563,10 +570,13 @@ class _SGDVLNTDPageState extends State<SGDVLNTDPage> {
                 color: theme.colorScheme.onSurface.withOpacity(0.6),
               ),
               const SizedBox(width: 8),
-              Text(
-                'Giờ: ${session.pgdGio}',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurface.withOpacity(0.7),
+              Expanded(
+                child: Text(
+                  'Giờ: ${session.pgdGio}',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurface.withOpacity(0.7),
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
@@ -690,9 +700,12 @@ class _SGDVLNTDPageState extends State<SGDVLNTDPage> {
                   color: theme.colorScheme.secondary,
                 ),
                 const SizedBox(width: 8),
-                Text(
-                  'Người liên hệ: ${registration.dksgdNguoilienhe}',
-                  style: theme.textTheme.bodyMedium,
+                Expanded(
+                  child: Text(
+                    'Người liên hệ: ${registration.dksgdNguoilienhe}',
+                    style: theme.textTheme.bodyMedium,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ],
             ),
@@ -707,9 +720,12 @@ class _SGDVLNTDPageState extends State<SGDVLNTDPage> {
                   color: theme.colorScheme.tertiary,
                 ),
                 const SizedBox(width: 8),
-                Text(
-                  'Điện thoại: ${registration.dksgdDienthoai}',
-                  style: theme.textTheme.bodyMedium,
+                Expanded(
+                  child: Text(
+                    'Điện thoại: ${registration.dksgdDienthoai}',
+                    style: theme.textTheme.bodyMedium,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ],
             ),

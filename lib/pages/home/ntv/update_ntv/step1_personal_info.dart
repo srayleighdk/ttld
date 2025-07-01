@@ -165,28 +165,28 @@ class Step1PersonalInfo extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _buildFormSection(
-            theme,
-            'Thông tin tài khoản',
-            [
-              CustomTextField.email(
-                controller: emailController,
-                validator: 'email',
-              ),
-              const SizedBox(height: 12),
-              CustomTextField(
-                labelText: 'Tên đăng nhập',
-                hintText: 'Tên đăng nhập',
-                controller: usernameController,
-                validator: 'not_empty',
-              ),
-              const SizedBox(height: 12),
-              CustomTextField.password(
-                controller: passwordController,
-                validator: 'not_empty',
-              ),
-            ],
-          ),
+          // _buildFormSection(
+          //   theme,
+          //   'Thông tin tài khoản',
+          //   [
+          //     CustomTextField.email(
+          //       controller: emailController,
+          //       validator: 'email',
+          //     ),
+          //     const SizedBox(height: 12),
+          //     CustomTextField(
+          //       labelText: 'Tên đăng nhập',
+          //       hintText: 'Tên đăng nhập',
+          //       controller: usernameController,
+          //       validator: 'not_empty',
+          //     ),
+          //     // const SizedBox(height: 12),
+          //     // CustomTextField.password(
+          //     //   controller: passwordController,
+          //     //   validator: 'not_empty',
+          //     // ),
+          //   ],
+          // ),
           _buildFormSection(
             theme,
             'Thông tin cá nhân',

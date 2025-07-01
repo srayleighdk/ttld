@@ -43,20 +43,21 @@ class AccountInfoSection extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           CustomTextField(
+            labelText: "Username",
+            controller: usernameController,
+            hintText: 'Username',
+            readOnly: true,
+          ),
+          const SizedBox(height: 8),
+          CustomTextField(
             labelText: "Mã số thuế",
             controller: mstController,
             hintText: 'Mã số thuế',
           ),
-          const SizedBox(height: 8),
-          CustomTextField(
-            labelText: "Username",
-            controller: usernameController,
-            hintText: 'Username',
-          ),
-          const SizedBox(height: 8),
-          CustomTextField.password(
-            controller: passwordController,
-          ),
+          // const SizedBox(height: 8),
+          // CustomTextField.password(
+          //   controller: passwordController,
+          // ),
           const SizedBox(height: 8),
           CustomTextField(
             labelText: "Mã NTD",

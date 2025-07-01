@@ -612,7 +612,10 @@ class _NTVHomePageState extends State<NTVHomePage> {
             if (route == '/ntv_home/update_ntv') {
               context.push(route, extra: tblHoSoUngVien);
             } else {
-              context.push(route);
+              // Navigate to feature locked page for all other features
+              context.push('/feature-locked', extra: {
+                'featureName': label.replaceAll('\n', ' '),
+              });
             }
           } catch (e) {
             debugPrint('Navigation error: $e');

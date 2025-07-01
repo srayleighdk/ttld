@@ -82,22 +82,22 @@ class _ChapNoiPageState extends State<ChapNoiPage> {
       case 3:
         return 'Đã hoàn thành';
       default:
-        return 'Không xác định';
+        return status != null ? 'Trạng thái $status' : 'Chưa xác định';
     }
   }
 
   Color _getStatusColor(int? status) {
     switch (status) {
       case 0:
-        return Colors.orange;
+        return Colors.orange.shade700;
       case 1:
-        return Colors.green;
+        return Colors.green.shade700;
       case 2:
-        return Colors.red;
+        return Colors.red.shade700;
       case 3:
-        return Colors.blue;
+        return Colors.blue.shade700;
       default:
-        return Colors.grey;
+        return Colors.grey.shade700;
     }
   }
 
@@ -489,20 +489,7 @@ class _ChapNoiPageState extends State<ChapNoiPage> {
         children: [
           Row(
             children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: _getStatusColor(chapNoi.idKetQua).withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Text(
-                  chapNoi.tenKetqua ?? _getStatusText(chapNoi.idKetQua),
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: _getStatusColor(chapNoi.idKetQua),
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
+              _buildStatusChip(theme, chapNoi),
               const Spacer(),
               Text(
                 _formatDate(chapNoi.ngayMuonHs),
@@ -590,6 +577,47 @@ class _ChapNoiPageState extends State<ChapNoiPage> {
               ],
             ),
           ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatusChip(ThemeData theme, ChapNoiModel chapNoi) {
+    final statusText = chapNoi.tenKetqua?.isNotEmpty == true 
+        ? chapNoi.tenKetqua! 
+        : _getStatusText(chapNoi.idKetQua);
+    final statusColor = _getStatusColor(chapNoi.idKetQua);
+    
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: statusColor.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: statusColor.withOpacity(0.4),
+          width: 1.5,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 6,
+            height: 6,
+            decoration: BoxDecoration(
+              color: statusColor,
+              shape: BoxShape.circle,
+            ),
+          ),
+          const SizedBox(width: 6),
+          Text(
+            statusText,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: statusColor,
+              fontWeight: FontWeight.w600,
+              fontSize: 11,
+            ),
+          ),
         ],
       ),
     );

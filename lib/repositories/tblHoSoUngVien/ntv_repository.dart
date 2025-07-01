@@ -11,8 +11,16 @@ class NTVRepository {
     return await _ntvApiService.getHoSoUngVienList();
   }
 
+  Future<List<TblHoSoUngVienModel>> getHoSoUngVienByIdDn(String idDn) async {
+    return await _ntvApiService.getHoSoUngVienListByIdDn(idDn);
+  }
+
   Future<TblHoSoUngVienModel?> getHoSoUngVienById(id) async {
     return await _ntvApiService.getHoSoUngVienById(id);
+  }
+
+  Future<TblHoSoUngVienModel?> getHoSoUngVienByUvId(String uvId) async {
+    return await _ntvApiService.getHoSoUngVienByUvId(uvId);
   }
 
   Future<TblHoSoUngVienModel> createHoSoUngVien(

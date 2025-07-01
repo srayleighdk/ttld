@@ -11,11 +11,25 @@ abstract class NTVEvent extends Equatable {
 
 class LoadTblHoSoUngViens extends NTVEvent {}
 
+class LoadTblHoSoUngViensByIdDn extends NTVEvent {
+  final String idDn;
+  const LoadTblHoSoUngViensByIdDn(this.idDn);
+  @override
+  List<Object> get props => [idDn];
+}
+
 class LoadTblHoSoUngVien extends NTVEvent {
   final int id;
   const LoadTblHoSoUngVien(this.id);
   @override
   List<Object> get props => [id];
+}
+
+class LoadTblHoSoUngVienByUvId extends NTVEvent {
+  final String uvId;
+  const LoadTblHoSoUngVienByUvId(this.uvId);
+  @override
+  List<Object> get props => [uvId];
 }
 
 class AddTblHoSoUngVien extends NTVEvent {

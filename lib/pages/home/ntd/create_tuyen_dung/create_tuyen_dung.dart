@@ -15,6 +15,7 @@ import 'package:ttld/models/thoigianlamviec_model.dart';
 import 'package:ttld/models/tinh_thanh_model.dart';
 import 'package:ttld/models/trinh_do_hoc_van_model.dart';
 import 'package:ttld/models/trinh_do_tin_hoc_model.dart';
+import 'package:ttld/widgets/common/custom_app_bar.dart';
 import 'package:ttld/widgets/field/custom_checkbox.dart';
 import 'package:ttld/widgets/field/custom_pick_datetime_grok.dart';
 import 'package:ttld/widgets/field/custom_picker_grok.dart';
@@ -559,30 +560,24 @@ class _CreateTuyenDungPageState extends State<CreateTuyenDungPage>
   }
 
   PreferredSizeWidget _buildAppBar(ThemeData theme) {
-    return AppBar(
+    return CustomAppBar(
+      title: widget.isEdit ? 'Chỉnh sửa tuyển dụng' : 'Tạo bài tuyển dụng',
       elevation: 0,
-      backgroundColor: theme.colorScheme.surface,
-      foregroundColor: theme.colorScheme.onSurface,
-      title: Column(
-        children: [
-          Text(
-            widget.isEdit ? 'Chỉnh sửa tuyển dụng' : 'Tạo bài tuyển dụng',
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Text(
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back_ios),
+        onPressed: () => Navigator.of(context).pop(),
+      ),
+      bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(30),
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: Text(
             'Bước ${_currentStep + 1} / ${_steps.length}',
             style: theme.textTheme.bodySmall?.copyWith(
               color: theme.colorScheme.onSurface.withOpacity(0.6),
             ),
           ),
-        ],
-      ),
-      centerTitle: true,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back_ios),
-        onPressed: () => Navigator.of(context).pop(),
+        ),
       ),
     );
   }

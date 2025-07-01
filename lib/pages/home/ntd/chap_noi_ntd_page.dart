@@ -25,18 +25,16 @@ class _ChapNoiNTDPageState extends State<ChapNoiNTDPage> {
   late final AuthBloc _authBloc;
   
   List<ChapNoiModel> chapNoiList = [];
+  List<ChapNoiModel> filteredChapNoiList = [];
   List<KieuChapNoiModel> kieuChapNoiList = [];
   bool isLoading = true;
   int currentPage = 1;
   int totalRecords = 0;
   final int itemsPerPage = 10;
   
-  // Filter variables
-  String? selectedKieuChapNoi;
-  String? selectedStatus;
-  String searchQuery = '';
-  
-  final TextEditingController _searchController = TextEditingController();
+  // Status filtering variables
+  int? selectedStatusFilter;
+  bool showingFilteredList = false;
 
   @override
   void initState() {
@@ -59,7 +57,7 @@ class _ChapNoiNTDPageState extends State<ChapNoiNTDPage> {
       _chapNoiBloc.add(ChapNoiFetchList(
         limit: itemsPerPage,
         page: currentPage,
-        status: selectedStatus != null ? int.tryParse(selectedStatus!) : null,
+        status: selectedStatusFilter, // Use selected status filter
         idTuyenDung: null,
         idDoanhNghiep: authState.userId,
         idUv: null,
@@ -74,9 +72,20 @@ class _ChapNoiNTDPageState extends State<ChapNoiNTDPage> {
     _loadChapNoiData();
   }
 
-  void _onFilterChanged() {
+  void _filterByStatus(int? status) {
     setState(() {
+      selectedStatusFilter = status;
+      currentPage = 1; // Reset to first page when filtering
+      showingFilteredList = status != null;
+    });
+    _loadChapNoiData();
+  }
+
+  void _clearFilter() {
+    setState(() {
+      selectedStatusFilter = null;
       currentPage = 1;
+      showingFilteredList = false;
     });
     _loadChapNoiData();
   }
@@ -113,7 +122,6 @@ class _ChapNoiNTDPageState extends State<ChapNoiNTDPage> {
 
   @override
   void dispose() {
-    _searchController.dispose();
     super.dispose();
   }
 
@@ -173,10 +181,6 @@ class _ChapNoiNTDPageState extends State<ChapNoiNTDPage> {
                 _buildEnhancedStatisticsCards(theme),
                 const SizedBox(height: 12),
                 
-                // Filter Section
-                _buildCompactFilterSection(theme),
-                const SizedBox(height: 12),
-                
                 // Content Section
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.5, // Fixed height for content
@@ -188,6 +192,15 @@ class _ChapNoiNTDPageState extends State<ChapNoiNTDPage> {
                           if (state is ChapNoiListLoaded) {
                             setState(() {
                               chapNoiList = state.chapNoiList;
+                              if (selectedStatusFilter != null) {
+                                if (selectedStatusFilter == 0) {
+                                  filteredChapNoiList = chapNoiList.where((item) => item.idKetQua == 0 || item.idKetQua == null).toList();
+                                } else {
+                                  filteredChapNoiList = chapNoiList.where((item) => item.idKetQua == selectedStatusFilter).toList();
+                                }
+                              } else {
+                                filteredChapNoiList = chapNoiList;
+                              }
                               totalRecords = state.total;
                               isLoading = false;
                             });
@@ -423,9 +436,9 @@ class _ChapNoiNTDPageState extends State<ChapNoiNTDPage> {
     
     // Calculate statistics
     final totalApplications = totalRecords; // Use totalRecords for accurate count
-    final pendingCount = chapNoiList.where((item) => item.idKetQua == 0 || item.idKetQua == null).length;
-    final acceptedCount = chapNoiList.where((item) => item.idKetQua == 1).length;
-    final rejectedCount = chapNoiList.where((item) => item.idKetQua == 2).length;
+    final pendingCount = chapNoiList.where((item) => item.idKetQua == 0 || item.idKetQua == null).length; // 0 = Chờ xử lý
+    final rejectedCount = chapNoiList.where((item) => item.idKetQua == 1).length; // 1 = Không đạt
+    final acceptedCount = chapNoiList.where((item) => item.idKetQua == 2).length; // 2 = Đạt
     
     return Container(
       padding: const EdgeInsets.all(16),
@@ -458,48 +471,68 @@ class _ChapNoiNTDPageState extends State<ChapNoiNTDPage> {
                   color: colorScheme.onSurface,
                 ),
               ),
+              const Spacer(),
+              if (selectedStatusFilter != null)
+                TextButton.icon(
+                  onPressed: _clearFilter,
+                  icon: const Icon(FontAwesomeIcons.xmark, size: 12),
+                  label: const Text('Xóa bộ lọc', style: TextStyle(fontSize: 12)),
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    backgroundColor: colorScheme.primary.withValues(alpha: 0.1),
+                    foregroundColor: colorScheme.primary,
+                  ),
+                ),
             ],
           ),
           const SizedBox(height: 16),
           Row(
             children: [
               Expanded(
-                child: _buildEnhancedStatCard(
+                child: _buildClickableStatCard(
                   theme,
                   'Tổng Hồ Sơ',
                   totalApplications.toString(),
                   FontAwesomeIcons.folder,
                   colorScheme.primary,
+                  null, // Show all records
+                  selectedStatusFilter == null,
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: _buildEnhancedStatCard(
+                child: _buildClickableStatCard(
                   theme,
                   'Chờ Xử Lý',
                   pendingCount.toString(),
                   FontAwesomeIcons.clock,
                   Colors.orange,
+                  0, // Status 0 for pending
+                  selectedStatusFilter == 0,
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: _buildEnhancedStatCard(
+                child: _buildClickableStatCard(
                   theme,
-                  'Đã Chấp Nhận',
-                  acceptedCount.toString(),
-                  FontAwesomeIcons.circleCheck,
-                  Colors.green,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildEnhancedStatCard(
-                  theme,
-                  'Đã Từ Chối',
+                  'Không Đạt',
                   rejectedCount.toString(),
                   FontAwesomeIcons.circleXmark,
                   Colors.red,
+                  1, // Status 1 for rejected
+                  selectedStatusFilter == 1,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _buildClickableStatCard(
+                  theme,
+                  'Đạt',
+                  acceptedCount.toString(),
+                  FontAwesomeIcons.circleCheck,
+                  Colors.green,
+                  2, // Status 2 for accepted
+                  selectedStatusFilter == 2,
                 ),
               ),
             ],
@@ -547,117 +580,86 @@ class _ChapNoiNTDPageState extends State<ChapNoiNTDPage> {
     );
   }
 
-  Widget _buildCompactFilterSection(ThemeData theme) {
-    final colorScheme = theme.colorScheme;
-    
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: colorScheme.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: colorScheme.outline.withValues(alpha: 0.2),
+  Widget _buildClickableStatCard(
+    ThemeData theme, 
+    String title, 
+    String value, 
+    IconData icon, 
+    Color color, 
+    int? statusFilter,
+    bool isSelected,
+  ) {
+    return InkWell(
+      onTap: () => _filterByStatus(statusFilter),
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: isSelected 
+            ? color.withValues(alpha: 0.15) 
+            : color.withValues(alpha: 0.05),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isSelected 
+              ? color.withValues(alpha: 0.5) 
+              : color.withValues(alpha: 0.2),
+            width: isSelected ? 2 : 1,
+          ),
+          boxShadow: isSelected ? [
+            BoxShadow(
+              color: color.withValues(alpha: 0.2),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ] : null,
         ),
-      ),
-      child: Row(
-        children: [
-          // Search field
-          Expanded(
-            flex: 3,
-            child: Container(
-              decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(8),
+        child: Column(
+          children: [
+            Icon(
+              icon,
+              color: color,
+              size: 20,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              value,
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: color,
               ),
-              child: TextField(
-                controller: _searchController,
-                decoration: InputDecoration(
-                  hintText: 'Tìm kiếm...',
-                  prefixIcon: Icon(
-                    FontAwesomeIcons.magnifyingGlass,
-                    color: colorScheme.onSurface.withValues(alpha: 0.6),
-                    size: 16,
-                  ),
-                  border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 10,
+            ),
+            Text(
+              title,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            if (isSelected) ...[
+              const SizedBox(height: 4),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  'Đã chọn',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: color,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-                onChanged: (value) {
-                  setState(() {
-                    searchQuery = value;
-                  });
-                },
-                onSubmitted: (value) => _onFilterChanged(),
               ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          
-          // Status filter
-          Expanded(
-            flex: 2,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  value: selectedStatus,
-                  hint: Text(
-                    'Trạng thái',
-                    style: TextStyle(
-                      color: colorScheme.onSurface.withValues(alpha: 0.6),
-                      fontSize: 14,
-                    ),
-                  ),
-                  isExpanded: true,
-                  icon: Icon(
-                    FontAwesomeIcons.chevronDown,
-                    color: colorScheme.onSurface.withValues(alpha: 0.6),
-                    size: 12,
-                  ),
-                  items: const [
-                    DropdownMenuItem(value: null, child: Text('Tất cả')),
-                    DropdownMenuItem(value: '0', child: Text('Chờ xử lý')),
-                    DropdownMenuItem(value: '1', child: Text('Đã chấp nhận')),
-                    DropdownMenuItem(value: '2', child: Text('Đã từ chối')),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      selectedStatus = value;
-                    });
-                    _onFilterChanged();
-                  },
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          
-          // Filter button
-          Container(
-            decoration: BoxDecoration(
-              color: colorScheme.primary,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: IconButton(
-              onPressed: _onFilterChanged,
-              icon: const Icon(
-                FontAwesomeIcons.filter,
-                size: 16,
-                color: Colors.white,
-              ),
-              tooltip: 'Lọc',
-            ),
-          ),
-        ],
+            ],
+          ],
+        ),
       ),
     );
   }
+
 
   Widget _buildEnhancedContent(ThemeData theme) {
     return Container(
@@ -687,7 +689,7 @@ class _ChapNoiNTDPageState extends State<ChapNoiNTDPage> {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  'Danh Sách Hồ Sơ Chấp Nhận',
+                  _getListTitle(),
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: theme.colorScheme.onSurface,
@@ -717,7 +719,7 @@ class _ChapNoiNTDPageState extends State<ChapNoiNTDPage> {
           Expanded(
             child: isLoading
                 ? _buildLoadingState(theme)
-                : chapNoiList.isEmpty
+                : filteredChapNoiList.isEmpty
                     ? _buildEnhancedEmptyState(theme)
                     : _buildChapNoiListView(theme),
           ),
@@ -773,7 +775,7 @@ class _ChapNoiNTDPageState extends State<ChapNoiNTDPage> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Chưa có hồ sơ chấp nhận nào',
+              _getEmptyStateTitle(),
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: colorScheme.onSurface,
@@ -781,23 +783,42 @@ class _ChapNoiNTDPageState extends State<ChapNoiNTDPage> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Các hồ sơ ứng viên chấp nhận sẽ hiển thị tại đây',
+              _getEmptyStateMessage(),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: colorScheme.onSurface.withValues(alpha: 0.7),
               ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            ElevatedButton.icon(
-              onPressed: () => _loadChapNoiData(),
-              icon: const Icon(FontAwesomeIcons.arrowsRotate, size: 14),
-              label: const Text('Làm mới'),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () => _loadChapNoiData(),
+                  icon: const Icon(FontAwesomeIcons.arrowsRotate, size: 14),
+                  label: const Text('Làm mới'),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                  ),
                 ),
-              ),
+                if (selectedStatusFilter != null) ...[
+                  const SizedBox(width: 12),
+                  OutlinedButton.icon(
+                    onPressed: _clearFilter,
+                    icon: const Icon(FontAwesomeIcons.xmark, size: 14),
+                    label: const Text('Xóa bộ lọc'),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                    ),
+                  ),
+                ],
+              ],
             ),
           ],
         ),
@@ -808,9 +829,9 @@ class _ChapNoiNTDPageState extends State<ChapNoiNTDPage> {
   Widget _buildChapNoiListView(ThemeData theme) {
     return ListView.builder(
       padding: const EdgeInsets.only(bottom: 16),
-      itemCount: chapNoiList.length,
+      itemCount: filteredChapNoiList.length,
       itemBuilder: (context, index) {
-        final chapNoi = chapNoiList[index];
+        final chapNoi = filteredChapNoiList[index];
         return _buildEnhancedChapNoiCard(theme, chapNoi, index);
       },
     );
@@ -1129,16 +1150,17 @@ class _ChapNoiNTDPageState extends State<ChapNoiNTDPage> {
     IconData icon;
     
     switch (status) {
-      case 1:
+      case 2:
         chipColor = Colors.green;
-        statusText = 'Đã chấp nhận';
+        statusText = 'Đạt';
         icon = FontAwesomeIcons.circleCheck;
         break;
-      case 2:
+      case 1:
         chipColor = Colors.red;
-        statusText = 'Đã từ chối';
+        statusText = 'Không đạt';
         icon = FontAwesomeIcons.circleXmark;
         break;
+      case 0:
       default:
         chipColor = Colors.orange;
         statusText = 'Chờ xử lý';
@@ -1183,6 +1205,45 @@ class _ChapNoiNTDPageState extends State<ChapNoiNTDPage> {
     }
   }
 
+  String _getListTitle() {
+    switch (selectedStatusFilter) {
+      case 0:
+        return 'Hồ Sơ Chờ Xử Lý';
+      case 1:
+        return 'Hồ Sơ Không Đạt';
+      case 2:
+        return 'Hồ Sơ Đạt';
+      default:
+        return 'Danh Sách Hồ Sơ Chấp Nhận';
+    }
+  }
+
+  String _getEmptyStateTitle() {
+    switch (selectedStatusFilter) {
+      case 0:
+        return 'Không có hồ sơ chờ xử lý';
+      case 1:
+        return 'Không có hồ sơ không đạt';
+      case 2:
+        return 'Không có hồ sơ đạt';
+      default:
+        return 'Chưa có hồ sơ chấp nhận nào';
+    }
+  }
+
+  String _getEmptyStateMessage() {
+    switch (selectedStatusFilter) {
+      case 0:
+        return 'Hiện tại không có hồ sơ nào đang chờ xử lý';
+      case 1:
+        return 'Hiện tại không có hồ sơ nào bị từ chối';
+      case 2:
+        return 'Hiện tại không có hồ sơ nào được chấp nhận';
+      default:
+        return 'Các hồ sơ ứng viên chấp nhận sẽ hiển thị tại đây';
+    }
+  }
+
   Widget _buildInfoChip(ThemeData theme, IconData icon, String text) {
     final colorScheme = theme.colorScheme;
     
@@ -1221,16 +1282,17 @@ class _ChapNoiNTDPageState extends State<ChapNoiNTDPage> {
     IconData icon;
     
     switch (status) {
-      case 1:
+      case 2:
         chipColor = Colors.green;
-        statusText = 'Đã chấp nhận';
+        statusText = 'Đạt';
         icon = Icons.check_circle;
         break;
-      case 2:
+      case 1:
         chipColor = Colors.red;
-        statusText = 'Đã từ chối';
+        statusText = 'Không đạt';
         icon = Icons.cancel;
         break;
+      case 0:
       default:
         chipColor = Colors.orange;
         statusText = 'Chờ xử lý';
@@ -1711,16 +1773,17 @@ class _ChapNoiDetailDialog extends StatelessWidget {
     IconData icon;
     
     switch (status) {
-      case 1:
+      case 2:
         chipColor = Colors.green;
-        statusText = 'Đã chấp nhận';
+        statusText = 'Đạt';
         icon = Icons.check_circle;
         break;
-      case 2:
+      case 1:
         chipColor = Colors.red;
-        statusText = 'Đã từ chối';
+        statusText = 'Không đạt';
         icon = Icons.cancel;
         break;
+      case 0:
       default:
         chipColor = Colors.orange;
         statusText = 'Chờ xử lý';

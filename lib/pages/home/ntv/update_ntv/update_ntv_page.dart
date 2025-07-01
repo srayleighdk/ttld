@@ -29,7 +29,6 @@ import 'package:ttld/models/tblHoSoUngVien/tblHoSoUngVien_model.dart';
 import 'package:ttld/pages/home/ntv/update_ntv/step1_personal_info.dart';
 import 'package:ttld/pages/home/ntv/update_ntv/step2_display_settings.dart';
 import 'package:ttld/pages/home/ntv/update_ntv/step3_job_preferences.dart';
-import 'package:ttld/pages/home/ntv/update_ntv/step4_confirmation.dart';
 
 class UpdateNTVPage extends StatefulWidget {
   final TblHoSoUngVienModel? hoSoUngVien;
@@ -45,14 +44,12 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
     0: GlobalKey<FormState>(),
     1: GlobalKey<FormState>(),
     2: GlobalKey<FormState>(),
-    3: GlobalKey<FormState>(),
   };
   int _currentStep = 0;
   final List<String> _steps = [
     'Thông tin\ncá nhân',
     'Hiện thị\nthông tin',
     'Việc làm\nmong muốn',
-    'Xác nhận',
   ];
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -599,13 +596,6 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
             _uvnvNoilamviecController.text = value?.id.toString() ?? '';
             tinhThanhmm = value;
           }),
-        );
-      case 3:
-        return Step4Confirmation(
-          formKey: _formKeys[3]!,
-          hoten: _hotenController.text,
-          email: _emailController.text,
-          onSubmit: _submitForm,
         );
       default:
         return Container();

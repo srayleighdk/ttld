@@ -24,6 +24,24 @@ class NTVApiService {
     }
   }
 
+  Future<List<TblHoSoUngVienModel>> getHoSoUngVienListByIdDn(String idDn) async {
+    try {
+      final response = await _dio.get(
+        ApiEndpoints.hosoUngVien,
+        queryParameters: {'idDn': idDn},
+      );
+      if (response.data == null || response.data['data'] == null) {
+        throw Exception('Invalid API response format');
+      }
+      List<TblHoSoUngVienModel> hoSoUngVienList = (response.data['data'] as List)
+          .map((json) => TblHoSoUngVienModel.fromJson(json))
+          .toList();
+      return hoSoUngVienList;
+    } catch (e) {
+      throw Exception('Failed to fetch HoSoUngVien list by idDn: $e');
+    }
+  }
+
   Future<TblHoSoUngVienModel> getHoSoUngVienById(int id) async {
     try {
       final response = await _dio
@@ -35,6 +53,29 @@ class NTVApiService {
     } catch (e) {
       print('error: $e');
       throw Exception('Failed to fetch HoSoUngVien by ID: $e');
+    }
+  }
+
+  Future<TblHoSoUngVienModel?> getHoSoUngVienByUvId(String uvId) async {
+    try {
+      final response = await _dio
+          .get(ApiEndpoints.hosoUngVien, queryParameters: {'uvId': uvId});
+      
+      if (response.data == null || response.data['data'] == null) {
+        return null;
+      }
+      
+      final data = response.data['data'];
+      if (data is List && data.isNotEmpty) {
+        return TblHoSoUngVienModel.fromJson(data.first);
+      } else if (data is Map<String, dynamic>) {
+        return TblHoSoUngVienModel.fromJson(data);
+      }
+      
+      return null;
+    } catch (e) {
+      print('error: $e');
+      return null;
     }
   }
 

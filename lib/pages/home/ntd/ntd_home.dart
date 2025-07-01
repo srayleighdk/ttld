@@ -243,34 +243,8 @@ class _NTDHomePageState extends State<NTDHomePage> {
                             color: theme.colorScheme.onSurface,
                             letterSpacing: 0.3,
                           ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
+                          softWrap: true,
                         ),
-                        if (ntd.ntdDiachichitiet != null) ...[
-                          const SizedBox(height: 4),
-                          Row(
-                            children: [
-                              Icon(
-                                FontAwesomeIcons.locationDot,
-                                size: 12,
-                                color: theme.colorScheme.onSurface
-                                    .withOpacity(0.6),
-                              ),
-                              const SizedBox(width: 4),
-                              Expanded(
-                                child: Text(
-                                  ntd.ntdDiachichitiet!,
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                    color: theme.colorScheme.onSurface
-                                        .withOpacity(0.6),
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
                       ],
                     ),
                   ),
@@ -405,9 +379,9 @@ class _NTDHomePageState extends State<NTDHomePage> {
           ),
           _buildKeyActionButtonItem(
             context,
-            FontAwesomeIcons.plus,
-            'Thêm TD',
-            '/ntd_home/create_tuyen_dung',
+            FontAwesomeIcons.chartLine,
+            'Tổng quan',
+            '/ntd_home/tong_quan',
             [Color(0xFF4CAF50), Color(0xFF2E7D32)], // Green gradient
           ),
           _buildKeyActionButtonItem(
@@ -552,7 +526,7 @@ class _NTDHomePageState extends State<NTDHomePage> {
         // Modern grid of quick access items
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
             borderRadius: BorderRadius.circular(20),
@@ -569,13 +543,20 @@ class _NTDHomePageState extends State<NTDHomePage> {
             ),
           ),
           child: GridView.count(
-            crossAxisCount: 3, // Changed to 3 for better layout
+            crossAxisCount: 4, // Changed to 4 icons per row
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            mainAxisSpacing: 16,
-            crossAxisSpacing: 16,
-            childAspectRatio: 0.9, // Adjusted for better proportions
+            mainAxisSpacing: 12,
+            crossAxisSpacing: 12,
+            childAspectRatio: 0.85, // Adjusted for 4 columns layout
             children: [
+              _buildQuickAccessItem(
+                context,
+                FontAwesomeIcons.plus,
+                'Thêm TD\nTuyển dụng mới',
+                '/ntd_home/create_tuyen_dung',
+                [Color(0xFF4CAF50), Color(0xFF2E7D32)], // Green gradient
+              ),
               _buildQuickAccessItem(
                 context,
                 FontAwesomeIcons.solidPenToSquare,
@@ -617,6 +598,13 @@ class _NTDHomePageState extends State<NTDHomePage> {
                 'Kết quả\nkết nối việc làm',
                 null,
                 [Color(0xFF00BCD4), Color(0xFF0097A7)], // Cyan gradient
+              ),
+              _buildQuickAccessItem(
+                context,
+                FontAwesomeIcons.fileContract,
+                'Hợp đồng\nlao động',
+                null,
+                [Color(0xFF795548), Color(0xFF5D4037)], // Brown gradient
               ),
             ],
           ),
@@ -694,20 +682,40 @@ class _NTDHomePageState extends State<NTDHomePage> {
         onTap: () {
           if (route != null) {
             try {
-              if (route == '/ntd_home/quan-ly-tuyen-dung') {
-                context.push(route, extra: userId);
-              } else if (route == '/ntd_home/quan-ly-nhan-vien') {
-                context.push(route, extra: userId);
-              } else if (route == '/ntd_home/ho-so-chap-noi') {
-                context.push(route, extra: {
-                  'tabIndex': 0,
-                });
+              // Allow "Thêm TD", "Cập nhật TT", and "Quản Lý Tuyển Dụng" features
+              if (route == '/ntd_home/create_tuyen_dung' || 
+                  route == '/update_ntd' || 
+                  route == '/ntd_home/quan-ly-tuyen-dung') {
+                if (route == '/ntd_home/quan-ly-tuyen-dung') {
+                  context.push(route, extra: userId);
+                } else if (route == '/ntd_home/quan-ly-nhan-vien') {
+                  context.push(route, extra: userId);
+                } else if (route == '/ntd_home/ho-so-chap-noi') {
+                  context.push(route, extra: {
+                    'tabIndex': 0,
+                  });
+                } else if (route == '/ntd_home/create_tuyen_dung') {
+                  context.push(route, extra: {
+                    'ntd': ntd,
+                    'isEdit': false,
+                  });
+                } else {
+                  context.push(route);
+                }
               } else {
-                context.push(route);
+                // Navigate to feature locked page for all other features
+                context.push('/feature-locked', extra: {
+                  'featureName': label.replaceAll('\n', ' '),
+                });
               }
             } catch (e) {
               debugPrint('Navigation error: $e');
             }
+          } else {
+            // Navigate to feature locked page for items with null routes
+            context.push('/feature-locked', extra: {
+              'featureName': label.replaceAll('\n', ' '),
+            });
           }
         },
         borderRadius: BorderRadius.circular(16),
@@ -728,42 +736,43 @@ class _NTDHomePageState extends State<NTDHomePage> {
             children: [
               // Icon with gradient background
               Container(
-                width: 48,
-                height: 48,
+                width: 40,
+                height: 40,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: gradientColors,
                   ),
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
                       color: gradientColors[0].withOpacity(0.3),
-                      blurRadius: 8,
-                      offset: const Offset(0, 3),
+                      blurRadius: 6,
+                      offset: const Offset(0, 2),
                     ),
                   ],
                 ),
                 child: Center(
                   child: Icon(
                     icon,
-                    size: 20,
+                    size: 18,
                     color: Colors.white,
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               // Label with improved typography
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 2),
                 child: Text(
                   label,
                   textAlign: TextAlign.center,
-                  style: theme.textTheme.labelMedium?.copyWith(
+                  style: theme.textTheme.labelSmall?.copyWith(
                     color: theme.colorScheme.onSurface,
                     fontWeight: FontWeight.w500,
-                    height: 1.2,
+                    height: 1.1,
+                    fontSize: 11,
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -912,30 +921,42 @@ class _NTDHomePageState extends State<NTDHomePage> {
                   ),
                 ),
                 // View all button
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.primary.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Xem tất cả',
-                        style: theme.textTheme.labelMedium?.copyWith(
-                          color: theme.colorScheme.primary,
-                          fontWeight: FontWeight.w600,
+                InkWell(
+                  onTap: () {
+                    try {
+                      context.push('/ntd_home/tim_ung_vien', extra: {
+                        'idDn': ntd?.idDoanhNghiep,
+                      });
+                    } catch (e) {
+                      debugPrint('Navigation error: $e');
+                    }
+                  },
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.primary.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Xem tất cả',
+                          style: theme.textTheme.labelMedium?.copyWith(
+                            color: theme.colorScheme.primary,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 4),
-                      Icon(
-                        FontAwesomeIcons.angleRight,
-                        size: 12,
-                        color: theme.colorScheme.primary,
-                      ),
-                    ],
+                        const SizedBox(width: 4),
+                        Icon(
+                          FontAwesomeIcons.angleRight,
+                          size: 12,
+                          color: theme.colorScheme.primary,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],

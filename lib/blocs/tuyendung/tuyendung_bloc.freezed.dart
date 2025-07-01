@@ -18,7 +18,16 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$TuyenDungEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String? ntdId, String? idUv) fetchList,
+    required TResult Function(
+            String? ntdId,
+            String? idUv,
+            int? limit,
+            int? page,
+            String? search,
+            String? status,
+            String? duyet,
+            String? id)
+        fetchList,
     required TResult Function(NTDTuyenDung tuyenDung) create,
     required TResult Function(NTDTuyenDung tuyenDung) update,
     required TResult Function(NTDTuyenDung tuyenDung) updateForm,
@@ -27,7 +36,9 @@ mixin _$TuyenDungEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String? ntdId, String? idUv)? fetchList,
+    TResult? Function(String? ntdId, String? idUv, int? limit, int? page,
+            String? search, String? status, String? duyet, String? id)?
+        fetchList,
     TResult? Function(NTDTuyenDung tuyenDung)? create,
     TResult? Function(NTDTuyenDung tuyenDung)? update,
     TResult? Function(NTDTuyenDung tuyenDung)? updateForm,
@@ -36,7 +47,9 @@ mixin _$TuyenDungEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String? ntdId, String? idUv)? fetchList,
+    TResult Function(String? ntdId, String? idUv, int? limit, int? page,
+            String? search, String? status, String? duyet, String? id)?
+        fetchList,
     TResult Function(NTDTuyenDung tuyenDung)? create,
     TResult Function(NTDTuyenDung tuyenDung)? update,
     TResult Function(NTDTuyenDung tuyenDung)? updateForm,
@@ -101,7 +114,15 @@ abstract class _$$FetchTuyenDungListImplCopyWith<$Res> {
           $Res Function(_$FetchTuyenDungListImpl) then) =
       __$$FetchTuyenDungListImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String? ntdId, String? idUv});
+  $Res call(
+      {String? ntdId,
+      String? idUv,
+      int? limit,
+      int? page,
+      String? search,
+      String? status,
+      String? duyet,
+      String? id});
 }
 
 /// @nodoc
@@ -119,6 +140,12 @@ class __$$FetchTuyenDungListImplCopyWithImpl<$Res>
   $Res call({
     Object? ntdId = freezed,
     Object? idUv = freezed,
+    Object? limit = freezed,
+    Object? page = freezed,
+    Object? search = freezed,
+    Object? status = freezed,
+    Object? duyet = freezed,
+    Object? id = freezed,
   }) {
     return _then(_$FetchTuyenDungListImpl(
       freezed == ntdId
@@ -129,6 +156,30 @@ class __$$FetchTuyenDungListImplCopyWithImpl<$Res>
           ? _value.idUv
           : idUv // ignore: cast_nullable_to_non_nullable
               as String?,
+      limit: freezed == limit
+          ? _value.limit
+          : limit // ignore: cast_nullable_to_non_nullable
+              as int?,
+      page: freezed == page
+          ? _value.page
+          : page // ignore: cast_nullable_to_non_nullable
+              as int?,
+      search: freezed == search
+          ? _value.search
+          : search // ignore: cast_nullable_to_non_nullable
+              as String?,
+      status: freezed == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as String?,
+      duyet: freezed == duyet
+          ? _value.duyet
+          : duyet // ignore: cast_nullable_to_non_nullable
+              as String?,
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -136,16 +187,35 @@ class __$$FetchTuyenDungListImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$FetchTuyenDungListImpl implements FetchTuyenDungList {
-  const _$FetchTuyenDungListImpl(this.ntdId, {this.idUv});
+  const _$FetchTuyenDungListImpl(this.ntdId,
+      {this.idUv,
+      this.limit,
+      this.page,
+      this.search,
+      this.status,
+      this.duyet,
+      this.id});
 
   @override
   final String? ntdId;
   @override
   final String? idUv;
+  @override
+  final int? limit;
+  @override
+  final int? page;
+  @override
+  final String? search;
+  @override
+  final String? status;
+  @override
+  final String? duyet;
+  @override
+  final String? id;
 
   @override
   String toString() {
-    return 'TuyenDungEvent.fetchList(ntdId: $ntdId, idUv: $idUv)';
+    return 'TuyenDungEvent.fetchList(ntdId: $ntdId, idUv: $idUv, limit: $limit, page: $page, search: $search, status: $status, duyet: $duyet, id: $id)';
   }
 
   @override
@@ -154,11 +224,18 @@ class _$FetchTuyenDungListImpl implements FetchTuyenDungList {
         (other.runtimeType == runtimeType &&
             other is _$FetchTuyenDungListImpl &&
             (identical(other.ntdId, ntdId) || other.ntdId == ntdId) &&
-            (identical(other.idUv, idUv) || other.idUv == idUv));
+            (identical(other.idUv, idUv) || other.idUv == idUv) &&
+            (identical(other.limit, limit) || other.limit == limit) &&
+            (identical(other.page, page) || other.page == page) &&
+            (identical(other.search, search) || other.search == search) &&
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.duyet, duyet) || other.duyet == duyet) &&
+            (identical(other.id, id) || other.id == id));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, ntdId, idUv);
+  int get hashCode => Object.hash(
+      runtimeType, ntdId, idUv, limit, page, search, status, duyet, id);
 
   /// Create a copy of TuyenDungEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -172,31 +249,44 @@ class _$FetchTuyenDungListImpl implements FetchTuyenDungList {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String? ntdId, String? idUv) fetchList,
+    required TResult Function(
+            String? ntdId,
+            String? idUv,
+            int? limit,
+            int? page,
+            String? search,
+            String? status,
+            String? duyet,
+            String? id)
+        fetchList,
     required TResult Function(NTDTuyenDung tuyenDung) create,
     required TResult Function(NTDTuyenDung tuyenDung) update,
     required TResult Function(NTDTuyenDung tuyenDung) updateForm,
     required TResult Function(String idTuyenDung, String? userId) delete,
   }) {
-    return fetchList(ntdId, idUv);
+    return fetchList(ntdId, idUv, limit, page, search, status, duyet, id);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String? ntdId, String? idUv)? fetchList,
+    TResult? Function(String? ntdId, String? idUv, int? limit, int? page,
+            String? search, String? status, String? duyet, String? id)?
+        fetchList,
     TResult? Function(NTDTuyenDung tuyenDung)? create,
     TResult? Function(NTDTuyenDung tuyenDung)? update,
     TResult? Function(NTDTuyenDung tuyenDung)? updateForm,
     TResult? Function(String idTuyenDung, String? userId)? delete,
   }) {
-    return fetchList?.call(ntdId, idUv);
+    return fetchList?.call(ntdId, idUv, limit, page, search, status, duyet, id);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String? ntdId, String? idUv)? fetchList,
+    TResult Function(String? ntdId, String? idUv, int? limit, int? page,
+            String? search, String? status, String? duyet, String? id)?
+        fetchList,
     TResult Function(NTDTuyenDung tuyenDung)? create,
     TResult Function(NTDTuyenDung tuyenDung)? update,
     TResult Function(NTDTuyenDung tuyenDung)? updateForm,
@@ -204,7 +294,7 @@ class _$FetchTuyenDungListImpl implements FetchTuyenDungList {
     required TResult orElse(),
   }) {
     if (fetchList != null) {
-      return fetchList(ntdId, idUv);
+      return fetchList(ntdId, idUv, limit, page, search, status, duyet, id);
     }
     return orElse();
   }
@@ -251,11 +341,23 @@ class _$FetchTuyenDungListImpl implements FetchTuyenDungList {
 }
 
 abstract class FetchTuyenDungList implements TuyenDungEvent {
-  const factory FetchTuyenDungList(final String? ntdId, {final String? idUv}) =
-      _$FetchTuyenDungListImpl;
+  const factory FetchTuyenDungList(final String? ntdId,
+      {final String? idUv,
+      final int? limit,
+      final int? page,
+      final String? search,
+      final String? status,
+      final String? duyet,
+      final String? id}) = _$FetchTuyenDungListImpl;
 
   String? get ntdId;
   String? get idUv;
+  int? get limit;
+  int? get page;
+  String? get search;
+  String? get status;
+  String? get duyet;
+  String? get id;
 
   /// Create a copy of TuyenDungEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -346,7 +448,16 @@ class _$CreateTuyenDungImpl implements CreateTuyenDung {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String? ntdId, String? idUv) fetchList,
+    required TResult Function(
+            String? ntdId,
+            String? idUv,
+            int? limit,
+            int? page,
+            String? search,
+            String? status,
+            String? duyet,
+            String? id)
+        fetchList,
     required TResult Function(NTDTuyenDung tuyenDung) create,
     required TResult Function(NTDTuyenDung tuyenDung) update,
     required TResult Function(NTDTuyenDung tuyenDung) updateForm,
@@ -358,7 +469,9 @@ class _$CreateTuyenDungImpl implements CreateTuyenDung {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String? ntdId, String? idUv)? fetchList,
+    TResult? Function(String? ntdId, String? idUv, int? limit, int? page,
+            String? search, String? status, String? duyet, String? id)?
+        fetchList,
     TResult? Function(NTDTuyenDung tuyenDung)? create,
     TResult? Function(NTDTuyenDung tuyenDung)? update,
     TResult? Function(NTDTuyenDung tuyenDung)? updateForm,
@@ -370,7 +483,9 @@ class _$CreateTuyenDungImpl implements CreateTuyenDung {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String? ntdId, String? idUv)? fetchList,
+    TResult Function(String? ntdId, String? idUv, int? limit, int? page,
+            String? search, String? status, String? duyet, String? id)?
+        fetchList,
     TResult Function(NTDTuyenDung tuyenDung)? create,
     TResult Function(NTDTuyenDung tuyenDung)? update,
     TResult Function(NTDTuyenDung tuyenDung)? updateForm,
@@ -519,7 +634,16 @@ class _$UpdateTuyenDungImpl implements UpdateTuyenDung {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String? ntdId, String? idUv) fetchList,
+    required TResult Function(
+            String? ntdId,
+            String? idUv,
+            int? limit,
+            int? page,
+            String? search,
+            String? status,
+            String? duyet,
+            String? id)
+        fetchList,
     required TResult Function(NTDTuyenDung tuyenDung) create,
     required TResult Function(NTDTuyenDung tuyenDung) update,
     required TResult Function(NTDTuyenDung tuyenDung) updateForm,
@@ -531,7 +655,9 @@ class _$UpdateTuyenDungImpl implements UpdateTuyenDung {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String? ntdId, String? idUv)? fetchList,
+    TResult? Function(String? ntdId, String? idUv, int? limit, int? page,
+            String? search, String? status, String? duyet, String? id)?
+        fetchList,
     TResult? Function(NTDTuyenDung tuyenDung)? create,
     TResult? Function(NTDTuyenDung tuyenDung)? update,
     TResult? Function(NTDTuyenDung tuyenDung)? updateForm,
@@ -543,7 +669,9 @@ class _$UpdateTuyenDungImpl implements UpdateTuyenDung {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String? ntdId, String? idUv)? fetchList,
+    TResult Function(String? ntdId, String? idUv, int? limit, int? page,
+            String? search, String? status, String? duyet, String? id)?
+        fetchList,
     TResult Function(NTDTuyenDung tuyenDung)? create,
     TResult Function(NTDTuyenDung tuyenDung)? update,
     TResult Function(NTDTuyenDung tuyenDung)? updateForm,
@@ -692,7 +820,16 @@ class _$UpdateTuyenDungFormImpl implements UpdateTuyenDungForm {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String? ntdId, String? idUv) fetchList,
+    required TResult Function(
+            String? ntdId,
+            String? idUv,
+            int? limit,
+            int? page,
+            String? search,
+            String? status,
+            String? duyet,
+            String? id)
+        fetchList,
     required TResult Function(NTDTuyenDung tuyenDung) create,
     required TResult Function(NTDTuyenDung tuyenDung) update,
     required TResult Function(NTDTuyenDung tuyenDung) updateForm,
@@ -704,7 +841,9 @@ class _$UpdateTuyenDungFormImpl implements UpdateTuyenDungForm {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String? ntdId, String? idUv)? fetchList,
+    TResult? Function(String? ntdId, String? idUv, int? limit, int? page,
+            String? search, String? status, String? duyet, String? id)?
+        fetchList,
     TResult? Function(NTDTuyenDung tuyenDung)? create,
     TResult? Function(NTDTuyenDung tuyenDung)? update,
     TResult? Function(NTDTuyenDung tuyenDung)? updateForm,
@@ -716,7 +855,9 @@ class _$UpdateTuyenDungFormImpl implements UpdateTuyenDungForm {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String? ntdId, String? idUv)? fetchList,
+    TResult Function(String? ntdId, String? idUv, int? limit, int? page,
+            String? search, String? status, String? duyet, String? id)?
+        fetchList,
     TResult Function(NTDTuyenDung tuyenDung)? create,
     TResult Function(NTDTuyenDung tuyenDung)? update,
     TResult Function(NTDTuyenDung tuyenDung)? updateForm,
@@ -861,7 +1002,16 @@ class _$DeleteTuyenDungImpl implements DeleteTuyenDung {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String? ntdId, String? idUv) fetchList,
+    required TResult Function(
+            String? ntdId,
+            String? idUv,
+            int? limit,
+            int? page,
+            String? search,
+            String? status,
+            String? duyet,
+            String? id)
+        fetchList,
     required TResult Function(NTDTuyenDung tuyenDung) create,
     required TResult Function(NTDTuyenDung tuyenDung) update,
     required TResult Function(NTDTuyenDung tuyenDung) updateForm,
@@ -873,7 +1023,9 @@ class _$DeleteTuyenDungImpl implements DeleteTuyenDung {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String? ntdId, String? idUv)? fetchList,
+    TResult? Function(String? ntdId, String? idUv, int? limit, int? page,
+            String? search, String? status, String? duyet, String? id)?
+        fetchList,
     TResult? Function(NTDTuyenDung tuyenDung)? create,
     TResult? Function(NTDTuyenDung tuyenDung)? update,
     TResult? Function(NTDTuyenDung tuyenDung)? updateForm,
@@ -885,7 +1037,9 @@ class _$DeleteTuyenDungImpl implements DeleteTuyenDung {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String? ntdId, String? idUv)? fetchList,
+    TResult Function(String? ntdId, String? idUv, int? limit, int? page,
+            String? search, String? status, String? duyet, String? id)?
+        fetchList,
     TResult Function(NTDTuyenDung tuyenDung)? create,
     TResult Function(NTDTuyenDung tuyenDung)? update,
     TResult Function(NTDTuyenDung tuyenDung)? updateForm,
@@ -959,7 +1113,9 @@ mixin _$TuyenDungState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<NTDTuyenDung> tuyenDungList) loaded,
+    required TResult Function(List<NTDTuyenDung> tuyenDungList, int currentPage,
+            int totalPages, int totalItems, int limit)
+        loaded,
     required TResult Function(String message) error,
     required TResult Function(NTDTuyenDung tuyenDung, bool isValidated)
         creating,
@@ -969,7 +1125,9 @@ mixin _$TuyenDungState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<NTDTuyenDung> tuyenDungList)? loaded,
+    TResult? Function(List<NTDTuyenDung> tuyenDungList, int currentPage,
+            int totalPages, int totalItems, int limit)?
+        loaded,
     TResult? Function(String message)? error,
     TResult? Function(NTDTuyenDung tuyenDung, bool isValidated)? creating,
   }) =>
@@ -978,7 +1136,9 @@ mixin _$TuyenDungState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<NTDTuyenDung> tuyenDungList)? loaded,
+    TResult Function(List<NTDTuyenDung> tuyenDungList, int currentPage,
+            int totalPages, int totalItems, int limit)?
+        loaded,
     TResult Function(String message)? error,
     TResult Function(NTDTuyenDung tuyenDung, bool isValidated)? creating,
     required TResult orElse(),
@@ -1078,7 +1238,9 @@ class _$TuyenDungInitialImpl implements TuyenDungInitial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<NTDTuyenDung> tuyenDungList) loaded,
+    required TResult Function(List<NTDTuyenDung> tuyenDungList, int currentPage,
+            int totalPages, int totalItems, int limit)
+        loaded,
     required TResult Function(String message) error,
     required TResult Function(NTDTuyenDung tuyenDung, bool isValidated)
         creating,
@@ -1091,7 +1253,9 @@ class _$TuyenDungInitialImpl implements TuyenDungInitial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<NTDTuyenDung> tuyenDungList)? loaded,
+    TResult? Function(List<NTDTuyenDung> tuyenDungList, int currentPage,
+            int totalPages, int totalItems, int limit)?
+        loaded,
     TResult? Function(String message)? error,
     TResult? Function(NTDTuyenDung tuyenDung, bool isValidated)? creating,
   }) {
@@ -1103,7 +1267,9 @@ class _$TuyenDungInitialImpl implements TuyenDungInitial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<NTDTuyenDung> tuyenDungList)? loaded,
+    TResult Function(List<NTDTuyenDung> tuyenDungList, int currentPage,
+            int totalPages, int totalItems, int limit)?
+        loaded,
     TResult Function(String message)? error,
     TResult Function(NTDTuyenDung tuyenDung, bool isValidated)? creating,
     required TResult orElse(),
@@ -1202,7 +1368,9 @@ class _$TuyenDungLoadingImpl implements TuyenDungLoading {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<NTDTuyenDung> tuyenDungList) loaded,
+    required TResult Function(List<NTDTuyenDung> tuyenDungList, int currentPage,
+            int totalPages, int totalItems, int limit)
+        loaded,
     required TResult Function(String message) error,
     required TResult Function(NTDTuyenDung tuyenDung, bool isValidated)
         creating,
@@ -1215,7 +1383,9 @@ class _$TuyenDungLoadingImpl implements TuyenDungLoading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<NTDTuyenDung> tuyenDungList)? loaded,
+    TResult? Function(List<NTDTuyenDung> tuyenDungList, int currentPage,
+            int totalPages, int totalItems, int limit)?
+        loaded,
     TResult? Function(String message)? error,
     TResult? Function(NTDTuyenDung tuyenDung, bool isValidated)? creating,
   }) {
@@ -1227,7 +1397,9 @@ class _$TuyenDungLoadingImpl implements TuyenDungLoading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<NTDTuyenDung> tuyenDungList)? loaded,
+    TResult Function(List<NTDTuyenDung> tuyenDungList, int currentPage,
+            int totalPages, int totalItems, int limit)?
+        loaded,
     TResult Function(String message)? error,
     TResult Function(NTDTuyenDung tuyenDung, bool isValidated)? creating,
     required TResult orElse(),
@@ -1289,7 +1461,12 @@ abstract class _$$TuyenDungLoadedImplCopyWith<$Res> {
           $Res Function(_$TuyenDungLoadedImpl) then) =
       __$$TuyenDungLoadedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({List<NTDTuyenDung> tuyenDungList});
+  $Res call(
+      {List<NTDTuyenDung> tuyenDungList,
+      int currentPage,
+      int totalPages,
+      int totalItems,
+      int limit});
 }
 
 /// @nodoc
@@ -1306,12 +1483,32 @@ class __$$TuyenDungLoadedImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? tuyenDungList = null,
+    Object? currentPage = null,
+    Object? totalPages = null,
+    Object? totalItems = null,
+    Object? limit = null,
   }) {
     return _then(_$TuyenDungLoadedImpl(
       null == tuyenDungList
           ? _value._tuyenDungList
           : tuyenDungList // ignore: cast_nullable_to_non_nullable
               as List<NTDTuyenDung>,
+      currentPage: null == currentPage
+          ? _value.currentPage
+          : currentPage // ignore: cast_nullable_to_non_nullable
+              as int,
+      totalPages: null == totalPages
+          ? _value.totalPages
+          : totalPages // ignore: cast_nullable_to_non_nullable
+              as int,
+      totalItems: null == totalItems
+          ? _value.totalItems
+          : totalItems // ignore: cast_nullable_to_non_nullable
+              as int,
+      limit: null == limit
+          ? _value.limit
+          : limit // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -1319,7 +1516,11 @@ class __$$TuyenDungLoadedImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$TuyenDungLoadedImpl implements TuyenDungLoaded {
-  const _$TuyenDungLoadedImpl(final List<NTDTuyenDung> tuyenDungList)
+  const _$TuyenDungLoadedImpl(final List<NTDTuyenDung> tuyenDungList,
+      {this.currentPage = 1,
+      this.totalPages = 1,
+      this.totalItems = 0,
+      this.limit = 10})
       : _tuyenDungList = tuyenDungList;
 
   final List<NTDTuyenDung> _tuyenDungList;
@@ -1331,8 +1532,21 @@ class _$TuyenDungLoadedImpl implements TuyenDungLoaded {
   }
 
   @override
+  @JsonKey()
+  final int currentPage;
+  @override
+  @JsonKey()
+  final int totalPages;
+  @override
+  @JsonKey()
+  final int totalItems;
+  @override
+  @JsonKey()
+  final int limit;
+
+  @override
   String toString() {
-    return 'TuyenDungState.loaded(tuyenDungList: $tuyenDungList)';
+    return 'TuyenDungState.loaded(tuyenDungList: $tuyenDungList, currentPage: $currentPage, totalPages: $totalPages, totalItems: $totalItems, limit: $limit)';
   }
 
   @override
@@ -1341,12 +1555,24 @@ class _$TuyenDungLoadedImpl implements TuyenDungLoaded {
         (other.runtimeType == runtimeType &&
             other is _$TuyenDungLoadedImpl &&
             const DeepCollectionEquality()
-                .equals(other._tuyenDungList, _tuyenDungList));
+                .equals(other._tuyenDungList, _tuyenDungList) &&
+            (identical(other.currentPage, currentPage) ||
+                other.currentPage == currentPage) &&
+            (identical(other.totalPages, totalPages) ||
+                other.totalPages == totalPages) &&
+            (identical(other.totalItems, totalItems) ||
+                other.totalItems == totalItems) &&
+            (identical(other.limit, limit) || other.limit == limit));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(_tuyenDungList));
+      runtimeType,
+      const DeepCollectionEquality().hash(_tuyenDungList),
+      currentPage,
+      totalPages,
+      totalItems,
+      limit);
 
   /// Create a copy of TuyenDungState
   /// with the given fields replaced by the non-null parameter values.
@@ -1362,12 +1588,14 @@ class _$TuyenDungLoadedImpl implements TuyenDungLoaded {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<NTDTuyenDung> tuyenDungList) loaded,
+    required TResult Function(List<NTDTuyenDung> tuyenDungList, int currentPage,
+            int totalPages, int totalItems, int limit)
+        loaded,
     required TResult Function(String message) error,
     required TResult Function(NTDTuyenDung tuyenDung, bool isValidated)
         creating,
   }) {
-    return loaded(tuyenDungList);
+    return loaded(tuyenDungList, currentPage, totalPages, totalItems, limit);
   }
 
   @override
@@ -1375,11 +1603,14 @@ class _$TuyenDungLoadedImpl implements TuyenDungLoaded {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<NTDTuyenDung> tuyenDungList)? loaded,
+    TResult? Function(List<NTDTuyenDung> tuyenDungList, int currentPage,
+            int totalPages, int totalItems, int limit)?
+        loaded,
     TResult? Function(String message)? error,
     TResult? Function(NTDTuyenDung tuyenDung, bool isValidated)? creating,
   }) {
-    return loaded?.call(tuyenDungList);
+    return loaded?.call(
+        tuyenDungList, currentPage, totalPages, totalItems, limit);
   }
 
   @override
@@ -1387,13 +1618,15 @@ class _$TuyenDungLoadedImpl implements TuyenDungLoaded {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<NTDTuyenDung> tuyenDungList)? loaded,
+    TResult Function(List<NTDTuyenDung> tuyenDungList, int currentPage,
+            int totalPages, int totalItems, int limit)?
+        loaded,
     TResult Function(String message)? error,
     TResult Function(NTDTuyenDung tuyenDung, bool isValidated)? creating,
     required TResult orElse(),
   }) {
     if (loaded != null) {
-      return loaded(tuyenDungList);
+      return loaded(tuyenDungList, currentPage, totalPages, totalItems, limit);
     }
     return orElse();
   }
@@ -1440,10 +1673,17 @@ class _$TuyenDungLoadedImpl implements TuyenDungLoaded {
 }
 
 abstract class TuyenDungLoaded implements TuyenDungState {
-  const factory TuyenDungLoaded(final List<NTDTuyenDung> tuyenDungList) =
-      _$TuyenDungLoadedImpl;
+  const factory TuyenDungLoaded(final List<NTDTuyenDung> tuyenDungList,
+      {final int currentPage,
+      final int totalPages,
+      final int totalItems,
+      final int limit}) = _$TuyenDungLoadedImpl;
 
   List<NTDTuyenDung> get tuyenDungList;
+  int get currentPage;
+  int get totalPages;
+  int get totalItems;
+  int get limit;
 
   /// Create a copy of TuyenDungState
   /// with the given fields replaced by the non-null parameter values.
@@ -1523,7 +1763,9 @@ class _$TuyenDungErrorImpl implements TuyenDungError {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<NTDTuyenDung> tuyenDungList) loaded,
+    required TResult Function(List<NTDTuyenDung> tuyenDungList, int currentPage,
+            int totalPages, int totalItems, int limit)
+        loaded,
     required TResult Function(String message) error,
     required TResult Function(NTDTuyenDung tuyenDung, bool isValidated)
         creating,
@@ -1536,7 +1778,9 @@ class _$TuyenDungErrorImpl implements TuyenDungError {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<NTDTuyenDung> tuyenDungList)? loaded,
+    TResult? Function(List<NTDTuyenDung> tuyenDungList, int currentPage,
+            int totalPages, int totalItems, int limit)?
+        loaded,
     TResult? Function(String message)? error,
     TResult? Function(NTDTuyenDung tuyenDung, bool isValidated)? creating,
   }) {
@@ -1548,7 +1792,9 @@ class _$TuyenDungErrorImpl implements TuyenDungError {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<NTDTuyenDung> tuyenDungList)? loaded,
+    TResult Function(List<NTDTuyenDung> tuyenDungList, int currentPage,
+            int totalPages, int totalItems, int limit)?
+        loaded,
     TResult Function(String message)? error,
     TResult Function(NTDTuyenDung tuyenDung, bool isValidated)? creating,
     required TResult orElse(),
@@ -1707,7 +1953,9 @@ class _$CreateTuyenDungStateImpl implements CreateTuyenDungState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(List<NTDTuyenDung> tuyenDungList) loaded,
+    required TResult Function(List<NTDTuyenDung> tuyenDungList, int currentPage,
+            int totalPages, int totalItems, int limit)
+        loaded,
     required TResult Function(String message) error,
     required TResult Function(NTDTuyenDung tuyenDung, bool isValidated)
         creating,
@@ -1720,7 +1968,9 @@ class _$CreateTuyenDungStateImpl implements CreateTuyenDungState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(List<NTDTuyenDung> tuyenDungList)? loaded,
+    TResult? Function(List<NTDTuyenDung> tuyenDungList, int currentPage,
+            int totalPages, int totalItems, int limit)?
+        loaded,
     TResult? Function(String message)? error,
     TResult? Function(NTDTuyenDung tuyenDung, bool isValidated)? creating,
   }) {
@@ -1732,7 +1982,9 @@ class _$CreateTuyenDungStateImpl implements CreateTuyenDungState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(List<NTDTuyenDung> tuyenDungList)? loaded,
+    TResult Function(List<NTDTuyenDung> tuyenDungList, int currentPage,
+            int totalPages, int totalItems, int limit)?
+        loaded,
     TResult Function(String message)? error,
     TResult Function(NTDTuyenDung tuyenDung, bool isValidated)? creating,
     required TResult orElse(),

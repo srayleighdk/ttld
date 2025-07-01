@@ -24,9 +24,27 @@ class TuyenDungBloc extends Bloc<TuyenDungEvent, TuyenDungState> {
   ) async {
     emit(TuyenDungLoading());
     try {
-      final tuyenDungList =
-          await _repository.getTuyenDungList(event.ntdId, idUv: event.idUv);
-      emit(TuyenDungLoaded(tuyenDungList));
+      final result = await _repository.getTuyenDungList(
+        event.ntdId,
+        idUv: event.idUv,
+        limit: event.limit,
+        page: event.page,
+        search: event.search,
+        status: event.status,
+        duyet: event.duyet,
+        id: event.id,
+      );
+      
+      final tuyenDungList = result['data'] as List<NTDTuyenDung>;
+      final pagination = result['pagination'] as Map<String, dynamic>;
+      
+      emit(TuyenDungLoaded(
+        tuyenDungList,
+        currentPage: pagination['currentPage'] as int,
+        totalPages: pagination['totalPages'] as int,
+        totalItems: pagination['totalItems'] as int,
+        limit: pagination['limit'] as int,
+      ));
     } catch (e) {
       emit(TuyenDungError(e.toString()));
     }
@@ -38,11 +56,20 @@ class TuyenDungBloc extends Bloc<TuyenDungEvent, TuyenDungState> {
   ) async {
     emit(TuyenDungLoading());
     try {
-      final newTuyenDung = await _repository.createTuyenDung(event.tuyenDung);
+      await _repository.createTuyenDung(event.tuyenDung);
       // After creating, fetch the complete list to ensure we have all data
-      final tuyenDungList =
+      final result =
           await _repository.getTuyenDungList(event.tuyenDung.idDoanhNghiep);
-      emit(TuyenDungLoaded(tuyenDungList));
+      final tuyenDungList = result['data'] as List<NTDTuyenDung>;
+      final pagination = result['pagination'] as Map<String, dynamic>;
+      
+      emit(TuyenDungLoaded(
+        tuyenDungList,
+        currentPage: pagination['currentPage'] as int,
+        totalPages: pagination['totalPages'] as int,
+        totalItems: pagination['totalItems'] as int,
+        limit: pagination['limit'] as int,
+      ));
     } catch (e) {
       emit(TuyenDungError(e.toString()));
     }
@@ -62,7 +89,13 @@ class TuyenDungBloc extends Bloc<TuyenDungEvent, TuyenDungState> {
             ? updatedTuyenDung
             : td;
       }).toList();
-      emit(TuyenDungLoaded(updatedList));
+      emit(TuyenDungLoaded(
+        updatedList,
+        currentPage: currentState.currentPage,
+        totalPages: currentState.totalPages,
+        totalItems: currentState.totalItems,
+        limit: currentState.limit,
+      ));
     } catch (e) {
       emit(TuyenDungError(e.toString()));
     }
@@ -86,8 +119,17 @@ class TuyenDungBloc extends Bloc<TuyenDungEvent, TuyenDungState> {
     try {
       await _repository.deleteTuyenDung(event.idTuyenDung);
       // After deleting, fetch the complete list to ensure we have all data
-      final tuyenDungList = await _repository.getTuyenDungList(event.userId);
-      emit(TuyenDungLoaded(tuyenDungList));
+      final result = await _repository.getTuyenDungList(event.userId);
+      final tuyenDungList = result['data'] as List<NTDTuyenDung>;
+      final pagination = result['pagination'] as Map<String, dynamic>;
+      
+      emit(TuyenDungLoaded(
+        tuyenDungList,
+        currentPage: pagination['currentPage'] as int,
+        totalPages: pagination['totalPages'] as int,
+        totalItems: pagination['totalItems'] as int,
+        limit: pagination['limit'] as int,
+      ));
     } catch (e) {
       emit(TuyenDungError(e.toString()));
     }

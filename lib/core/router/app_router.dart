@@ -18,6 +18,9 @@ import 'package:ttld/pages/home/home_page.dart';
 import 'package:ttld/pages/home/ntd/create_tuyen_dung/create_tuyen_dung.dart';
 import 'package:ttld/pages/home/ntd/ntd_home.dart';
 import 'package:ttld/pages/home/ntd/ntd_tuyendung_info_page.dart';
+import 'package:ttld/pages/home/ntd/tim_ung_vien_page.dart';
+import 'package:ttld/pages/home/ntd/tong_quan_page.dart';
+import 'package:ttld/pages/feature_locked_page.dart';
 import 'package:ttld/pages/home/ntd/quan_ly_nhan_vien/create_nhan_vien.dart';
 import 'package:ttld/pages/home/ntd/quan_ly_nhan_vien/quan_ly_nhan_vien.dart';
 import 'package:ttld/pages/home/ntd/quan_ly_tuyen_dung/quan_ly_tuyen_dung.dart';
@@ -267,6 +270,18 @@ class AppRouter {
             const NTDHomePage(),
         routes: [
           GoRoute(
+            path: '/tong_quan',
+            builder: (context, state) => const TongQuanPage(),
+          ),
+          GoRoute(
+            path: '/tim_ung_vien',
+            builder: (context, state) {
+              final extra = state.extra as Map<String, dynamic>?;
+              final idDn = extra?['idDn'] as String?;
+              return TimUngVienPage(idDn: idDn);
+            },
+          ),
+          GoRoute(
             path: '/update_ntd',
             builder: (context, state) => const UpdateNTDPage(),
           ),
@@ -372,6 +387,14 @@ class AppRouter {
         path: '/error', // Default home route
         builder: (BuildContext context, GoRouterState state) =>
             const ErrorPage(),
+      ),
+      GoRoute(
+        path: '/feature-locked',
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          final featureName = extra?['featureName'] as String?;
+          return FeatureLockedPage(featureName: featureName);
+        },
       ),
       // SGDVLRegistrationPage route moved to be a child of /ntv_home
     ],

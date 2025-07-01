@@ -6,7 +6,16 @@ class TuyenDungApiService {
 
   TuyenDungApiService(this._dio);
 
-  Future<Response> getTuyenDungList(String? ntdId, {String? idUv}) async {
+  Future<Response> getTuyenDungList(
+    String? ntdId, {
+    String? idUv,
+    int? limit,
+    int? page,
+    String? search,
+    String? status,
+    String? duyet,
+    String? id,
+  }) async {
     try {
       // Build query parameters
       final queryParams = <String, dynamic>{};
@@ -15,6 +24,24 @@ class TuyenDungApiService {
       }
       if (idUv != null) {
         queryParams['idUv'] = idUv;
+      }
+      if (limit != null) {
+        queryParams['limit'] = limit;
+      }
+      if (page != null) {
+        queryParams['page'] = page;
+      }
+      if (search != null && search.isNotEmpty) {
+        queryParams['search'] = search;
+      }
+      if (status != null && status.isNotEmpty) {
+        queryParams['status'] = status;
+      }
+      if (duyet != null && duyet.isNotEmpty) {
+        queryParams['duyet'] = duyet;
+      }
+      if (id != null && id.isNotEmpty) {
+        queryParams['id'] = id;
       }
 
       final response = await _dio.get(

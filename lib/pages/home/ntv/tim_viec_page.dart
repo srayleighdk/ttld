@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -21,6 +22,13 @@ import 'package:ttld/features/auth/bloc/auth_state.dart';
 import 'package:ttld/blocs/chapnoi/chapnoi_bloc.dart';
 import 'package:ttld/models/chapnoi/chapnoi_model.dart';
 import 'package:ttld/core/utils/toast_utils.dart';
+import 'package:ttld/blocs/tblHoSoUngVien/tblhosoungvien_bloc.dart';
+import 'package:ttld/blocs/tblHoSoUngVien/tblhosoungvien_event.dart';
+import 'package:ttld/blocs/tblHoSoUngVien/tblhosoungvien_state.dart';
+import 'package:ttld/repositories/tblHoSoUngVien/ntv_repository.dart';
+import 'package:ttld/models/tblHoSoUngVien/tblHoSoUngVien_model.dart';
+import 'package:ttld/pages/home/ntv/update_ntv/update_ntv_page.dart';
+import 'package:go_router/go_router.dart';
 
 class TimViecPage extends StatefulWidget {
   const TimViecPage({super.key});
@@ -38,8 +46,13 @@ class _TimViecPageState extends State<TimViecPage> {
   late final TinhBloc _tinhBloc;
   late final AuthBloc _authBloc;
   late final ChapNoiBloc _chapNoiBloc;
+  late final NTVBloc _ntvBloc;
   // Track active subscriptions for cleanup
   final List<StreamSubscription> _activeSubscriptions = [];
+  
+  // User profile data
+  TblHoSoUngVienModel? _userProfile;
+  bool _isCheckingProfile = true;
 
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
@@ -62,6 +75,13 @@ class _TimViecPageState extends State<TimViecPage> {
 
   // Filter visibility
   bool _showFilters = false;
+
+  // Pagination variables
+  int _currentPage = 1;
+  int _totalPages = 1;
+  int _totalItems = 0;
+  int _limit = 10;
+  bool _isLoadingMore = false;
 
   // Salary ranges
   final List<Map<String, String>> _salaryRanges = [
@@ -90,9 +110,13 @@ class _TimViecPageState extends State<TimViecPage> {
     _tinhBloc = TinhBloc(tinhRepository: locator<TinhRepository>());
     _authBloc = locator<AuthBloc>();
     _chapNoiBloc = locator<ChapNoiBloc>();
+    _ntvBloc = NTVBloc(locator<NTVRepository>());
 
     // Get current user info
     _getCurrentUserInfo();
+    
+    // Check user profile
+    _checkUserProfile();
   }
 
   void _getCurrentUserInfo() {
@@ -109,19 +133,112 @@ class _TimViecPageState extends State<TimViecPage> {
     }
   }
 
-  void _loadInitialData() {
-    // Pass the current user ID (idUV) for NTV users
-    if (_currentUserType == 'ntv' && _currentUserId != null) {
-      _tuyenDungBloc.add(FetchTuyenDungList(null, idUv: _currentUserId));
-      print('TimViecPage: FetchTuyenDungList with idUV: $_currentUserId');
+  void _checkUserProfile() {
+    if (_currentUserId != null && _currentUserType == 'NTV') {
+      // Load user profile by uvId
+      _ntvBloc.add(LoadTblHoSoUngVienByUvId(_currentUserId!));
+      
+      // Listen to NTV bloc state changes
+      _activeSubscriptions.add(
+        _ntvBloc.stream.listen((state) {
+          if (state is NTVLoadedById) {
+            setState(() {
+              _userProfile = state.tblHoSoUngVien;
+              _isCheckingProfile = false;
+            });
+            
+            // Check if user has completed their profile
+            if (_userProfile == null || _userProfile!.uvnvNganhngheId == null || _userProfile!.uvnvNganhngheId == 0) {
+              _showProfileIncompleteDialog();
+            }
+          } else if (state is NTVError) {
+            setState(() {
+              _isCheckingProfile = false;
+            });
+            // If no profile found, show dialog
+            _showProfileIncompleteDialog();
+          }
+        }),
+      );
     } else {
-      // Fallback for other user types or when user ID is not available
-      _tuyenDungBloc.add(FetchTuyenDungList(null));
+      setState(() {
+        _isCheckingProfile = false;
+      });
     }
+  }
 
+  void _showProfileIncompleteDialog() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Thông tin chưa đầy đủ'),
+            content: const Text(
+              'Bạn cần cập nhật thông tin cá nhân và ngành nghề mong muốn trước khi có thể tìm việc làm.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  context.go('/home'); // Navigate back to home
+                },
+                child: const Text('Về trang chủ'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  // Navigate to update profile page
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => UpdateNTVPage(hoSoUngVien: _userProfile),
+                    ),
+                  );
+                },
+                child: const Text('Cập nhật thông tin'),
+              ),
+            ],
+          );
+        },
+      );
+    });
+  }
+
+  void _loadInitialData() {
+    _currentPage = 1; // Reset to first page
+    _loadTuyenDungData();
     _kinhNghiemBloc.add(FetchKinhNghiemLamViecList());
     _nganhNgheBloc.add(LoadNganhNghes());
     _tinhBloc.add(LoadTinhs());
+  }
+
+  void _loadTuyenDungData({bool isLoadMore = false}) {
+    if (isLoadMore) {
+      setState(() => _isLoadingMore = true);
+    }
+
+    final searchQuery = _searchController.text.trim();
+    
+    // Pass the current user ID (idUV) for NTV users
+    if (_currentUserType == 'ntv' && _currentUserId != null) {
+      _tuyenDungBloc.add(FetchTuyenDungList(
+        null,
+        idUv: _currentUserId,
+        limit: _limit,
+        page: _currentPage,
+        search: searchQuery.isNotEmpty ? searchQuery : null,
+      ));
+      print('TimViecPage: FetchTuyenDungList with idUV: $_currentUserId, page: $_currentPage');
+    } else {
+      // Fallback for other user types or when user ID is not available
+      _tuyenDungBloc.add(FetchTuyenDungList(
+        null,
+        limit: _limit,
+        page: _currentPage,
+        search: searchQuery.isNotEmpty ? searchQuery : null,
+      ));
+    }
   }
 
   @override
@@ -130,28 +247,24 @@ class _TimViecPageState extends State<TimViecPage> {
     _kinhNghiemBloc.close();
     _nganhNgheBloc.close();
     _tinhBloc.close();
+    _ntvBloc.close();
     // Don't close _chapNoiBloc here as it's managed by the locator
     // and might be needed by other pages
-    
+
     // Cancel any active subscriptions
     for (var subscription in _activeSubscriptions) {
       subscription.cancel();
     }
     _activeSubscriptions.clear();
-    
+
     _searchController.dispose();
     _searchFocusNode.dispose();
     super.dispose();
   }
 
   void _performSearch() {
-    // Perform search with current user ID for NTV users
-    if (_currentUserType == 'ntv' && _currentUserId != null) {
-      _tuyenDungBloc.add(FetchTuyenDungList(null, idUv: _currentUserId));
-    } else {
-      // Fallback for other user types or when user ID is not available
-      _tuyenDungBloc.add(FetchTuyenDungList(null));
-    }
+    _currentPage = 1; // Reset to first page when searching
+    _loadTuyenDungData();
   }
 
   void _clearFilters() {
@@ -175,16 +288,37 @@ class _TimViecPageState extends State<TimViecPage> {
     _performSearch();
   }
 
+  void _loadNextPage() {
+    if (_currentPage < _totalPages && !_isLoadingMore) {
+      _currentPage++;
+      _loadTuyenDungData(isLoadMore: true);
+    }
+  }
+
+  void _loadPreviousPage() {
+    if (_currentPage > 1 && !_isLoadingMore) {
+      _currentPage--;
+      _loadTuyenDungData();
+    }
+  }
+
+  void _goToPage(int page) {
+    if (page >= 1 && page <= _totalPages && page != _currentPage && !_isLoadingMore) {
+      _currentPage = page;
+      _loadTuyenDungData();
+    }
+  }
+
   String _formatDate(DateTime? date) {
     if (date == null) return 'Chưa có';
     return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
   }
-  
+
   String _formatDateForAPI(DateTime dateTime) {
     // Format: "2025-06-26T17:00:00.000Z"
     final utcDate = dateTime.toUtc();
     final isoString = utcDate.toIso8601String();
-    
+
     // If the ISO string already has milliseconds, use it
     if (isoString.contains('.')) {
       return isoString;
@@ -215,9 +349,10 @@ class _TimViecPageState extends State<TimViecPage> {
       // Format date to match API expectation: "2025-06-26T17:00:00.000Z"
       final now = DateTime.now().toUtc();
       final formattedDate = _formatDateForAPI(now);
-      
+
       final chapNoi = ChapNoiModel(
-        idKieuChapNoi: 'GGT', // Use proper connection type code (Giấy giới thiệu)
+        idKieuChapNoi:
+            'GGT', // Use proper connection type code (Giấy giới thiệu)
         idUngVien: _currentUserId!,
         idDoanhNghiep: job.idDoanhNghiep.toString(),
         idTuyenDung: job.idTuyenDung!,
@@ -230,7 +365,7 @@ class _TimViecPageState extends State<TimViecPage> {
 
       // Create a StreamSubscription variable that will be properly cleaned up
       StreamSubscription? streamSubscription;
-      
+
       // Define the listener function
       void handleState(state) {
         if (state is ChapNoiListLoaded) {
@@ -240,7 +375,7 @@ class _TimViecPageState extends State<TimViecPage> {
               'Ứng tuyển thành công! Hồ sơ của bạn đã được gửi đến nhà tuyển dụng.',
             );
           }
-          
+
           // Cancel subscription after handling the response
           streamSubscription?.cancel();
           streamSubscription = null;
@@ -251,19 +386,19 @@ class _TimViecPageState extends State<TimViecPage> {
               'Ứng tuyển thất bại: ${state.message}',
             );
           }
-          
+
           // Cancel subscription after handling the error
           streamSubscription?.cancel();
           streamSubscription = null;
         }
       }
-      
+
       // Assign the subscription and track it
       streamSubscription = _chapNoiBloc.stream.listen(handleState);
       if (streamSubscription != null) {
         _activeSubscriptions.add(streamSubscription!);
       }
-      
+
       // Dispatch the event after setting up the listener
       _chapNoiBloc.add(ChapNoiCreate(chapNoi));
     } catch (e) {
@@ -329,6 +464,34 @@ class _TimViecPageState extends State<TimViecPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    // Show loading indicator while checking profile for NTV users
+    if (_isCheckingProfile && _currentUserType == 'NTV') {
+      return Scaffold(
+        backgroundColor: theme.colorScheme.surface,
+        appBar: CustomAppBar(
+          title: 'Tìm Việc Làm',
+          elevation: 0,
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(
+                color: theme.colorScheme.primary,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Đang kiểm tra thông tin cá nhân...',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurface.withOpacity(0.7),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
       appBar: CustomAppBar(
@@ -346,6 +509,24 @@ class _TimViecPageState extends State<TimViecPage> {
       ),
       body: MultiBlocListener(
         listeners: [
+          BlocListener<TuyenDungBloc, TuyenDungState>(
+            bloc: _tuyenDungBloc,
+            listener: (context, state) {
+              if (state is TuyenDungLoaded) {
+                setState(() {
+                  _currentPage = state.currentPage;
+                  _totalPages = state.totalPages;
+                  _totalItems = state.totalItems;
+                  _limit = state.limit;
+                  _isLoadingMore = false;
+                });
+              } else if (state is TuyenDungError) {
+                setState(() {
+                  _isLoadingMore = false;
+                });
+              }
+            },
+          ),
           BlocListener<KinhNghiemLamViecBloc, KinhNghiemLamViecState>(
             bloc: _kinhNghiemBloc,
             listener: (context, state) {
@@ -808,7 +989,7 @@ class _TimViecPageState extends State<TimViecPage> {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      'Tìm thấy ${jobs.length} việc làm',
+                      'Tìm thấy $_totalItems việc làm (Trang $_currentPage/$_totalPages)',
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: theme.colorScheme.primary,
                         fontWeight: FontWeight.w600,
@@ -820,13 +1001,21 @@ class _TimViecPageState extends State<TimViecPage> {
 
               // Job list
               Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: jobs.length,
-                  itemBuilder: (context, index) {
-                    final job = jobs[index];
-                    return _buildJobCard(job, theme);
-                  },
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        itemCount: jobs.length,
+                        itemBuilder: (context, index) {
+                          final job = jobs[index];
+                          return _buildJobCard(job, theme);
+                        },
+                      ),
+                    ),
+                    // Pagination controls
+                    if (_totalPages > 1) _buildPaginationControls(theme),
+                  ],
                 ),
               ),
             ],
@@ -855,27 +1044,29 @@ class _TimViecPageState extends State<TimViecPage> {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: _currentUserType == 'ntv' ? null : () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => NTDInfoPage(
-                  ntdData: {
-                    'tuyendungId': job.idTuyenDung,
-                    'tuyendung': job.tdTieude ?? '',
-                    'soLuong': job.tdSoluong.toString(),
-                    'gioiTinh': job.tdYeuCauGioiTinh,
-                    'trinhDo': job.tdYeuCauHocVan ?? '',
-                    'nganhNghe': job.tdNganhnghe ?? '',
-                    'motaCongViec': job.tdMotacongviec ?? '',
-                    'ngayNhanHoSo': job.ngayNhanHoSo ?? '',
-                    'tenNTD': job.tdTieude ?? '',
-                    'address': job.noiLamviec ?? '',
-                    'idDoanhNghiep': job.idDoanhNghiep.toString(),
-                  },
-                ),
-              ),
-            );
-          },
+          onTap: _currentUserType == 'ntv'
+              ? null
+              : () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => NTDInfoPage(
+                        ntdData: {
+                          'tuyendungId': job.idTuyenDung,
+                          'tuyendung': job.tdTieude ?? '',
+                          'soLuong': job.tdSoluong.toString(),
+                          'gioiTinh': job.tdYeuCauGioiTinh,
+                          'trinhDo': job.tdYeuCauHocVan ?? '',
+                          'nganhNghe': job.tdNganhnghe ?? '',
+                          'motaCongViec': job.tdMotacongviec ?? '',
+                          'ngayNhanHoSo': job.ngayNhanHoSo ?? '',
+                          'tenNTD': job.tdTieude ?? '',
+                          'address': job.noiLamviec ?? '',
+                          'idDoanhNghiep': job.idDoanhNghiep.toString(),
+                        },
+                      ),
+                    ),
+                  );
+                },
           borderRadius: BorderRadius.circular(16),
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -916,7 +1107,7 @@ class _TimViecPageState extends State<TimViecPage> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'Công ty tuyển dụng',
+                            job.tenDoanhNghiep ?? "",
                             style: theme.textTheme.bodyMedium?.copyWith(
                               color:
                                   theme.colorScheme.onSurface.withOpacity(0.7),
@@ -1097,6 +1288,180 @@ class _TimViecPageState extends State<TimViecPage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildPaginationControls(ThemeData theme) {
+    return Container(
+      margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: theme.colorScheme.shadow.withAlpha(15),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Previous button
+          ElevatedButton.icon(
+            onPressed: _currentPage > 1 && !_isLoadingMore ? _loadPreviousPage : null,
+            icon: Icon(
+              FontAwesomeIcons.chevronLeft,
+              size: 14,
+              color: _currentPage > 1 && !_isLoadingMore 
+                  ? theme.colorScheme.onPrimary 
+                  : theme.colorScheme.onSurface.withOpacity(0.5),
+            ),
+            label: Text(
+              'Trước',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: _currentPage > 1 && !_isLoadingMore 
+                    ? theme.colorScheme.onPrimary 
+                    : theme.colorScheme.onSurface.withOpacity(0.5),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: _currentPage > 1 && !_isLoadingMore 
+                  ? theme.colorScheme.primary 
+                  : theme.colorScheme.surface,
+              foregroundColor: _currentPage > 1 && !_isLoadingMore 
+                  ? theme.colorScheme.onPrimary 
+                  : theme.colorScheme.onSurface.withOpacity(0.5),
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+                side: BorderSide(
+                  color: theme.colorScheme.outline.withOpacity(0.3),
+                ),
+              ),
+            ),
+          ),
+
+          // Page info and quick navigation
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (_totalPages <= 5) ...[
+                  // Show all pages if total pages <= 5
+                  for (int i = 1; i <= _totalPages; i++)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 2),
+                      child: _buildPageButton(i, theme),
+                    ),
+                ] else ...[
+                  // Show condensed pagination for more than 5 pages
+                  _buildPageButton(1, theme),
+                  if (_currentPage > 3) ...[
+                    const SizedBox(width: 4),
+                    Text('...', style: theme.textTheme.bodyMedium),
+                    const SizedBox(width: 4),
+                  ],
+                  for (int i = math.max(2, _currentPage - 1); 
+                       i <= math.min(_totalPages - 1, _currentPage + 1); 
+                       i++)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 2),
+                      child: _buildPageButton(i, theme),
+                    ),
+                  if (_currentPage < _totalPages - 2) ...[
+                    const SizedBox(width: 4),
+                    Text('...', style: theme.textTheme.bodyMedium),
+                    const SizedBox(width: 4),
+                  ],
+                  if (_totalPages > 1) _buildPageButton(_totalPages, theme),
+                ],
+              ],
+            ),
+          ),
+
+          // Next button
+          ElevatedButton.icon(
+            onPressed: _currentPage < _totalPages && !_isLoadingMore ? _loadNextPage : null,
+            icon: _isLoadingMore 
+                ? SizedBox(
+                    width: 14,
+                    height: 14,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: theme.colorScheme.onPrimary,
+                    ),
+                  )
+                : Icon(
+                    FontAwesomeIcons.chevronRight,
+                    size: 14,
+                    color: _currentPage < _totalPages && !_isLoadingMore 
+                        ? theme.colorScheme.onPrimary 
+                        : theme.colorScheme.onSurface.withOpacity(0.5),
+                  ),
+            label: Text(
+              'Tiếp',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: _currentPage < _totalPages && !_isLoadingMore 
+                    ? theme.colorScheme.onPrimary 
+                    : theme.colorScheme.onSurface.withOpacity(0.5),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: _currentPage < _totalPages && !_isLoadingMore 
+                  ? theme.colorScheme.primary 
+                  : theme.colorScheme.surface,
+              foregroundColor: _currentPage < _totalPages && !_isLoadingMore 
+                  ? theme.colorScheme.onPrimary 
+                  : theme.colorScheme.onSurface.withOpacity(0.5),
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+                side: BorderSide(
+                  color: theme.colorScheme.outline.withOpacity(0.3),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPageButton(int page, ThemeData theme) {
+    final isCurrentPage = page == _currentPage;
+    return GestureDetector(
+      onTap: !_isLoadingMore ? () => _goToPage(page) : null,
+      child: Container(
+        width: 32,
+        height: 32,
+        decoration: BoxDecoration(
+          color: isCurrentPage 
+              ? theme.colorScheme.primary 
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(
+            color: isCurrentPage 
+                ? theme.colorScheme.primary 
+                : theme.colorScheme.outline.withOpacity(0.3),
+          ),
+        ),
+        child: Center(
+          child: Text(
+            page.toString(),
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: isCurrentPage 
+                  ? theme.colorScheme.onPrimary 
+                  : theme.colorScheme.onSurface,
+              fontWeight: isCurrentPage ? FontWeight.w600 : FontWeight.w400,
+            ),
+          ),
+        ),
       ),
     );
   }

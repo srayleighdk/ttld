@@ -17,11 +17,32 @@ class NTVBloc extends Bloc<NTVEvent, NTVState> {
       }
     });
 
+    on<LoadTblHoSoUngViensByIdDn>((event, emit) async {
+      emit(NTVLoading());
+      try {
+        final tblHoSoUngViens = await _ntvRepository.getHoSoUngVienByIdDn(event.idDn);
+        emit(NTVLoaded(tblHoSoUngViens));
+      } catch (e) {
+        emit(NTVError(e.toString()));
+      }
+    });
+
     on<LoadTblHoSoUngVien>((event, emit) async {
       emit(NTVLoading());
       try {
         final tblHoSoUngVien =
             await _ntvRepository.getHoSoUngVienById(event.id);
+        emit(NTVLoadedById(tblHoSoUngVien));
+      } catch (e) {
+        emit(NTVError(e.toString()));
+      }
+    });
+
+    on<LoadTblHoSoUngVienByUvId>((event, emit) async {
+      emit(NTVLoading());
+      try {
+        final tblHoSoUngVien =
+            await _ntvRepository.getHoSoUngVienByUvId(event.uvId);
         emit(NTVLoadedById(tblHoSoUngVien));
       } catch (e) {
         emit(NTVError(e.toString()));

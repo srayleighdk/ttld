@@ -19,16 +19,44 @@ class TuyenDungRepository {
   // }
 
 //NOTE: This is for testing waring
-  Future<List<NTDTuyenDung>> getTuyenDungList(String? ntdId,
-      {String? idUv}) async {
+  Future<Map<String, dynamic>> getTuyenDungList(
+    String? ntdId, {
+    String? idUv,
+    int? limit,
+    int? page,
+    String? search,
+    String? status,
+    String? duyet,
+    String? id,
+  }) async {
     try {
-      final response =
-          await _tuyenDungService.getTuyenDungList(ntdId, idUv: idUv);
+      final response = await _tuyenDungService.getTuyenDungList(
+        ntdId,
+        idUv: idUv,
+        limit: limit,
+        page: page,
+        search: search,
+        status: status,
+        duyet: duyet,
+        id: id,
+      );
+      
       final data = response.data['data'] as List;
-      return data.map((json) {
+      final tuyenDungList = data.map((json) {
         // Log the raw JSON for debugging
         return NTDTuyenDung.fromJson(json);
       }).toList();
+      
+      // Return both the list and pagination info
+      return {
+        'data': tuyenDungList,
+        'pagination': {
+          'currentPage': response.data['currentPage'] ?? page ?? 1,
+          'totalPages': response.data['totalPages'] ?? 1,
+          'totalItems': response.data['totalItems'] ?? tuyenDungList.length,
+          'limit': response.data['limit'] ?? limit ?? 10,
+        }
+      };
     } on DioException catch (e) {
       throw Exception('Failed to get tuyen dung list: ${e.message}');
     } catch (e) {
