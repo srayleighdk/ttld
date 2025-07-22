@@ -17,9 +17,54 @@ import 'package:ttld/models/tinh/tinh.dart';
 import 'package:ttld/models/xa/xa.dart';
 import 'package:ttld/blocs/kcn/kcn_cubit.dart';
 import 'package:ttld/models/kcn/kcn_model.dart';
-import 'package:ttld/widgets/field/custom_picker.dart';
-import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
+import 'package:ttld/widgets/form/modern_text_field.dart';
+import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
+import 'package:ttld/themes/colors/color_style.dart';
+import 'package:theme_provider/theme_provider.dart';
 
+/// Modern, theme-aware cascade location picker widget that follows the project's design system.
+/// Provides a hierarchical location selection interface for Tinh > Huyen > Xa > KCN.
+class ModernCascadeLocationPicker extends StatefulWidget {
+  const ModernCascadeLocationPicker({
+    super.key,
+    this.onTinhChanged,
+    this.onHuyenChanged,
+    this.onXaChanged,
+    this.onKCNChanged,
+    required this.addressDetailController,
+    this.initialTinh,
+    this.initialHuyen,
+    this.initialXa,
+    this.initialKCN,
+    required this.isNTD,
+    this.style,
+    this.showAddressDetail = true,
+    this.validator,
+    this.helperText,
+  });
+
+  final String? initialTinh;
+  final String? initialHuyen;
+  final String? initialXa;
+  final String? initialKCN;
+  final Function(Tinh?)? onTinhChanged;
+  final Function(Huyen?)? onHuyenChanged;
+  final Function(Xa?)? onXaChanged;
+  final Function(KCNModel?)? onKCNChanged;
+  final TextEditingController addressDetailController;
+  final bool isNTD;
+  final ModernCascadeLocationPickerStyle? style;
+  final bool showAddressDetail;
+  final String? Function(String?)? validator;
+  final String? helperText;
+
+  @override
+  State<ModernCascadeLocationPicker> createState() =>
+      _ModernCascadeLocationPickerState();
+}
+
+/// Legacy class for backward compatibility
+/// @deprecated Use ModernCascadeLocationPicker instead
 class CascadeLocationPickerGrok extends StatefulWidget {
   const CascadeLocationPickerGrok({
     super.key,
@@ -47,22 +92,41 @@ class CascadeLocationPickerGrok extends StatefulWidget {
   final bool isNTD;
 
   @override
-  State<CascadeLocationPickerGrok> createState() =>
-      _CascadeLocationPickerGrokState();
+  State<CascadeLocationPickerGrok> createState() => _CascadeLocationPickerGrokState();
 }
 
 class _CascadeLocationPickerGrokState extends State<CascadeLocationPickerGrok> {
+  @override
+  Widget build(BuildContext context) {
+    // Use the new ModernCascadeLocationPicker for consistent styling
+    return ModernCascadeLocationPicker(
+      onTinhChanged: widget.onTinhChanged,
+      onHuyenChanged: widget.onHuyenChanged,
+      onXaChanged: widget.onXaChanged,
+      onKCNChanged: widget.onKCNChanged,
+      addressDetailController: widget.addressDetailController,
+      initialTinh: widget.initialTinh,
+      initialHuyen: widget.initialHuyen,
+      initialXa: widget.initialXa,
+      initialKCN: widget.initialKCN,
+      isNTD: widget.isNTD,
+    );
+  }
+}
+
+class _ModernCascadeLocationPickerState
+    extends State<ModernCascadeLocationPicker> {
   Tinh? selectedTinh;
   Huyen? selectedHuyen;
   Xa? selectedXa;
   KCNModel? selectedKCN;
-  late final KcnCubit _kcnCubit; // Will be initialized in initState
-  bool _showAddressDetail = true;
+  late final KcnCubit _kcnCubit;
+  String? _errorText;
 
   @override
   void initState() {
     super.initState();
-    _kcnCubit = locator<KcnCubit>(); // Initialize from BlocProvider
+    _kcnCubit = locator<KcnCubit>();
     _initializeTinh();
   }
 
@@ -75,7 +139,7 @@ class _CascadeLocationPickerGrokState extends State<CascadeLocationPickerGrok> {
           await tinhBloc.stream.firstWhere((state) => state is TinhLoaded);
       if (tinhState is TinhLoaded) {
         final foundTinh = tinhState.tinhs.firstWhere(
-          (tinh) => tinh.matinh == widget.initialTinh,
+          (tinh) => tinh.id == widget.initialTinh,
           orElse: () => tinhState.tinhs.first,
         );
         setState(() {
@@ -87,254 +151,429 @@ class _CascadeLocationPickerGrokState extends State<CascadeLocationPickerGrok> {
 
     if (selectedTinh != null && widget.initialHuyen != null) {
       final huyenBloc = locator<HuyenBloc>();
-      huyenBloc.add(LoadHuyensByTinh(matinh: selectedTinh!.matinh));
+      huyenBloc.add(LoadHuyensByTinh(matinh: selectedTinh!.id));
 
       final huyenState = await huyenBloc.stream
           .firstWhere((state) => state is HuyenLoadedByTinh);
       if (huyenState is HuyenLoadedByTinh) {
         final foundHuyen = huyenState.huyens.firstWhere(
-          (huyen) => huyen.mahuyen == widget.initialHuyen,
+          (huyen) => huyen.id == widget.initialHuyen,
           orElse: () => huyenState.huyens.first,
         );
         setState(() {
           selectedHuyen = foundHuyen;
         });
-        _loadHuyenData(foundHuyen);
+        _loadInitialXa(foundHuyen);
       }
     }
 
     if (selectedHuyen != null && widget.initialXa != null) {
       final xaBloc = locator<XaBloc>();
-      xaBloc.add(LoadXasByHuyen(mahuyen: selectedHuyen!.mahuyen));
+      xaBloc.add(LoadXasByHuyen(mahuyen: selectedHuyen!.id));
 
       final xaState =
           await xaBloc.stream.firstWhere((state) => state is XaLoadedByHuyen);
       if (xaState is XaLoadedByHuyen) {
         final foundXa = xaState.xas.firstWhere(
-          (xa) => xa.maxa == widget.initialXa,
+          (xa) => xa.id == widget.initialXa,
           orElse: () => xaState.xas.first,
         );
         setState(() {
           selectedXa = foundXa;
         });
-        _loadXaData(foundXa);
+        _updateAddressDetail();
       }
     }
 
     if (widget.isNTD && selectedTinh != null && widget.initialKCN != null) {
-      _kcnCubit.getKCN(selectedTinh!.matinh);
+      _kcnCubit.getKCN(selectedTinh!.id);
+
       final kcnState =
           await _kcnCubit.stream.firstWhere((state) => state is KcnLoaded);
       if (kcnState is KcnLoaded) {
         final foundKCN = kcnState.kcnList.firstWhere(
-          (kcn) => kcn.id == int.tryParse(widget.initialKCN ?? ''),
+          (kcn) => kcn.id.toString() == widget.initialKCN,
           orElse: () => kcnState.kcnList.first,
         );
         setState(() {
           selectedKCN = foundKCN;
         });
-        widget.onKCNChanged?.call(foundKCN);
       }
     }
-
-    if (selectedTinh != null) {
-      _kcnCubit.getKCN(selectedTinh!.matinh); // Load KCN even in NTV mode
-    }
-    _updateAddressDetail();
   }
 
   void _loadInitialData(Tinh tinh) {
-    locator<HuyenBloc>().add(LoadHuyensByTinh(matinh: tinh.matinh));
-    _kcnCubit.getKCN(tinh.matinh);
-    widget.onTinhChanged?.call(tinh);
+    locator<HuyenBloc>().add(LoadHuyensByTinh(matinh: tinh.id));
+    if (widget.isNTD) {
+      _kcnCubit.getKCN(tinh.id);
+    }
   }
 
-  void _loadHuyenData(Huyen huyen) {
-    locator<XaBloc>().add(LoadXasByHuyen(mahuyen: huyen.mahuyen));
-    widget.onHuyenChanged?.call(huyen);
+  void _loadInitialXa(Huyen huyen) {
+    locator<XaBloc>().add(LoadXasByHuyen(mahuyen: huyen.id));
   }
 
-  void _loadXaData(Xa xa) {
-    widget.onXaChanged?.call(xa);
+  void _validateSelection() {
+    if (widget.validator != null) {
+      setState(() {
+        _errorText = widget.validator!(_buildAddressString(
+          selectedXa?.displayName,
+          selectedHuyen?.displayName,
+          selectedTinh?.displayName,
+        ));
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        BlocBuilder<TinhBloc, TinhState>(
-          bloc: locator<TinhBloc>(),
-          builder: (context, state) {
-            Widget child;
-            if (state is TinhLoaded) {
-              child = CustomPicker<Tinh>(
-                key: ValueKey(state.tinhs),
-                label: const Text('Tỉnh/Thành Phố'),
-                items: state.tinhs,
-                selectedItem: selectedTinh,
-                hint: 'Chọn Tỉnh/Thành Phố',
-                displayItemBuilder: (Tinh? tinh) => tinh?.tentinh ?? '',
-                onChanged: (Tinh? newValue) {
-                  setState(() {
-                    selectedTinh = newValue;
-                    selectedHuyen = null;
-                    selectedXa = null;
-                    selectedKCN = null;
-                    _showAddressDetail = true;
-                    _updateAddressDetail();
-                  });
-                  if (newValue != null) {
-                    locator<HuyenBloc>()
-                        .add(LoadHuyensByTinh(matinh: newValue.matinh));
-                    _kcnCubit
-                        .getKCN(newValue.matinh); // Use initialized _kcnCubit
-                  }
-                  widget.onTinhChanged?.call(newValue);
-                },
-              );
-            } else if (state is TinhError) {
-              child = Text('Error: ${(state).message}');
-            } else if (state is TinhLoading) {
-              child = const CircularProgressIndicator();
-            } else {
-              child = const Text('Loading Tỉnh...');
-            }
-            return child;
-          },
-        ),
-        const SizedBox(height: 14),
-        BlocBuilder<HuyenBloc, HuyenState>(
-          bloc: locator<HuyenBloc>(),
-          builder: (context, state) {
-            Widget child;
-            if (state is HuyenLoadedByTinh) {
-              child = CustomPicker<Huyen>(
-                label: const Text('Quận/Huyện'),
-                items: state.huyens,
-                selectedItem: selectedHuyen,
-                hint: 'Chọn Quận/Huyện',
-                displayItemBuilder: (Huyen? huyen) => huyen?.tenhuyen ?? '',
-                onChanged: (Huyen? newValue) {
-                  setState(() {
-                    selectedHuyen = newValue;
-                    selectedXa = null;
-                    selectedKCN = null;
-                    _showAddressDetail = true;
-                    _updateAddressDetail();
-                  });
-                  if (newValue != null) {
-                    locator<XaBloc>()
-                        .add(LoadXasByHuyen(mahuyen: newValue.mahuyen));
-                  }
-                  widget.onHuyenChanged?.call(newValue);
-                },
-              );
-            } else if (state is HuyenError) {
-              child = Text('Error: ${(state).message}');
-            } else if (state is HuyenLoading) {
-              child = const CircularProgressIndicator();
-            } else {
-              child = CustomPicker<Huyen>(
-                label: const Text('Quận/Huyện'),
-                items: const [],
-                selectedItem: selectedHuyen,
-                hint: 'Chọn Quận/Huyện',
-                displayItemBuilder: (Huyen? huyen) => huyen?.tenhuyen ?? '',
-                onChanged: (Huyen? newValue) {},
-              );
-            }
-            return child;
-          },
-        ),
-        const SizedBox(height: 14),
-        BlocBuilder<XaBloc, XaState>(
-          bloc: locator<XaBloc>(),
-          builder: (context, state) {
-            Widget child;
-            if (state is XaLoadedByHuyen) {
-              child = CustomPicker<Xa>(
-                label: const Text('Xã/Phường'),
-                items: state.xas,
-                selectedItem: selectedXa,
-                displayItemBuilder: (Xa? xa) => xa?.tenxa ?? '',
-                hint: 'Chọn Xã/Phường',
-                onChanged: (Xa? newValue) {
-                  setState(() {
-                    selectedXa = newValue;
-                    selectedKCN = null;
-                    _showAddressDetail = true;
-                    _updateAddressDetail();
-                  });
-                  widget.onXaChanged?.call(newValue);
-                },
-              );
-            } else if (state is XaError) {
-              child = Text('Error: ${(state).message}');
-            } else if (state is XaLoading) {
-              child = const CircularProgressIndicator();
-            } else {
-              child = CustomPicker<Xa>(
-                label: const Text('Xã/Phường'),
-                items: const [],
-                selectedItem: selectedXa,
-                displayItemBuilder: (Xa? xa) => xa?.tenxa ?? '',
-                hint: 'Chọn Xã/Phường',
-                onChanged: (Xa? newValue) {},
-              );
-            }
-            return child;
-          },
-        ),
-        const SizedBox(height: 14),
-        if (widget.isNTD)
-          BlocBuilder<KcnCubit, KcnState>(
-            bloc: _kcnCubit, // Explicitly use _kcnCubit
-            builder: (context, state) {
-              Widget child;
-              if (state is KcnLoading) {
-                child = const CircularProgressIndicator();
-              } else if (state is KcnLoaded) {
-                child = CustomPicker<KCNModel>(
-                  items: state.kcnList,
-                  selectedItem: selectedKCN,
-                  displayItemBuilder: (KCNModel? kcn) => kcn?.displayName ?? '',
-                  hint: 'Chọn KCN',
-                  onChanged: (KCNModel? newValue) {
-                    setState(() {
-                      selectedKCN = newValue;
-                    });
-                    widget.onKCNChanged?.call(newValue);
-                  },
-                );
-              } else if (state is KcnError) {
-                child = Text('Error: ${state.message}');
-              } else {
-                child = const SizedBox.shrink();
+    final theme = Theme.of(context);
+    final colorStyles =
+        ThemeProvider.themeOf(context).data.extension<ColorStyles>();
+    final effectiveStyle =
+        widget.style ?? ModernCascadeLocationPickerStyle.defaultStyle(context);
+
+    return Container(
+      padding: effectiveStyle.containerPadding,
+      decoration: BoxDecoration(
+        color: colorStyles?.surfaceBackground ?? theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(effectiveStyle.borderRadius),
+        boxShadow: effectiveStyle.showShadow
+            ? [
+                BoxShadow(
+                  color: (colorStyles?.content ?? theme.colorScheme.onSurface)
+                      .withOpacity(0.06),
+                  spreadRadius: 0,
+                  blurRadius: 16,
+                  offset: const Offset(0, 2),
+                ),
+              ]
+            : null,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header Section
+          if (effectiveStyle.showHeader)
+            _buildHeaderSection(theme, colorStyles),
+
+          // Location Pickers
+          _buildTinhPicker(theme, colorStyles, effectiveStyle),
+          SizedBox(height: effectiveStyle.spacing),
+
+          _buildHuyenPicker(theme, colorStyles, effectiveStyle),
+          SizedBox(height: effectiveStyle.spacing),
+
+          _buildXaPicker(theme, colorStyles, effectiveStyle),
+          SizedBox(height: effectiveStyle.spacing),
+
+          // KCN Picker (only for NTD)
+          if (widget.isNTD) ...[
+            _buildKCNPicker(theme, colorStyles, effectiveStyle),
+            SizedBox(height: effectiveStyle.spacing),
+          ],
+
+          // Address Detail Field
+          if (widget.showAddressDetail)
+            _buildAddressDetailField(theme, colorStyles, effectiveStyle),
+
+          // Error Text
+          if (_errorText != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Text(
+                _errorText!,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.error,
+                ),
+              ),
+            ),
+
+          // Helper Text
+          if (widget.helperText != null && _errorText == null)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Text(
+                widget.helperText!,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: (colorStyles?.content ?? theme.colorScheme.onSurface)
+                      .withOpacity(0.6),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeaderSection(ThemeData theme, ColorStyles? colorStyles) {
+    return Container(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: (colorStyles?.primaryAccent ?? theme.colorScheme.primary)
+                  .withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              Icons.location_on_outlined,
+              color: colorStyles?.primaryAccent ?? theme.colorScheme.primary,
+              size: 20,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Địa chỉ',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: colorStyles?.content ?? theme.colorScheme.onSurface,
+                  ),
+                ),
+                Text(
+                  'Chọn địa chỉ theo thứ tự: Tỉnh/Thành phố → Quận/Huyện → Xã/Phường',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: (colorStyles?.content ?? theme.colorScheme.onSurface)
+                        .withOpacity(0.7),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTinhPicker(ThemeData theme, ColorStyles? colorStyles,
+      ModernCascadeLocationPickerStyle style) {
+    return BlocBuilder<TinhBloc, TinhState>(
+      bloc: locator<TinhBloc>(),
+      builder: (context, state) {
+        if (state is TinhLoaded) {
+          return ModernPicker<Tinh>(
+            label: 'Tỉnh/Thành phố',
+            hint: 'Chọn Tỉnh/Thành phố',
+            items: state.tinhs,
+            initialValue: selectedTinh?.id,
+            onChanged: (item) {
+              final tinh = item;
+              setState(() {
+                selectedTinh = tinh;
+                selectedHuyen = null;
+                selectedXa = null;
+                selectedKCN = null;
+                _updateAddressDetail();
+              });
+              if (tinh != null) {
+                locator<HuyenBloc>().add(LoadHuyensByTinh(matinh: tinh.id));
+                if (widget.isNTD) {
+                  _kcnCubit.getKCN(tinh.id);
+                }
               }
-              return child;
+              widget.onTinhChanged?.call(tinh);
+              _validateSelection();
             },
+            isLoading: state is TinhLoading,
+            style: style.pickerStyle,
+            prefixIcon: Icon(Icons.location_city_outlined),
+          );
+        } else if (state is TinhError) {
+          return _buildErrorWidget(
+              'Lỗi tải danh sách tỉnh: ${state.message}', theme);
+        } else {
+          return _buildLoadingPicker('Tỉnh/Thành phố', 'Đang tải...', theme);
+        }
+      },
+    );
+  }
+
+  Widget _buildHuyenPicker(ThemeData theme, ColorStyles? colorStyles,
+      ModernCascadeLocationPickerStyle style) {
+    return BlocBuilder<HuyenBloc, HuyenState>(
+      bloc: locator<HuyenBloc>(),
+      builder: (context, state) {
+        if (state is HuyenLoadedByTinh) {
+          return ModernPicker<Huyen>(
+            label: 'Quận/Huyện',
+            hint: 'Chọn Quận/Huyện',
+            items:
+                state.huyens,
+            initialValue: selectedHuyen?.id,
+            onChanged: (item) {
+              final huyen = item;
+              setState(() {
+                selectedHuyen = huyen;
+                selectedXa = null;
+                selectedKCN = null;
+                _updateAddressDetail();
+              });
+              if (huyen != null) {
+                locator<XaBloc>().add(LoadXasByHuyen(mahuyen: huyen.id));
+              }
+              widget.onHuyenChanged?.call(huyen);
+              _validateSelection();
+            },
+            isLoading: state is HuyenLoading,
+            enabled: selectedTinh != null,
+            style: style.pickerStyle,
+            prefixIcon: Icon(Icons.location_searching_outlined),
+          );
+        } else if (state is HuyenError) {
+          return _buildErrorWidget(
+              'Lỗi tải danh sách huyện: ${state.message}', theme);
+        } else {
+          return _buildLoadingPicker(
+              'Quận/Huyện',
+              selectedTinh == null ? 'Vui lòng chọn tỉnh trước' : 'Đang tải...',
+              theme);
+        }
+      },
+    );
+  }
+
+  Widget _buildXaPicker(ThemeData theme, ColorStyles? colorStyles,
+      ModernCascadeLocationPickerStyle style) {
+    return BlocBuilder<XaBloc, XaState>(
+      bloc: locator<XaBloc>(),
+      builder: (context, state) {
+        if (state is XaLoadedByHuyen) {
+          return ModernPicker<Xa>(
+            label: 'Xã/Phường',
+            hint: 'Chọn Xã/Phường',
+            items: state.xas,
+            initialValue: selectedXa?.id,
+            onChanged: (item) {
+              final xa = item;
+              setState(() {
+                selectedXa = xa;
+                selectedKCN = null;
+                _updateAddressDetail();
+              });
+              widget.onXaChanged?.call(xa);
+              _validateSelection();
+            },
+            isLoading: state is XaLoading,
+            enabled: selectedHuyen != null,
+            style: style.pickerStyle,
+            prefixIcon: Icon(Icons.home_outlined),
+          );
+        } else if (state is XaError) {
+          return _buildErrorWidget(
+              'Lỗi tải danh sách xã: ${state.message}', theme);
+        } else {
+          return _buildLoadingPicker(
+              'Xã/Phường',
+              selectedHuyen == null
+                  ? 'Vui lòng chọn huyện trước'
+                  : 'Đang tải...',
+              theme);
+        }
+      },
+    );
+  }
+
+  Widget _buildKCNPicker(ThemeData theme, ColorStyles? colorStyles,
+      ModernCascadeLocationPickerStyle style) {
+    return BlocBuilder<KcnCubit, KcnState>(
+      bloc: _kcnCubit,
+      builder: (context, state) {
+        if (state is KcnLoaded) {
+          return ModernPicker<KCNModel>(
+            label: 'Khu công nghiệp',
+            hint: 'Chọn KCN (tùy chọn)',
+            items: state.kcnList,
+            initialValue: selectedKCN?.id,
+            onChanged: (kcn) {
+              setState(() {
+                selectedKCN = kcn;
+              });
+              widget.onKCNChanged?.call(kcn);
+              _validateSelection();
+            },
+            isLoading: state is KcnLoading,
+            enabled: selectedTinh != null,
+            style: style.pickerStyle,
+            prefixIcon: Icon(Icons.factory_outlined),
+          );
+        } else if (state is KcnError) {
+          return _buildErrorWidget(
+              'Lỗi tải danh sách KCN: ${state.message}', theme);
+        } else {
+          return _buildLoadingPicker(
+              'Khu công nghiệp',
+              selectedTinh == null ? 'Vui lòng chọn tỉnh trước' : 'Đang tải...',
+              theme);
+        }
+      },
+    );
+  }
+
+  Widget _buildAddressDetailField(ThemeData theme, ColorStyles? colorStyles,
+      ModernCascadeLocationPickerStyle style) {
+    return ModernTextField.textArea(
+      label: 'Địa chỉ chi tiết',
+      hint: 'Nhập số nhà, tên đường...',
+      controller: widget.addressDetailController,
+      minLines: 2,
+      maxLines: 3,
+      helperText: 'Địa chỉ sẽ được tự động cập nhật khi bạn chọn địa điểm',
+    );
+  }
+
+  Widget _buildLoadingPicker(String label, String hint, ThemeData theme) {
+    return ModernPicker<GenericPickerItem>(
+      label: label,
+      hint: hint,
+      items: const [],
+      initialValue: null,
+      onChanged: (_) {},
+      isLoading: true,
+      enabled: false,
+    );
+  }
+
+  Widget _buildErrorWidget(String message, ThemeData theme) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.errorContainer.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: theme.colorScheme.error.withOpacity(0.3)),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.error_outline, color: theme.colorScheme.error, size: 20),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              message,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.error,
+              ),
+            ),
           ),
-        const SizedBox(height: 14),
-        if (_showAddressDetail)
-          CustomTextField.addressDetail(
-            controller: widget.addressDetailController,
-            tinh: selectedTinh?.tentinh,
-            huyen: selectedHuyen?.tenhuyen,
-            xa: selectedXa?.tenxa,
-          ),
-      ],
+        ],
+      ),
     );
   }
 
   @override
   void dispose() {
-    // No need to close _kcnCubit since it's provided by BlocProvider
     super.dispose();
   }
 
   void _updateAddressDetail() {
     widget.addressDetailController.text = _buildAddressString(
-        selectedXa?.tenxa, selectedHuyen?.tenhuyen, selectedTinh?.tentinh);
+        selectedXa?.displayName, 
+        selectedHuyen?.displayName, 
+        selectedTinh?.displayName);
   }
 
   String _buildAddressString(String? xa, String? huyen, String? tinh) {
@@ -351,3 +590,67 @@ class _CascadeLocationPickerGrokState extends State<CascadeLocationPickerGrok> {
     return address;
   }
 }
+
+/// Style configuration for ModernCascadeLocationPicker
+class ModernCascadeLocationPickerStyle {
+  final EdgeInsets containerPadding;
+  final double borderRadius;
+  final double spacing;
+  final bool showShadow;
+  final bool showHeader;
+  final ModernPickerStyle? pickerStyle;
+
+  const ModernCascadeLocationPickerStyle({
+    this.containerPadding = const EdgeInsets.all(20),
+    this.borderRadius = 16,
+    this.spacing = 16,
+    this.showShadow = true,
+    this.showHeader = true,
+    this.pickerStyle,
+  });
+
+  /// Default style that follows the project's design system
+  factory ModernCascadeLocationPickerStyle.defaultStyle(BuildContext context) {
+    return const ModernCascadeLocationPickerStyle();
+  }
+
+  /// Compact style for forms with many fields
+  factory ModernCascadeLocationPickerStyle.compact() {
+    return ModernCascadeLocationPickerStyle(
+      containerPadding: const EdgeInsets.all(16),
+      spacing: 12,
+      showHeader: false,
+      pickerStyle: ModernPickerStyle.compact(),
+    );
+  }
+
+  /// Card style with prominent appearance
+  factory ModernCascadeLocationPickerStyle.card() {
+    return ModernCascadeLocationPickerStyle(
+      containerPadding: const EdgeInsets.all(24),
+      spacing: 20,
+      showShadow: true,
+      showHeader: true,
+      pickerStyle: ModernPickerStyle.prominent(),
+    );
+  }
+
+  ModernCascadeLocationPickerStyle copyWith({
+    EdgeInsets? containerPadding,
+    double? borderRadius,
+    double? spacing,
+    bool? showShadow,
+    bool? showHeader,
+    ModernPickerStyle? pickerStyle,
+  }) {
+    return ModernCascadeLocationPickerStyle(
+      containerPadding: containerPadding ?? this.containerPadding,
+      borderRadius: borderRadius ?? this.borderRadius,
+      spacing: spacing ?? this.spacing,
+      showShadow: showShadow ?? this.showShadow,
+      showHeader: showHeader ?? this.showHeader,
+      pickerStyle: pickerStyle ?? this.pickerStyle,
+    );
+  }
+}
+

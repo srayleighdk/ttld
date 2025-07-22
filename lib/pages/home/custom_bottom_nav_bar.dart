@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'dart:ui';
 
 class CustomNavigationBar extends StatefulWidget {
   final int currentIndex;
@@ -68,35 +67,35 @@ class _CustomNavigationBarState extends State<CustomNavigationBar>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-              _buildModernNavItem(
-                context: context,
-                index: 0,
-                label: 'Trang chủ',
-                icon: FontAwesomeIcons.house,
-                selectedIcon: FontAwesomeIcons.house,
-              ),
-              _buildModernNavItem(
-                context: context,
-                index: 1,
-                label: 'Thông báo',
-                icon: FontAwesomeIcons.bell,
-                selectedIcon: FontAwesomeIcons.solidBell,
-                badgeCount: 3, // Example badge count
-              ),
-              _buildModernNavItem(
-                context: context,
-                index: 2,
-                label: 'Hồ sơ',
-                icon: FontAwesomeIcons.user,
-                selectedIcon: FontAwesomeIcons.solidUser,
-              ),
-              _buildModernNavItem(
-                context: context,
-                index: 3,
-                label: 'Liên hệ',
-                icon: FontAwesomeIcons.envelope,
-                selectedIcon: FontAwesomeIcons.solidEnvelope,
-              ),
+          _buildModernNavItem(
+            context: context,
+            index: 0,
+            label: 'Trang chủ',
+            icon: FontAwesomeIcons.house,
+            selectedIcon: FontAwesomeIcons.house,
+          ),
+          _buildModernNavItem(
+            context: context,
+            index: 1,
+            label: 'Thông báo',
+            icon: FontAwesomeIcons.bell,
+            selectedIcon: FontAwesomeIcons.solidBell,
+            badgeCount: 3, // Example badge count
+          ),
+          _buildModernNavItem(
+            context: context,
+            index: 2,
+            label: 'Hồ sơ',
+            icon: FontAwesomeIcons.user,
+            selectedIcon: FontAwesomeIcons.solidUser,
+          ),
+          _buildModernNavItem(
+            context: context,
+            index: 3,
+            label: 'Liên hệ',
+            icon: FontAwesomeIcons.envelope,
+            selectedIcon: FontAwesomeIcons.solidEnvelope,
+          ),
         ],
       ),
     );

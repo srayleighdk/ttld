@@ -56,7 +56,7 @@ class HuyenBloc extends Bloc<HuyenEvent, HuyenState> {
       if (state is HuyenLoaded) {
         final List<Huyen> updatedHuyens =
             (state as HuyenLoaded).huyens.map((existingHuyen) {
-          return existingHuyen.mahuyen == huyen.mahuyen ? huyen : existingHuyen;
+          return existingHuyen.id == huyen.id ? huyen : existingHuyen;
         }).toList();
         emit(HuyenLoaded(huyens: updatedHuyens));
       }
@@ -72,7 +72,7 @@ class HuyenBloc extends Bloc<HuyenEvent, HuyenState> {
       if (state is HuyenLoaded) {
         final List<Huyen> updatedHuyens = (state as HuyenLoaded)
             .huyens
-            .where((huyen) => huyen.mahuyen != event.id)
+            .where((huyen) => huyen.id != event.id)
             .toList();
         emit(HuyenLoaded(huyens: updatedHuyens));
       }

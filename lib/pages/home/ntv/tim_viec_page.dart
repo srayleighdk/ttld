@@ -560,7 +560,7 @@ class _TimViecPageState extends State<TimViecPage> {
                 setState(() {
                   _tinhMap = {
                     for (var item in state.tinhs)
-                      item.matinh.toString(): item.tentinh
+                      item.id.toString(): item.displayName
                   };
                 });
               }

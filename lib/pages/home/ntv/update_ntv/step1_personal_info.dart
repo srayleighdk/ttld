@@ -337,10 +337,10 @@ class Step1PersonalInfo extends StatelessWidget {
                 initialHuyen: idHuyenController.text,
                 initialXa: idXaController.text,
                 onTinhChanged: (tinh) {
-                  onLocationChanged(tinh?.matinh, null, null);
+                  onLocationChanged(tinh?.id, null, null);
                 },
                 onHuyenChanged: (huyen) {
-                  onLocationChanged(null, huyen?.mahuyen, null);
+                  onLocationChanged(null, huyen?.id, null);
                 },
                 onXaChanged: (xa) {
                   onLocationChanged(null, null, xa?.maxa);

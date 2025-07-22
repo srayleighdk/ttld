@@ -995,14 +995,14 @@ class _CreateHoSoUngVienPageState extends State<CreateHoSoUngVienPage> {
             initialXa: _idXaController.text,
             onTinhChanged: (tinh) {
               setState(() {
-                _selectedTinh = tinh?.tentinh;
-                _idTinhController.text = tinh?.matinh ?? '';
+                _selectedTinh = tinh?.displayName;
+                _idTinhController.text = tinh?.id ?? '';
               });
             },
             onHuyenChanged: (huyen) {
               setState(() {
-                _selectedHuyen = huyen?.tenhuyen;
-                _idHuyenController.text = huyen?.mahuyen ?? '';
+                _selectedHuyen = huyen?.displayName;
+                _idHuyenController.text = huyen?.id ?? '';
               });
             },
             onXaChanged: (xa) {

@@ -51,7 +51,7 @@ class TinhBloc extends Bloc<TinhEvent, TinhState> {
       if (state is TinhLoaded) {
         final List<Tinh> updatedTinhs =
             (state as TinhLoaded).tinhs.map((existingTinh) {
-          return existingTinh.matinh == tinh.matinh ? tinh : existingTinh;
+          return existingTinh.id == tinh.id ? tinh : existingTinh;
         }).toList();
         emit(TinhLoaded(tinhs: updatedTinhs));
       }
@@ -66,7 +66,7 @@ class TinhBloc extends Bloc<TinhEvent, TinhState> {
       if (state is TinhLoaded) {
         final List<Tinh> updatedTinhs = (state as TinhLoaded)
             .tinhs
-            .where((tinh) => tinh.matinh != event.id)
+            .where((tinh) => tinh.id != event.id)
             .toList();
         emit(TinhLoaded(tinhs: updatedTinhs));
       }
