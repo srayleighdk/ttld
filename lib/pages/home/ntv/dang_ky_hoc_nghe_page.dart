@@ -1,103 +1,81 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go_router/go_router.dart';
+import 'package:ttld/core/di/injection.dart';
+import 'package:ttld/core/services/hosoungvien_api_service.dart';
+import 'package:ttld/core/utils/toast_utils.dart';
+import 'package:ttld/features/auth/bloc/auth_bloc.dart';
+import 'package:ttld/features/auth/bloc/auth_state.dart';
+import 'package:ttld/models/hoso_dtn/hoso_dtn_model.dart';
+import 'package:ttld/pages/dang_ky_hoc_nghe/dang_ky_hoc_nghe_form.dart';
+import 'package:ttld/utils/hoso_dtn_mapper.dart';
 
-class DangKyHocNghePage extends StatelessWidget {
+class DangKyHocNghePage extends StatefulWidget {
   const DangKyHocNghePage({super.key});
 
   static const String routePath = '/ntv_home/dang-ky-hoc-nghe';
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final size = MediaQuery.of(context).size;
+  State<DangKyHocNghePage> createState() => _DangKyHocNghePageState();
+}
 
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 2,
-        backgroundColor: theme.colorScheme.surface,
-        scrolledUnderElevation: 1.0,
-        title: Text(
-          'Đăng ký học nghề',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: theme.colorScheme.onSurface,
-          ),
+class _DangKyHocNghePageState extends State<DangKyHocNghePage> {
+  bool _isLoading = true;
+  HosoDTN? _initialData;
+  String? _userId;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final authState = locator<AuthBloc>().state;
+    if (authState is AuthAuthenticated) {
+      _userId = authState.userId;
+      
+      try {
+        // Fetch HoSoUngVien data for the current user
+        final hosoUVService = locator<HoSoUngVienApiService>();
+        final hosoUV = await hosoUVService.getHoSoUngVienByUserId(_userId!);
+
+        // Pre-populate HosoDTN with HoSoUngVien data
+        if (hosoUV != null && HosoDTNMapper.hasEssentialData(hosoUV)) {
+          _initialData = HosoDTNMapper.fromHoSoUngVien(hosoUV);
+          
+          if (mounted) {
+            // Show summary of pre-filled data
+            final summary = HosoDTNMapper.getPrefilledSummary(hosoUV);
+            ToastUtils.showInfoToast(context, summary);
+          }
+        }
+      } catch (e) {
+        // If error loading profile, just show empty form
+        if (mounted) {
+          ToastUtils.showWarningToast(
+            context,
+            'Không thể tải dữ liệu hồ sơ. Vui lòng nhập thủ công.',
+          );
+        }
+      }
+    }
+
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
         ),
-        iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
-        leading: IconButton(
-          icon: const Icon(FontAwesomeIcons.arrowLeft),
-          onPressed: () => context.pop(),
-        ),
-      ),
-      body: Container(
-        height: size.height,
-        width: size.width,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              theme.colorScheme.primary.withAlpha(25),
-              theme.colorScheme.surface,
-            ],
-          ),
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.primary.withOpacity(0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    FontAwesomeIcons.gear,
-                    size: 64,
-                    color: theme.colorScheme.primary,
-                  ),
-                ),
-                const SizedBox(height: 32),
-                Text(
-                  'Đang cập nhật biểu mẫu',
-                  style: theme.textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.onSurface,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Chúng tôi đang nâng cấp hệ thống để phục vụ bạn tốt hơn.\nVui lòng quay lại sau.',
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    color: theme.colorScheme.onSurface.withOpacity(0.7),
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 48),
-                ElevatedButton.icon(
-                  onPressed: () => context.pop(),
-                  icon: const Icon(FontAwesomeIcons.arrowLeft),
-                  label: const Text('Quay lại'),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 32,
-                      vertical: 16,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+      );
+    }
+
+    return DangKyHocNgheForm(existingData: _initialData);
   }
 }

@@ -29,10 +29,13 @@ class ApiEndpoints {
   static String get ntdById => '/tttt/nha-tdid';
 
   // Danh muc hanh chinh
+  static String get hanhChinh => '/danhmuc/hanh-chinh';
   static String get tinh => '/danhmuc/hanh-chinh/tinh';
   static String get huyen => '/danhmuc/hanh-chinh/huyen';
   static String get xa => '/danhmuc/hanh-chinh/xa';
   static String get thon => '/danhmuc/hanh-chinh/thon';
+  static String get tinhMoi => '/danhmuc/hanh-chinh/tinhmoi';
+  static String get xaMoi => '/danhmuc/hanh-chinh/xamoi';
 
   static String get chucDanh => '/danhmuc/chuc-danh';
 

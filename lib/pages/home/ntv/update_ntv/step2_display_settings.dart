@@ -1,109 +1,60 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:ttld/widgets/field/custom_checkbox.dart';
+import 'package:ttld/core/di/injection.dart';
+import 'package:ttld/models/nganh_nghe_bachoc.dart';
+import 'package:ttld/models/nganh_nghe_td_model.dart';
+import 'package:ttld/models/trinh_do_hoc_van_model.dart';
+import 'package:ttld/models/trinh_do_ngoai_ngu_model.dart';
+import 'package:ttld/models/trinh_do_tin_hoc_model.dart';
+import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
+import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
+import 'package:ttld/widgets/reuseable_widgets/multi_select_dropdown.dart';
 
 class Step2DisplaySettings extends StatelessWidget {
   final GlobalKey<FormState> formKey;
-  final bool? uvhtEmail;
-  final bool? uvhtAddress;
-  final bool? uvhtTelephone;
-  final bool? newletterSubscription;
-  final bool? jobsletterSubscription;
-  final File? selectedFile;
-  final File? selectedImage;
-  final Function(bool?) onUvhtEmailChanged;
-  final Function(bool?) onUvhtAddressChanged;
-  final Function(bool?) onUvhtTelephoneChanged;
-  final Function(bool?) onNewletterSubscriptionChanged;
-  final Function(bool?) onJobsletterSubscriptionChanged;
-  final Function() onPickFile;
-  final Function() onPickImage;
+
+  // Education fields
+  final int? trinhDoHocVanId;
+  final int? nganhNgheId;
+  final dynamic trinhDoDaoTaoId; // Can be int or string from API
+  final TextEditingController kinhNghiemController;
+  final TextEditingController bangCapKhacController;
+  final TextEditingController trinhDoNgoaiNguController;
+  final TextEditingController trinhDoTinHocController;
+
+  // Callbacks
+  final Function(TrinhDoHocVan?) onTrinhDoHocVanChanged;
+  final Function(NganhNgheTD?) onNganhNgheChanged;
+  final Function(TrinhDoChuyenMon?) onTrinhDoDaoTaoChanged;
 
   const Step2DisplaySettings({
     Key? key,
     required this.formKey,
-    required this.uvhtEmail,
-    required this.uvhtAddress,
-    required this.uvhtTelephone,
-    required this.newletterSubscription,
-    required this.jobsletterSubscription,
-    required this.selectedFile,
-    required this.selectedImage,
-    required this.onUvhtEmailChanged,
-    required this.onUvhtAddressChanged,
-    required this.onUvhtTelephoneChanged,
-    required this.onNewletterSubscriptionChanged,
-    required this.onJobsletterSubscriptionChanged,
-    required this.onPickFile,
-    required this.onPickImage,
+    required this.trinhDoHocVanId,
+    required this.nganhNgheId,
+    required this.trinhDoDaoTaoId,
+    required this.kinhNghiemController,
+    required this.bangCapKhacController,
+    required this.trinhDoNgoaiNguController,
+    required this.trinhDoTinHocController,
+    required this.onTrinhDoHocVanChanged,
+    required this.onNganhNgheChanged,
+    required this.onTrinhDoDaoTaoChanged,
   }) : super(key: key);
 
   Widget _buildSectionHeader(ThemeData theme, String title) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: theme.colorScheme.shadow.withAlpha(26),
-            spreadRadius: 1,
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: theme.colorScheme.primaryContainer.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(8),
       ),
-      child: Row(
-        children: [
-          Container(
-            width: 4,
-            height: 24,
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primary,
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Text(
-            title,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: theme.colorScheme.onSurface,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFormSection(
-      ThemeData theme, String title, List<Widget> children) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        _buildSectionHeader(theme, title),
-        const SizedBox(height: 12),
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surface,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: theme.colorScheme.shadow.withAlpha(13),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: children,
-          ),
+      child: Text(
+        title,
+        style: theme.textTheme.titleMedium?.copyWith(
+          fontWeight: FontWeight.bold,
+          color: theme.colorScheme.onSurface,
         ),
-        const SizedBox(height: 16),
-      ],
+      ),
     );
   }
 
@@ -115,184 +66,100 @@ class Step2DisplaySettings extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _buildFormSection(
-            theme,
-            'Hiển thị thông tin',
-            [
-              CustomCheckbox(
-                label: 'Email',
-                value: uvhtEmail ?? false,
-                onChanged: onUvhtEmailChanged,
+          _buildSectionHeader(theme, 'TRÌNH ĐỘ CHUYÊN MÔN'),
+          const SizedBox(height: 16),
+
+          // Row 1: Trình độ học vấn cao nhất | Ngành nghề
+          Row(
+            children: [
+              Expanded(
+                child: GenericPicker<TrinhDoHocVan>(
+                  label: 'Trình độ học vấn cao nhất (*)',
+                  hintText: 'Chọn trình độ học vấn',
+                  items: locator<List<TrinhDoHocVan>>(),
+                  initialValue: trinhDoHocVanId,
+                  onChanged: onTrinhDoHocVanChanged,
+                ),
               ),
-              const SizedBox(height: 12),
-              CustomCheckbox(
-                label: 'Địa chỉ',
-                value: uvhtAddress ?? false,
-                onChanged: onUvhtAddressChanged,
-              ),
-              const SizedBox(height: 12),
-              CustomCheckbox(
-                label: 'Số điện thoại',
-                value: uvhtTelephone ?? false,
-                onChanged: onUvhtTelephoneChanged,
+              const SizedBox(width: 12),
+              Expanded(
+                child: GenericPicker<NganhNgheTD>(
+                  label: 'Ngành nghề',
+                  hintText: 'Chọn ngành nghề',
+                  items: locator<List<NganhNgheTD>>(),
+                  initialValue: nganhNgheId,
+                  onChanged: onNganhNgheChanged,
+                ),
               ),
             ],
           ),
-          _buildFormSection(
-            theme,
-            'Đăng ký nhận thông báo',
-            [
-              CustomCheckbox(
-                label: 'Đăng ký nhận bản tin',
-                value: newletterSubscription ?? false,
-                onChanged: onNewletterSubscriptionChanged,
+          const SizedBox(height: 12),
+
+          // Row 2: Trình độ ngoại ngữ | Tin học/Kỹ thuật viên tin học
+          Row(
+            children: [
+              Expanded(
+                child: MultiSelectDropdown<TrinhDoNgoaiNgu>(
+                  labelText: 'Trình độ ngoại ngữ',
+                  hintText: 'Chọn trình độ ngoại ngữ',
+                  items: locator<List<TrinhDoNgoaiNgu>>(),
+                  controller: trinhDoNgoaiNguController,
+                ),
               ),
-              const SizedBox(height: 12),
-              CustomCheckbox(
-                label: 'Đăng ký nhận thông báo việc làm',
-                value: jobsletterSubscription ?? false,
-                onChanged: onJobsletterSubscriptionChanged,
+              const SizedBox(width: 12),
+              Expanded(
+                child: MultiSelectDropdown<TrinhDoTinHoc>(
+                  labelText: 'Tin học/Kỹ thuật viên tin học',
+                  hintText: 'Chọn trình độ tin học',
+                  items: locator<List<TrinhDoTinHoc>>(),
+                  controller: trinhDoTinHocController,
+                ),
               ),
             ],
           ),
-          _buildFormSection(
-            theme,
-            'Tài liệu đính kèm',
-            [
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.surface,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                      color: theme.colorScheme.outline.withOpacity(0.5)),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'CV của bạn',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            selectedFile != null
-                                ? selectedFile!.path.split('/').last
-                                : 'Chưa chọn file',
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        ElevatedButton.icon(
-                          onPressed: onPickFile,
-                          icon: Icon(Icons.upload_file, size: 16),
-                          label: Text('Chọn File CV'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: theme.colorScheme.primary,
-                            foregroundColor: theme.colorScheme.onPrimary,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 8),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+          const SizedBox(height: 12),
+
+          // Row 3: Trình độ đào tạo | Kinh nghiệm
+          Row(
+            children: [
+              Expanded(
+                child: GenericPicker<TrinhDoChuyenMon>(
+                  label: 'Trình độ đào tạo',
+                  hintText: 'Chọn trình độ đào tạo',
+                  items: locator<List<TrinhDoChuyenMon>>(),
+                  initialValue: trinhDoDaoTaoId,
+                  onChanged: onTrinhDoDaoTaoChanged,
                 ),
               ),
-              const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.surface,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                      color: theme.colorScheme.outline.withOpacity(0.5)),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Ảnh đại diện',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
+              const SizedBox(width: 12),
+              Expanded(
+                child: CustomTextField(
+                  labelText: 'Kinh nghiệm',
+                  hintText: '0',
+                  controller: kinhNghiemController,
+                  suffixIcon: Padding(
+                    padding: const EdgeInsets.only(right: 12, top: 12),
+                    child: Text(
+                      '(tháng)',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        fontSize: 14,
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        if (selectedImage != null)
-                          Container(
-                            width: 80,
-                            height: 80,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              image: DecorationImage(
-                                image: FileImage(selectedImage!),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          )
-                        else
-                          Container(
-                            width: 80,
-                            height: 80,
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.surfaceVariant,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Icon(
-                              Icons.person_outline,
-                              size: 32,
-                              color: theme.colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ElevatedButton.icon(
-                                onPressed: onPickImage,
-                                icon: Icon(Icons.photo_library, size: 16),
-                                label: Text('Chọn Ảnh'),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: theme.colorScheme.primary,
-                                  foregroundColor: theme.colorScheme.onPrimary,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 12, vertical: 8),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                              ),
-                              if (selectedImage != null) ...[
-                                const SizedBox(height: 4),
-                                Text(
-                                  selectedImage!.path.split('/').last,
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                    color: theme.colorScheme.onSurfaceVariant,
-                                  ),
-                                ),
-                              ],
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                  ),
+                  keyboardType: TextInputType.number,
                 ),
               ),
             ],
+          ),
+          const SizedBox(height: 12),
+
+          // Row 4: Bằng cấp khác
+          CustomTextField(
+            labelText: 'Bằng cấp khác',
+            hintText: 'Nhập bằng cấp khác',
+            controller: bangCapKhacController,
+            maxLines: 3,
           ),
         ],
       ),

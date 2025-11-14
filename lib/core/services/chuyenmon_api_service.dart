@@ -8,9 +8,13 @@ class ChuyenMonApiService {
 
   Future<List<ChuyenMon>> getChuyenMons() async {
     try {
-      final response = await _dio.get('/tblDmChuyenMon');
+      final response = await _dio.get('/common/chuyen-mon');
       if (response.statusCode == 200) {
-        final List<dynamic> data = response.data as List<dynamic>;
+        // Handle both array response and {data: [...]} response
+        final dynamic responseData = response.data;
+        final List<dynamic> data = responseData is List
+            ? responseData
+            : (responseData['data'] as List<dynamic>);
         return data.map((json) => ChuyenMon.fromJson(json)).toList();
       } else {
         throw Exception('Failed to load ChuyenMons: ${response.statusCode}');

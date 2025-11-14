@@ -11,5 +11,6 @@ Future<void> initializeAppData() async {
   // Other data initialization might cause duplicate registrations or access unregistered repositories
   await initializeMiscData();
   await initializeJobData();
-  await initializeUserData(); // Add this line to initialize DanToc and other user data
+  await initializeUserData();
+  await initializeEmploymentData();
 }

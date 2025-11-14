@@ -14,16 +14,24 @@ class ApiClient {
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
   ApiClient(this._prefs) {
-    // Load base URL from SharedPreferences on initialization
-    final savedRegionName = _prefs.getString('selected_region');
-    final savedRegion = regionFromString(savedRegionName);
-    final initialBaseUrl = getEnv(savedRegion?.baseUrlKey ??
-        Region.lamDong.baseUrlKey); // Use default if none saved
+    // Determine base URL based on environment
+    final appEnv = getEnv('APP_ENV');
+    final isDevelopment = appEnv == 'developing';
+
+    String initialBaseUrl;
+    if (isDevelopment) {
+      // Development: Always use localhost
+      initialBaseUrl = 'http://localhost:3003/api';
+    } else {
+      // Production: Use saved region or default to Lam Dong
+      final savedRegionName = _prefs.getString('selected_region');
+      final savedRegion = regionFromString(savedRegionName);
+      initialBaseUrl = getEnv(savedRegion?.baseUrlKey ?? Region.lamDong.baseUrlKey);
+    }
 
     _dio = Dio(
       BaseOptions(
-        // baseUrl: initialBaseUrl, // Set initial base URL
-        baseUrl: 'http://localhost:3003/api',
+        baseUrl: initialBaseUrl,
         connectTimeout: const Duration(seconds: 30),
         receiveTimeout: const Duration(seconds: 30),
         sendTimeout: const Duration(seconds: 30),

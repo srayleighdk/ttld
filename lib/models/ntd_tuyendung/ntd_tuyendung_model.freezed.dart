@@ -57,17 +57,17 @@ mixin _$NTDTuyenDung {
   int? get idDoituongCs => throw _privateConstructorUsedError;
   String? get idphieut11 => throw _privateConstructorUsedError;
   String? get idDoanhNghiep => throw _privateConstructorUsedError;
-  int? get tdNoilamviec => throw _privateConstructorUsedError;
-  int? get tdNganhnghe => throw _privateConstructorUsedError;
-  int? get tdYeuCauHocVan => throw _privateConstructorUsedError;
-  int? get tdThoigianlamviec => throw _privateConstructorUsedError;
-  String? get idKinhnghiem => throw _privateConstructorUsedError;
-  String? get idBacHoc => throw _privateConstructorUsedError;
-  String? get idKynang => throw _privateConstructorUsedError;
-  String? get idHinhthucLv => throw _privateConstructorUsedError;
-  String? get tdYeuCauTinHoc => throw _privateConstructorUsedError;
-  String? get tdYeuCauNgoaiNgu => throw _privateConstructorUsedError;
-  int? get tdYeuCauGioiTinh => throw _privateConstructorUsedError;
+  dynamic get tdNoilamviec => throw _privateConstructorUsedError;
+  dynamic get tdNganhnghe => throw _privateConstructorUsedError;
+  dynamic get tdYeuCauHocVan => throw _privateConstructorUsedError;
+  dynamic get tdThoigianlamviec => throw _privateConstructorUsedError;
+  dynamic get idKinhnghiem => throw _privateConstructorUsedError;
+  dynamic get idBacHoc => throw _privateConstructorUsedError;
+  dynamic get idKynang => throw _privateConstructorUsedError;
+  dynamic get idHinhthucLv => throw _privateConstructorUsedError;
+  dynamic get tdYeuCauTinHoc => throw _privateConstructorUsedError;
+  dynamic get tdYeuCauNgoaiNgu => throw _privateConstructorUsedError;
+  dynamic get tdYeuCauGioiTinh => throw _privateConstructorUsedError;
   String? get maHoso => throw _privateConstructorUsedError;
   String? get nguoiLienhe => throw _privateConstructorUsedError;
   String? get soDienthoai => throw _privateConstructorUsedError;
@@ -131,17 +131,17 @@ abstract class $NTDTuyenDungCopyWith<$Res> {
       int? idDoituongCs,
       String? idphieut11,
       String? idDoanhNghiep,
-      int? tdNoilamviec,
-      int? tdNganhnghe,
-      int? tdYeuCauHocVan,
-      int? tdThoigianlamviec,
-      String? idKinhnghiem,
-      String? idBacHoc,
-      String? idKynang,
-      String? idHinhthucLv,
-      String? tdYeuCauTinHoc,
-      String? tdYeuCauNgoaiNgu,
-      int? tdYeuCauGioiTinh,
+      dynamic tdNoilamviec,
+      dynamic tdNganhnghe,
+      dynamic tdYeuCauHocVan,
+      dynamic tdThoigianlamviec,
+      dynamic idKinhnghiem,
+      dynamic idBacHoc,
+      dynamic idKynang,
+      dynamic idHinhthucLv,
+      dynamic tdYeuCauTinHoc,
+      dynamic tdYeuCauNgoaiNgu,
+      dynamic tdYeuCauGioiTinh,
       String? maHoso,
       String? nguoiLienhe,
       String? soDienthoai,
@@ -376,47 +376,47 @@ class _$NTDTuyenDungCopyWithImpl<$Res, $Val extends NTDTuyenDung>
       tdNoilamviec: freezed == tdNoilamviec
           ? _value.tdNoilamviec
           : tdNoilamviec // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as dynamic,
       tdNganhnghe: freezed == tdNganhnghe
           ? _value.tdNganhnghe
           : tdNganhnghe // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as dynamic,
       tdYeuCauHocVan: freezed == tdYeuCauHocVan
           ? _value.tdYeuCauHocVan
           : tdYeuCauHocVan // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as dynamic,
       tdThoigianlamviec: freezed == tdThoigianlamviec
           ? _value.tdThoigianlamviec
           : tdThoigianlamviec // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as dynamic,
       idKinhnghiem: freezed == idKinhnghiem
           ? _value.idKinhnghiem
           : idKinhnghiem // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as dynamic,
       idBacHoc: freezed == idBacHoc
           ? _value.idBacHoc
           : idBacHoc // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as dynamic,
       idKynang: freezed == idKynang
           ? _value.idKynang
           : idKynang // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as dynamic,
       idHinhthucLv: freezed == idHinhthucLv
           ? _value.idHinhthucLv
           : idHinhthucLv // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as dynamic,
       tdYeuCauTinHoc: freezed == tdYeuCauTinHoc
           ? _value.tdYeuCauTinHoc
           : tdYeuCauTinHoc // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as dynamic,
       tdYeuCauNgoaiNgu: freezed == tdYeuCauNgoaiNgu
           ? _value.tdYeuCauNgoaiNgu
           : tdYeuCauNgoaiNgu // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as dynamic,
       tdYeuCauGioiTinh: freezed == tdYeuCauGioiTinh
           ? _value.tdYeuCauGioiTinh
           : tdYeuCauGioiTinh // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as dynamic,
       maHoso: freezed == maHoso
           ? _value.maHoso
           : maHoso // ignore: cast_nullable_to_non_nullable
@@ -499,17 +499,17 @@ abstract class _$$NTDTuyenDungImplCopyWith<$Res>
       int? idDoituongCs,
       String? idphieut11,
       String? idDoanhNghiep,
-      int? tdNoilamviec,
-      int? tdNganhnghe,
-      int? tdYeuCauHocVan,
-      int? tdThoigianlamviec,
-      String? idKinhnghiem,
-      String? idBacHoc,
-      String? idKynang,
-      String? idHinhthucLv,
-      String? tdYeuCauTinHoc,
-      String? tdYeuCauNgoaiNgu,
-      int? tdYeuCauGioiTinh,
+      dynamic tdNoilamviec,
+      dynamic tdNganhnghe,
+      dynamic tdYeuCauHocVan,
+      dynamic tdThoigianlamviec,
+      dynamic idKinhnghiem,
+      dynamic idBacHoc,
+      dynamic idKynang,
+      dynamic idHinhthucLv,
+      dynamic tdYeuCauTinHoc,
+      dynamic tdYeuCauNgoaiNgu,
+      dynamic tdYeuCauGioiTinh,
       String? maHoso,
       String? nguoiLienhe,
       String? soDienthoai,
@@ -742,47 +742,47 @@ class __$$NTDTuyenDungImplCopyWithImpl<$Res>
       tdNoilamviec: freezed == tdNoilamviec
           ? _value.tdNoilamviec
           : tdNoilamviec // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as dynamic,
       tdNganhnghe: freezed == tdNganhnghe
           ? _value.tdNganhnghe
           : tdNganhnghe // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as dynamic,
       tdYeuCauHocVan: freezed == tdYeuCauHocVan
           ? _value.tdYeuCauHocVan
           : tdYeuCauHocVan // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as dynamic,
       tdThoigianlamviec: freezed == tdThoigianlamviec
           ? _value.tdThoigianlamviec
           : tdThoigianlamviec // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as dynamic,
       idKinhnghiem: freezed == idKinhnghiem
           ? _value.idKinhnghiem
           : idKinhnghiem // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as dynamic,
       idBacHoc: freezed == idBacHoc
           ? _value.idBacHoc
           : idBacHoc // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as dynamic,
       idKynang: freezed == idKynang
           ? _value.idKynang
           : idKynang // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as dynamic,
       idHinhthucLv: freezed == idHinhthucLv
           ? _value.idHinhthucLv
           : idHinhthucLv // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as dynamic,
       tdYeuCauTinHoc: freezed == tdYeuCauTinHoc
           ? _value.tdYeuCauTinHoc
           : tdYeuCauTinHoc // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as dynamic,
       tdYeuCauNgoaiNgu: freezed == tdYeuCauNgoaiNgu
           ? _value.tdYeuCauNgoaiNgu
           : tdYeuCauNgoaiNgu // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as dynamic,
       tdYeuCauGioiTinh: freezed == tdYeuCauGioiTinh
           ? _value.tdYeuCauGioiTinh
           : tdYeuCauGioiTinh // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as dynamic,
       maHoso: freezed == maHoso
           ? _value.maHoso
           : maHoso // ignore: cast_nullable_to_non_nullable
@@ -958,27 +958,27 @@ class _$NTDTuyenDungImpl implements _NTDTuyenDung {
   @override
   final String? idDoanhNghiep;
   @override
-  final int? tdNoilamviec;
+  final dynamic tdNoilamviec;
   @override
-  final int? tdNganhnghe;
+  final dynamic tdNganhnghe;
   @override
-  final int? tdYeuCauHocVan;
+  final dynamic tdYeuCauHocVan;
   @override
-  final int? tdThoigianlamviec;
+  final dynamic tdThoigianlamviec;
   @override
-  final String? idKinhnghiem;
+  final dynamic idKinhnghiem;
   @override
-  final String? idBacHoc;
+  final dynamic idBacHoc;
   @override
-  final String? idKynang;
+  final dynamic idKynang;
   @override
-  final String? idHinhthucLv;
+  final dynamic idHinhthucLv;
   @override
-  final String? tdYeuCauTinHoc;
+  final dynamic tdYeuCauTinHoc;
   @override
-  final String? tdYeuCauNgoaiNgu;
+  final dynamic tdYeuCauNgoaiNgu;
   @override
-  final int? tdYeuCauGioiTinh;
+  final dynamic tdYeuCauGioiTinh;
   @override
   final String? maHoso;
   @override
@@ -1078,25 +1078,25 @@ class _$NTDTuyenDungImpl implements _NTDTuyenDung {
                 other.idphieut11 == idphieut11) &&
             (identical(other.idDoanhNghiep, idDoanhNghiep) ||
                 other.idDoanhNghiep == idDoanhNghiep) &&
-            (identical(other.tdNoilamviec, tdNoilamviec) ||
-                other.tdNoilamviec == tdNoilamviec) &&
-            (identical(other.tdNganhnghe, tdNganhnghe) ||
-                other.tdNganhnghe == tdNganhnghe) &&
-            (identical(other.tdYeuCauHocVan, tdYeuCauHocVan) ||
-                other.tdYeuCauHocVan == tdYeuCauHocVan) &&
-            (identical(other.tdThoigianlamviec, tdThoigianlamviec) ||
-                other.tdThoigianlamviec == tdThoigianlamviec) &&
-            (identical(other.idKinhnghiem, idKinhnghiem) ||
-                other.idKinhnghiem == idKinhnghiem) &&
-            (identical(other.idBacHoc, idBacHoc) ||
-                other.idBacHoc == idBacHoc) &&
-            (identical(other.idKynang, idKynang) ||
-                other.idKynang == idKynang) &&
-            (identical(other.idHinhthucLv, idHinhthucLv) ||
-                other.idHinhthucLv == idHinhthucLv) &&
-            (identical(other.tdYeuCauTinHoc, tdYeuCauTinHoc) || other.tdYeuCauTinHoc == tdYeuCauTinHoc) &&
-            (identical(other.tdYeuCauNgoaiNgu, tdYeuCauNgoaiNgu) || other.tdYeuCauNgoaiNgu == tdYeuCauNgoaiNgu) &&
-            (identical(other.tdYeuCauGioiTinh, tdYeuCauGioiTinh) || other.tdYeuCauGioiTinh == tdYeuCauGioiTinh) &&
+            const DeepCollectionEquality()
+                .equals(other.tdNoilamviec, tdNoilamviec) &&
+            const DeepCollectionEquality()
+                .equals(other.tdNganhnghe, tdNganhnghe) &&
+            const DeepCollectionEquality()
+                .equals(other.tdYeuCauHocVan, tdYeuCauHocVan) &&
+            const DeepCollectionEquality()
+                .equals(other.tdThoigianlamviec, tdThoigianlamviec) &&
+            const DeepCollectionEquality()
+                .equals(other.idKinhnghiem, idKinhnghiem) &&
+            const DeepCollectionEquality().equals(other.idBacHoc, idBacHoc) &&
+            const DeepCollectionEquality().equals(other.idKynang, idKynang) &&
+            const DeepCollectionEquality()
+                .equals(other.idHinhthucLv, idHinhthucLv) &&
+            const DeepCollectionEquality()
+                .equals(other.tdYeuCauTinHoc, tdYeuCauTinHoc) &&
+            const DeepCollectionEquality()
+                .equals(other.tdYeuCauNgoaiNgu, tdYeuCauNgoaiNgu) &&
+            const DeepCollectionEquality().equals(other.tdYeuCauGioiTinh, tdYeuCauGioiTinh) &&
             (identical(other.maHoso, maHoso) || other.maHoso == maHoso) &&
             (identical(other.nguoiLienhe, nguoiLienhe) || other.nguoiLienhe == nguoiLienhe) &&
             (identical(other.soDienthoai, soDienthoai) || other.soDienthoai == soDienthoai) &&
@@ -1148,17 +1148,17 @@ class _$NTDTuyenDungImpl implements _NTDTuyenDung {
         idDoituongCs,
         idphieut11,
         idDoanhNghiep,
-        tdNoilamviec,
-        tdNganhnghe,
-        tdYeuCauHocVan,
-        tdThoigianlamviec,
-        idKinhnghiem,
-        idBacHoc,
-        idKynang,
-        idHinhthucLv,
-        tdYeuCauTinHoc,
-        tdYeuCauNgoaiNgu,
-        tdYeuCauGioiTinh,
+        const DeepCollectionEquality().hash(tdNoilamviec),
+        const DeepCollectionEquality().hash(tdNganhnghe),
+        const DeepCollectionEquality().hash(tdYeuCauHocVan),
+        const DeepCollectionEquality().hash(tdThoigianlamviec),
+        const DeepCollectionEquality().hash(idKinhnghiem),
+        const DeepCollectionEquality().hash(idBacHoc),
+        const DeepCollectionEquality().hash(idKynang),
+        const DeepCollectionEquality().hash(idHinhthucLv),
+        const DeepCollectionEquality().hash(tdYeuCauTinHoc),
+        const DeepCollectionEquality().hash(tdYeuCauNgoaiNgu),
+        const DeepCollectionEquality().hash(tdYeuCauGioiTinh),
         maHoso,
         nguoiLienhe,
         soDienthoai,
@@ -1224,17 +1224,17 @@ abstract class _NTDTuyenDung implements NTDTuyenDung {
       final int? idDoituongCs,
       final String? idphieut11,
       final String? idDoanhNghiep,
-      final int? tdNoilamviec,
-      final int? tdNganhnghe,
-      final int? tdYeuCauHocVan,
-      final int? tdThoigianlamviec,
-      final String? idKinhnghiem,
-      final String? idBacHoc,
-      final String? idKynang,
-      final String? idHinhthucLv,
-      final String? tdYeuCauTinHoc,
-      final String? tdYeuCauNgoaiNgu,
-      final int? tdYeuCauGioiTinh,
+      final dynamic tdNoilamviec,
+      final dynamic tdNganhnghe,
+      final dynamic tdYeuCauHocVan,
+      final dynamic tdThoigianlamviec,
+      final dynamic idKinhnghiem,
+      final dynamic idBacHoc,
+      final dynamic idKynang,
+      final dynamic idHinhthucLv,
+      final dynamic tdYeuCauTinHoc,
+      final dynamic tdYeuCauNgoaiNgu,
+      final dynamic tdYeuCauGioiTinh,
       final String? maHoso,
       final String? nguoiLienhe,
       final String? soDienthoai,
@@ -1322,27 +1322,27 @@ abstract class _NTDTuyenDung implements NTDTuyenDung {
   @override
   String? get idDoanhNghiep;
   @override
-  int? get tdNoilamviec;
+  dynamic get tdNoilamviec;
   @override
-  int? get tdNganhnghe;
+  dynamic get tdNganhnghe;
   @override
-  int? get tdYeuCauHocVan;
+  dynamic get tdYeuCauHocVan;
   @override
-  int? get tdThoigianlamviec;
+  dynamic get tdThoigianlamviec;
   @override
-  String? get idKinhnghiem;
+  dynamic get idKinhnghiem;
   @override
-  String? get idBacHoc;
+  dynamic get idBacHoc;
   @override
-  String? get idKynang;
+  dynamic get idKynang;
   @override
-  String? get idHinhthucLv;
+  dynamic get idHinhthucLv;
   @override
-  String? get tdYeuCauTinHoc;
+  dynamic get tdYeuCauTinHoc;
   @override
-  String? get tdYeuCauNgoaiNgu;
+  dynamic get tdYeuCauNgoaiNgu;
   @override
-  int? get tdYeuCauGioiTinh;
+  dynamic get tdYeuCauGioiTinh;
   @override
   String? get maHoso;
   @override

@@ -69,6 +69,8 @@ class TblHoSoUngVienModel with _$TblHoSoUngVienModel {
     String? idTinh,
     String? idhuyen,
     String? idxa,
+    int? idTinhMoi,
+    int? idxaMoi,
     String? idtv,
     String? mahoGd,
     dynamic fileCv,

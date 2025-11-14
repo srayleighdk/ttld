@@ -3,114 +3,62 @@ import 'package:ttld/models/chuc_danh_model.dart';
 import 'package:ttld/models/hinhthuc_doanhnghiep/hinhthuc_doanhnghiep_model.dart';
 import 'package:ttld/models/muc_luong_mm.dart';
 import 'package:ttld/models/thoigianlamviec_model.dart';
-import 'package:ttld/models/tinh_thanh_model.dart';
 import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
 import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
 import 'package:ttld/core/di/injection.dart';
 
 class Step3JobPreferences extends StatelessWidget {
   final GlobalKey<FormState> formKey;
-  final TextEditingController cvMongMuonController;
-  final TextEditingController uvnvTienluong;
-  final TextEditingController uvcmCongviechientaiController;
-  final TextEditingController uvcmKynangController;
-  final TextEditingController uvGhichuController;
-  final TextEditingController uvnvNoilamviecController;
-  final int? uvnvVitrimongmuonId;
-  final int? idMucluong;
-  final int? uvnvThoigianId;
-  final int? uvnvHinhthuccongtyId;
-  final Function(ChucDanhModel?) onChucDanhChanged;
+
+  // Text field controllers
+  final TextEditingController congViecMMController;
+  final TextEditingController noiLamViecMMController;
+  final TextEditingController congViecDaLamController;
+  final TextEditingController khaNangSoTruongController;
+
+  // Dropdown IDs
+  final int? viTriMMId;
+  final int? mucLuongId;
+  final int? thoiGianLamViecMMId;
+  final int? hinhThucCtyMMId;
+
+  // Callbacks
+  final Function(ChucDanhModel?) onViTriMMChanged;
   final Function(MucLuongMM?) onMucLuongChanged;
   final Function(ThoiGianLamViec?) onThoiGianLamViecChanged;
-  final Function(HinhThucDoanhNghiep?) onHinhThucDoanhNghiepChanged;
-  final Function(TinhThanhModel?) onTinhThanhMMChanged;
+  final Function(HinhThucDoanhNghiep?) onHinhThucCtyMMChanged;
 
   const Step3JobPreferences({
     Key? key,
     required this.formKey,
-    required this.cvMongMuonController,
-    required this.uvnvTienluong,
-    required this.uvcmCongviechientaiController,
-    required this.uvcmKynangController,
-    required this.uvGhichuController,
-    required this.uvnvNoilamviecController,
-    required this.uvnvVitrimongmuonId,
-    required this.idMucluong,
-    required this.uvnvThoigianId,
-    required this.uvnvHinhthuccongtyId,
-    required this.onChucDanhChanged,
+    required this.congViecMMController,
+    required this.noiLamViecMMController,
+    required this.congViecDaLamController,
+    required this.khaNangSoTruongController,
+    required this.viTriMMId,
+    required this.mucLuongId,
+    required this.thoiGianLamViecMMId,
+    required this.hinhThucCtyMMId,
+    required this.onViTriMMChanged,
     required this.onMucLuongChanged,
     required this.onThoiGianLamViecChanged,
-    required this.onHinhThucDoanhNghiepChanged,
-    required this.onTinhThanhMMChanged,
+    required this.onHinhThucCtyMMChanged,
   }) : super(key: key);
 
   Widget _buildSectionHeader(ThemeData theme, String title) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: theme.colorScheme.shadow.withAlpha(26),
-            spreadRadius: 1,
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        color: theme.colorScheme.primaryContainer.withOpacity(0.3),
+        borderRadius: BorderRadius.circular(8),
       ),
-      child: Row(
-        children: [
-          Container(
-            width: 4,
-            height: 24,
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primary,
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Text(
-            title,
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: theme.colorScheme.onSurface,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFormSection(
-      ThemeData theme, String title, List<Widget> children) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        _buildSectionHeader(theme, title),
-        const SizedBox(height: 12),
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: theme.colorScheme.surface,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: theme.colorScheme.shadow.withAlpha(13),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: children,
-          ),
+      child: Text(
+        title,
+        style: theme.textTheme.titleMedium?.copyWith(
+          fontWeight: FontWeight.bold,
+          color: theme.colorScheme.onSurface,
         ),
-        const SizedBox(height: 16),
-      ],
+      ),
     );
   }
 
@@ -122,100 +70,94 @@ class Step3JobPreferences extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _buildFormSection(
-            theme,
-            'Việc làm mong muốn',
-            [
-              CustomTextField(
-                labelText: 'Việc làm mong muốn',
-                hintText: 'Việc làm mong muốn',
-                controller: cvMongMuonController,
-                validator: 'not_empty',
+          _buildSectionHeader(theme, 'NHU CẦU CÔNG VIỆC, VỊ TRÍ VIỆC LÀM MONG MUỐN (MONG MUỐN = MM)'),
+          const SizedBox(height: 16),
+
+          // Row 1: Công việc MM (full width)
+          CustomTextField(
+            labelText: 'Công việc MM',
+            hintText: 'Cong nghe thong tin',
+            controller: congViecMMController,
+          ),
+          const SizedBox(height: 12),
+
+          // Row 2: Vị trí MM | Mức lương
+          Row(
+            children: [
+              Expanded(
+                child: GenericPicker<ChucDanhModel>(
+                  label: 'Vị trí MM',
+                  hintText: 'Chọn vị trí',
+                  items: locator<List<ChucDanhModel>>(),
+                  initialValue: viTriMMId,
+                  onChanged: onViTriMMChanged,
+                ),
               ),
-              const SizedBox(height: 12),
-              GenericPicker<ChucDanhModel>(
-                label: 'Chức vụ mong muốn',
-                items: locator<List<ChucDanhModel>>(),
-                initialValue: uvnvVitrimongmuonId,
-                onChanged: onChucDanhChanged,
+              const SizedBox(width: 12),
+              Expanded(
+                child: GenericPicker<MucLuongMM>(
+                  label: 'Mức lương',
+                  hintText: 'Thỏa thuận',
+                  items: locator<List<MucLuongMM>>(),
+                  initialValue: mucLuongId,
+                  onChanged: onMucLuongChanged,
+                ),
               ),
             ],
           ),
-          _buildFormSection(
-            theme,
-            'Thông tin lương',
-            [
-              GenericPicker<MucLuongMM>(
-                label: 'Mức lương mong muốn',
-                items: locator<List<MucLuongMM>>(),
-                initialValue: idMucluong,
-                onChanged: onMucLuongChanged,
+          const SizedBox(height: 12),
+
+          // Row 3: Thời gian làm việc MM | Hình thức Cty MM
+          Row(
+            children: [
+              Expanded(
+                child: GenericPicker<ThoiGianLamViec>(
+                  label: 'Thời gian làm việc MM',
+                  hintText: 'Chọn thời gian làm việc',
+                  items: locator<List<ThoiGianLamViec>>(),
+                  initialValue: thoiGianLamViecMMId,
+                  onChanged: onThoiGianLamViecChanged,
+                ),
               ),
-              const SizedBox(height: 12),
-              CustomTextField.number(
-                allowDecimals: true,
-                hintText: 'Lương khởi điểm',
-                controller: uvnvTienluong,
-                validator: 'not_empty',
-                labelText: 'Lương khởi điểm',
-              ),
-            ],
-          ),
-          _buildFormSection(
-            theme,
-            'Thời gian và hình thức làm việc',
-            [
-              GenericPicker<ThoiGianLamViec>(
-                label: 'Thời gian làm việc mong muốn',
-                items: locator<List<ThoiGianLamViec>>(),
-                initialValue: uvnvThoigianId,
-                onChanged: onThoiGianLamViecChanged,
-              ),
-              const SizedBox(height: 12),
-              GenericPicker<HinhThucDoanhNghiep>(
-                label: 'Hình thức công ty mong muốn',
-                items: locator<List<HinhThucDoanhNghiep>>(),
-                initialValue: uvnvHinhthuccongtyId,
-                onChanged: onHinhThucDoanhNghiepChanged,
-              ),
-              const SizedBox(height: 12),
-              GenericPicker<TinhThanhModel>(
-                label: 'Thành phố mong muốn',
-                items: locator<List<TinhThanhModel>>(),
-                initialValue: uvnvNoilamviecController.text,
-                onChanged: onTinhThanhMMChanged,
+              const SizedBox(width: 12),
+              Expanded(
+                child: GenericPicker<HinhThucDoanhNghiep>(
+                  label: 'Hình thức Cty MM',
+                  hintText: 'Chọn hình thức công ty',
+                  items: locator<List<HinhThucDoanhNghiep>>(),
+                  initialValue: hinhThucCtyMMId,
+                  onChanged: onHinhThucCtyMMChanged,
+                ),
               ),
             ],
           ),
-          _buildFormSection(
-            theme,
-            'Kinh nghiệm và kỹ năng',
-            [
-              CustomTextField.textArea(
-                labelText: 'Công việc đã làm',
-                hintText: 'Công việc đã làm',
-                minLines: 3,
-                maxLines: 5,
-                controller: uvcmCongviechientaiController,
-                validator: 'not_empty',
-              ),
-              const SizedBox(height: 12),
-              CustomTextField.textArea(
-                labelText: 'Kỹ năng',
-                hintText: 'Kỹ năng',
-                minLines: 3,
-                maxLines: 5,
-                controller: uvcmKynangController,
-              ),
-              const SizedBox(height: 12),
-              CustomTextField.textArea(
-                labelText: 'Ghi chú',
-                hintText: 'Ghi chú',
-                minLines: 3,
-                maxLines: 5,
-                controller: uvGhichuController,
-              ),
-            ],
+          const SizedBox(height: 12),
+
+          // Row 4: Nơi làm việc MM (full width)
+          CustomTextField(
+            labelText: 'Nơi làm việc MM',
+            hintText: 'Nhập nơi làm việc mong muốn',
+            controller: noiLamViecMMController,
+          ),
+          const SizedBox(height: 12),
+
+          // Row 5: Công việc đã làm (multiline)
+          CustomTextField(
+            labelText: 'Công việc đã làm',
+            hintText: 'công việc hiện tại đang làm hoặc đã từng làm ở công ty khác, Công ty đã từng công tác...',
+            controller: congViecDaLamController,
+            maxLines: 4,
+            minLines: 3,
+          ),
+          const SizedBox(height: 12),
+
+          // Row 6: Khả năng, sở trường (multiline)
+          CustomTextField(
+            labelText: 'Khả năng, sở trường',
+            hintText: 'kỹ năng mềm, kỹ năng giao tiếp, kỹ năng phân tích...',
+            controller: khaNangSoTruongController,
+            maxLines: 4,
+            minLines: 3,
           ),
         ],
       ),

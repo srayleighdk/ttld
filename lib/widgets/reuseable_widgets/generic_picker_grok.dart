@@ -177,6 +177,12 @@ class _ModernPickerState<T extends GenericPickerItem> extends State<ModernPicker
                   return DropdownMenuEntry<T>(
                     value: item,
                     label: item.displayName,
+                    style: ButtonStyle(
+                      textStyle: MaterialStateProperty.all(
+                        theme.textTheme.bodyMedium,
+                      ),
+                      foregroundColor: MaterialStateProperty.all(contentColor),
+                    ),
                   );
                 }).toList(),
                 hintText: widget.hint ?? 'Select an option',
@@ -422,6 +428,14 @@ class _GenericPickerState<T extends GenericPickerItem>
 
   @override
   Widget build(BuildContext context) {
+    // Debug logging
+    if (widget.label == 'Trình độ CMKT') {
+      debugPrint('🎨 GenericPicker build - ${widget.label}: ${widget.items.length} items');
+      if (widget.items.isNotEmpty) {
+        debugPrint('🎨 First item: ${widget.items.first.displayName}');
+      }
+    }
+    
     // Use the new ModernPicker for consistent styling
     return ModernPicker<T>(
       label: widget.label,

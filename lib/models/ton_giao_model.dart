@@ -1,25 +1,29 @@
-class TonGiao {
-  final String tenTg;
+import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
+
+class TonGiao extends GenericPickerItem {
   final int displayOrder;
   final bool status;
 
   TonGiao({
-    required this.tenTg,
+    required super.id,
+    required String name,
     required this.displayOrder,
     required this.status,
-  });
+  }) : super(displayName: name);
 
   factory TonGiao.fromJson(Map<String, dynamic> json) {
     return TonGiao(
-      tenTg: json['tenTg'],
-      displayOrder: json['displayOrder'],
-      status: json['status'],
+      id: json['id'] ?? json['idTg'],
+      name: json['tenTg'] ?? json['name'] ?? '',
+      displayOrder: json['displayOrder'] ?? 0,
+      status: json['status'] ?? true,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'tenTg': tenTg,
+      'id': id,
+      'tenTg': displayName,
       'displayOrder': displayOrder,
       'status': status,
     };

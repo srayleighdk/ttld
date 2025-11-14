@@ -1,0 +1,141 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'hoso_dtn_model.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+_$HosoDTNImpl _$$HosoDTNImplFromJson(Map<String, dynamic> json) =>
+    _$HosoDTNImpl(
+      id: json['id'] as String?,
+      idloai: (json['idloai'] as num?)?.toInt(),
+      dkdtnNgay: json['dkdtnNgay'] == null
+          ? null
+          : DateTime.parse(json['dkdtnNgay'] as String),
+      dkdtnUsername: json['dkdtnUsername'] as String?,
+      dkdtnEmail: json['dkdtnEmail'] as String?,
+      dkdtnPassword: json['dkdtnPassword'] as String?,
+      dkdtnHoten: json['dkdtnHoten'] as String?,
+      imagePath: json['imagePath'] as String?,
+      dkdtnNgaysinh: json['dkdtnNgaysinh'] == null
+          ? null
+          : DateTime.parse(json['dkdtnNgaysinh'] as String),
+      dkdtnChuyenmon: json['dkdtnChuyenmon'] as String?,
+      dkdtnDienthoai: json['dkdtnDienthoai'] as String?,
+      dkdtnDantoc: (json['dkdtnDantoc'] as num?)?.toInt(),
+      dkdtnTongiao: (json['dkdtnTongiao'] as num?)?.toInt(),
+      dkdtnHokhauthuongtru: json['dkdtnHokhauthuongtru'] as String?,
+      dkdtndmNghenganhan: (json['dkdtndmNghenganhan'] as num?)?.toInt(),
+      dkdtndmNghesocap: (json['dkdtndmNghesocap'] as num?)?.toInt(),
+      dkdtnGhichu: json['dkdtnGhichu'] as String?,
+      dkdtnhtTelephone:
+          const IntToBoolConverter().fromJson(json['dkdtnhtTelephone']),
+      dkdtnhtEmail: const IntToBoolConverter().fromJson(json['dkdtnhtEmail']),
+      dkdtnhtAddress:
+          const IntToBoolConverter().fromJson(json['dkdtnhtAddress']),
+      soNhaDuong: json['soNhaDuong'] as String?,
+      maTinh: json['maTinh'] as String?,
+      maHuyen: json['maHuyen'] as String?,
+      maXa: json['maXa'] as String?,
+      idDaoTao: (json['idDaoTao'] as num?)?.toInt(),
+      nguyenQuan: json['nguyenQuan'] as String?,
+      idTdNgoaiNgu: json['idTdNgoaiNgu'] as String?,
+      chieuCao: json['chieuCao'] as String?,
+      canNang: json['canNang'] as String?,
+      matTrai: json['matTrai'] as String?,
+      matPhai: json['matPhai'] as String?,
+      muMau: json['muMau'] as String?,
+      hoTenCha: json['hoTenCha'] as String?,
+      hoTenMe: json['hoTenMe'] as String?,
+      diaChiBaoTin: json['diaChiBaoTin'] as String?,
+      dienThoaiBaoTin: json['dienThoaiBaoTin'] as String?,
+      tinNhanBaoTin: json['tinNhanBaoTin'] as String?,
+      soHoChieu: json['soHoChieu'] as String?,
+      docThan: const IntToBoolConverter().fromJson(json['docThan']),
+      daCoGiaDinh: const IntToBoolConverter().fromJson(json['daCoGiaDinh']),
+      daLyDi: const IntToBoolConverter().fromJson(json['daLyDi']),
+      soCon: (json['soCon'] as num?)?.toInt(),
+      daLamViecONuocNgoai: json['daLamViecONuocNgoai'] as String?,
+      coBhtn: const IntToBoolConverter().fromJson(json['coBhtn']),
+      idtv: json['idtv'] as String?,
+      dkStatus: (json['dkStatus'] as num?)?.toInt(),
+      dkngonngu: json['dkngonngu'] as String?,
+      duyetdangky: const IntToBoolConverter().fromJson(json['duyetdangky']),
+      dkdtndmDoituongchinhsach:
+          (json['dkdtndmDoituongchinhsach'] as num?)?.toInt(),
+      dkdtndmTruong: (json['dkdtndmTruong'] as num?)?.toInt(),
+      dkdtnGioitinh: (json['dkdtnGioitinh'] as num?)?.toInt(),
+      dkdtnDuyet: (json['dkdtnDuyet'] as num?)?.toInt(),
+      idTrangThaiTrungTuyen:
+          const IntToBoolConverter().fromJson(json['idTrangThaiTrungTuyen']),
+      dkdtndmTrinhdohocvanDtn:
+          (json['dkdtndmTrinhdohocvanDtn'] as num?)?.toInt(),
+      dkdtndmNghedaotao: (json['dkdtndmNghedaotao'] as num?)?.toInt(),
+      dkdtndmNganhcaodang: (json['dkdtndmNganhcaodang'] as num?)?.toInt(),
+      dkdtndmNganhtrungcap: (json['dkdtndmNganhtrungcap'] as num?)?.toInt(),
+    );
+
+Map<String, dynamic> _$$HosoDTNImplToJson(_$HosoDTNImpl instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'idloai': instance.idloai,
+      'dkdtnNgay': instance.dkdtnNgay?.toIso8601String(),
+      'dkdtnUsername': instance.dkdtnUsername,
+      'dkdtnEmail': instance.dkdtnEmail,
+      'dkdtnPassword': instance.dkdtnPassword,
+      'dkdtnHoten': instance.dkdtnHoten,
+      'imagePath': instance.imagePath,
+      'dkdtnNgaysinh': instance.dkdtnNgaysinh?.toIso8601String(),
+      'dkdtnChuyenmon': instance.dkdtnChuyenmon,
+      'dkdtnDienthoai': instance.dkdtnDienthoai,
+      'dkdtnDantoc': instance.dkdtnDantoc,
+      'dkdtnTongiao': instance.dkdtnTongiao,
+      'dkdtnHokhauthuongtru': instance.dkdtnHokhauthuongtru,
+      'dkdtndmNghenganhan': instance.dkdtndmNghenganhan,
+      'dkdtndmNghesocap': instance.dkdtndmNghesocap,
+      'dkdtnGhichu': instance.dkdtnGhichu,
+      'dkdtnhtTelephone':
+          const IntToBoolConverter().toJson(instance.dkdtnhtTelephone),
+      'dkdtnhtEmail': const IntToBoolConverter().toJson(instance.dkdtnhtEmail),
+      'dkdtnhtAddress':
+          const IntToBoolConverter().toJson(instance.dkdtnhtAddress),
+      'soNhaDuong': instance.soNhaDuong,
+      'maTinh': instance.maTinh,
+      'maHuyen': instance.maHuyen,
+      'maXa': instance.maXa,
+      'idDaoTao': instance.idDaoTao,
+      'nguyenQuan': instance.nguyenQuan,
+      'idTdNgoaiNgu': instance.idTdNgoaiNgu,
+      'chieuCao': instance.chieuCao,
+      'canNang': instance.canNang,
+      'matTrai': instance.matTrai,
+      'matPhai': instance.matPhai,
+      'muMau': instance.muMau,
+      'hoTenCha': instance.hoTenCha,
+      'hoTenMe': instance.hoTenMe,
+      'diaChiBaoTin': instance.diaChiBaoTin,
+      'dienThoaiBaoTin': instance.dienThoaiBaoTin,
+      'tinNhanBaoTin': instance.tinNhanBaoTin,
+      'soHoChieu': instance.soHoChieu,
+      'docThan': const IntToBoolConverter().toJson(instance.docThan),
+      'daCoGiaDinh': const IntToBoolConverter().toJson(instance.daCoGiaDinh),
+      'daLyDi': const IntToBoolConverter().toJson(instance.daLyDi),
+      'soCon': instance.soCon,
+      'daLamViecONuocNgoai': instance.daLamViecONuocNgoai,
+      'coBhtn': const IntToBoolConverter().toJson(instance.coBhtn),
+      'idtv': instance.idtv,
+      'dkStatus': instance.dkStatus,
+      'dkngonngu': instance.dkngonngu,
+      'duyetdangky': const IntToBoolConverter().toJson(instance.duyetdangky),
+      'dkdtndmDoituongchinhsach': instance.dkdtndmDoituongchinhsach,
+      'dkdtndmTruong': instance.dkdtndmTruong,
+      'dkdtnGioitinh': instance.dkdtnGioitinh,
+      'dkdtnDuyet': instance.dkdtnDuyet,
+      'idTrangThaiTrungTuyen':
+          const IntToBoolConverter().toJson(instance.idTrangThaiTrungTuyen),
+      'dkdtndmTrinhdohocvanDtn': instance.dkdtndmTrinhdohocvanDtn,
+      'dkdtndmNghedaotao': instance.dkdtndmNghedaotao,
+      'dkdtndmNganhcaodang': instance.dkdtndmNganhcaodang,
+      'dkdtndmNganhtrungcap': instance.dkdtndmNganhtrungcap,
+    };

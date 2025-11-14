@@ -15,6 +15,7 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:ttld/pages/home/ntd/ntv_info_page.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPreferences
 import 'package:ttld/core/enums/region.dart'; // Import Region enum
+import 'package:ttld/widgets/common/letter_avatar.dart';
 
 class NTDHomePage extends StatefulWidget {
   static const routePath = '/ntd_home';
@@ -204,22 +205,15 @@ class _NTDHomePageState extends State<NTDHomePage> {
                       ],
                     ),
                     child: Center(
-                      child: _avatarBaseUrl.isNotEmpty &&
-                              ntd.imagePath != null &&
-                              ntd.imagePath!.isNotEmpty
-                          ? ClipOval(
-                              child: Image.network(
-                                '$_avatarBaseUrl${ntd.imagePath}',
-                                width: 66,
-                                height: 66,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  debugPrint('Error loading avatar: $error');
-                                  return _buildAvatarFallback(ntd, theme);
-                                },
-                              ),
-                            )
-                          : _buildAvatarFallback(ntd, theme),
+                      child: NetworkLetterAvatar(
+                        name: ntd.ntdTen ?? 'Nhà Tuyển Dụng',
+                        imageUrl: (_avatarBaseUrl.isNotEmpty &&
+                                ntd.imagePath != null &&
+                                ntd.imagePath!.isNotEmpty)
+                            ? '$_avatarBaseUrl${ntd.imagePath}'
+                            : null,
+                        size: 66,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -329,27 +323,6 @@ class _NTDHomePageState extends State<NTDHomePage> {
     }
   }
 
-  // Helper method for avatar fallback
-  Widget _buildAvatarFallback(Ntd ntd, ThemeData theme) {
-    return Container(
-      width: 66,
-      height: 66,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: theme.colorScheme.surface,
-      ),
-      child: Center(
-        child: Text(
-          (ntd.ntdTen ?? 'U')[0].toUpperCase(),
-          style: TextStyle(
-            fontSize: 26,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-      ),
-    );
-  }
 
   // Modern key action buttons section with gradient backgrounds
   Widget _buildKeyActionButtonsSection(BuildContext context) {

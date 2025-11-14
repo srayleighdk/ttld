@@ -1,23 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:ttld/helppers/ny_color.dart';
+import 'package:ttld/helppers/ny_text_style.dart';
+import 'package:ttld/themes/colors/color_style.dart';
+import 'package:theme_provider/theme_provider.dart';
 
 class CustomPickDateTimeGrok extends StatefulWidget {
   const CustomPickDateTimeGrok({
     super.key,
     this.labelText,
     this.hintText,
+    this.helperText,
     this.onChanged,
     this.selectedDate,
     this.validator,
     this.initialValue,
+    this.enabled = true,
+    this.style,
+    this.prefixIcon,
   });
 
   final String? labelText;
   final String? hintText;
-  final ValueChanged<String?>? onChanged; // Keep as String? for ISO 8601
+  final String? helperText;
+  final ValueChanged<String?>? onChanged;
   final DateTime? selectedDate;
   final String? Function(DateTime?)? validator;
   final dynamic initialValue;
+  final bool enabled;
+  final ModernDatePickerStyle? style;
+  final Widget? prefixIcon;
 
   @override
   State<CustomPickDateTimeGrok> createState() => _CustomPickDateTimeGrokState();
@@ -26,12 +38,39 @@ class CustomPickDateTimeGrok extends StatefulWidget {
 class _CustomPickDateTimeGrokState extends State<CustomPickDateTimeGrok> {
   DateTime? _selectedDate;
   String? _errorText;
+  final FocusNode _focusNode = FocusNode();
+  bool _hasBeenFocused = false;
 
   @override
   void initState() {
     super.initState();
-    _selectedDate =
-        _parseInitialValue(widget.initialValue) ?? widget.selectedDate;
+    _selectedDate = _parseInitialValue(widget.initialValue) ?? widget.selectedDate;
+    _focusNode.addListener(_onFocusChange);
+  }
+
+  @override
+  void dispose() {
+    _focusNode.removeListener(_onFocusChange);
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  void _onFocusChange() {
+    if (!_focusNode.hasFocus && _hasBeenFocused) {
+      _validateSelection();
+    }
+    if (_focusNode.hasFocus) {
+      _hasBeenFocused = true;
+    }
+    setState(() {});
+  }
+
+  void _validateSelection() {
+    if (widget.validator != null) {
+      setState(() {
+        _errorText = widget.validator!(_selectedDate);
+      });
+    }
   }
 
   DateTime? _parseInitialValue(dynamic value) {
@@ -89,42 +128,112 @@ class _CustomPickDateTimeGrokState extends State<CustomPickDateTimeGrok> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorStyles = ThemeProvider.themeOf(context).data.extension<ColorStyles>();
+    final effectiveStyle = widget.style ?? ModernDatePickerStyle.defaultStyle(context);
+    
+    // Theme-aware colors matching GenericPicker
+    final primaryColor = colorStyles?.primaryAccent ?? theme.colorScheme.primary;
+    final errorColor = theme.colorScheme.error;
+    final surfaceColor = colorStyles?.surfaceBackground ?? theme.colorScheme.surface;
+    final contentColor = colorStyles?.content ?? theme.colorScheme.onSurface;
+    
+    Color getBorderColor() {
+      if (_errorText != null) return errorColor;
+      if (_focusNode.hasFocus) return primaryColor;
+      return contentColor.withOpacity(0.3);
+    }
+
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: effectiveStyle.margin,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          if (widget.labelText != null)
-            Text(widget.labelText!,
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 8),
-          InkWell(
-            onTap: () => _selectYear(context),
-            child: InputDecorator(
-              decoration: InputDecoration(
-                labelText: widget.hintText ?? 'Select Date',
-                border: const OutlineInputBorder(),
-                errorText: _errorText,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                    _selectedDate != null
-                        ? DateFormat('dd-MM-yyyy')
-                            .format(_selectedDate!.toLocal())
-                        : widget.hintText ?? 'Select Date',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: _selectedDate != null ? Colors.black : Colors.grey,
-                    ),
+          Focus(
+            focusNode: _focusNode,
+            child: InkWell(
+              onTap: widget.enabled ? () => _selectYear(context) : null,
+              borderRadius: BorderRadius.circular(8),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: effectiveStyle.filled 
+                      ? (effectiveStyle.fillColor?.toColor(context) ?? 
+                         surfaceColor.withOpacity(0.05))
+                      : Colors.transparent,
+                  border: Border.all(
+                    color: getBorderColor(),
+                    width: _focusNode.hasFocus ? 2.0 : 1.0,
                   ),
-                  const Icon(Icons.calendar_today),
-                ],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                padding: effectiveStyle.contentPadding,
+                child: Row(
+                  children: [
+                    if (widget.prefixIcon != null) ...[
+                      widget.prefixIcon!,
+                      const SizedBox(width: 12),
+                    ],
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (widget.labelText != null && widget.labelText!.isNotEmpty)
+                            Text(
+                              widget.labelText!,
+                              style: effectiveStyle.labelStyle?.toTextStyle(context) ??
+                                     theme.textTheme.bodySmall?.copyWith(
+                                       color: _focusNode.hasFocus ? primaryColor : contentColor.withOpacity(0.7),
+                                     ),
+                            ),
+                          if (widget.labelText != null && widget.labelText!.isNotEmpty)
+                            const SizedBox(height: 4),
+                          Text(
+                            _selectedDate != null
+                                ? DateFormat('dd-MM-yyyy').format(_selectedDate!.toLocal())
+                                : widget.hintText ?? 'Select Date',
+                            style: effectiveStyle.textStyle?.toTextStyle(context) ??
+                                   theme.textTheme.bodyLarge?.copyWith(
+                                     color: _selectedDate != null 
+                                         ? contentColor 
+                                         : contentColor.withOpacity(0.5),
+                                   ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Icon(
+                      Icons.calendar_today,
+                      color: _errorText != null 
+                          ? errorColor 
+                          : (_focusNode.hasFocus ? primaryColor : contentColor.withOpacity(0.5)),
+                      size: 20,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
+          if (_errorText != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 4, left: 12),
+              child: Text(
+                _errorText!,
+                style: theme.textTheme.bodySmall?.copyWith(color: errorColor),
+              ),
+            ),
+          if (widget.helperText != null && _errorText == null)
+            Padding(
+              padding: const EdgeInsets.only(top: 4, left: 12),
+              child: Text(
+                widget.helperText!,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: colorStyles?.content.withOpacity(0.6) ?? 
+                         theme.colorScheme.onSurface.withOpacity(0.6),
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -138,5 +247,67 @@ class _CustomPickDateTimeGrokState extends State<CustomPickDateTimeGrok> {
       return _errorText;
     }
     return null;
+  }
+}
+
+/// Style configuration for CustomPickDateTimeGrok, consistent with ModernPicker styling
+class ModernDatePickerStyle {
+  final EdgeInsets margin;
+  final EdgeInsets contentPadding;
+  final bool filled;
+  final NyColor? fillColor;
+  final NyTextStyle? textStyle;
+  final NyTextStyle? labelStyle;
+  final NyTextStyle? hintStyle;
+
+  const ModernDatePickerStyle({
+    this.margin = const EdgeInsets.symmetric(vertical: 8),
+    this.contentPadding = const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+    this.filled = true,
+    this.fillColor,
+    this.textStyle,
+    this.labelStyle,
+    this.hintStyle,
+  });
+
+  /// Default style that follows the project's design system
+  factory ModernDatePickerStyle.defaultStyle(BuildContext context) {
+    return const ModernDatePickerStyle();
+  }
+
+  /// Compact style for forms with many fields
+  factory ModernDatePickerStyle.compact() {
+    return const ModernDatePickerStyle(
+      margin: EdgeInsets.symmetric(vertical: 4),
+      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+    );
+  }
+
+  /// Style for prominent fields
+  factory ModernDatePickerStyle.prominent() {
+    return const ModernDatePickerStyle(
+      margin: EdgeInsets.symmetric(vertical: 12),
+      contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+    );
+  }
+
+  ModernDatePickerStyle copyWith({
+    EdgeInsets? margin,
+    EdgeInsets? contentPadding,
+    bool? filled,
+    NyColor? fillColor,
+    NyTextStyle? textStyle,
+    NyTextStyle? labelStyle,
+    NyTextStyle? hintStyle,
+  }) {
+    return ModernDatePickerStyle(
+      margin: margin ?? this.margin,
+      contentPadding: contentPadding ?? this.contentPadding,
+      filled: filled ?? this.filled,
+      fillColor: fillColor ?? this.fillColor,
+      textStyle: textStyle ?? this.textStyle,
+      labelStyle: labelStyle ?? this.labelStyle,
+      hintStyle: hintStyle ?? this.hintStyle,
+    );
   }
 }

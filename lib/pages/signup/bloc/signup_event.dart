@@ -15,6 +15,7 @@ class SignupSubmitted extends SignupEvent {
   final String password;
   final String userType;
   final String confirmPassword;
+  final String region;
 
   // Admin specific fields
 
@@ -30,10 +31,11 @@ class SignupSubmitted extends SignupEvent {
     required this.password,
     required this.userType,
     required this.confirmPassword,
+    required this.region,
     this.maSoThue,
   });
 
   @override
   List<Object?> get props =>
-      [userName, email, name, password, confirmPassword, userType, maSoThue];
+      [userName, email, name, password, confirmPassword, userType, region, maSoThue];
 }

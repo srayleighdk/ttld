@@ -137,7 +137,7 @@ class _ModernCascadeLocationPickerState
     if (widget.initialTinh != null) {
       final tinhState =
           await tinhBloc.stream.firstWhere((state) => state is TinhLoaded);
-      if (tinhState is TinhLoaded) {
+      if (tinhState is TinhLoaded && mounted) {
         final foundTinh = tinhState.tinhs.firstWhere(
           (tinh) => tinh.id == widget.initialTinh,
           orElse: () => tinhState.tinhs.first,
@@ -155,7 +155,7 @@ class _ModernCascadeLocationPickerState
 
       final huyenState = await huyenBloc.stream
           .firstWhere((state) => state is HuyenLoadedByTinh);
-      if (huyenState is HuyenLoadedByTinh) {
+      if (huyenState is HuyenLoadedByTinh && mounted) {
         final foundHuyen = huyenState.huyens.firstWhere(
           (huyen) => huyen.id == widget.initialHuyen,
           orElse: () => huyenState.huyens.first,
@@ -173,7 +173,7 @@ class _ModernCascadeLocationPickerState
 
       final xaState =
           await xaBloc.stream.firstWhere((state) => state is XaLoadedByHuyen);
-      if (xaState is XaLoadedByHuyen) {
+      if (xaState is XaLoadedByHuyen && mounted) {
         final foundXa = xaState.xas.firstWhere(
           (xa) => xa.id == widget.initialXa,
           orElse: () => xaState.xas.first,
@@ -190,7 +190,7 @@ class _ModernCascadeLocationPickerState
 
       final kcnState =
           await _kcnCubit.stream.firstWhere((state) => state is KcnLoaded);
-      if (kcnState is KcnLoaded) {
+      if (kcnState is KcnLoaded && mounted) {
         final foundKCN = kcnState.kcnList.firstWhere(
           (kcn) => kcn.id.toString() == widget.initialKCN,
           orElse: () => kcnState.kcnList.first,

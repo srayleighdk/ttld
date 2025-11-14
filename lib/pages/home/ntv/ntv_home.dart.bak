@@ -1,0 +1,1087 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ttld/blocs/tblHoSoUngVien/tblhosoungvien_bloc.dart';
+import 'package:ttld/blocs/tblHoSoUngVien/tblhosoungvien_event.dart';
+import 'package:ttld/blocs/tblHoSoUngVien/tblhosoungvien_state.dart';
+import 'package:ttld/core/di/injection.dart';
+import 'package:ttld/core/design_system/widgets/job_card.dart';
+import 'package:ttld/features/auth/bloc/auth_bloc.dart';
+import 'package:ttld/features/auth/bloc/auth_state.dart';
+import 'package:ttld/helppers/help.dart';
+import 'package:ttld/models/tblHoSoUngVien/tblHoSoUngVien_model.dart';
+import 'package:ttld/blocs/tuyendung/tuyendung_bloc.dart';
+import 'package:ttld/pages/home/ntd/ntd_tuyendung_info_page.dart';
+import 'package:ttld/repositories/tuyendung_repository.dart';
+import 'package:ttld/blocs/kinh_nghiem_lam_viec/kinh_nghiem_lam_viec_bloc.dart';
+import 'package:ttld/repositories/kinh_nghiem_lam_viec_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ttld/core/enums/region.dart';
+import 'package:ttld/widgets/common/letter_avatar.dart';
+
+class NTVHomePage extends StatefulWidget {
+  final VoidCallback? onProfileTap; // Add callback parameter
+
+  const NTVHomePage({
+    super.key,
+    this.onProfileTap, // Make it optional
+  });
+
+  static const String routePath = '/ntv_home';
+
+  @override
+  State<NTVHomePage> createState() => _NTVHomePageState();
+}
+
+class _NTVHomePageState extends State<NTVHomePage> {
+  TblHoSoUngVienModel? tblHoSoUngVien;
+  late final TuyenDungBloc _tuyenDungBloc;
+  late final KinhNghiemLamViecBloc _kinhNghiemBloc;
+  Map<String, String> _kinhNghiemMap = {};
+  bool _isInitialLoading = true;
+  String _avatarBaseUrl = ''; // Variable to store the avatar base URL
+
+  String _formatDate(DateTime? date) {
+    if (date == null) return 'Chưa có';
+    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final authState = locator<AuthBloc>()
+        .state; // Keep locator for AuthBloc as per HomePage pattern
+    if (authState is AuthAuthenticated && authState.userType == 'ntv') {
+      // Use getIt locator for NTVBloc to maintain consistency with dependency injection
+      locator<NTVBloc>().add(LoadTblHoSoUngVien(int.parse(authState.userId)));
+    }
+    _tuyenDungBloc = TuyenDungBloc(
+        locator<TuyenDungRepository>()); // Keep local TuyenDungBloc
+    _tuyenDungBloc.add(FetchTuyenDungList(null));
+
+    _kinhNghiemBloc = KinhNghiemLamViecBloc(locator<
+        KinhNghiemLamViecRepository>()); // Keep local KinhNghiemLamViecBloc
+    _kinhNghiemBloc.add(FetchKinhNghiemLamViecList());
+
+    _loadAvatarBaseUrl(); // Load avatar base URL
+  }
+
+  Future<void> _loadAvatarBaseUrl() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedRegionName = prefs.getString('selected_region');
+    final savedRegion = regionFromString(savedRegionName);
+
+    if (savedRegion != null) {
+      setState(() {
+        _avatarBaseUrl = getEnv(savedRegion.avatarUrlKey);
+      });
+    } else {
+      // Fallback or error handling if region is not saved
+      debugPrint('Warning: Region not found in SharedPreferences.');
+      // Optionally set a default or show an error
+      setState(() {
+        _avatarBaseUrl = getEnv('URL_AVATAR_BD'); // Example fallback
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _tuyenDungBloc.close();
+    _kinhNghiemBloc.close();
+    super.dispose();
+  }
+
+  String _getKinhNghiemName(String? id) {
+    if (id == null) return 'Chưa có';
+    return _kinhNghiemMap[id] ?? 'Chưa có';
+  }
+
+  void _checkProfileBeforeNavigation(BuildContext context, String route) {
+    // Check if user has nganhngheId
+    if (tblHoSoUngVien == null ||
+        tblHoSoUngVien!.uvnvNganhngheId == null ||
+        tblHoSoUngVien!.uvnvNganhngheId == 0) {
+      _showProfileIncompleteDialog(context);
+    } else {
+      context.push(route);
+    }
+  }
+
+  void _showProfileIncompleteDialog(BuildContext context) {
+    final theme = Theme.of(context);
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surface,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: theme.colorScheme.shadow.withOpacity(0.1),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Icon with gradient background
+                Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(40),
+                    gradient: const LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [Color(0xFFFF6B6B), Color(0xFFFF4B4B)],
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFFFF6B6B).withOpacity(0.3),
+                        blurRadius: 15,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                  ),
+                  child: const Icon(
+                    FontAwesomeIcons.circleExclamation,
+                    size: 32,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // Title
+                Text(
+                  'Thông tin chưa đầy đủ',
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: theme.colorScheme.onSurface,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 12),
+
+                // Content
+                Text(
+                  'Bạn cần cập nhật thông tin ngành nghề mong muốn trước khi có thể tìm việc làm.',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurface.withOpacity(0.7),
+                    height: 1.5,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 32),
+
+                // Action buttons
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor:
+                              theme.colorScheme.onSurface.withOpacity(0.7),
+                          side: BorderSide(
+                            color: theme.colorScheme.outline.withOpacity(0.3),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: Text(
+                          'Để sau',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      flex: 2,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          context.push('/ntv_home/update_ntv');
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: theme.colorScheme.primary,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          elevation: 0,
+                          shadowColor: Colors.transparent,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              FontAwesomeIcons.userPen,
+                              size: 16,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Cập nhật ngay',
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // Modern action buttons section with cards and gradients
+  Widget _buildActionButtonsSection(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: theme.colorScheme.shadow.withAlpha(20),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _buildActionButtonItem(
+            context,
+            FontAwesomeIcons.buildingUser,
+            'Sàn GDVL',
+            '/ntv_home/sgdvl',
+            [Color(0xFF4A6FFF), Color(0xFF2E5CFF)], // Blue gradient
+          ),
+          _buildActionButtonItem(
+            context,
+            FontAwesomeIcons.magnifyingGlass,
+            'Tìm Việc',
+            '/ntv_home/tim-viec',
+            [Color(0xFFFF6B6B), Color(0xFFFF4B4B)], // Red gradient
+          ),
+          _buildActionButtonItem(
+            context,
+            FontAwesomeIcons.handshake,
+            'Chắp Nối',
+            '/ntv_home/ho-so-chap-noi',
+            [Color(0xFF4CAF50), Color(0xFF2E7D32)], // Green gradient
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Modern action button item with gradient background and elevated design
+  Widget _buildActionButtonItem(
+    BuildContext context,
+    IconData icon,
+    String label,
+    String? route,
+    List<Color> gradientColors,
+  ) {
+    final theme = Theme.of(context);
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: InkWell(
+          onTap: () {
+            if (route != null) {
+              // Check if navigating to tim-viec page and user profile is incomplete
+              if (route == '/ntv_home/tim-viec') {
+                _checkProfileBeforeNavigation(context, route);
+              } else {
+                context.push(route);
+              }
+            }
+          },
+          borderRadius: BorderRadius.circular(12),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: gradientColors,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: gradientColors[0].withOpacity(0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Icon(
+                    icon,
+                    size: 24,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                label,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: theme.colorScheme.onSurface,
+                  fontWeight: FontWeight.w500,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: SafeArea(
+        child: MultiBlocListener(
+          listeners: [
+            BlocListener<NTVBloc, NTVState>(
+              // Use getIt locator for NTVBloc to maintain consistency with dependency injection
+              bloc: locator<NTVBloc>(),
+              listener: (context, state) {
+                if (state is NTVLoadedById) {
+                  setState(() {
+                    tblHoSoUngVien = state.tblHoSoUngVien;
+                    _isInitialLoading = false;
+                  });
+                } else if (state is NTVError) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Error: ${state.message}")),
+                  );
+                }
+              },
+            ),
+            BlocListener<KinhNghiemLamViecBloc, KinhNghiemLamViecState>(
+              bloc: _kinhNghiemBloc,
+              listener: (context, state) {
+                if (state is KinhNghiemLamViecLoaded) {
+                  setState(() {
+                    _kinhNghiemMap = {
+                      for (var kn in state.kinhNghiemList)
+                        kn.id.toString(): kn.displayName
+                    };
+                  });
+                }
+              },
+            ),
+          ],
+          child: BlocBuilder<TuyenDungBloc, TuyenDungState>(
+            bloc: _tuyenDungBloc,
+            builder: (context, tuyenDungState) {
+              return SingleChildScrollView(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildUserInfoSection(context),
+                    const SizedBox(height: 12.0),
+                    _buildActionButtonsSection(context),
+                    const SizedBox(height: 12.0),
+                    _buildQuickAccessSection(context),
+                    const SizedBox(height: 12.0),
+                    _buildStatisticsSection(context, tuyenDungState),
+                    const SizedBox(
+                        height: 100), // Add bottom padding for navbar
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Modern user info section with glass effect and enhanced design
+  Widget _buildUserInfoSection(BuildContext context) {
+    final theme = Theme.of(context);
+    return BlocBuilder<AuthBloc, AuthState>(
+      bloc: locator<AuthBloc>(),
+      builder: (context, state) {
+        if (state is AuthAuthenticated) {
+          final user = state;
+          return Container(
+            margin: const EdgeInsets.symmetric(vertical: 8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: theme.colorScheme.shadow.withAlpha(15),
+                  blurRadius: 15,
+                  offset: const Offset(0, 5),
+                ),
+              ],
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () {
+                  // Call the callback to switch to the Profile tab
+                  widget.onProfileTap?.call();
+                },
+                borderRadius: BorderRadius.circular(20),
+                child: Ink(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        theme.colorScheme.primary.withOpacity(0.05),
+                        theme.colorScheme.surface,
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: theme.colorScheme.primary.withOpacity(0.1),
+                      width: 1,
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      children: [
+                        // Avatar with enhanced design
+                        Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                theme.colorScheme.primary,
+                                theme.colorScheme.primary.withOpacity(0.7),
+                              ],
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color:
+                                    theme.colorScheme.primary.withOpacity(0.3),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Center(
+                            child: NetworkLetterAvatar(
+                              name: tblHoSoUngVien?.uvHoten ?? user.userName,
+                              imageUrl: (_avatarBaseUrl.isNotEmpty &&
+                                      tblHoSoUngVien?.avatarUrl != null &&
+                                      tblHoSoUngVien!.avatarUrl!.isNotEmpty)
+                                  ? '$_avatarBaseUrl${tblHoSoUngVien?.avatarUrl}'
+                                  : null,
+                              size: 56,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        // User info with enhanced typography
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Welcome back,',
+                                style: theme.textTheme.bodyLarge?.copyWith(
+                                  color: theme.colorScheme.onSurface
+                                      .withOpacity(0.7),
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                user.userName,
+                                style: theme.textTheme.headlineSmall?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                  color: theme.colorScheme.onSurface,
+                                  letterSpacing: 0.3,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        // Profile button
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.primary.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(
+                            FontAwesomeIcons.angleRight,
+                            size: 16,
+                            color: theme.colorScheme.primary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        } else {
+          return Center(
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.errorContainer.withOpacity(0.7),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Text(
+                'User not logged in',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: theme.colorScheme.onErrorContainer,
+                ),
+              ),
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  // Modern quick access section with card-based design and improved visuals
+  Widget _buildQuickAccessSection(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Modern section header with gradient accent
+        Container(
+          margin: const EdgeInsets.only(bottom: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.shadow.withAlpha(15),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 5,
+                height: 28,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      theme.colorScheme.primary,
+                      theme.colorScheme.secondary,
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(3),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                'Dịch vụ việc làm',
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: theme.colorScheme.onSurface,
+                  letterSpacing: 0.3,
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        // Modern grid of quick access items
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.shadow.withAlpha(15),
+                blurRadius: 15,
+                offset: const Offset(0, 5),
+              ),
+            ],
+            border: Border.all(
+              color: theme.colorScheme.primary.withOpacity(0.05),
+              width: 1,
+            ),
+          ),
+          child: GridView.count(
+            crossAxisCount: 4,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            mainAxisSpacing: 16,
+            crossAxisSpacing: 16,
+            childAspectRatio: 0.75, // Reduced to provide more height for text
+            children: [
+              _buildQuickAccessItem(
+                context,
+                FontAwesomeIcons.solidPenToSquare,
+                'Cập nhật TT\nPhiếu TT tìm việc',
+                '/ntv_home/update_ntv',
+                [Color(0xFF4A6FFF), Color(0xFF2E5CFF)], // Blue gradient
+              ),
+              _buildQuickAccessItem(
+                context,
+                FontAwesomeIcons.briefcase,
+                'Đăng ký tìm việc làm',
+                '/ntv_home/dang-ky-tim-viec-lam-list',
+                [Color(0xFF00BCD4), Color(0xFF00ACC1)], // Teal gradient
+              ),
+              _buildQuickAccessItem(
+                context,
+                FontAwesomeIcons.calendarCheck,
+                'Đăng ký tư vấn việc làm',
+                '/ntv_home/dang-ky-tu-van-viec-lam',
+                [Color(0xFFFF6B6B), Color(0xFFFF4B4B)], // Red gradient
+              ),
+              _buildQuickAccessItem(
+                context,
+                FontAwesomeIcons.graduationCap,
+                'Đăng ký tư vấn học nghề',
+                '/ntv_home/dang-ky-hoc-nghe',
+                [Color(0xFF4CAF50), Color(0xFF2E7D32)], // Green gradient
+              ),
+              _buildQuickAccessItem(
+                context,
+                FontAwesomeIcons.plane,
+                'Đăng ký xuất khẩu lao động',
+                '/ntv_home/dang-ky-xuat-khao-lao-dong',
+                [Color(0xFFFF9800), Color(0xFFF57C00)], // Orange gradient
+              ),
+              _buildQuickAccessItem(
+                context,
+                FontAwesomeIcons.buildingUser,
+                'Đăng ký tham gia PGDVL',
+                '/ntv_home/dang-ky-tham-gia-pgdvl',
+                [Color(0xFF9C27B0), Color(0xFF7B1FA2)], // Purple gradient
+              ),
+              _buildQuickAccessItem(
+                context,
+                FontAwesomeIcons.clipboardCheck,
+                'Kết quả kết nối VL',
+                '/ntv_home/ket-quoc-ket-noi-vl',
+                [Color(0xFF00BCD4), Color(0xFF0097A7)], // Cyan gradient
+              ),
+              _buildQuickAccessItem(
+                context,
+                FontAwesomeIcons.fileContract,
+                'Thông tin hợp đồng LD',
+                '/ntv_home/thong-tin-hop-dong-ld',
+                [Color(0xFF3F51B5), Color(0xFF303F9F)], // Indigo gradient
+              ),
+              _buildQuickAccessItem(
+                context,
+                FontAwesomeIcons.chartLine,
+                'Thống kê & báo cáo',
+                '/ntv_home/thong-ke-bao-cao',
+                [Color(0xFF607D8B), Color(0xFF455A64)], // Blue-grey gradient
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Modern quick access item with gradient background and improved visuals
+  Widget _buildQuickAccessItem(
+    BuildContext context,
+    IconData icon,
+    String label,
+    String route,
+    List<Color> gradientColors,
+  ) {
+    final theme = Theme.of(context);
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () {
+          try {
+            debugPrint('🔍 NTV Navigation - Route: $route, Label: $label');
+            if (route == '/ntv_home/update_ntv') {
+              context.push(route, extra: tblHoSoUngVien);
+            } else if (route == '/ntv_home/dang-ky-tim-viec-lam' ||
+                route == '/ntv_home/dang-ky-hoc-nghe' ||
+                route == '/ntv_home/dang-ky-xuat-khao-lao-dong') {
+              // Navigate to implemented registration forms
+              debugPrint('✅ Navigating to implemented form: $route');
+              context.push(route);
+            } else {
+              // Navigate to feature locked page for unimplemented features
+              debugPrint('🔒 Feature locked: $route');
+              context.push('/feature-locked', extra: {
+                'featureName': label.replaceAll('\n', ' '),
+              });
+            }
+          } catch (e) {
+            debugPrint('Navigation error: $e');
+          }
+        },
+        borderRadius: BorderRadius.circular(16),
+        child: Ink(
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.shadow.withAlpha(10),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Icon with gradient background
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: gradientColors,
+                  ),
+                  borderRadius: BorderRadius.circular(14),
+                  boxShadow: [
+                    BoxShadow(
+                      color: gradientColors[0].withOpacity(0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Icon(
+                    icon,
+                    size: 20,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              // Label with improved typography
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: Text(
+                  label,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.labelMedium?.copyWith(
+                    color: theme.colorScheme.onSurface,
+                    fontWeight: FontWeight.w500,
+                    height: 1.2,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Modern job cards section
+  Widget _buildStatisticsSection(BuildContext context, TuyenDungState state) {
+    final theme = Theme.of(context);
+
+    if (state is TuyenDungError) {
+      return Center(
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.errorContainer.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: theme.colorScheme.error.withOpacity(0.2),
+              width: 1,
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                FontAwesomeIcons.triangleExclamation,
+                size: 48,
+                color: theme.colorScheme.error,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Có lỗi xảy ra',
+                style: theme.textTheme.titleLarge?.copyWith(
+                  color: theme.colorScheme.error,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                state.message,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onErrorContainer,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    if (state is TuyenDungLoaded) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Modern section header with statistics summary
+          Container(
+            margin: const EdgeInsets.only(bottom: 16),
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  theme.colorScheme.primary.withOpacity(0.05),
+                  theme.colorScheme.surface,
+                ],
+              ),
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: theme.colorScheme.shadow.withAlpha(15),
+                  blurRadius: 15,
+                  offset: const Offset(0, 5),
+                ),
+              ],
+              border: Border.all(
+                color: theme.colorScheme.primary.withOpacity(0.1),
+                width: 1,
+              ),
+            ),
+            child: Row(
+              children: [
+                // Icon with gradient background
+                Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        theme.colorScheme.primary,
+                        theme.colorScheme.primary.withOpacity(0.7),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: [
+                      BoxShadow(
+                        color: theme.colorScheme.primary.withOpacity(0.3),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Icon(
+                    FontAwesomeIcons.briefcase,
+                    size: 24,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Cơ hội việc làm',
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: theme.colorScheme.onSurface,
+                          letterSpacing: 0.3,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '${state.tuyenDungList.length} vị trí tuyển dụng',
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          color: theme.colorScheme.onSurface.withOpacity(0.7),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // View all button
+                InkWell(
+                  onTap: () => context.push('/ntv_home/tim-viec'),
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.primary.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Xem tất cả',
+                          style: theme.textTheme.labelMedium?.copyWith(
+                            color: theme.colorScheme.primary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        Icon(
+                          FontAwesomeIcons.angleRight,
+                          size: 12,
+                          color: theme.colorScheme.primary,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Modern job cards list
+          ...state.tuyenDungList.take(5).map((tuyenDung) {
+            return JobCard(
+              jobTitle: tuyenDung.tdTieude ?? 'Chưa có tiêu đề',
+              companyName: tuyenDung.tdTieude,
+              location: tuyenDung.noiLamviec,
+              salary: tuyenDung.mucLuong,
+              quantity: tuyenDung.tdSoluong,
+              experience: _getKinhNghiemName(tuyenDung.idKinhnghiem),
+              postedDate: tuyenDung.modifiredDate != null
+                  ? '📅 ${_formatDate(tuyenDung.modifiredDate)}'
+                  : null,
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => NTDInfoPage(
+                      ntdData: {
+                        'tuyendungId': tuyenDung.idTuyenDung,
+                        'tuyendung': tuyenDung.tdTieude ?? '',
+                        'soLuong': tuyenDung.tdSoluong.toString(),
+                        'gioiTinh': tuyenDung.tdYeuCauGioiTinh,
+                        'trinhDo': tuyenDung.tdYeuCauHocVan ?? '',
+                        'nganhNghe': tuyenDung.tdNganhnghe ?? '',
+                        'moTaCongViec': tuyenDung.tdMotacongviec ?? '',
+                        'ngayNhanHoSo': tuyenDung.ngayNhanHoSo ?? '',
+                        'tenNTD': tuyenDung.tdTieude ?? '',
+                        'address': tuyenDung.noiLamviec ?? '',
+                        'idDoanhNghiep': tuyenDung.idDoanhNghiep.toString(),
+                        'ngayDang': tuyenDung.createdDate != null
+                            ? _formatDate(tuyenDung.createdDate!)
+                            : '',
+                        'mucLuong': tuyenDung.mucLuong ?? '',
+                        'idKinhnghiem': tuyenDung.idKinhnghiem ?? '',
+                        'tdNoinophoso': tuyenDung.tdNoinophoso ?? '',
+                        'tdHosobaogom': tuyenDung.tdHosobaogom ?? '',
+                        'tdGhichu': tuyenDung.tdGhichu ?? '',
+                      },
+                    ),
+                  ),
+                );
+              },
+              onApply: () {
+                // TODO: Implement apply functionality
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Ứng tuyển: ${tuyenDung.tdTieude}'),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+              },
+            );
+          }).toList(),
+
+          // Show more button if there are more jobs
+          if (state.tuyenDungList.length > 5) ...[
+            const SizedBox(height: 8),
+            Center(
+              child: TextButton.icon(
+                onPressed: () => context.push('/ntv_home/tim-viec'),
+                icon: Icon(FontAwesomeIcons.plus, size: 14),
+                label:
+                    Text('Xem thêm ${state.tuyenDungList.length - 5} việc làm'),
+                style: TextButton.styleFrom(
+                  foregroundColor: theme.colorScheme.primary,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ],
+      );
+    }
+
+    return const SizedBox.shrink();
+  }
+}

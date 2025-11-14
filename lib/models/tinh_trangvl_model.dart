@@ -1,17 +1,23 @@
-class TinhTrangViecLam {
-  final String tenTrangThai;
-  final int displayOrder;
-  final bool status;
+import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
+
+class TinhTrangViecLam extends GenericPickerItem {
+  final int? displayOrder;
+  final bool? status;
 
   TinhTrangViecLam({
-    required this.tenTrangThai,
-    required this.displayOrder,
-    required this.status,
-  });
+    required super.id,
+    required String name,
+    this.displayOrder,
+    this.status,
+  }) : super(displayName: name);
+
+  // Backward compatibility getter
+  String get tenTrangThai => displayName;
 
   factory TinhTrangViecLam.fromJson(Map<String, dynamic> json) {
     return TinhTrangViecLam(
-      tenTrangThai: json['tenTrangThai'],
+      id: json['id'],
+      name: json['name'] ?? json['tenTrangThai'] ?? '',
       displayOrder: json['displayOrder'],
       status: json['status'],
     );
@@ -19,7 +25,9 @@ class TinhTrangViecLam {
 
   Map<String, dynamic> toJson() {
     return {
-      'tenTrangThai': tenTrangThai,
+      'id': id,
+      'name': displayName,
+      'tenTrangThai': displayName,
       'displayOrder': displayOrder,
       'status': status,
     };

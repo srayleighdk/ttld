@@ -1,16 +1,31 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
 
-part 'chuyenmon.freezed.dart';
-part 'chuyenmon.g.dart';
+class ChuyenMon extends GenericPickerItem {
+  final int displayOrder;
+  final bool status;
 
-@freezed
-abstract class ChuyenMon with _$ChuyenMon {
-  factory ChuyenMon(
-    @JsonKey(name: 'ma_chuyen_mon') int maChuyenMon,
-    @JsonKey(name: 'ten_chuyen_mon') String tenChuyenMon,
-    @JsonKey(name: 'DisplayOrder') int displayOrder,
-    @JsonKey(name: 'Status') bool status,
-  ) = _ChuyenMon;
+  ChuyenMon({
+    required int super.id,
+    required String name,
+    required this.displayOrder,
+    required this.status,
+  }) : super(displayName: name);
 
-  factory ChuyenMon.fromJson(Map<String, dynamic> json) => _$ChuyenMonFromJson(json);
+  factory ChuyenMon.fromJson(Map<String, dynamic> json) {
+    return ChuyenMon(
+      id: json['maChuyenMon'] ?? json['ma_chuyen_mon'] ?? json['id'] ?? 0,
+      name: json['tenChuyenMon'] ?? json['ten_chuyen_mon'] ?? json['name'] ?? '',
+      displayOrder: json['displayOrder'] ?? json['DisplayOrder'] ?? 0,
+      status: json['status'] ?? json['Status'] ?? true,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ma_chuyen_mon': id,
+      'ten_chuyen_mon': displayName,
+      'DisplayOrder': displayOrder,
+      'Status': status,
+    };
+  }
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ttld/blocs/tuyendung/tuyendung_bloc.dart';
@@ -49,7 +50,7 @@ class _TimViecPageState extends State<TimViecPage> {
   late final NTVBloc _ntvBloc;
   // Track active subscriptions for cleanup
   final List<StreamSubscription> _activeSubscriptions = [];
-  
+
   // User profile data
   TblHoSoUngVienModel? _userProfile;
   bool _isCheckingProfile = true;
@@ -114,7 +115,7 @@ class _TimViecPageState extends State<TimViecPage> {
 
     // Get current user info
     _getCurrentUserInfo();
-    
+
     // Check user profile
     _checkUserProfile();
   }
@@ -137,7 +138,7 @@ class _TimViecPageState extends State<TimViecPage> {
     if (_currentUserId != null && _currentUserType == 'NTV') {
       // Load user profile by uvId
       _ntvBloc.add(LoadTblHoSoUngVienByUvId(_currentUserId!));
-      
+
       // Listen to NTV bloc state changes
       _activeSubscriptions.add(
         _ntvBloc.stream.listen((state) {
@@ -146,9 +147,11 @@ class _TimViecPageState extends State<TimViecPage> {
               _userProfile = state.tblHoSoUngVien;
               _isCheckingProfile = false;
             });
-            
+
             // Check if user has completed their profile
-            if (_userProfile == null || _userProfile!.uvnvNganhngheId == null || _userProfile!.uvnvNganhngheId == 0) {
+            if (_userProfile == null ||
+                _userProfile!.uvnvNganhngheId == null ||
+                _userProfile!.uvnvNganhngheId == 0) {
               _showProfileIncompleteDialog();
             }
           } else if (state is NTVError) {
@@ -192,7 +195,8 @@ class _TimViecPageState extends State<TimViecPage> {
                   // Navigate to update profile page
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => UpdateNTVPage(hoSoUngVien: _userProfile),
+                      builder: (context) =>
+                          UpdateNTVPage(hoSoUngVien: _userProfile),
                     ),
                   );
                 },
@@ -219,7 +223,7 @@ class _TimViecPageState extends State<TimViecPage> {
     }
 
     final searchQuery = _searchController.text.trim();
-    
+
     // Pass the current user ID (idUV) for NTV users
     if (_currentUserType == 'ntv' && _currentUserId != null) {
       _tuyenDungBloc.add(FetchTuyenDungList(
@@ -229,7 +233,8 @@ class _TimViecPageState extends State<TimViecPage> {
         page: _currentPage,
         search: searchQuery.isNotEmpty ? searchQuery : null,
       ));
-      print('TimViecPage: FetchTuyenDungList with idUV: $_currentUserId, page: $_currentPage');
+      print(
+          'TimViecPage: FetchTuyenDungList with idUV: $_currentUserId, page: $_currentPage');
     } else {
       // Fallback for other user types or when user ID is not available
       _tuyenDungBloc.add(FetchTuyenDungList(
@@ -303,7 +308,10 @@ class _TimViecPageState extends State<TimViecPage> {
   }
 
   void _goToPage(int page) {
-    if (page >= 1 && page <= _totalPages && page != _currentPage && !_isLoadingMore) {
+    if (page >= 1 &&
+        page <= _totalPages &&
+        page != _currentPage &&
+        !_isLoadingMore) {
       _currentPage = page;
       _loadTuyenDungData();
     }
@@ -315,17 +323,8 @@ class _TimViecPageState extends State<TimViecPage> {
   }
 
   String _formatDateForAPI(DateTime dateTime) {
-    // Format: "2025-06-26T17:00:00.000Z"
-    final utcDate = dateTime.toUtc();
-    final isoString = utcDate.toIso8601String();
-
-    // If the ISO string already has milliseconds, use it
-    if (isoString.contains('.')) {
-      return isoString;
-    } else {
-      // Add milliseconds if not present
-      return "${isoString.split('Z')[0]}.000Z";
-    }
+    // Backend expects DD-MM-YYYY format for moment.js parsing
+    return DateFormat('dd-MM-yyyy').format(dateTime);
   }
 
   void _quickApplyForJob(NTDTuyenDung job) async {
@@ -346,22 +345,62 @@ class _TimViecPageState extends State<TimViecPage> {
     }
 
     try {
-      // Format date to match API expectation: "2025-06-26T17:00:00.000Z"
+      // Format date to match API expectation
       final now = DateTime.now().toUtc();
       final formattedDate = _formatDateForAPI(now);
+      
+      // Add 7 days for ngayTraHs
+      final returnDate = now.add(const Duration(days: 7));
+      final formattedReturnDate = _formatDateForAPI(returnDate);
+
+      // Debug logging to identify the issue
+      debugPrint('ChapNoi Debug Info:');
+      debugPrint('idKieuChapNoi: GGT');
+      debugPrint('idUngVien: $_currentUserId');
+      debugPrint('idDoanhNghiep: ${job.idDoanhNghiep}');
+      debugPrint('idTuyenDung: ${job.idTuyenDung}');
+      debugPrint('ngayMuonHs: $formattedDate');
+      debugPrint('ngayTraHs: $formattedReturnDate');
+
+      // Validate required fields before creating ChapNoiModel
+      if (_currentUserId == null || _currentUserId!.isEmpty) {
+        ToastUtils.showErrorToast(
+          context,
+          'Lỗi: Không tìm thấy ID người dùng',
+        );
+        return;
+      }
+
+      if (job.idDoanhNghiep == null) {
+        ToastUtils.showErrorToast(
+          context, 
+          'Lỗi: Không tìm thấy ID doanh nghiệp',
+        );
+        return;
+      }
+
+      if (job.idTuyenDung == null || job.idTuyenDung!.isEmpty) {
+        ToastUtils.showErrorToast(
+          context,
+          'Lỗi: Không tìm thấy ID tuyển dụng',
+        );
+        return;
+      }
 
       final chapNoi = ChapNoiModel(
-        idKieuChapNoi:
-            'GGT', // Use proper connection type code (Giấy giới thiệu)
+        idKieuChapNoi: 'GGT', // Use proper connection type code (Giấy giới thiệu)
         idUngVien: _currentUserId!,
         idDoanhNghiep: job.idDoanhNghiep.toString(),
         idTuyenDung: job.idTuyenDung!,
         ngayMuonHs: formattedDate,
-        ngayTraHs: '', // Empty string as per API structure
+        ngayTraHs: formattedReturnDate, // Add 7 days from ngayMuonHs
         ghiChu: 'Ứng tuyển nhanh từ danh sách việc làm',
-        idKetQua: 0, // Pending status
+        idKetQua: 0, // 0 = Thất bại (or initial status)
         displayOrder: 0, // Default display order
       );
+
+      // Debug: Print the ChapNoiModel JSON
+      debugPrint('ChapNoi JSON: ${chapNoi.toJson()}');
 
       // Create a StreamSubscription variable that will be properly cleaned up
       StreamSubscription? streamSubscription;
@@ -381,6 +420,8 @@ class _TimViecPageState extends State<TimViecPage> {
           streamSubscription = null;
         } else if (state is ChapNoiError) {
           if (mounted) {
+            // Enhanced error logging and display
+            debugPrint('ChapNoi Error: ${state.message}');
             ToastUtils.showErrorToast(
               context,
               'Ứng tuyển thất bại: ${state.message}',
@@ -468,9 +509,9 @@ class _TimViecPageState extends State<TimViecPage> {
     if (_isCheckingProfile && _currentUserType == 'NTV') {
       return Scaffold(
         backgroundColor: theme.colorScheme.surface,
-        appBar: CustomAppBar(
+        appBar: const CustomAppBar(
           title: 'Tìm Việc Làm',
-          elevation: 0,
+          useGradient: true,
         ),
         body: Center(
           child: Column(
@@ -496,7 +537,7 @@ class _TimViecPageState extends State<TimViecPage> {
       backgroundColor: theme.colorScheme.surface,
       appBar: CustomAppBar(
         title: 'Tìm Việc Làm',
-        elevation: 0,
+        useGradient: true,
         actions: [
           IconButton(
             onPressed: () => setState(() => _showFilters = !_showFilters),
@@ -874,6 +915,21 @@ class _TimViecPageState extends State<TimViecPage> {
         }
 
         if (state is TuyenDungError) {
+          // Parse error message to provide better user feedback
+          String userFriendlyMessage = 'Không thể tải danh sách việc làm';
+          String technicalDetails = state.message;
+          
+          if (state.message.contains('500')) {
+            userFriendlyMessage = 'Máy chủ đang gặp sự cố';
+            technicalDetails = 'Vui lòng thử lại sau ít phút hoặc liên hệ quản trị viên nếu lỗi vẫn tiếp diễn.';
+          } else if (state.message.contains('Failed to fetch') || state.message.contains('Network')) {
+            userFriendlyMessage = 'Không có kết nối mạng';
+            technicalDetails = 'Vui lòng kiểm tra kết nối internet của bạn.';
+          } else if (state.message.contains('timeout')) {
+            userFriendlyMessage = 'Kết nối quá chậm';
+            technicalDetails = 'Vui lòng thử lại hoặc kiểm tra kết nối mạng.';
+          }
+          
           return Center(
             child: Container(
               margin: const EdgeInsets.all(24),
@@ -895,24 +951,44 @@ class _TimViecPageState extends State<TimViecPage> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Có lỗi xảy ra',
+                    userFriendlyMessage,
                     style: theme.textTheme.titleLarge?.copyWith(
                       color: theme.colorScheme.error,
                       fontWeight: FontWeight.w600,
                     ),
+                    textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    state.message,
+                    technicalDetails,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.onErrorContainer,
                     ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: _performSearch,
-                    child: const Text('Thử lại'),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      OutlinedButton.icon(
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: Icon(FontAwesomeIcons.arrowLeft, size: 14),
+                        label: Text('Quay lại'),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: theme.colorScheme.primary,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      ElevatedButton.icon(
+                        onPressed: _performSearch,
+                        icon: Icon(FontAwesomeIcons.arrowsRotate, size: 14),
+                        label: Text('Thử lại'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: theme.colorScheme.primary,
+                          foregroundColor: Colors.white,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -1057,11 +1133,17 @@ class _TimViecPageState extends State<TimViecPage> {
                           'gioiTinh': job.tdYeuCauGioiTinh,
                           'trinhDo': job.tdYeuCauHocVan ?? '',
                           'nganhNghe': job.tdNganhnghe ?? '',
-                          'motaCongViec': job.tdMotacongviec ?? '',
+                          'moTaCongViec': job.tdMotacongviec ?? '',
                           'ngayNhanHoSo': job.ngayNhanHoSo ?? '',
                           'tenNTD': job.tdTieude ?? '',
                           'address': job.noiLamviec ?? '',
                           'idDoanhNghiep': job.idDoanhNghiep.toString(),
+                          'ngayDang': job.createdDate != null ? _formatDate(job.createdDate!) : '',
+                          'mucLuong': job.mucLuong ?? '',
+                          'idKinhnghiem': job.idKinhnghiem ?? '',
+                          'tdNoinophoso': job.tdNoinophoso ?? '',
+                          'tdHosobaogom': job.tdHosobaogom ?? '',
+                          'tdGhichu': job.tdGhichu ?? '',
                         },
                       ),
                     ),
@@ -1201,7 +1283,7 @@ class _TimViecPageState extends State<TimViecPage> {
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                'Ứng tuyển',
+                                'Chắp nối việc làm',
                                 style: theme.textTheme.bodyMedium?.copyWith(
                                   color: theme.colorScheme.onPrimary,
                                   fontWeight: FontWeight.w600,
@@ -1224,11 +1306,17 @@ class _TimViecPageState extends State<TimViecPage> {
                                   'gioiTinh': job.tdYeuCauGioiTinh,
                                   'trinhDo': job.tdYeuCauHocVan ?? '',
                                   'nganhNghe': job.tdNganhnghe ?? '',
-                                  'motaCongViec': job.tdMotacongviec ?? '',
+                                  'moTaCongViec': job.tdMotacongviec ?? '',
                                   'ngayNhanHoSo': job.ngayNhanHoSo ?? '',
                                   'tenNTD': job.tdTieude ?? '',
                                   'address': job.noiLamviec ?? '',
                                   'idDoanhNghiep': job.idDoanhNghiep.toString(),
+                                  'ngayDang': job.createdDate != null ? _formatDate(job.createdDate!) : '',
+                                  'mucLuong': job.mucLuong ?? '',
+                                  'idKinhnghiem': job.idKinhnghiem ?? '',
+                                  'tdNoinophoso': job.tdNoinophoso ?? '',
+                                  'tdHosobaogom': job.tdHosobaogom ?? '',
+                                  'tdGhichu': job.tdGhichu ?? '',
                                 },
                               ),
                             ),
@@ -1312,29 +1400,30 @@ class _TimViecPageState extends State<TimViecPage> {
         children: [
           // Previous button
           ElevatedButton.icon(
-            onPressed: _currentPage > 1 && !_isLoadingMore ? _loadPreviousPage : null,
+            onPressed:
+                _currentPage > 1 && !_isLoadingMore ? _loadPreviousPage : null,
             icon: Icon(
               FontAwesomeIcons.chevronLeft,
               size: 14,
-              color: _currentPage > 1 && !_isLoadingMore 
-                  ? theme.colorScheme.onPrimary 
+              color: _currentPage > 1 && !_isLoadingMore
+                  ? theme.colorScheme.onPrimary
                   : theme.colorScheme.onSurface.withOpacity(0.5),
             ),
             label: Text(
               'Trước',
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: _currentPage > 1 && !_isLoadingMore 
-                    ? theme.colorScheme.onPrimary 
+                color: _currentPage > 1 && !_isLoadingMore
+                    ? theme.colorScheme.onPrimary
                     : theme.colorScheme.onSurface.withOpacity(0.5),
                 fontWeight: FontWeight.w600,
               ),
             ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: _currentPage > 1 && !_isLoadingMore 
-                  ? theme.colorScheme.primary 
+              backgroundColor: _currentPage > 1 && !_isLoadingMore
+                  ? theme.colorScheme.primary
                   : theme.colorScheme.surface,
-              foregroundColor: _currentPage > 1 && !_isLoadingMore 
-                  ? theme.colorScheme.onPrimary 
+              foregroundColor: _currentPage > 1 && !_isLoadingMore
+                  ? theme.colorScheme.onPrimary
                   : theme.colorScheme.onSurface.withOpacity(0.5),
               elevation: 0,
               shape: RoundedRectangleBorder(
@@ -1366,9 +1455,9 @@ class _TimViecPageState extends State<TimViecPage> {
                     Text('...', style: theme.textTheme.bodyMedium),
                     const SizedBox(width: 4),
                   ],
-                  for (int i = math.max(2, _currentPage - 1); 
-                       i <= math.min(_totalPages - 1, _currentPage + 1); 
-                       i++)
+                  for (int i = math.max(2, _currentPage - 1);
+                      i <= math.min(_totalPages - 1, _currentPage + 1);
+                      i++)
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 2),
                       child: _buildPageButton(i, theme),
@@ -1386,8 +1475,10 @@ class _TimViecPageState extends State<TimViecPage> {
 
           // Next button
           ElevatedButton.icon(
-            onPressed: _currentPage < _totalPages && !_isLoadingMore ? _loadNextPage : null,
-            icon: _isLoadingMore 
+            onPressed: _currentPage < _totalPages && !_isLoadingMore
+                ? _loadNextPage
+                : null,
+            icon: _isLoadingMore
                 ? SizedBox(
                     width: 14,
                     height: 14,
@@ -1399,25 +1490,25 @@ class _TimViecPageState extends State<TimViecPage> {
                 : Icon(
                     FontAwesomeIcons.chevronRight,
                     size: 14,
-                    color: _currentPage < _totalPages && !_isLoadingMore 
-                        ? theme.colorScheme.onPrimary 
+                    color: _currentPage < _totalPages && !_isLoadingMore
+                        ? theme.colorScheme.onPrimary
                         : theme.colorScheme.onSurface.withOpacity(0.5),
                   ),
             label: Text(
               'Tiếp',
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: _currentPage < _totalPages && !_isLoadingMore 
-                    ? theme.colorScheme.onPrimary 
+                color: _currentPage < _totalPages && !_isLoadingMore
+                    ? theme.colorScheme.onPrimary
                     : theme.colorScheme.onSurface.withOpacity(0.5),
                 fontWeight: FontWeight.w600,
               ),
             ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: _currentPage < _totalPages && !_isLoadingMore 
-                  ? theme.colorScheme.primary 
+              backgroundColor: _currentPage < _totalPages && !_isLoadingMore
+                  ? theme.colorScheme.primary
                   : theme.colorScheme.surface,
-              foregroundColor: _currentPage < _totalPages && !_isLoadingMore 
-                  ? theme.colorScheme.onPrimary 
+              foregroundColor: _currentPage < _totalPages && !_isLoadingMore
+                  ? theme.colorScheme.onPrimary
                   : theme.colorScheme.onSurface.withOpacity(0.5),
               elevation: 0,
               shape: RoundedRectangleBorder(
@@ -1441,13 +1532,11 @@ class _TimViecPageState extends State<TimViecPage> {
         width: 32,
         height: 32,
         decoration: BoxDecoration(
-          color: isCurrentPage 
-              ? theme.colorScheme.primary 
-              : Colors.transparent,
+          color: isCurrentPage ? theme.colorScheme.primary : Colors.transparent,
           borderRadius: BorderRadius.circular(6),
           border: Border.all(
-            color: isCurrentPage 
-                ? theme.colorScheme.primary 
+            color: isCurrentPage
+                ? theme.colorScheme.primary
                 : theme.colorScheme.outline.withOpacity(0.3),
           ),
         ),
@@ -1455,8 +1544,8 @@ class _TimViecPageState extends State<TimViecPage> {
           child: Text(
             page.toString(),
             style: theme.textTheme.bodySmall?.copyWith(
-              color: isCurrentPage 
-                  ? theme.colorScheme.onPrimary 
+              color: isCurrentPage
+                  ? theme.colorScheme.onPrimary
                   : theme.colorScheme.onSurface,
               fontWeight: isCurrentPage ? FontWeight.w600 : FontWeight.w400,
             ),

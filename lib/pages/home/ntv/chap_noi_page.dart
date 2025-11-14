@@ -12,6 +12,7 @@ import 'package:ttld/features/auth/bloc/auth_state.dart';
 import 'package:ttld/models/chapnoi/chapnoi_model.dart';
 import 'package:ttld/models/tblHoSoUngVien/tblHoSoUngVien_model.dart';
 import 'package:ttld/widgets/logout_button.dart';
+import 'package:ttld/widgets/common/custom_app_bar.dart';
 
 class ChapNoiPage extends StatefulWidget {
   const ChapNoiPage({super.key});
@@ -106,21 +107,10 @@ class _ChapNoiPageState extends State<ChapNoiPage> {
     final theme = Theme.of(context);
     
     return Scaffold(
-      extendBodyBehindAppBar: true,
-      backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        title: Text(
-          'Chắp Nối Việc Làm',
-          style: theme.textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: theme.colorScheme.onSurface,
-          ),
-        ),
-        centerTitle: true,
-        elevation: 2,
-        backgroundColor: theme.colorScheme.surface,
-        scrolledUnderElevation: 1.0,
-        iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
+      backgroundColor: theme.colorScheme.surface,
+      appBar: CustomAppBar(
+        title: 'Chắp Nối Việc Làm',
+        useGradient: true,
         actions: [
           LogoutButton(),
         ],

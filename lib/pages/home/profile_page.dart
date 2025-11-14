@@ -13,6 +13,7 @@ import 'package:ttld/core/api_client.dart';
 import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/core/utils/toast_utils.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
+import 'package:ttld/widgets/common/letter_avatar.dart';
 import 'package:ttld/features/auth/bloc/auth_event.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
 import 'package:ttld/features/auth/repositories/auth_repository.dart';
@@ -229,11 +230,17 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _buildAvatarSection(ThemeData theme) {
     final colorScheme = theme.colorScheme;
+    final authState = locator<AuthBloc>().state;
+    String? avatarUrl;
 
-    // Check if we have an avatar image
-    final bool hasAvatar = _avatarImage != null ||
-        (locator<AuthBloc>().state is AuthAuthenticated &&
-            (locator<AuthBloc>().state as AuthAuthenticated).avatarUrl != null);
+    // Get avatar URL
+    if (authState is AuthAuthenticated) {
+      avatarUrl = _avatarImage != null 
+          ? null  // Use local file if available
+          : (authState.avatarUrl != null 
+              ? '${getEnv('URL_AVATAR')}${authState.avatarUrl}' 
+              : null);
+    }
 
     return Stack(
       children: [
@@ -252,30 +259,13 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ],
           ),
-          child: CircleAvatar(
-            radius: 60,
-            backgroundColor: Colors.white,
-            backgroundImage: hasAvatar
-                ? (_avatarImage != null
-                        ? FileImage(_avatarImage!)
-                        : NetworkImage(
-                            '${getEnv('URL_AVATAR')}${(locator<AuthBloc>().state as AuthAuthenticated).avatarUrl}'))
-                    as ImageProvider
-                : null,
-            child: !hasAvatar
-                ? Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: colorScheme.primary.withValues(alpha: 0.1),
-                    ),
-                    child: FaIcon(
-                      FontAwesomeIcons.user,
-                      size: 50,
-                      color: colorScheme.primary.withValues(alpha: 0.7),
-                    ),
-                  )
-                : null,
-          ),
+          child: _avatarImage != null 
+              ? CircleAvatar(
+                  radius: 60,
+                  backgroundColor: Colors.white,
+                  backgroundImage: FileImage(_avatarImage!),
+                )
+              : _buildDynamicLetterAvatar(avatarUrl),
         ),
         Positioned(
           bottom: 4,
@@ -310,6 +300,65 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ],
     );
+  }
+
+  Widget _buildDynamicLetterAvatar(String? avatarUrl) {
+    if (widget.userType.toLowerCase() == 'ntv') {
+      return BlocBuilder<NTVBloc, NTVState>(
+        bloc: BlocProvider.of<NTVBloc>(context),
+        builder: (context, state) {
+          String userName = 'Ứng Viên';
+          if (state is NTVLoadedById && state.tblHoSoUngVien != null) {
+            userName = state.tblHoSoUngVien!.uvHoten ?? 'Ứng Viên';
+          }
+          return NetworkLetterAvatar(
+            name: userName,
+            imageUrl: avatarUrl,
+            size: 120,
+            textStyle: TextStyle(
+              fontSize: 36,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+              letterSpacing: 1.0,
+            ),
+          );
+        },
+      );
+    } else if (widget.userType.toLowerCase() == 'ntd') {
+      return BlocBuilder<NTDBloc, NTDState>(
+        bloc: BlocProvider.of<NTDBloc>(context),
+        builder: (context, state) {
+          String userName = 'Nhà Tuyển Dụng';
+          if (state is NTDLoadedById) {
+            userName = state.ntd.ntdTen ?? 'Nhà Tuyển Dụng';
+          }
+          return NetworkLetterAvatar(
+            name: userName,
+            imageUrl: avatarUrl,
+            size: 120,
+            textStyle: TextStyle(
+              fontSize: 36,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+              letterSpacing: 1.0,
+            ),
+          );
+        },
+      );
+    } else {
+      // Admin case
+      return NetworkLetterAvatar(
+        name: 'Quản Trị Viên',
+        imageUrl: avatarUrl,
+        size: 120,
+        textStyle: TextStyle(
+          fontSize: 36,
+          fontWeight: FontWeight.w600,
+          color: Colors.white,
+          letterSpacing: 1.0,
+        ),
+      );
+    }
   }
 
   Widget _buildUserInfoSection() {

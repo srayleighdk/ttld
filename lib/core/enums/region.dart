@@ -1,14 +1,12 @@
-enum Region { lamDong, binhThuan, binhDinh }
+enum Region { lamDong, giaLai }
 
 extension RegionExtension on Region {
   String get displayName {
     switch (this) {
       case Region.lamDong:
         return 'Lâm Đồng';
-      case Region.binhThuan:
-        return 'Bình Thuận';
-      case Region.binhDinh:
-        return 'Bình Định';
+      case Region.giaLai:
+        return 'Gia Lai';
     }
   }
 
@@ -16,10 +14,8 @@ extension RegionExtension on Region {
     switch (this) {
       case Region.lamDong:
         return 'API_LAMDONG';
-      case Region.binhThuan:
-        return 'API_BINHTHUAN';
-      case Region.binhDinh:
-        return 'API_BINHDINH';
+      case Region.giaLai:
+        return 'API_GIALAI';
     }
   }
 
@@ -27,10 +23,8 @@ extension RegionExtension on Region {
     switch (this) {
       case Region.lamDong:
         return 'URL_AVATAR_LD';
-      case Region.binhThuan:
-        return 'URL_AVATAR_BT';
-      case Region.binhDinh:
-        return 'URL_AVATAR_BD';
+      case Region.giaLai:
+        return 'URL_AVATAR_GL';
     }
   }
 }

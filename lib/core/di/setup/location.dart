@@ -7,7 +7,9 @@ import 'package:ttld/core/api_client.dart';
 import 'package:ttld/core/services/huyen_api_service.dart';
 import 'package:ttld/core/services/quocgia_api_service.dart';
 import 'package:ttld/core/services/tinh_api_service.dart';
+import 'package:ttld/core/services/tinh_moi_api_service.dart';
 import 'package:ttld/core/services/xa_api_service.dart';
+import 'package:ttld/core/services/xa_moi_api_service.dart';
 import 'package:ttld/repositories/huyen/huyen_repository.dart';
 import 'package:ttld/repositories/quocgia/quocgia_repository.dart';
 import 'package:ttld/repositories/tinh/tinh_repository.dart';
@@ -37,6 +39,12 @@ Future<void> setupLocationLocator() async {
       () => XaRepositoryImpl(xaApiService: locator<XaApiService>()));
   locator.registerLazySingleton(
       () => XaBloc(xaRepository: locator<XaRepository>()));
+
+  // TinhMoi and XaMoi API Services
+  locator.registerLazySingleton<TinhMoiApiService>(
+      () => TinhMoiApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<XaMoiApiService>(
+      () => XaMoiApiService(locator<ApiClient>().dio));
 
   // QuocGia
   locator.registerLazySingleton<QuocGiaApiService>(

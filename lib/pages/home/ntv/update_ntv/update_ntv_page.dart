@@ -15,12 +15,17 @@ import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/core/utils/toast_utils.dart';
 import 'package:ttld/models/chuc_danh_model.dart';
 import 'package:ttld/models/dan_toc_model.dart';
+import 'package:ttld/models/dmtinhmoi_model.dart';
+import 'package:ttld/models/dmxamoi_model.dart';
 import 'package:ttld/models/doituong_chinhsach/doituong.dart';
 import 'package:ttld/models/hinhthuc_doanhnghiep/hinhthuc_doanhnghiep_model.dart';
 import 'package:ttld/models/muc_luong_mm.dart';
+import 'package:ttld/models/nganh_nghe_bachoc.dart';
+import 'package:ttld/models/nganh_nghe_td_model.dart';
 import 'package:ttld/models/nguon_thuthap_model.dart';
 import 'package:ttld/models/thoigianlamviec_model.dart';
 import 'package:ttld/models/tinh_thanh_model.dart';
+import 'package:ttld/models/trinh_do_hoc_van_model.dart';
 import 'package:ttld/models/trinh_do_ngoai_ngu_model.dart';
 import 'package:ttld/models/trinh_do_tin_hoc_model.dart';
 import 'package:ttld/models/trinh_do_van_hoa_model.dart';
@@ -29,6 +34,7 @@ import 'package:ttld/models/tblHoSoUngVien/tblHoSoUngVien_model.dart';
 import 'package:ttld/pages/home/ntv/update_ntv/step1_personal_info.dart';
 import 'package:ttld/pages/home/ntv/update_ntv/step2_display_settings.dart';
 import 'package:ttld/pages/home/ntv/update_ntv/step3_job_preferences.dart';
+import 'package:ttld/widgets/common/custom_app_bar.dart';
 
 class UpdateNTVPage extends StatefulWidget {
   final TblHoSoUngVienModel? hoSoUngVien;
@@ -47,9 +53,9 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
   };
   int _currentStep = 0;
   final List<String> _steps = [
-    'Thông tin\ncá nhân',
-    'Hiện thị\nthông tin',
-    'Việc làm\nmong muốn',
+    'Thông tin\nlý lịch',
+    'Trình độ\nchuyên môn',
+    'Công việc\nmong muốn',
   ];
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -121,9 +127,30 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
   final _idBacHocController = TextEditingController();
   final _diachilienheController = TextEditingController();
 
+  // Step 2: Professional qualifications controllers
+  final _kinhNghiemController = TextEditingController();
+  final _bangCapKhacController = TextEditingController();
+  final _trinhDoNgoaiNguController = TextEditingController();
+  final _trinhDoTinHocControllerStep2 = TextEditingController();
+
+  // Step 3: Job preferences controllers
+  final _congViecMMController = TextEditingController();
+  final _noiLamViecMMController = TextEditingController();
+  final _congViecDaLamController = TextEditingController();
+  final _khaNangSoTruongController = TextEditingController();
+
   String? _selectedTinh;
   String? _selectedHuyen;
   String? _selectedXa;
+
+  // New fields for Tinh Moi and Xa Moi
+  int? _idTinhMoi;
+  int? _idXaMoi;
+
+  // Step 2: Professional qualifications IDs
+  int? _trinhDoHocVanId;
+  int? _nganhNgheId;
+  dynamic _trinhDoDaoTaoId; // Can be int or string depending on API
 
   // Model instance variables are kept for onChanged logic if needed by the page
   NguonThuThap? nguonThuThap;
@@ -139,6 +166,14 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
   ThoiGianLamViec? thoigianlamviec;
   HinhThucDoanhNghiep? hinhthucdoanhnghiep;
   TrinhDoVanHoa? trinhDoVanHoa;
+  DmTinhMoi? tinhMoi;
+  DmXaMoi? xaMoi;
+
+  // Step 2 model instances
+  TrinhDoHocVan? trinhDoHocVan;
+  TrinhDoChuyenMon? bacHoc;
+  NganhNgheTD? nganhNghe;
+  TrinhDoChuyenMon? trinhDoDaoTao;
 
   File? _selectedFile; // For file (e.g., CV)
   File? _selectedImage; // For image (e.g., avatar)
@@ -177,6 +212,8 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
       _idTinhController.text = ntv.idTinh ?? '';
       _idHuyenController.text = ntv.idhuyen ?? '';
       _idXaController.text = ntv.idxa ?? '';
+      _idTinhMoi = ntv.idTinhMoi;
+      _idXaMoi = ntv.idxaMoi;
 
       // Work Experience and Skills
       _uvcmCongviechientaiController.text = ntv.uvcmCongviechientai ?? '';
@@ -202,6 +239,24 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
       _uvcmTrinhdongoainguController.text = ntv.uvcmTrinhdongoaingu ?? '';
       _uvcmTrinhdotinhocController.text = ntv.uvcmTrinhdotinhoc ?? '';
       _idBacHocController.text = ntv.idBacHoc ?? '';
+
+      // Step 2: Professional qualifications
+      _kinhNghiemController.text = ntv.uvcmKinhnghiem?.toString() ?? '';
+      _bangCapKhacController.text = ntv.uvcmBangcap ?? '';
+      _trinhDoNgoaiNguController.text = ntv.uvcmTrinhdongoaingu ?? '';
+      _trinhDoTinHocControllerStep2.text = ntv.uvcmTrinhdotinhoc ?? '';
+
+      // Set IDs for step 2
+      _trinhDoHocVanId = ntv.uvcmTrinhdoId;
+      _nganhNgheId = ntv.uvnvNganhngheId;
+      // trinhDoDaoTaoId maps to IdBacHoc in backend (keep as string to match API response)
+      _trinhDoDaoTaoId = ntv.idBacHoc;
+
+      // Step 3: Job preferences
+      _congViecMMController.text = ntv.cvMongMuon ?? '';
+      _noiLamViecMMController.text = ntv.uvnvNoilamviec ?? '';
+      _congViecDaLamController.text = ntv.uvcmCongviechientai ?? '';
+      _khaNangSoTruongController.text = ntv.uvcmKynang ?? '';
 
       // Display Settings
       _uvDuyet = ntv.uvDuyet;
@@ -303,21 +358,10 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      extendBodyBehindAppBar: true,
-      backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        title: Text(
-          'Cập nhật thông tin',
-          style: theme.textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: theme.colorScheme.onSurface,
-          ),
-        ),
-        centerTitle: true,
-        elevation: 2,
-        backgroundColor: theme.colorScheme.surface,
-        scrolledUnderElevation: 1.0,
-        iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
+      backgroundColor: theme.colorScheme.surface,
+      appBar: const CustomAppBar(
+        title: 'Cập nhật thông tin',
+        useGradient: true,
       ),
       body: Container(
         height: MediaQuery.of(context).size.height,
@@ -347,9 +391,17 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
               ToastUtils.showToastSuccess(
                 context,
                 message: 'Cập nhật thành công',
-                description: 'Test',
+                description: 'Hồ sơ của bạn đã được cập nhật',
               );
-              context.go('/ntv_home');
+              // Reload the NTV data first to refresh the home page
+              if (widget.hoSoUngVien != null) {
+                final ntvId = int.tryParse(widget.hoSoUngVien!.id);
+                if (ntvId != null) {
+                  locator<NTVBloc>().add(LoadTblHoSoUngVien(ntvId));
+                }
+              }
+              // Then navigate back
+              Navigator.pop(context);
             }
           },
           child: SafeArea(
@@ -507,6 +559,8 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
           idNguonThuThap: _idNguonThuThap != null
               ? int.tryParse(_idNguonThuThap.toString())
               : null,
+          idTinhMoi: _idTinhMoi,
+          idXaMoi: _idXaMoi,
           onNgaysinhChanged: (value) =>
               setState(() => _uvngaysinhController = value),
           onNgaycapChanged: (value) => setState(() => _uvNgaycap = value),
@@ -541,60 +595,65 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
             if (huyen != null) _idHuyenController.text = huyen;
             if (xa != null) _idXaController.text = xa;
           }),
+          onTinhMoiChanged: (value) => setState(() {
+            _idTinhMoi = value?.id;
+            tinhMoi = value;
+          }),
+          onXaMoiChanged: (value) => setState(() {
+            _idXaMoi = value?.id;
+            xaMoi = value;
+          }),
         );
       case 1:
         return Step2DisplaySettings(
           formKey: _formKeys[1]!,
-          uvhtEmail: _uvhtEmail,
-          uvhtAddress: _uvhtAddress,
-          uvhtTelephone: _uvhtTelephone,
-          newletterSubscription: _newletterSubscription,
-          jobsletterSubscription: _jobsletterSubscription,
-          selectedFile: _selectedFile,
-          selectedImage: _selectedImage,
-          onUvhtEmailChanged: (value) => setState(() => _uvhtEmail = value),
-          onUvhtAddressChanged: (value) => setState(() => _uvhtAddress = value),
-          onUvhtTelephoneChanged: (value) =>
-              setState(() => _uvhtTelephone = value),
-          onNewletterSubscriptionChanged: (value) =>
-              setState(() => _newletterSubscription = value),
-          onJobsletterSubscriptionChanged: (value) =>
-              setState(() => _jobsletterSubscription = value),
-          onPickFile: _pickFile,
-          onPickImage: _pickImage,
+          trinhDoHocVanId: _trinhDoHocVanId,
+          nganhNgheId: _nganhNgheId,
+          trinhDoDaoTaoId: _trinhDoDaoTaoId,
+          kinhNghiemController: _kinhNghiemController,
+          bangCapKhacController: _bangCapKhacController,
+          trinhDoNgoaiNguController: _trinhDoNgoaiNguController,
+          trinhDoTinHocController: _trinhDoTinHocControllerStep2,
+          onTrinhDoHocVanChanged: (value) => setState(() {
+            _trinhDoHocVanId = value?.id is int ? value?.id : int.tryParse(value?.id?.toString() ?? '');
+            trinhDoHocVan = value;
+          }),
+          onNganhNgheChanged: (value) => setState(() {
+            _nganhNgheId = value?.id is int ? value?.id : int.tryParse(value?.id?.toString() ?? '');
+            nganhNghe = value;
+          }),
+          onTrinhDoDaoTaoChanged: (value) => setState(() {
+            // Keep ID as-is (can be int or string) to match API response type
+            _trinhDoDaoTaoId = value?.id;
+            trinhDoDaoTao = value;
+          }),
         );
       case 2:
         return Step3JobPreferences(
           formKey: _formKeys[2]!,
-          cvMongMuonController: _cvMongMuonController,
-          uvnvTienluong: _uvnvTienluong,
-          uvcmCongviechientaiController: _uvcmCongviechientaiController,
-          uvcmKynangController: _uvcmKynangController,
-          uvGhichuController: _uvGhichuController,
-          uvnvNoilamviecController: _uvnvNoilamviecController,
-          uvnvVitrimongmuonId: _uvnvVitrimongmuonId,
-          idMucluong: _idMucluong,
-          uvnvThoigianId: _uvnvThoigianId,
-          uvnvHinhthuccongtyId: _uvnvHinhthuccongtyId,
-          onChucDanhChanged: (value) => setState(() {
+          congViecMMController: _congViecMMController,
+          noiLamViecMMController: _noiLamViecMMController,
+          congViecDaLamController: _congViecDaLamController,
+          khaNangSoTruongController: _khaNangSoTruongController,
+          viTriMMId: _uvnvVitrimongmuonId,
+          mucLuongId: _idMucluong,
+          thoiGianLamViecMMId: _uvnvThoigianId,
+          hinhThucCtyMMId: _uvnvHinhthuccongtyId,
+          onViTriMMChanged: (value) => setState(() {
             chucDanh = value;
-            _uvnvVitrimongmuonId = value?.id;
+            _uvnvVitrimongmuonId = value?.id is int ? value?.id : int.tryParse(value?.id?.toString() ?? '');
           }),
           onMucLuongChanged: (value) => setState(() {
-            _idMucluong = value?.id;
+            _idMucluong = value?.id is int ? value?.id : int.tryParse(value?.id?.toString() ?? '');
             mucLuong = value;
           }),
           onThoiGianLamViecChanged: (value) => setState(() {
-            _uvnvThoigianId = value?.id;
+            _uvnvThoigianId = value?.id is int ? value?.id : int.tryParse(value?.id?.toString() ?? '');
             thoigianlamviec = value;
           }),
-          onHinhThucDoanhNghiepChanged: (value) => setState(() {
-            _uvnvHinhthuccongtyId = value?.id;
+          onHinhThucCtyMMChanged: (value) => setState(() {
+            _uvnvHinhthuccongtyId = value?.id is int ? value?.id : int.tryParse(value?.id?.toString() ?? '');
             hinhthucdoanhnghiep = value;
-          }),
-          onTinhThanhMMChanged: (value) => setState(() {
-            _uvnvNoilamviecController.text = value?.id.toString() ?? '';
-            tinhThanhmm = value;
           }),
         );
       default:
@@ -746,6 +805,8 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
             idTinh: _idTinhController.text,
             idhuyen: _idHuyenController.text,
             idxa: _idXaController.text,
+            idTinhMoi: _idTinhMoi,
+            idxaMoi: _idXaMoi,
             idtv: _idTv,
             idBacHoc: _idBacHocController.text,
             idMucluong: _idMucluong,
@@ -771,9 +832,11 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
             'uvHoten': _hotenController.text,
             'uvEmail': _emailController.text,
             'maHoSo': 'Test',
-            'cvMongMuon': _cvMongMuonController.text,
+            // Step 3: Cong viec mong muon
+            'cvMongMuon': _congViecMMController.text,
             'documentPath': 'Test',
             'imagePath': 'Test',
+            // Step 1: Personal info
             'uvDiachichitiet': _diachichitietController.text,
             'uvDienthoai': _dienthoaiController.text,
             'uvSoCmnd': _cmndController.text,
@@ -784,16 +847,19 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
             'uvCannang': _uvcannangController.text,
             'idNguonThuThap': _idNguonThuThap,
             'uvNgaysinh': _uvngaysinhController,
-            'uvcmCongviechientai': _uvcmCongviechientaiController.text,
-            'uvnvNoilamviec': _uvnvNoilamviecController.text,
+            // Step 3: Work experience
+            'uvcmCongviechientai': _congViecDaLamController.text,
+            'uvnvNoilamviec': _noiLamViecMMController.text,
             'diachilienhe': _diachilienheController.text,
             'uvnvTienluong': double.tryParse(_uvnvTienluong.text) ?? 0,
             'uvGhichu': _uvGhichuController.text,
-            'uvcmBangcap': _uvcmBangcapController.text,
-            'uvcmKynang': _uvcmKynangController.text,
-            'uvcmTrinhdongoaingu': _uvcmTrinhdongoainguController.text,
-            'uvcmTrinhdotinhoc': _uvcmTrinhdotinhocController.text,
-            'uvcmKinhnghiem': int.tryParse(_uvcmKinhnghiem.text) ?? 0,
+            // Step 2: Professional qualifications
+            'uvcmBangcap': _bangCapKhacController.text,
+            'uvcmKynang': _khaNangSoTruongController.text,
+            // Both trinh do ngoai ngu and tin hoc are text fields that can contain multiple selected values
+            'uvcmTrinhdongoaingu': _trinhDoNgoaiNguController.text,
+            'uvcmTrinhdotinhoc': _trinhDoTinHocControllerStep2.text,
+            'uvcmKinhnghiem': int.tryParse(_kinhNghiemController.text) ?? 0,
             'uvDuyet': _uvDuyet,
             'uvHienthi': _uvHienthi,
             'uvhtTelephone': _uvhtTelephone,
@@ -808,8 +874,11 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
             'idTinh': _idTinhController.text,
             'idhuyen': _idHuyenController.text,
             'idxa': _idXaController.text,
+            'idTinhMoi': _idTinhMoi,
+            'idxaMoi': _idXaMoi,
             'idtv': _idTv,
-            'idBacHoc': _idBacHocController.text,
+            // Note: Using idBacHoc (capital H) to match entity property name, not DTO's idBachoc
+            'idBacHoc': _trinhDoDaoTaoId?.toString() ?? _idBacHocController.text,
             'idMucluong': _idMucluong,
             'mahoGd': _mahoGd,
             'displayOrder': _displayOrder,
@@ -819,10 +888,11 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
             'uvHonnhanId': _uvHonnhanId,
             'uvnvVitrimongmuonid': _uvnvVitrimongmuonId ?? 0,
             'uvDoituongchinhsachId': _uvDoiTuongChingSachId ?? 0,
-            'uvcmTrinhdoId': _uvcmTrinhdoId ?? 0,
-            'uvnvNganhngheId': _uvnvNganhngheId ?? 0,
             'uvnvHinhthuccongtyId': _uvnvHinhthuccongtyId ?? 0,
             'uvnvThoigianId': _uvnvThoigianId ?? 0,
+            // Step 2: Professional qualification IDs using DTO field names (camelCase)
+            'uvcmTrinhdoId': _trinhDoHocVanId ?? _uvcmTrinhdoId ?? 0,
+            'uvnvNganhngheId': _nganhNgheId ?? 0,
             'fileCv': _selectedFile?.path ?? originalNtv.fileCv,
             'avatarUrl': _selectedImage?.path ?? originalNtv.avatarUrl,
             if (_selectedFile != null)
@@ -878,6 +948,14 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
     _fileCVController.dispose();
     _idBacHocController.dispose();
     _diachilienheController.dispose();
+    _kinhNghiemController.dispose();
+    _bangCapKhacController.dispose();
+    _trinhDoNgoaiNguController.dispose();
+    _trinhDoTinHocControllerStep2.dispose();
+    _congViecMMController.dispose();
+    _noiLamViecMMController.dispose();
+    _congViecDaLamController.dispose();
+    _khaNangSoTruongController.dispose();
     super.dispose();
   }
 }

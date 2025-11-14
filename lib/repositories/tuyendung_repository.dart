@@ -42,19 +42,42 @@ class TuyenDungRepository {
       );
       
       final data = response.data['data'] as List;
-      final tuyenDungList = data.map((json) {
-        // Log the raw JSON for debugging
-        return NTDTuyenDung.fromJson(json);
-      }).toList();
-      
-      // Return both the list and pagination info
+      final tuyenDungList = <NTDTuyenDung>[];
+
+      for (var i = 0; i < data.length; i++) {
+        try {
+          final json = data[i] as Map<String, dynamic>;
+          final item = NTDTuyenDung.fromJson(json);
+          tuyenDungList.add(item);
+        } catch (e) {
+          print('Error parsing tuyendung item at index $i: $e');
+          print('JSON data: ${data[i]}');
+          rethrow;
+        }
+      }
+
+      // Handle both string and int types from API
+      int parseIntSafely(dynamic value, int defaultValue) {
+        if (value == null) return defaultValue;
+        if (value is int) return value;
+        if (value is String) return int.tryParse(value) ?? defaultValue;
+        return defaultValue;
+      }
+
+      // Backend returns: page, limit, total, totalQuery
+      // Convert to: currentPage, limit, totalItems, totalPages
+      final currentPage = parseIntSafely(response.data['page'], page ?? 1);
+      final limitValue = parseIntSafely(response.data['limit'], limit ?? 10);
+      final totalItems = parseIntSafely(response.data['totalQuery'], tuyenDungList.length);
+      final totalPages = limitValue > 0 ? (totalItems / limitValue).ceil() : 1;
+
       return {
         'data': tuyenDungList,
         'pagination': {
-          'currentPage': response.data['currentPage'] ?? page ?? 1,
-          'totalPages': response.data['totalPages'] ?? 1,
-          'totalItems': response.data['totalItems'] ?? tuyenDungList.length,
-          'limit': response.data['limit'] ?? limit ?? 10,
+          'currentPage': currentPage,
+          'totalPages': totalPages,
+          'totalItems': totalItems,
+          'limit': limitValue,
         }
       };
     } on DioException catch (e) {

@@ -10,14 +10,14 @@ import 'package:ttld/core/enums/region.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
 import 'package:ttld/pages/home/admin/admin_home.dart';
-import 'package:ttld/pages/home/custom_bottom_nav_bar.dart';
+import 'package:ttld/core/design_system/widgets/modern_bottom_nav.dart';
+import 'package:ttld/core/design_system/widgets/profile_app_bar.dart';
 import 'package:ttld/pages/home/notification_page.dart';
-import 'package:ttld/pages/home/ntd/ntd_home.dart';
-import 'package:ttld/pages/home/ntv/ntv_home.dart';
+import 'package:ttld/pages/home/ntd/ultra_modern_ntd_home.dart';
+import 'package:ttld/pages/home/ntv/ultra_modern_ntv_home.dart';
 import 'package:ttld/pages/home/profile_page.dart';
 import 'package:ttld/pages/home/lien_he_page.dart';
 import 'package:ttld/widgets/logout_button.dart';
-import 'package:ttld/widgets/common/custom_app_bar.dart';
 
 enum UserRole { admin, ntd, ntv }
 
@@ -89,12 +89,27 @@ class _HomePageState extends State<HomePage> {
 
   Widget _wrapWithAppBar({required String title, required Widget child}) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
-      backgroundColor: Colors.transparent,
-      appBar: CustomAppBar(
+      backgroundColor: const Color(0xFFFAFAFA), // Consistent background
+      appBar: ProfileAppBar(
         title: title,
-        elevation: 2,
+        onProfileTap: () {
+          setState(() {
+            _currentIndex = 2; // Switch to profile tab
+          });
+        },
         actions: [
+          IconButton(
+            onPressed: () {
+              setState(() {
+                _currentIndex = 1; // Switch to notifications
+              });
+            },
+            icon: Icon(Icons.notifications_outlined),
+            style: IconButton.styleFrom(
+              backgroundColor: Colors.grey.shade100,
+            ),
+          ),
+          SizedBox(width: 8),
           LogoutButton(),
         ],
       ),
@@ -111,15 +126,14 @@ class _HomePageState extends State<HomePage> {
       case UserRole.ntd:
         homePage = BlocProvider<NTDBloc>.value(
           value: locator<NTDBloc>(),
-          child: const NTDHomePage(),
+          child: const UltraModernNTDHome(),
         );
         break;
       case UserRole.ntv:
         homePage = BlocProvider<NTVBloc>.value(
           value: locator<NTVBloc>(),
-          child: NTVHomePage(
+          child: UltraModernNTVHome(
             onProfileTap: () {
-              // Callback to switch to the Profile tab (index 2)
               setState(() {
                 _currentIndex = 2;
               });
@@ -164,54 +178,36 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
-      extendBodyBehindAppBar: true,
-      backgroundColor: Colors.transparent,
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              theme.colorScheme.primary.withAlpha(25),
-              theme.colorScheme.surface,
-            ],
-          ),
-        ),
-        child: SafeArea(
-          child: _isInitializing || _role == null || _pages.isEmpty
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
-              : Stack(
-                  children: [
-                    IndexedStack(
-                      index: _currentIndex,
-                      children: _pages,
+      backgroundColor: const Color(0xFFFAFAFA), // Consistent light gray background
+      body: SafeArea(
+        child: _isInitializing || _role == null || _pages.isEmpty
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : Stack(
+                children: [
+                  IndexedStack(
+                    index: _currentIndex,
+                    children: _pages,
+                  ),
+                  // Position the navbar at the bottom as an overlay
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: ModernBottomNav(
+                      currentIndex: _currentIndex,
+                      onTap: (index) {
+                        setState(() {
+                          _currentIndex = index;
+                        });
+                      },
                     ),
-                    // Position the navbar at the bottom as an overlay
-                    Positioned(
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      child: CustomNavigationBar(
-                        currentIndex: _currentIndex,
-                        onDestinationSelected: (index) {
-                          setState(() {
-                            _currentIndex = index;
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-        ),
+                  ),
+                ],
+              ),
       ),
-      // Removed bottomNavigationBar to avoid Scaffold's automatic styling
     );
   }
 }

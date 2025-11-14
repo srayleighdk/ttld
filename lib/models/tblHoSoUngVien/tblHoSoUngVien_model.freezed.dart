@@ -83,6 +83,8 @@ mixin _$TblHoSoUngVienModel {
   String? get idTinh => throw _privateConstructorUsedError;
   String? get idhuyen => throw _privateConstructorUsedError;
   String? get idxa => throw _privateConstructorUsedError;
+  int? get idTinhMoi => throw _privateConstructorUsedError;
+  int? get idxaMoi => throw _privateConstructorUsedError;
   String? get idtv => throw _privateConstructorUsedError;
   String? get mahoGd => throw _privateConstructorUsedError;
   dynamic get fileCv => throw _privateConstructorUsedError;
@@ -174,6 +176,8 @@ abstract class $TblHoSoUngVienModelCopyWith<$Res> {
       String? idTinh,
       String? idhuyen,
       String? idxa,
+      int? idTinhMoi,
+      int? idxaMoi,
       String? idtv,
       String? mahoGd,
       dynamic fileCv,
@@ -264,6 +268,8 @@ class _$TblHoSoUngVienModelCopyWithImpl<$Res, $Val extends TblHoSoUngVienModel>
     Object? idTinh = freezed,
     Object? idhuyen = freezed,
     Object? idxa = freezed,
+    Object? idTinhMoi = freezed,
+    Object? idxaMoi = freezed,
     Object? idtv = freezed,
     Object? mahoGd = freezed,
     Object? fileCv = freezed,
@@ -528,6 +534,14 @@ class _$TblHoSoUngVienModelCopyWithImpl<$Res, $Val extends TblHoSoUngVienModel>
           ? _value.idxa
           : idxa // ignore: cast_nullable_to_non_nullable
               as String?,
+      idTinhMoi: freezed == idTinhMoi
+          ? _value.idTinhMoi
+          : idTinhMoi // ignore: cast_nullable_to_non_nullable
+              as int?,
+      idxaMoi: freezed == idxaMoi
+          ? _value.idxaMoi
+          : idxaMoi // ignore: cast_nullable_to_non_nullable
+              as int?,
       idtv: freezed == idtv
           ? _value.idtv
           : idtv // ignore: cast_nullable_to_non_nullable
@@ -644,6 +658,8 @@ abstract class _$$TblHoSoUngVienModelImplCopyWith<$Res>
       String? idTinh,
       String? idhuyen,
       String? idxa,
+      int? idTinhMoi,
+      int? idxaMoi,
       String? idtv,
       String? mahoGd,
       dynamic fileCv,
@@ -732,6 +748,8 @@ class __$$TblHoSoUngVienModelImplCopyWithImpl<$Res>
     Object? idTinh = freezed,
     Object? idhuyen = freezed,
     Object? idxa = freezed,
+    Object? idTinhMoi = freezed,
+    Object? idxaMoi = freezed,
     Object? idtv = freezed,
     Object? mahoGd = freezed,
     Object? fileCv = freezed,
@@ -996,6 +1014,14 @@ class __$$TblHoSoUngVienModelImplCopyWithImpl<$Res>
           ? _value.idxa
           : idxa // ignore: cast_nullable_to_non_nullable
               as String?,
+      idTinhMoi: freezed == idTinhMoi
+          ? _value.idTinhMoi
+          : idTinhMoi // ignore: cast_nullable_to_non_nullable
+              as int?,
+      idxaMoi: freezed == idxaMoi
+          ? _value.idxaMoi
+          : idxaMoi // ignore: cast_nullable_to_non_nullable
+              as int?,
       idtv: freezed == idtv
           ? _value.idtv
           : idtv // ignore: cast_nullable_to_non_nullable
@@ -1107,6 +1133,8 @@ class _$TblHoSoUngVienModelImpl implements _TblHoSoUngVienModel {
       this.idTinh,
       this.idhuyen,
       this.idxa,
+      this.idTinhMoi,
+      this.idxaMoi,
       this.idtv,
       this.mahoGd,
       this.fileCv,
@@ -1260,6 +1288,10 @@ class _$TblHoSoUngVienModelImpl implements _TblHoSoUngVienModel {
   @override
   final String? idxa;
   @override
+  final int? idTinhMoi;
+  @override
+  final int? idxaMoi;
+  @override
   final String? idtv;
   @override
   final String? mahoGd;
@@ -1282,7 +1314,7 @@ class _$TblHoSoUngVienModelImpl implements _TblHoSoUngVienModel {
 
   @override
   String toString() {
-    return 'TblHoSoUngVienModel(id: $id, uvUsername: $uvUsername, uvPassword: $uvPassword, uvHoten: $uvHoten, uvEmail: $uvEmail, maHoSo: $maHoSo, tenDanToc: $tenDanToc, idDanToc: $idDanToc, cvMongMuon: $cvMongMuon, documentPath: $documentPath, imagePath: $imagePath, uvDiachichitiet: $uvDiachichitiet, uvDienthoai: $uvDienthoai, uvSoCmnd: $uvSoCmnd, uvNgaycap: $uvNgaycap, uvNoicap: $uvNoicap, uvGioitinh: $uvGioitinh, uvChieucao: $uvChieucao, uvCannang: $uvCannang, uvDoituongchinhsach: $uvDoituongchinhsach, uvDoituongchinhsachId: $uvDoituongchinhsachId, uvTinhtrangtantat: $uvTinhtrangtantat, uvTinhtrangtantatId: $uvTinhtrangtantatId, uvHonnhan: $uvHonnhan, uvHonnhanId: $uvHonnhanId, uvNgaysinh: $uvNgaysinh, uvcmCongviechientai: $uvcmCongviechientai, uvnvNganhnghe: $uvnvNganhnghe, uvnvNganhngheId: $uvnvNganhngheId, uvnvVitrimongmuon: $uvnvVitrimongmuon, uvnvVitrimongmuonid: $uvnvVitrimongmuonid, uvnvThoigian: $uvnvThoigian, uvnvThoigianId: $uvnvThoigianId, uvnvNoilamviec: $uvnvNoilamviec, idMucluong: $idMucluong, uvnvTienluong: $uvnvTienluong, uvnvHinhthuccongty: $uvnvHinhthuccongty, uvnvHinhthuccongtyId: $uvnvHinhthuccongtyId, uvGhichu: $uvGhichu, uvcmTrinhdo: $uvcmTrinhdo, uvcmTrinhdoId: $uvcmTrinhdoId, uvcmBangcap: $uvcmBangcap, uvcmKynang: $uvcmKynang, uvcmTrinhdongoaingu: $uvcmTrinhdongoaingu, uvcmTrinhdotinhoc: $uvcmTrinhdotinhoc, uvcmKinhnghiem: $uvcmKinhnghiem, uvSolanxem: $uvSolanxem, interview: $interview, interviewed: $interviewed, uvDuyet: $uvDuyet, uvHienthi: $uvHienthi, uvhtTelephone: $uvhtTelephone, uvhtEmail: $uvhtEmail, uvhtAddress: $uvhtAddress, uvId: $uvId, newsletterSubscription: $newsletterSubscription, jobsletterSubscription: $jobsletterSubscription, coBhtn: $coBhtn, soNhaDuong: $soNhaDuong, idThanhPho: $idThanhPho, idTinh: $idTinh, idhuyen: $idhuyen, idxa: $idxa, idtv: $idtv, mahoGd: $mahoGd, fileCv: $fileCv, displayOrder: $displayOrder, ngayduyet: $ngayduyet, idNguonThuThap: $idNguonThuThap, avatarUrl: $avatarUrl, avatar: $avatar, idBacHoc: $idBacHoc, diachilienhe: $diachilienhe)';
+    return 'TblHoSoUngVienModel(id: $id, uvUsername: $uvUsername, uvPassword: $uvPassword, uvHoten: $uvHoten, uvEmail: $uvEmail, maHoSo: $maHoSo, tenDanToc: $tenDanToc, idDanToc: $idDanToc, cvMongMuon: $cvMongMuon, documentPath: $documentPath, imagePath: $imagePath, uvDiachichitiet: $uvDiachichitiet, uvDienthoai: $uvDienthoai, uvSoCmnd: $uvSoCmnd, uvNgaycap: $uvNgaycap, uvNoicap: $uvNoicap, uvGioitinh: $uvGioitinh, uvChieucao: $uvChieucao, uvCannang: $uvCannang, uvDoituongchinhsach: $uvDoituongchinhsach, uvDoituongchinhsachId: $uvDoituongchinhsachId, uvTinhtrangtantat: $uvTinhtrangtantat, uvTinhtrangtantatId: $uvTinhtrangtantatId, uvHonnhan: $uvHonnhan, uvHonnhanId: $uvHonnhanId, uvNgaysinh: $uvNgaysinh, uvcmCongviechientai: $uvcmCongviechientai, uvnvNganhnghe: $uvnvNganhnghe, uvnvNganhngheId: $uvnvNganhngheId, uvnvVitrimongmuon: $uvnvVitrimongmuon, uvnvVitrimongmuonid: $uvnvVitrimongmuonid, uvnvThoigian: $uvnvThoigian, uvnvThoigianId: $uvnvThoigianId, uvnvNoilamviec: $uvnvNoilamviec, idMucluong: $idMucluong, uvnvTienluong: $uvnvTienluong, uvnvHinhthuccongty: $uvnvHinhthuccongty, uvnvHinhthuccongtyId: $uvnvHinhthuccongtyId, uvGhichu: $uvGhichu, uvcmTrinhdo: $uvcmTrinhdo, uvcmTrinhdoId: $uvcmTrinhdoId, uvcmBangcap: $uvcmBangcap, uvcmKynang: $uvcmKynang, uvcmTrinhdongoaingu: $uvcmTrinhdongoaingu, uvcmTrinhdotinhoc: $uvcmTrinhdotinhoc, uvcmKinhnghiem: $uvcmKinhnghiem, uvSolanxem: $uvSolanxem, interview: $interview, interviewed: $interviewed, uvDuyet: $uvDuyet, uvHienthi: $uvHienthi, uvhtTelephone: $uvhtTelephone, uvhtEmail: $uvhtEmail, uvhtAddress: $uvhtAddress, uvId: $uvId, newsletterSubscription: $newsletterSubscription, jobsletterSubscription: $jobsletterSubscription, coBhtn: $coBhtn, soNhaDuong: $soNhaDuong, idThanhPho: $idThanhPho, idTinh: $idTinh, idhuyen: $idhuyen, idxa: $idxa, idTinhMoi: $idTinhMoi, idxaMoi: $idxaMoi, idtv: $idtv, mahoGd: $mahoGd, fileCv: $fileCv, displayOrder: $displayOrder, ngayduyet: $ngayduyet, idNguonThuThap: $idNguonThuThap, avatarUrl: $avatarUrl, avatar: $avatar, idBacHoc: $idBacHoc, diachilienhe: $diachilienhe)';
   }
 
   @override
@@ -1396,6 +1428,8 @@ class _$TblHoSoUngVienModelImpl implements _TblHoSoUngVienModel {
             (identical(other.idTinh, idTinh) || other.idTinh == idTinh) &&
             (identical(other.idhuyen, idhuyen) || other.idhuyen == idhuyen) &&
             (identical(other.idxa, idxa) || other.idxa == idxa) &&
+            (identical(other.idTinhMoi, idTinhMoi) || other.idTinhMoi == idTinhMoi) &&
+            (identical(other.idxaMoi, idxaMoi) || other.idxaMoi == idxaMoi) &&
             (identical(other.idtv, idtv) || other.idtv == idtv) &&
             (identical(other.mahoGd, mahoGd) || other.mahoGd == mahoGd) &&
             const DeepCollectionEquality().equals(other.fileCv, fileCv) &&
@@ -1475,6 +1509,8 @@ class _$TblHoSoUngVienModelImpl implements _TblHoSoUngVienModel {
         idTinh,
         idhuyen,
         idxa,
+        idTinhMoi,
+        idxaMoi,
         idtv,
         mahoGd,
         const DeepCollectionEquality().hash(fileCv),
@@ -1569,6 +1605,8 @@ abstract class _TblHoSoUngVienModel implements TblHoSoUngVienModel {
       final String? idTinh,
       final String? idhuyen,
       final String? idxa,
+      final int? idTinhMoi,
+      final int? idxaMoi,
       final String? idtv,
       final String? mahoGd,
       final dynamic fileCv,
@@ -1709,6 +1747,10 @@ abstract class _TblHoSoUngVienModel implements TblHoSoUngVienModel {
   String? get idhuyen;
   @override
   String? get idxa;
+  @override
+  int? get idTinhMoi;
+  @override
+  int? get idxaMoi;
   @override
   String? get idtv;
   @override

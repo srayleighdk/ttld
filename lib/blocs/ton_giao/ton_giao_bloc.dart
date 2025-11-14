@@ -41,7 +41,7 @@ class TonGiaoBloc extends Bloc<TonGiaoEvent, TonGiaoState> {
     try {
       final tonGiao = await tonGiaoRepository.updateTonGiao(event.tonGiao);
       if (state is TonGiaoLoaded) {
-        final updatedTonGiaos = (state as TonGiaoLoaded).tonGiaos.map((q) => q.tenTg == tonGiao.tenTg ? tonGiao : q).toList();
+        final updatedTonGiaos = (state as TonGiaoLoaded).tonGiaos.map((q) => q.displayName == tonGiao.displayName ? tonGiao : q).toList();
         emit(TonGiaoLoaded(tonGiaos: updatedTonGiaos));
       }
     } catch (e) {
@@ -53,7 +53,7 @@ class TonGiaoBloc extends Bloc<TonGiaoEvent, TonGiaoState> {
     try {
       await tonGiaoRepository.deleteTonGiao(event.tenTg);
       if (state is TonGiaoLoaded) {
-        final updatedTonGiaos = (state as TonGiaoLoaded).tonGiaos.where((q) => q.tenTg != event.tenTg).toList();
+        final updatedTonGiaos = (state as TonGiaoLoaded).tonGiaos.where((q) => q.displayName != event.tenTg).toList();
         emit(TonGiaoLoaded(tonGiaos: updatedTonGiaos));
       }
     } catch (e) {

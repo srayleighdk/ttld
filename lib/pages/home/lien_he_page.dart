@@ -8,7 +8,7 @@ import 'package:ttld/core/utils/launch_utils.dart';
 import 'package:ttld/core/utils/toast_utils.dart';
 
 class LienHePage extends StatelessWidget {
-  const LienHePage({super.key, this.region = Region.binhDinh});
+  const LienHePage({super.key, this.region = Region.lamDong});
 
   final Region region;
 
@@ -838,11 +838,9 @@ class LienHePage extends StatelessWidget {
     switch (region) {
       case Region.lamDong:
         return 'Tỉnh Lâm Đồng';
-      case Region.binhThuan:
-        return 'Tỉnh Bình Thuận';
-      case Region.binhDinh:
+      case Region.giaLai:
       default:
-        return 'Tỉnh Bình Định';
+        return 'Tỉnh Gia Lai';
     }
   }
 
@@ -858,26 +856,16 @@ class LienHePage extends StatelessWidget {
           'zalo': '0918007245',
           'zaloName': 'TRUNG TÂM DVVL LÂM ĐỒNG',
         };
-      case Region.binhThuan:
-        return {
-          'name': 'Trung tâm dịch vụ việc làm tỉnh Bình Thuận',
-          'address': 'Số 2 Phạm Tuấn Tái, Phường Phú Thủy, TP. Phan Thiết, Bình Thuận',
-          'phone': '02523820145',
-          'email': 'ttdvvl@vieclambinhthuan.com.vn',
-          'website': 'http://vieclambinhthuan.com.vn/',
-          'zalo': '0911186448',
-          'zaloName': 'TRUNG TÂM DVVL BÌNH THUẬN',
-        };
-      case Region.binhDinh:
+      case Region.giaLai:
       default:
         return {
-          'name': 'Trung tâm dịch vụ việc làm tỉnh Bình Định',
-          'address': 'Số 215 Trần Hưng Đạo, TP.Quy Nhơn, Bình Định',
-          'phone': '0256364509',
-          'email': 'pvl@vieclambinhdinh.gov.vn',
-          'website': 'http://vieclambinhdinh.gov.vn/',
-          'zalo': '2659249034461702353',
-          'zaloName': 'Trung tâm DVVL tỉnh Bình Định',
+          'name': 'Trung tâm dịch vụ việc làm tỉnh Gia Lai',
+          'address': 'Gia Lai',
+          'phone': '0260000000',
+          'email': 'info@vieclamgialai.gov.vn',
+          'website': 'http://vieclamgialai.gov.vn/',
+          'zalo': '',
+          'zaloName': 'Trung tâm DVVL tỉnh Gia Lai',
         };
     }
   }
@@ -893,27 +881,7 @@ class LienHePage extends StatelessWidget {
             'email': 'vieclamlamdong@gmail.com',
           },
         ];
-      case Region.binhThuan:
-        return [
-          {
-            'name': 'Văn phòng Tuy Phong',
-            'address': 'Số 100 Đường 3/2, Phường Tuy Phong, TP. Tuy Phong, Bình Thuận',
-            'phone': '02523820145',
-          },
-          {
-            'name': 'Văn Phòng Đức Linh',
-            'address': '69 Tôn Đức Thắng - thị trấn Võ Xu - huyện Đức Linh',
-            'phone': '02523737008',
-            'email': 'ttdvvl@vieclambinhthuan.gov.vn',
-          },
-          {
-            'name': 'Văn Phòng La Gi',
-            'address': '108 Nguyễn Chí Thanh - Xã Tân Bình thị xã La Gi',
-            'phone': '02523737007',
-            'email': 'ttdvvl@vieclambinhthuan.gov.vn',
-          },
-        ];
-      case Region.binhDinh:
+      case Region.giaLai:
       default:
         return [];
     }

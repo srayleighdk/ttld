@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ttld/helppers/ny_color.dart';
+import 'package:ttld/helppers/ny_text_style.dart';
+import 'package:ttld/themes/colors/color_style.dart';
+import 'package:theme_provider/theme_provider.dart';
 
 class CustomTextField extends StatefulWidget {
   final String labelText;
   final String hintText;
+  final String? helperText;
   final TextEditingController? controller;
   final bool obscureText;
   final TextInputType keyboardType;
@@ -21,12 +26,14 @@ class CustomTextField extends StatefulWidget {
   final bool expands;
   final List<TextInputFormatter>? inputFormatters;
   final bool readOnly;
-  final bool enabled; // Added enabled property
+  final bool enabled;
+  final ModernTextFieldStyle? style;
 
-  const CustomTextField(
-      {super.key,
+  const CustomTextField({
+      super.key,
       this.labelText = '',
       required this.hintText,
+      this.helperText,
       this.controller,
       this.obscureText = false,
       this.keyboardType = TextInputType.text,
@@ -44,7 +51,9 @@ class CustomTextField extends StatefulWidget {
       this.expands = false,
       this.inputFormatters,
       this.readOnly = false,
-      this.enabled = true}); // Initialize enabled
+      this.enabled = true,
+      this.style,
+  });
 
   factory CustomTextField.email({
     TextEditingController? controller,
@@ -321,103 +330,133 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorStyles = ThemeProvider.themeOf(context).data.extension<ColorStyles>();
+    final effectiveStyle = widget.style ?? ModernTextFieldStyle.defaultStyle(context);
+    
+    // Theme-aware colors matching GenericPicker
+    final primaryColor = colorStyles?.primaryAccent ?? theme.colorScheme.primary;
+    final errorColor = theme.colorScheme.error;
+    final surfaceColor = colorStyles?.surfaceBackground ?? theme.colorScheme.surface;
+    final contentColor = colorStyles?.content ?? theme.colorScheme.onSurface;
+    
+    Color getBorderColor() {
+      if (_errorText != null) return errorColor;
+      if (_focusNode.hasFocus) return primaryColor;
+      return contentColor.withOpacity(0.3);
+    }
+
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextFormField(
-        controller: _controller,
-        focusNode: _focusNode,
-        obscureText: widget.obscureText,
-        keyboardType: widget.keyboardType,
-        maxLines: widget.maxLines,
-        minLines: widget.minLines,
-        maxLength: widget.maxLength,
-        expands: widget.expands,
-        inputFormatters: widget.inputFormatters,
-        readOnly: widget.readOnly,
-        enabled: widget.enabled, // Pass enabled to TextFormField
-        validator: (value) {
-          final error =
-              CustomTextField.handleValidation(value, widget.validator);
-          setState(() {
-            _errorText = error;
-            _isValid = error == null;
-          });
-          return error;
-        },
-        onChanged: (value) {
-          if (widget.autoValidate) {
-            setState(() {
-              _errorText =
-                  CustomTextField.handleValidation(value, widget.validator);
-              _isValid = _errorText == null;
-            });
-          } else {
-            setState(() {
-              _errorText = null;
-            });
-          }
-          if (widget.onChanged != null) {
-            widget.onChanged!(value);
-          }
-        },
-        decoration: InputDecoration(
-          labelText: widget.labelText,
-          hintText: widget.hintText,
-          alignLabelWithHint: true,
-          labelStyle: TextStyle(
-            color: _errorText != null ? Colors.red : Colors.black,
-          ),
-          floatingLabelStyle: TextStyle(
-            color: _errorText != null
-                ? Colors.red
-                : _focusNode.hasFocus
-                    ? Colors.blue
-                    : Colors.black,
-          ),
-          // border: OutlineInputBorder(
-          //   borderRadius: BorderRadius.circular(10.0),
-          // ),
-          prefixIcon: widget.prefixIcon,
-          suffixIcon: widget.suffixIcon,
-          errorText: _errorText,
-          errorStyle: const TextStyle(color: Colors.red),
-          errorBorder: OutlineInputBorder(
-            // borderRadius: BorderRadius.circular(10.0),
-            borderSide: const BorderSide(
-              color: Colors.red,
-              width: 1.0,
+      padding: effectiveStyle.margin,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextFormField(
+            controller: _controller,
+            focusNode: _focusNode,
+            obscureText: widget.obscureText,
+            keyboardType: widget.keyboardType,
+            maxLines: widget.maxLines,
+            minLines: widget.minLines,
+            maxLength: widget.maxLength,
+            expands: widget.expands,
+            inputFormatters: widget.inputFormatters,
+            readOnly: widget.readOnly,
+            enabled: widget.enabled,
+            validator: (value) {
+              final error = CustomTextField.handleValidation(value, widget.validator);
+              setState(() {
+                _errorText = error;
+                _isValid = error == null;
+              });
+              return null; // Return null to prevent built-in error display
+            },
+            onChanged: (value) {
+              if (widget.autoValidate) {
+                setState(() {
+                  _errorText = CustomTextField.handleValidation(value, widget.validator);
+                  _isValid = _errorText == null;
+                });
+              } else {
+                setState(() {
+                  _errorText = null;
+                });
+              }
+              widget.onChanged?.call(value);
+            },
+            style: effectiveStyle.textStyle?.toTextStyle(context) ?? theme.textTheme.bodyLarge,
+            decoration: InputDecoration(
+              labelText: widget.labelText.isNotEmpty ? widget.labelText : null,
+              hintText: widget.hintText,
+              alignLabelWithHint: true,
+              filled: effectiveStyle.filled,
+              fillColor: effectiveStyle.fillColor?.toColor(context) ?? 
+                        surfaceColor.withOpacity(0.05),
+              contentPadding: effectiveStyle.contentPadding,
+              prefixIcon: widget.prefixIcon,
+              suffixIcon: widget.suffixIcon,
+              
+              // Modern styling matching GenericPicker
+              labelStyle: effectiveStyle.labelStyle?.toTextStyle(context) ??
+                         theme.textTheme.bodyMedium?.copyWith(
+                           color: _focusNode.hasFocus ? primaryColor : contentColor.withOpacity(0.7),
+                         ),
+              hintStyle: effectiveStyle.hintStyle?.toTextStyle(context) ??
+                        theme.textTheme.bodyMedium?.copyWith(
+                          color: contentColor.withOpacity(0.5),
+                        ),
+              floatingLabelStyle: theme.textTheme.bodySmall?.copyWith(
+                color: _errorText != null ? errorColor : primaryColor,
+              ),
+              
+              // Consistent border styling with 8px radius
+              border: effectiveStyle.border ?? OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: contentColor.withOpacity(0.3)),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: getBorderColor()),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: getBorderColor(), width: 2),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: errorColor),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: errorColor, width: 2),
+              ),
+              disabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: contentColor.withOpacity(0.1)),
+              ),
             ),
           ),
-          focusedErrorBorder: OutlineInputBorder(
-            // borderRadius: BorderRadius.circular(10.0),
-            borderSide: const BorderSide(
-              color: Colors.red,
-              width: 2.0,
+          if (_errorText != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 4, left: 12),
+              child: Text(
+                _errorText!,
+                style: theme.textTheme.bodySmall?.copyWith(color: errorColor),
+              ),
             ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            // borderRadius: BorderRadius.circular(10.0),
-            borderSide: BorderSide(
-              color: _errorText != null ? Colors.red : Colors.blue,
-              width: 2.0,
+          if (widget.helperText != null && _errorText == null)
+            Padding(
+              padding: const EdgeInsets.only(top: 4, left: 12),
+              child: Text(
+                widget.helperText!,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: colorStyles?.content.withOpacity(0.6) ?? 
+                         theme.colorScheme.onSurface.withOpacity(0.6),
+                ),
+              ),
             ),
-          ),
-          enabledBorder: OutlineInputBorder(
-            // borderRadius: BorderRadius.circular(10.0),
-            borderSide: BorderSide(
-              color: _errorText != null
-                  ? Colors.red
-                  : _isValid
-                      ? Colors.green
-                      : Colors.black,
-              width: 1.0,
-            ),
-          ),
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 12,
-            vertical: 16,
-          ),
-        ),
+        ],
       ),
     );
   }
@@ -432,6 +471,72 @@ class _CustomTextFieldState extends State<CustomTextField> {
       _controller.dispose();
     }
     super.dispose();
+  }
+}
+
+/// Style configuration for CustomTextField, consistent with ModernPicker styling
+class ModernTextFieldStyle {
+  final EdgeInsets margin;
+  final EdgeInsets contentPadding;
+  final bool filled;
+  final NyColor? fillColor;
+  final NyTextStyle? textStyle;
+  final NyTextStyle? labelStyle;
+  final NyTextStyle? hintStyle;
+  final InputBorder? border;
+
+  const ModernTextFieldStyle({
+    this.margin = const EdgeInsets.symmetric(vertical: 8),
+    this.contentPadding = const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+    this.filled = true,
+    this.fillColor,
+    this.textStyle,
+    this.labelStyle,
+    this.hintStyle,
+    this.border,
+  });
+
+  /// Default style that follows the project's design system
+  factory ModernTextFieldStyle.defaultStyle(BuildContext context) {
+    return const ModernTextFieldStyle();
+  }
+
+  /// Compact style for forms with many fields
+  factory ModernTextFieldStyle.compact() {
+    return const ModernTextFieldStyle(
+      margin: EdgeInsets.symmetric(vertical: 4),
+      contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+    );
+  }
+
+  /// Style for prominent fields
+  factory ModernTextFieldStyle.prominent() {
+    return const ModernTextFieldStyle(
+      margin: EdgeInsets.symmetric(vertical: 12),
+      contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+    );
+  }
+
+  ModernTextFieldStyle copyWith({
+    EdgeInsets? margin,
+    EdgeInsets? contentPadding,
+    bool? filled,
+    NyColor? fillColor,
+    NyTextStyle? textStyle,
+    NyTextStyle? labelStyle,
+    NyTextStyle? hintStyle,
+    InputBorder? border,
+  }) {
+    return ModernTextFieldStyle(
+      margin: margin ?? this.margin,
+      contentPadding: contentPadding ?? this.contentPadding,
+      filled: filled ?? this.filled,
+      fillColor: fillColor ?? this.fillColor,
+      textStyle: textStyle ?? this.textStyle,
+      labelStyle: labelStyle ?? this.labelStyle,
+      hintStyle: hintStyle ?? this.hintStyle,
+      border: border ?? this.border,
+    );
   }
 }
 

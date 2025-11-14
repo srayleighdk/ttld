@@ -35,6 +35,27 @@ import 'package:ttld/blocs/tinh_thanh/tinh_thanh_cubit.dart';
 import 'package:ttld/blocs/tinh_trangvl/tinh_trangvl_bloc.dart';
 import 'package:ttld/repositories/tinh_trangvl/tinh_trangvl_repository.dart';
 import 'package:ttld/core/services/tinh_trangvl_api_service.dart';
+import 'package:ttld/core/services/ve_tinh_api_service.dart';
+import 'package:ttld/core/services/status_vieclam_api_service.dart';
+import 'package:ttld/models/ve_tinh_model.dart';
+import 'package:ttld/repositories/ve_tinh/ve_tinh_repository.dart';
+import 'package:ttld/models/status_vieclam_model.dart';
+import 'package:ttld/repositories/status_vieclam/status_vieclam_repository.dart';
+import 'package:ttld/core/services/bac_mon_dao_tao_api_service.dart';
+import 'package:ttld/models/bac_mon_dao_tao_model.dart';
+import 'package:ttld/repositories/bac_mon_dao_tao/bac_mon_dao_tao_repository.dart';
+import 'package:ttld/core/services/chuyen_nganh_dao_tao_api_service.dart';
+import 'package:ttld/models/chuyen_nganh_dao_tao_model.dart';
+import 'package:ttld/repositories/chuyen_nganh_dao_tao/chuyen_nganh_dao_tao_repository.dart';
+import 'package:ttld/core/services/status_dg_api_service.dart';
+import 'package:ttld/models/status_dg_model.dart';
+import 'package:ttld/core/services/ca_lam_viec_api_service.dart';
+import 'package:ttld/models/ca_lam_viec_model.dart';
+import 'package:ttld/repositories/ca_lam_viec/ca_lam_viec_repository.dart';
+import 'package:ttld/repositories/status_dg/status_dg_repository.dart';
+import 'package:ttld/core/services/nguyen_nhan_that_nghiep_api_service.dart';
+import 'package:ttld/models/nguyen_nhan_that_nghiep_model.dart';
+import 'package:ttld/repositories/nguyen_nhan_that_nghiep/nguyen_nhan_that_nghiep_repository.dart';
 
 final locator = GetIt.instance;
 
@@ -131,4 +152,48 @@ Future<void> setupMiscLocator() async {
       TinhTrangVLRepositoryImpl(tinhTrangVLApiService: locator<TinhTrangVLApiService>()));
   locator.registerLazySingleton<TinhTrangVLBloc>(
       () => TinhTrangVLBloc(tinhTrangVLRepository: locator<TinhTrangVLRepository>()));
+
+  // VeTinh
+  locator.registerLazySingleton<VeTinhApiService>(
+      () => VeTinhApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<VeTinhRepository>(() =>
+      VeTinhRepositoryImpl(apiService: locator<VeTinhApiService>()));
+
+  // Status Viec Lam (TblDmStatusViecLam) - using /common/status-vl
+  locator.registerLazySingleton<StatusViecLamApiService>(
+      () => StatusViecLamApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<StatusViecLamRepository>(() =>
+      StatusViecLamRepositoryImpl(apiService: locator<StatusViecLamApiService>()));
+
+  // Bac Mon Dao Tao (TblDmBacMonDaoTao) - using /common/bac-hoc
+  locator.registerLazySingleton<BacMonDaoTaoApiService>(
+      () => BacMonDaoTaoApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<BacMonDaoTaoRepository>(() =>
+      BacMonDaoTaoRepositoryImpl(apiService: locator<BacMonDaoTaoApiService>()));
+
+  // Chuyen Nganh Dao Tao (TblDmBacDaoTaoC3) - using /common/chuyen-nganh
+  locator.registerLazySingleton<ChuyenNganhDaoTaoApiService>(
+      () => ChuyenNganhDaoTaoApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<ChuyenNganhDaoTaoRepository>(() =>
+      ChuyenNganhDaoTaoRepositoryImpl(apiService: locator<ChuyenNganhDaoTaoApiService>()));
+
+  // Status DG (TblDmStatusDG) - using /common/status-dg
+  locator.registerLazySingleton<StatusDgApiService>(
+      () => StatusDgApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<StatusDgRepository>(() =>
+      StatusDgRepositoryImpl(apiService: locator<StatusDgApiService>()));
+
+  // Ca Lam Viec (TblDmCaLamViec) - using /bo-sung/ca-lam
+  locator.registerLazySingleton<CaLamViecApiService>(
+      () => CaLamViecApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<CaLamViecRepository>(() =>
+      CaLamViecRepositoryImpl(caLamViecApiService: locator<CaLamViecApiService>()));
+
+  // Nguyen Nhan That Nghiep (TblDmNguyenNhanThatNghiep) - using /common/nguyen-nhan-tn
+  locator.registerLazySingleton<NguyenNhanThatNghiepApiService>(
+      () => NguyenNhanThatNghiepApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<NguyenNhanThatNghiepRepository>(() =>
+      NguyenNhanThatNghiepRepositoryImpl(apiService: locator<NguyenNhanThatNghiepApiService>()));
+
+  // Don't register empty list here - let misc_data_init.dart handle it after API call
 }

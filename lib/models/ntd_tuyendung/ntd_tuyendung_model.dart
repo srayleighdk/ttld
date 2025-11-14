@@ -3,6 +3,23 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'ntd_tuyendung_model.freezed.dart';
 part 'ntd_tuyendung_model.g.dart';
 
+// Custom converter to handle string to int conversion
+class IntConverter implements JsonConverter<int?, dynamic> {
+  const IntConverter();
+
+  @override
+  int? fromJson(dynamic value) {
+    if (value == null) return null;
+    if (value is int) return value;
+    if (value is String) return int.tryParse(value);
+    if (value is double) return value.toInt();
+    return null;
+  }
+
+  @override
+  dynamic toJson(int? value) => value;
+}
+
 @freezed
 class NTDTuyenDung with _$NTDTuyenDung {
   const factory NTDTuyenDung({
@@ -43,17 +60,17 @@ class NTDTuyenDung with _$NTDTuyenDung {
     int? idDoituongCs,
     String? idphieut11,
     String? idDoanhNghiep,
-    int? tdNoilamviec,
-    int? tdNganhnghe,
-    int? tdYeuCauHocVan,
-    int? tdThoigianlamviec,
-    String? idKinhnghiem,
-    String? idBacHoc,
-    String? idKynang,
-    String? idHinhthucLv,
-    String? tdYeuCauTinHoc,
-    String? tdYeuCauNgoaiNgu,
-    int? tdYeuCauGioiTinh,
+    dynamic tdNoilamviec,
+    dynamic tdNganhnghe,
+    dynamic tdYeuCauHocVan,
+    dynamic tdThoigianlamviec,
+    dynamic idKinhnghiem,
+    dynamic idBacHoc,
+    dynamic idKynang,
+    dynamic idHinhthucLv,
+    dynamic tdYeuCauTinHoc,
+    dynamic tdYeuCauNgoaiNgu,
+    dynamic tdYeuCauGioiTinh,
     String? maHoso,
     String? nguoiLienhe,
     String? soDienthoai,

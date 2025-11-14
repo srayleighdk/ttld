@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ttld/widgets/common/custom_app_bar.dart';
 
 class ErrorPage extends StatelessWidget {
   final String errorMessage;
@@ -11,8 +12,8 @@ class ErrorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Error'),
+      appBar: const CustomAppBar(
+        title: 'Lỗi',
       ),
       body: Center(
         child: Column(

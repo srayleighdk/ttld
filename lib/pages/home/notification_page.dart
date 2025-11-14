@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // For date formatting
+import 'package:ttld/widgets/common/custom_app_bar.dart';
 
 // A simple model for notification data
 class NotificationItem {
@@ -57,11 +58,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
     print('Number of notifications: ${_notifications.length}');
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Notifications'),
-        centerTitle: true,
-        backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-      ),
       body: _notifications.isEmpty
           ? Center(
               child: Column(
@@ -83,7 +79,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
               ),
             )
           : ListView.builder(
-              padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 117.0), // Added bottom padding for navigation bar
+              padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0,
+                  117.0), // Added bottom padding for navigation bar
               itemCount: _notifications.length,
               itemBuilder: (context, index) {
                 final notification = _notifications[index];

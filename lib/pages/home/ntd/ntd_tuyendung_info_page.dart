@@ -71,6 +71,27 @@ String getNganhNgheName(dynamic id) {
   return nganhNghe.displayName;
 }
 
+String getKinhNghiemName(dynamic id) {
+  if (id == null) return '';
+
+  // Convert to string if it's an integer
+  String stringId = id is int ? id.toString() : id;
+
+  // Define a simplified mapping for common experience levels
+  // In production, this should come from your API/database
+  final Map<String, String> kinhNghiemMap = {
+    '1': 'Chưa có kinh nghiệm',
+    '2': 'Dưới 1 năm',
+    '3': '1 - 2 năm',
+    '4': '2 - 5 năm',
+    '5': '5 - 10 năm',
+    '6': 'Trên 10 năm',
+    // Add more mappings as needed
+  };
+
+  return kinhNghiemMap[stringId] ?? 'Chưa cập nhật';
+}
+
 class NTDInfoPage extends StatefulWidget {
   final dynamic ntdData;
   const NTDInfoPage({super.key, this.ntdData});
@@ -303,7 +324,7 @@ class _NTDInfoPageState extends State<NTDInfoPage> {
                           ),
                           const SizedBox(width: 12),
                           Text(
-                            'Ứng Tuyển Ngay',
+                            'Chắp nối việc làm',
                             style: theme.textTheme.titleMedium?.copyWith(
                               color: theme.colorScheme.onPrimary,
                               fontWeight: FontWeight.w600,
@@ -361,12 +382,12 @@ class _NTDInfoPageState extends State<NTDInfoPage> {
           ),
         ),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.more_vert),
-            onPressed: () => _showMoreOptions(context),
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     icon: const Icon(Icons.more_vert),
+        //     onPressed: () => _showMoreOptions(context),
+        //   ),
+        // ],
       ),
       body: widget.ntdData == null
           ? _buildEmptyState(context)
@@ -630,9 +651,21 @@ class _NTDInfoPageState extends State<NTDInfoPage> {
         ),
         _buildInfoTile(
           context,
+          icon: Icons.work_history_outlined,
+          title: 'Yêu cầu kinh nghiệm',
+          value: getKinhNghiemName(widget.ntdData['idKinhnghiem']),
+        ),
+        _buildInfoTile(
+          context,
           icon: Icons.business_center_outlined,
           title: 'Ngành nghề',
           value: getNganhNgheName(widget.ntdData['nganhNghe']),
+        ),
+        _buildInfoTile(
+          context,
+          icon: Icons.attach_money_outlined,
+          title: 'Mức lương',
+          value: widget.ntdData['mucLuong'],
         ),
         _buildInfoTile(
           context,
@@ -693,29 +726,26 @@ class _NTDInfoPageState extends State<NTDInfoPage> {
   Widget _buildContactInfoSection(BuildContext context) {
     return _buildSection(
       context,
-      title: 'Thông tin liên hệ',
-      icon: Icons.contact_phone_outlined,
+      title: 'Thông tin nơi nộp hồ sơ và ghi chú',
+      icon: Icons.description_outlined,
       children: [
         _buildInfoTile(
           context,
-          icon: Icons.phone_outlined,
-          title: 'Số điện thoại',
-          value: ntd?.ntdDienthoai,
-          isSelectable: true,
-          onTap: ntd?.ntdDienthoai != null
-              ? () => launchPhoneCall(context, ntd!.ntdDienthoai!)
-              : null,
+          icon: Icons.location_on_outlined,
+          title: 'Nơi nộp hồ sơ',
+          value: widget.ntdData['tdNoinophoso'],
         ),
         _buildInfoTile(
           context,
-          icon: Icons.email_outlined,
-          title: 'Email liên hệ',
-          value: ntd?.ntdEmail,
-          isSelectable: true,
-          onTap: ntd?.ntdEmail != null
-              ? () => _copyToClipboard(
-                  context, ntd!.ntdEmail!, 'Email đã được sao chép')
-              : null,
+          icon: Icons.folder_outlined,
+          title: 'Hồ sơ bao gồm',
+          value: widget.ntdData['tdHosobaogom'],
+        ),
+        _buildInfoTile(
+          context,
+          icon: Icons.note_outlined,
+          title: 'Ghi chú',
+          value: widget.ntdData['tdGhichu'],
         ),
       ],
     );

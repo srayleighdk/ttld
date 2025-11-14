@@ -26,10 +26,12 @@ import 'package:ttld/pages/home/ntd/quan_ly_nhan_vien/quan_ly_nhan_vien.dart';
 import 'package:ttld/pages/home/ntd/quan_ly_tuyen_dung/quan_ly_tuyen_dung.dart';
 import 'package:ttld/pages/home/ntd/update_ntd/update_ntd_page.dart';
 import 'package:ttld/pages/home/ntv/dang_ky_hoc_nghe_page.dart';
-import 'package:ttld/pages/home/ntv/dang_ky_lam_viec_page.dart';
+import 'package:ttld/pages/dang_ky_tim_viec_lam/dang_ky_tim_viec_lam_page.dart';
+import 'package:ttld/pages/dang_ky_tim_viec_lam/dang_ky_tim_viec_lam_list_page.dart';
+import 'package:ttld/pages/dang_ky_xkld/dang_ky_xkld_form.dart';
 import 'package:ttld/pages/home/ntv/dang_ky_tu_van_viec_lam_page.dart';
-import 'package:ttld/pages/home/ntv/ntv_home.dart';
 import 'package:ttld/pages/home/ntv/sgdvl_registration.dart';
+import 'package:ttld/pages/home/ntv/ultra_modern_ntv_home.dart';
 import 'package:ttld/pages/home/ntv/update_ntv/update_ntv_page.dart';
 import 'package:ttld/pages/home/ntv/tim_viec_page.dart';
 import 'package:ttld/pages/hosochapnoi/hosochapnoi_page.dart';
@@ -41,13 +43,13 @@ import 'package:ttld/pages/hosoungvien/create_hoso_ungvien.dart';
 import 'package:ttld/pages/hosoungvien/hosoungvien_page.dart';
 import 'package:ttld/pages/laodongkhuyettat/laodongkhuyettat_page.dart';
 import 'package:ttld/pages/loghethong/loghethong_page.dart';
-import 'package:ttld/pages/login/login_page.dart';
+import 'package:ttld/pages/login/modern_login_page.dart';
 import 'package:ttld/pages/phanquyen/phanquyen_page.dart';
 import 'package:ttld/pages/phanquyen/phanquyen_user.dart';
 import 'package:ttld/pages/quantridulieu/quantridulieu_page.dart';
 import 'package:ttld/pages/quantringuoidung/quantringuoidung_page.dart';
-import 'package:ttld/pages/signup/signup.dart';
-import 'package:ttld/pages/splash/spash_page.dart';
+import 'package:ttld/pages/signup/modern_signup_page.dart';
+import 'package:ttld/pages/splash/modern_splash_page.dart';
 import 'package:ttld/pages/theodoivieclam/theodoivieclam_page.dart';
 import 'package:ttld/pages/auth/change_password_page.dart'; // Import the new page
 import 'package:ttld/pages/home/ntv/sgdvl_page.dart';
@@ -191,7 +193,7 @@ class AppRouter {
       GoRoute(
         path: '/login',
         name: 'login',
-        builder: (context, state) => const LoginPage(),
+        builder: (context, state) => const ModernLoginPage(),
       ),
       GoRoute(
         path: '/forgot_password',
@@ -201,12 +203,12 @@ class AppRouter {
       GoRoute(
         path: '/signup',
         name: 'signup',
-        builder: (context, state) => const SignupPage(),
+        builder: (context, state) => const ModernSignupPage(),
       ),
       GoRoute(
         path: '/splash',
         name: 'splash',
-        builder: (context, state) => const SplashPage(),
+        builder: (context, state) => const ModernSplashPage(),
       ),
       GoRoute(
         path: ChangePasswordPage.routePath, // Add the new route here
@@ -226,7 +228,7 @@ class AppRouter {
       GoRoute(
           path: '/ntv_home',
           builder: (BuildContext context, GoRouterState state) =>
-              NTVHomePage(), // Create NtvHomePage widget
+              const UltraModernNTVHome(),
           routes: [
             GoRoute(
               path: '/update_ntv',
@@ -239,8 +241,12 @@ class AppRouter {
               builder: (context, state) => const ChapNoiPage(),
             ),
             GoRoute(
-              path: '/dang-ky-lam-viec',
-              builder: (context, state) => const DangKyLamViecPage(),
+              path: '/dang-ky-tim-viec-lam-list',
+              builder: (context, state) => const DangKyTimViecLamListPage(),
+            ),
+            GoRoute(
+              path: '/dang-ky-tim-viec-lam',
+              builder: (context, state) => const DangKyTimViecLamPage(),
             ),
             GoRoute(
               path: '/dang-ky-tu-van-viec-lam',
@@ -249,6 +255,10 @@ class AppRouter {
             GoRoute(
               path: '/dang-ky-hoc-nghe',
               builder: (context, state) => const DangKyHocNghePage(),
+            ),
+            GoRoute(
+              path: '/dang-ky-xuat-khao-lao-dong',
+              builder: (context, state) => const DangKyXKLDForm(),
             ),
             GoRoute(
               path: SGDVLPage.routePath,
@@ -352,13 +362,9 @@ class AppRouter {
                   case 'lamDong':
                     region = Region.lamDong;
                     break;
-                  case 'Region.binhThuan':
-                  case 'binhThuan':
-                    region = Region.binhThuan;
-                    break;
-                  case 'Region.binhDinh':
-                  case 'binhDinh':
-                    region = Region.binhDinh;
+                  case 'Region.giaLai':
+                  case 'giaLai':
+                    region = Region.giaLai;
                     break;
                   default:
                     region = initialRegion;

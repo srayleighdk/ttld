@@ -21,6 +21,12 @@ import 'package:ttld/repositories/trinh_do_hoc_van/trinh_do_hoc_van_repository.d
 import 'package:ttld/repositories/trinh_do_ngoai_ngu/trinh_do_ngoai_ngu_repository.dart';
 import 'package:ttld/repositories/trinh_do_tin_hoc/trinh_do_tin_hoc_repository.dart';
 import 'package:ttld/repositories/hinhthuc_doanhnghiep/hinhthuc_doanhnghiep_repository.dart';
+import 'package:ttld/models/ca_lam_viec_model.dart';
+import 'package:ttld/repositories/ca_lam_viec/ca_lam_viec_repository.dart';
+import 'package:ttld/models/nguyen_nhan_that_nghiep_model.dart';
+import 'package:ttld/repositories/nguyen_nhan_that_nghiep/nguyen_nhan_that_nghiep_repository.dart';
+import 'package:ttld/models/ve_tinh_model.dart';
+import 'package:ttld/repositories/ve_tinh/ve_tinh_repository.dart';
 
 Future<void> initializeMiscData() async {
   final quocGiaRepository = locator<QuocGiaRepository>();
@@ -28,6 +34,9 @@ Future<void> initializeMiscData() async {
   final trinhDoRepository = locator<TrinhDoHocVanRepository>();
   final trinhDoTinHocRepository = locator<TrinhDoTinHocRepository>();
   final ngoaiNguRepository = locator<NgoaiNguRepository>();
+  final caLamViecRepository = locator<CaLamViecRepository>();
+  final nguyenNhanThatNghiepRepository = locator<NguyenNhanThatNghiepRepository>();
+  final veTinhRepository = locator<VeTinhRepository>();
   final trinhDoNgoaiNguRepository = locator<TrinhDoNgoaiNguRepository>();
   final kieuChapNoiRepository = locator<KieuChapNoiRepository>();
   final nguonThuThapRepository = locator<NguonThuThapRepository>();
@@ -93,6 +102,25 @@ Future<void> initializeMiscData() async {
     debugPrint('Error preloading trinh do ngoai ngu: $e');
   }
 
+  // NgoaiNgu (from /common/td-nn)
+  try {
+    if (!locator.isRegistered<List<NgoaiNgu>>()) {
+      debugPrint('🔄 Loading NgoaiNgu data...');
+      final ngoaiNgus = await ngoaiNguRepository.getNgoaiNgus();
+      debugPrint('✅ NgoaiNgu loaded: ${ngoaiNgus.length} items');
+      locator.registerSingleton<List<NgoaiNgu>>(ngoaiNgus);
+    } else {
+      debugPrint('⚠️ NgoaiNgu already registered');
+    }
+  } catch (e, stackTrace) {
+    debugPrint('❌ Error preloading ngoai ngu: $e');
+    debugPrint('Stack trace: $stackTrace');
+    if (!locator.isRegistered<List<NgoaiNgu>>()) {
+      locator.registerSingleton<List<NgoaiNgu>>([]); // Fallback empty list
+      debugPrint('⚠️ Registered empty NgoaiNgu list as fallback');
+    }
+  }
+
   // Kieu Chap Noi
   try {
     final kieuChapNois = await kieuChapNoiRepository.getKieuChapNois();
@@ -140,6 +168,63 @@ Future<void> initializeMiscData() async {
     debugPrint('Error preloading loai hinh: $e');
     if (!locator.isRegistered<List<LoaiHinh>>()) {
       locator.registerSingleton<List<LoaiHinh>>([]); // Fallback empty list
+    }
+  }
+
+  // Ca Lam Viec (TblDmCaLamViec) - from /bo-sung/ca-lam
+  try {
+    if (!locator.isRegistered<List<CaLamViec>>()) {
+      debugPrint('🔄 Loading CaLamViec data...');
+      final caLamViecs = await caLamViecRepository.getCaLamViecs();
+      debugPrint('✅ CaLamViec loaded: ${caLamViecs.length} items');
+      locator.registerSingleton<List<CaLamViec>>(caLamViecs);
+    } else {
+      debugPrint('⚠️ CaLamViec already registered');
+    }
+  } catch (e, stackTrace) {
+    debugPrint('❌ Error preloading ca lam viec: $e');
+    debugPrint('Stack trace: $stackTrace');
+    if (!locator.isRegistered<List<CaLamViec>>()) {
+      locator.registerSingleton<List<CaLamViec>>([]); // Fallback empty list
+      debugPrint('⚠️ Registered empty CaLamViec list as fallback');
+    }
+  }
+
+  // Nguyen Nhan That Nghiep (TblDmNguyenNhanThatNghiep) - from /common/nguyen-nhan-tn
+  try {
+    if (!locator.isRegistered<List<NguyenNhanThatNghiep>>()) {
+      debugPrint('🔄 Loading NguyenNhanThatNghiep data...');
+      final nguyenNhanThatNghieps = await nguyenNhanThatNghiepRepository.getNguyenNhanThatNghieps();
+      debugPrint('✅ NguyenNhanThatNghiep loaded: ${nguyenNhanThatNghieps.length} items');
+      locator.registerSingleton<List<NguyenNhanThatNghiep>>(nguyenNhanThatNghieps);
+    } else {
+      debugPrint('⚠️ NguyenNhanThatNghiep already registered');
+    }
+  } catch (e, stackTrace) {
+    debugPrint('❌ Error preloading nguyen nhan that nghiep: $e');
+    debugPrint('Stack trace: $stackTrace');
+    if (!locator.isRegistered<List<NguyenNhanThatNghiep>>()) {
+      locator.registerSingleton<List<NguyenNhanThatNghiep>>([]); // Fallback empty list
+      debugPrint('⚠️ Registered empty NguyenNhanThatNghiep list as fallback');
+    }
+  }
+
+  // VeTinh (bhtnVeTinh) - from /danhmuc/vetinh
+  try {
+    if (!locator.isRegistered<List<VeTinh>>()) {
+      debugPrint('🔄 Loading VeTinh data...');
+      final veTinhs = await veTinhRepository.getVeTinhs();
+      debugPrint('✅ VeTinh loaded: ${veTinhs.length} items');
+      locator.registerSingleton<List<VeTinh>>(veTinhs);
+    } else {
+      debugPrint('⚠️ VeTinh already registered');
+    }
+  } catch (e, stackTrace) {
+    debugPrint('❌ Error preloading ve tinh: $e');
+    debugPrint('Stack trace: $stackTrace');
+    if (!locator.isRegistered<List<VeTinh>>()) {
+      locator.registerSingleton<List<VeTinh>>([]); // Fallback empty list
+      debugPrint('⚠️ Registered empty VeTinh list as fallback');
     }
   }
 }

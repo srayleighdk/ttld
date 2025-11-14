@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ttld/core/di/injection.dart';
+import 'package:ttld/widgets/common/custom_app_bar.dart';
 import 'package:ttld/features/auth/bloc/auth_bloc.dart';
 import 'package:ttld/features/auth/bloc/auth_state.dart';
 import 'package:ttld/models/uv_dk_sgd/uv_dk_sgd_model.dart';
@@ -32,14 +33,9 @@ class SGDVLPage extends StatelessWidget {
     }
 
     Widget content = Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Sàn Giao Dịch Việc Làm',
-          style: theme.textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
+      appBar: const CustomAppBar(
+        title: 'Sàn Giao Dịch Việc Làm',
+        useGradient: true,
       ),
       body: RefreshIndicator(
         onRefresh: () async {

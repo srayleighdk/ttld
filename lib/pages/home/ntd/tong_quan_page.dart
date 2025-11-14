@@ -56,6 +56,7 @@ class _TongQuanPageState extends State<TongQuanPage> {
       backgroundColor: theme.colorScheme.surface,
       appBar: const CustomAppBar(
         title: 'Tổng quan',
+        useGradient: true,
       ),
       body: BlocBuilder<NTDBloc, NTDState>(
         bloc: _ntdBloc,

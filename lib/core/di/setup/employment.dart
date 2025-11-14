@@ -3,11 +3,13 @@ import 'package:ttld/blocs/biendong/biendong_bloc.dart';
 import 'package:ttld/blocs/hinh_thuc_lam_viec/hinh_thuc_lam_viec_bloc.dart';
 import 'package:ttld/blocs/hinh_thuc_tuyen_dung/hinh_thuc_tuyen_dung_bloc.dart';
 import 'package:ttld/blocs/loai_hop_dong_lao_dong/loai_hop_dong_lao_dong_bloc.dart';
+import 'package:ttld/blocs/m02tt11/m02tt11_bloc.dart';
 import 'package:ttld/blocs/muc_dich_lam_viec/muc_dich_lam_viec_bloc.dart';
 import 'package:ttld/blocs/muc_luong/muc_luong_bloc.dart';
 import 'package:ttld/blocs/tuyendung/tuyendung_bloc.dart';
 import 'package:ttld/core/api_client.dart';
 import 'package:ttld/repositories/muc_luong/muc_luong_repository.dart';
+import 'package:ttld/core/services/m02tt11_api_service.dart';
 import 'package:ttld/core/services/muc_luong_api_service.dart';
 import 'package:ttld/core/services/hinh_thuc_lam_viec_api_service.dart';
 import 'package:ttld/core/services/hinh_thuc_tuyen_dung_api_service.dart';
@@ -21,6 +23,12 @@ import 'package:ttld/repositories/muc_dich_lam_viec_repository.dart';
 import 'package:ttld/repositories/tuyendung_repository.dart';
 import 'package:ttld/services/biendong_service.dart';
 import 'package:ttld/services/tuyendung_service.dart';
+import 'package:ttld/core/services/chuyenmon_api_service.dart';
+import 'package:ttld/repositories/tblDmChuyenMon/chuyenmon_repository.dart';
+import 'package:ttld/repositories/tblDmChuyenMon/chuyenmon_repository_impl.dart';
+import 'package:ttld/core/services/lydo_nghiviec_api_service.dart';
+import 'package:ttld/repositories/lydo_nghiviec/lydo_nghiviec_repository.dart';
+import 'package:ttld/repositories/lydo_nghiviec/lydo_nghiviec_repository_impl.dart';
 
 final locator = GetIt.instance;
 
@@ -83,5 +91,21 @@ Future<void> setupEmploymentLocator() async {
   locator.registerLazySingleton(
       () => HinhThucLamViecBloc(locator<HinhThucLamViecRepository>()));
 
-  
+  // M02TT11 (Job Registration)
+  locator.registerLazySingleton<M02TT11ApiService>(
+      () => M02TT11ApiService(locator<ApiClient>().dio));
+  locator.registerFactory(
+      () => M02TT11Bloc(apiService: locator<M02TT11ApiService>()));
+
+  // ChuyenMon (Profession/Specialty)
+  locator.registerLazySingleton<ChuyenMonApiService>(
+      () => ChuyenMonApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<ChuyenMonRepository>(
+      () => ChuyenMonRepositoryImpl(locator<ChuyenMonApiService>()));
+
+  // LydoNghiviec (Reason for unemployment)
+  locator.registerLazySingleton<LydoNghiviecApiService>(
+      () => LydoNghiviecApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<LydoNghiviecRepository>(
+      () => LydoNghiviecRepositoryImpl(locator<LydoNghiviecApiService>()));
 }
