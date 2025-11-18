@@ -59,7 +59,8 @@ class _UltraModernNTVHomeState extends State<UltraModernNTVHome> {
     }
     _tuyenDungBloc = TuyenDungBloc(locator<TuyenDungRepository>());
     _tuyenDungBloc.add(FetchTuyenDungList(null));
-    _kinhNghiemBloc = KinhNghiemLamViecBloc(locator<KinhNghiemLamViecRepository>());
+    _kinhNghiemBloc =
+        KinhNghiemLamViecBloc(locator<KinhNghiemLamViecRepository>());
     _kinhNghiemBloc.add(FetchKinhNghiemLamViecList());
     _loadAvatarBaseUrl();
   }
@@ -106,21 +107,25 @@ class _UltraModernNTVHomeState extends State<UltraModernNTVHome> {
                 width: 80,
                 height: 80,
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [AppColors.warning, AppColors.warningDark]),
+                  gradient: LinearGradient(
+                      colors: [AppColors.warning, AppColors.warningDark]),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(Icons.warning_rounded, size: 40, color: Colors.white),
+                child:
+                    Icon(Icons.warning_rounded, size: 40, color: Colors.white),
               ),
               SizedBox(height: AppSpacing.xxl),
               Text(
                 'Thông tin chưa đầy đủ',
-                style: AppTypography.titleLarge.copyWith(fontWeight: FontWeight.w700),
+                style: AppTypography.titleLarge
+                    .copyWith(fontWeight: FontWeight.w700),
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: AppSpacing.md),
               Text(
                 'Bạn cần cập nhật thông tin ngành nghề mong muốn trước khi có thể tìm việc làm.',
-                style: AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary),
+                style: AppTypography.bodyMedium
+                    .copyWith(color: AppColors.textSecondary),
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: AppSpacing.xxxl),
@@ -131,7 +136,8 @@ class _UltraModernNTVHomeState extends State<UltraModernNTVHome> {
                       onPressed: () => Navigator.pop(context),
                       style: OutlinedButton.styleFrom(
                         padding: EdgeInsets.symmetric(vertical: AppSpacing.md),
-                        shape: RoundedRectangleBorder(borderRadius: AppRadius.button),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: AppRadius.button),
                       ),
                       child: Text('Để sau'),
                     ),
@@ -147,9 +153,11 @@ class _UltraModernNTVHomeState extends State<UltraModernNTVHome> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
                         padding: EdgeInsets.symmetric(vertical: AppSpacing.md),
-                        shape: RoundedRectangleBorder(borderRadius: AppRadius.button),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: AppRadius.button),
                       ),
-                      child: Text('Cập nhật ngay', style: TextStyle(color: Colors.white)),
+                      child: Text('Cập nhật ngay',
+                          style: TextStyle(color: Colors.white)),
                     ),
                   ),
                 ],
@@ -185,7 +193,8 @@ class _UltraModernNTVHomeState extends State<UltraModernNTVHome> {
                 if (state is KinhNghiemLamViecLoaded) {
                   setState(() {
                     _kinhNghiemMap = {
-                      for (var kn in state.kinhNghiemList) kn.id.toString(): kn.displayName
+                      for (var kn in state.kinhNghiemList)
+                        kn.id.toString(): kn.displayName
                     };
                   });
                 }
@@ -237,7 +246,8 @@ class _UltraModernNTVHomeState extends State<UltraModernNTVHome> {
     );
   }
 
-  Widget _buildActionButton(String label, IconData icon, List<Color> colors, VoidCallback onTap) {
+  Widget _buildActionButton(
+      String label, IconData icon, List<Color> colors, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -284,7 +294,8 @@ class _UltraModernNTVHomeState extends State<UltraModernNTVHome> {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              gradient: LinearGradient(colors: [AppColors.success, AppColors.successDark]),
+              gradient: LinearGradient(
+                  colors: [AppColors.success, AppColors.successDark]),
               borderRadius: AppRadius.radiusMD,
             ),
             child: Icon(Icons.handshake_rounded, color: Colors.white),
@@ -294,8 +305,12 @@ class _UltraModernNTVHomeState extends State<UltraModernNTVHome> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Chắp Nối Việc Làm', style: AppTypography.titleSmall.copyWith(fontWeight: FontWeight.w600)),
-                Text('Kết nối với nhà tuyển dụng', style: AppTypography.bodySmall.copyWith(color: AppColors.textSecondary)),
+                Text('Chắp Nối Việc Làm',
+                    style: AppTypography.titleSmall
+                        .copyWith(fontWeight: FontWeight.w600)),
+                Text('Kết nối với nhà tuyển dụng',
+                    style: AppTypography.bodySmall
+                        .copyWith(color: AppColors.textSecondary)),
               ],
             ),
           ),
@@ -330,13 +345,15 @@ class _UltraModernNTVHomeState extends State<UltraModernNTVHome> {
               children: [
                 Text(
                   'Không thể tải danh sách việc làm',
-                  style: AppTypography.bodyMedium.copyWith(color: AppColors.error),
+                  style:
+                      AppTypography.bodyMedium.copyWith(color: AppColors.error),
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 8),
                 Text(
                   'Chi tiết: ${state.message}',
-                  style: AppTypography.bodySmall.copyWith(color: AppColors.error),
+                  style:
+                      AppTypography.bodySmall.copyWith(color: AppColors.error),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -357,16 +374,19 @@ class _UltraModernNTVHomeState extends State<UltraModernNTVHome> {
                     children: [
                       Text(
                         'Cơ hội việc làm',
-                        style: AppTypography.titleLarge.copyWith(fontWeight: FontWeight.w700),
+                        style: AppTypography.titleLarge
+                            .copyWith(fontWeight: FontWeight.w700),
                       ),
                       Text(
                         '${state.tuyenDungList.length} vị trí đang tuyển',
-                        style: AppTypography.bodyMedium.copyWith(color: AppColors.textSecondary),
+                        style: AppTypography.bodyMedium
+                            .copyWith(color: AppColors.textSecondary),
                       ),
                     ],
                   ),
                   TextButton(
-                    onPressed: () => _checkProfileBeforeNavigation(context, '/ntv_home/tim-viec'),
+                    onPressed: () => _checkProfileBeforeNavigation(
+                        context, '/ntv_home/tim-viec'),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -441,14 +461,54 @@ class _UltraModernNTVHomeState extends State<UltraModernNTVHome> {
 
   Widget _buildServicesGrid() {
     final services = [
-      {'icon': Icons.edit_document, 'title': 'Cập nhật hồ sơ', 'color': AppColors.primary, 'route': '/ntv_home/update_ntv'},
-      {'icon': Icons.app_registration_rounded, 'title': 'Đăng ký tìm việc làm', 'color': AppColors.error, 'route': '/ntv_home/dang-ky-tim-viec-lam-list'},
-      {'icon': Icons.school_rounded, 'title': 'Đăng ký học nghề', 'color': AppColors.success, 'route': '/ntv_home/dang-ky-hoc-nghe'},
-      {'icon': Icons.school_outlined, 'title': 'Đăng ký học nghề BHTN', 'color': AppColors.info, 'route': null},
-      {'icon': Icons.flight_takeoff_rounded, 'title': 'Đăng ký XKLĐ', 'color': AppColors.warning, 'route': '/ntv_home/dang-ky-xuat-khao-lao-dong'},
-      {'icon': Icons.handshake_rounded, 'title': 'Kết nối việc làm', 'color': Color(0xFF00BCD4), 'route': '/ntv_home/ho-so-chap-noi'},
-      {'icon': Icons.description_rounded, 'title': 'Hợp đồng lao động', 'color': Color(0xFF3F51B5), 'route': null},
-      {'icon': Icons.file_present_rounded, 'title': 'Xuất file CV', 'color': Color(0xFF9C27B0), 'route': null},
+      {
+        'icon': Icons.edit_document,
+        'title': 'Cập nhật hồ sơ',
+        'color': AppColors.primary,
+        'route': '/ntv_home/update_ntv'
+      },
+      {
+        'icon': Icons.app_registration_rounded,
+        'title': 'Đăng ký tìm việc làm',
+        'color': AppColors.error,
+        'route': '/ntv_home/dang-ky-tim-viec-lam-list'
+      },
+      {
+        'icon': Icons.school_rounded,
+        'title': 'Đăng ký học nghề',
+        'color': AppColors.success,
+        'route': '/ntv_home/dang-ky-hoc-nghe-list'
+      },
+      {
+        'icon': Icons.school_outlined,
+        'title': 'Đăng ký học nghề BHTN',
+        'color': AppColors.info,
+        'route': null
+      },
+      {
+        'icon': Icons.flight_takeoff_rounded,
+        'title': 'Đăng ký XKLĐ',
+        'color': AppColors.warning,
+        'route': '/ntv_home/dang-ky-xuat-khao-lao-dong'
+      },
+      {
+        'icon': Icons.handshake_rounded,
+        'title': 'Kết nối việc làm',
+        'color': Color(0xFF00BCD4),
+        'route': '/ntv_home/ho-so-chap-noi'
+      },
+      {
+        'icon': Icons.description_rounded,
+        'title': 'Hợp đồng lao động',
+        'color': Color(0xFF3F51B5),
+        'route': null
+      },
+      {
+        'icon': Icons.file_present_rounded,
+        'title': 'Xuất file CV',
+        'color': Color(0xFF9C27B0),
+        'route': null
+      },
     ];
 
     return Column(
@@ -469,51 +529,54 @@ class _UltraModernNTVHomeState extends State<UltraModernNTVHome> {
             childAspectRatio: 0.75,
           ),
           itemCount: services.length,
-      itemBuilder: (context, index) {
-        final service = services[index];
-        return GestureDetector(
-          onTap: () {
-            if (service['route'] != null) {
-              context.push(service['route'] as String, extra: tblHoSoUngVien);
-            } else {
-              context.push('/feature-locked', extra: {'featureName': service['title']});
-            }
+          itemBuilder: (context, index) {
+            final service = services[index];
+            return GestureDetector(
+              onTap: () {
+                if (service['route'] != null) {
+                  context.push(service['route'] as String,
+                      extra: tblHoSoUngVien);
+                } else {
+                  context.push('/feature-locked',
+                      extra: {'featureName': service['title']});
+                }
+              },
+              child: Container(
+                padding: EdgeInsets.all(AppSpacing.sm),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: AppRadius.radiusMD,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: (service['color'] as Color).withOpacity(0.1),
+                        borderRadius: AppRadius.radiusSM,
+                      ),
+                      child: Icon(service['icon'] as IconData,
+                          color: service['color'] as Color, size: 24),
+                    ),
+                    SizedBox(height: AppSpacing.xs),
+                    Text(
+                      service['title'] as String,
+                      style: AppTypography.caption.copyWith(
+                        fontWeight: FontWeight.w600,
+                        height: 1.2,
+                      ),
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+            );
           },
-          child: Container(
-            padding: EdgeInsets.all(AppSpacing.sm),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: AppRadius.radiusMD,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: (service['color'] as Color).withOpacity(0.1),
-                    borderRadius: AppRadius.radiusSM,
-                  ),
-                  child: Icon(service['icon'] as IconData, color: service['color'] as Color, size: 24),
-                ),
-                SizedBox(height: AppSpacing.xs),
-                Text(
-                  service['title'] as String,
-                  style: AppTypography.caption.copyWith(
-                    fontWeight: FontWeight.w600,
-                    height: 1.2,
-                  ),
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    ),
+        ),
       ],
     );
   }

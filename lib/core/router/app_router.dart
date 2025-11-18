@@ -26,6 +26,7 @@ import 'package:ttld/pages/home/ntd/quan_ly_nhan_vien/quan_ly_nhan_vien.dart';
 import 'package:ttld/pages/home/ntd/quan_ly_tuyen_dung/quan_ly_tuyen_dung.dart';
 import 'package:ttld/pages/home/ntd/update_ntd/update_ntd_page.dart';
 import 'package:ttld/pages/home/ntv/dang_ky_hoc_nghe_page.dart';
+import 'package:ttld/pages/dang_ky_hoc_nghe/dang_ky_hoc_nghe_list_page.dart';
 import 'package:ttld/pages/dang_ky_tim_viec_lam/dang_ky_tim_viec_lam_page.dart';
 import 'package:ttld/pages/dang_ky_tim_viec_lam/dang_ky_tim_viec_lam_list_page.dart';
 import 'package:ttld/pages/dang_ky_xkld/dang_ky_xkld_form.dart';
@@ -255,6 +256,10 @@ class AppRouter {
             GoRoute(
               path: '/dang-ky-hoc-nghe-create',
               builder: (context, state) => const DangKyHocNgheCreatePage(),
+            ),
+            GoRoute(
+              path: '/dang-ky-hoc-nghe-list',
+              builder: (context, state) => const DangKyHocNgheListPage(),
             ),
             GoRoute(
               path: '/dang-ky-xuat-khao-lao-dong',

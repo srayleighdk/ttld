@@ -15,6 +15,7 @@ import 'package:ttld/core/services/nganh_nghe_chuyennganh_api_service.dart';
 import 'package:ttld/core/services/nganh_nghe_api_service.dart';
 import 'package:ttld/core/services/nganh_nghe_td_api_service.dart';
 import 'package:ttld/core/services/nganh_nghe_bachoc_api_service.dart';
+import 'package:ttld/core/services/nganh_nghe_daotao_api_service.dart';
 import 'package:ttld/repositories/chuc_danh_repository.dart';
 import 'package:ttld/repositories/hinhthuc_doanhnghiep/hinhthuc_doanhnghiep_repository.dart';
 import 'package:ttld/repositories/loai_hinh/loai_hinh_repository.dart';
@@ -23,6 +24,7 @@ import 'package:ttld/repositories/nganh_nghe/nganh_nghe_chuyennganh_repository.d
 import 'package:ttld/repositories/nganh_nghe/nganh_nghe_repository.dart';
 import 'package:ttld/repositories/nganh_nghe/nganh_nghe_td_repository.dart';
 import 'package:ttld/repositories/nganh_nghe/nganh_nghe_bachoc_repository.dart';
+import 'package:ttld/repositories/nganh_nghe/nganh_nghe_daotao_repository.dart';
 import 'package:ttld/core/di/injection.dart';
 
 Future<void> setupIndustryLocator() async {
@@ -50,8 +52,8 @@ Future<void> setupIndustryLocator() async {
   locator.registerLazySingleton<NganhNgheTDRepository>(() =>
       NganhNgheTDRepositoryImpl(
           nganhNgheTDApiService: locator<NganhNgheTDApiService>()));
-  locator.registerLazySingleton<NganhNgheTDBloc>(
-      () => NganhNgheTDBloc(nganhNgheTDRepository: locator<NganhNgheTDRepository>()));
+  locator.registerLazySingleton<NganhNgheTDBloc>(() =>
+      NganhNgheTDBloc(nganhNgheTDRepository: locator<NganhNgheTDRepository>()));
 
   // NganhNgheBacHoc
   locator.registerLazySingleton<NganhNgheBacHocApiService>(
@@ -59,8 +61,8 @@ Future<void> setupIndustryLocator() async {
   locator.registerLazySingleton<NganhNgheBacHocRepository>(() =>
       NganhNgheBacHocRepositoryImpl(
           nganhNgheBacHocApiService: locator<NganhNgheBacHocApiService>()));
-  locator.registerLazySingleton<NganhNgheBacHocBloc>(
-      () => NganhNgheBacHocBloc(nganhNgheBacHocRepository: locator<NganhNgheBacHocRepository>()));
+  locator.registerLazySingleton<NganhNgheBacHocBloc>(() => NganhNgheBacHocBloc(
+      nganhNgheBacHocRepository: locator<NganhNgheBacHocRepository>()));
 
   // Chuc Danh
   locator.registerLazySingleton<ChucDanhApiService>(
@@ -100,4 +102,11 @@ Future<void> setupIndustryLocator() async {
               locator<HinhThucDoanhNghiepApiService>()));
   locator.registerLazySingleton(() => HinhThucDoanhNghiepBloc(
       hinhThucDoanhNghiepRepository: locator<HinhThucDoanhNghiepRepository>()));
+
+  // NganhNgheDaoTao
+  locator.registerLazySingleton<NganhNgheDaoTaoApiService>(
+      () => NganhNgheDaoTaoApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<NganhNgheDaoTaoRepository>(() =>
+      NganhNgheDaoTaoRepositoryImpl(
+          nganhNgheDaoTaoApiService: locator<NganhNgheDaoTaoApiService>()));
 }
