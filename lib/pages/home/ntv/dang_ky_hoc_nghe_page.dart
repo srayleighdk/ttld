@@ -8,16 +8,17 @@ import 'package:ttld/models/hoso_dtn/hoso_dtn_model.dart';
 import 'package:ttld/pages/dang_ky_hoc_nghe/dang_ky_hoc_nghe_form.dart';
 import 'package:ttld/utils/hoso_dtn_mapper.dart';
 
-class DangKyHocNghePage extends StatefulWidget {
-  const DangKyHocNghePage({super.key});
+class DangKyHocNgheCreatePage extends StatefulWidget {
+  const DangKyHocNgheCreatePage({super.key});
 
   static const String routePath = '/ntv_home/dang-ky-hoc-nghe';
 
   @override
-  State<DangKyHocNghePage> createState() => _DangKyHocNghePageState();
+  State<DangKyHocNgheCreatePage> createState() =>
+      _DangKyHocNgheCreatePageState();
 }
 
-class _DangKyHocNghePageState extends State<DangKyHocNghePage> {
+class _DangKyHocNgheCreatePageState extends State<DangKyHocNgheCreatePage> {
   bool _isLoading = true;
   HosoDTN? _initialData;
   String? _userId;
@@ -32,7 +33,7 @@ class _DangKyHocNghePageState extends State<DangKyHocNghePage> {
     final authState = locator<AuthBloc>().state;
     if (authState is AuthAuthenticated) {
       _userId = authState.userId;
-      
+
       try {
         // Fetch HoSoUngVien data for the current user
         final hosoUVService = locator<HoSoUngVienApiService>();
@@ -41,7 +42,7 @@ class _DangKyHocNghePageState extends State<DangKyHocNghePage> {
         // Pre-populate HosoDTN with HoSoUngVien data
         if (hosoUV != null && HosoDTNMapper.hasEssentialData(hosoUV)) {
           _initialData = HosoDTNMapper.fromHoSoUngVien(hosoUV);
-          
+
           if (mounted) {
             // Show summary of pre-filled data
             final summary = HosoDTNMapper.getPrefilledSummary(hosoUV);

@@ -39,6 +39,9 @@ class ApiEndpoints {
 
   static String get chucDanh => '/danhmuc/chuc-danh';
 
+  // BHTN Khoa dao tao
+  static String get bhtnKhoadaotao => '/bhtn-khoadaotao';
+
   // Ho so ung vien
   static String get hosoUngVien => '/nghiep-vu/hoso-uv';
   static String get hosoUngVienById => '/nghiep-vu/hoso-uvid';

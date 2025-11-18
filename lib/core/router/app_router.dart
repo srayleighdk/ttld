@@ -253,8 +253,8 @@ class AppRouter {
               builder: (context, state) => const DangKyTuVanViecLamPage(),
             ),
             GoRoute(
-              path: '/dang-ky-hoc-nghe',
-              builder: (context, state) => const DangKyHocNghePage(),
+              path: '/dang-ky-hoc-nghe-create',
+              builder: (context, state) => const DangKyHocNgheCreatePage(),
             ),
             GoRoute(
               path: '/dang-ky-xuat-khao-lao-dong',

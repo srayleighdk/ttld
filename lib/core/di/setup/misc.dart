@@ -56,6 +56,9 @@ import 'package:ttld/repositories/status_dg/status_dg_repository.dart';
 import 'package:ttld/core/services/nguyen_nhan_that_nghiep_api_service.dart';
 import 'package:ttld/models/nguyen_nhan_that_nghiep_model.dart';
 import 'package:ttld/repositories/nguyen_nhan_that_nghiep/nguyen_nhan_that_nghiep_repository.dart';
+import 'package:ttld/core/services/bhtn_khoadaotao_api_service.dart';
+import 'package:ttld/models/bhtn_khoadaotao/bhtn_khoadaotao_model.dart';
+import 'package:ttld/repositories/bhtn_khoadaotao_repository.dart';
 
 final locator = GetIt.instance;
 
@@ -149,51 +152,64 @@ Future<void> setupMiscLocator() async {
   locator.registerLazySingleton<TinhTrangVLApiService>(
       () => TinhTrangVLApiService(locator<ApiClient>().dio));
   locator.registerLazySingleton<TinhTrangVLRepository>(() =>
-      TinhTrangVLRepositoryImpl(tinhTrangVLApiService: locator<TinhTrangVLApiService>()));
-  locator.registerLazySingleton<TinhTrangVLBloc>(
-      () => TinhTrangVLBloc(tinhTrangVLRepository: locator<TinhTrangVLRepository>()));
+      TinhTrangVLRepositoryImpl(
+          tinhTrangVLApiService: locator<TinhTrangVLApiService>()));
+  locator.registerLazySingleton<TinhTrangVLBloc>(() =>
+      TinhTrangVLBloc(tinhTrangVLRepository: locator<TinhTrangVLRepository>()));
 
   // VeTinh
   locator.registerLazySingleton<VeTinhApiService>(
       () => VeTinhApiService(locator<ApiClient>().dio));
-  locator.registerLazySingleton<VeTinhRepository>(() =>
-      VeTinhRepositoryImpl(apiService: locator<VeTinhApiService>()));
+  locator.registerLazySingleton<VeTinhRepository>(
+      () => VeTinhRepositoryImpl(apiService: locator<VeTinhApiService>()));
 
   // Status Viec Lam (TblDmStatusViecLam) - using /common/status-vl
   locator.registerLazySingleton<StatusViecLamApiService>(
       () => StatusViecLamApiService(locator<ApiClient>().dio));
   locator.registerLazySingleton<StatusViecLamRepository>(() =>
-      StatusViecLamRepositoryImpl(apiService: locator<StatusViecLamApiService>()));
+      StatusViecLamRepositoryImpl(
+          apiService: locator<StatusViecLamApiService>()));
 
   // Bac Mon Dao Tao (TblDmBacMonDaoTao) - using /common/bac-hoc
   locator.registerLazySingleton<BacMonDaoTaoApiService>(
       () => BacMonDaoTaoApiService(locator<ApiClient>().dio));
   locator.registerLazySingleton<BacMonDaoTaoRepository>(() =>
-      BacMonDaoTaoRepositoryImpl(apiService: locator<BacMonDaoTaoApiService>()));
+      BacMonDaoTaoRepositoryImpl(
+          apiService: locator<BacMonDaoTaoApiService>()));
 
   // Chuyen Nganh Dao Tao (TblDmBacDaoTaoC3) - using /common/chuyen-nganh
   locator.registerLazySingleton<ChuyenNganhDaoTaoApiService>(
       () => ChuyenNganhDaoTaoApiService(locator<ApiClient>().dio));
   locator.registerLazySingleton<ChuyenNganhDaoTaoRepository>(() =>
-      ChuyenNganhDaoTaoRepositoryImpl(apiService: locator<ChuyenNganhDaoTaoApiService>()));
+      ChuyenNganhDaoTaoRepositoryImpl(
+          apiService: locator<ChuyenNganhDaoTaoApiService>()));
 
   // Status DG (TblDmStatusDG) - using /common/status-dg
   locator.registerLazySingleton<StatusDgApiService>(
       () => StatusDgApiService(locator<ApiClient>().dio));
-  locator.registerLazySingleton<StatusDgRepository>(() =>
-      StatusDgRepositoryImpl(apiService: locator<StatusDgApiService>()));
+  locator.registerLazySingleton<StatusDgRepository>(
+      () => StatusDgRepositoryImpl(apiService: locator<StatusDgApiService>()));
 
   // Ca Lam Viec (TblDmCaLamViec) - using /bo-sung/ca-lam
   locator.registerLazySingleton<CaLamViecApiService>(
       () => CaLamViecApiService(locator<ApiClient>().dio));
   locator.registerLazySingleton<CaLamViecRepository>(() =>
-      CaLamViecRepositoryImpl(caLamViecApiService: locator<CaLamViecApiService>()));
+      CaLamViecRepositoryImpl(
+          caLamViecApiService: locator<CaLamViecApiService>()));
 
   // Nguyen Nhan That Nghiep (TblDmNguyenNhanThatNghiep) - using /common/nguyen-nhan-tn
   locator.registerLazySingleton<NguyenNhanThatNghiepApiService>(
       () => NguyenNhanThatNghiepApiService(locator<ApiClient>().dio));
   locator.registerLazySingleton<NguyenNhanThatNghiepRepository>(() =>
-      NguyenNhanThatNghiepRepositoryImpl(apiService: locator<NguyenNhanThatNghiepApiService>()));
+      NguyenNhanThatNghiepRepositoryImpl(
+          apiService: locator<NguyenNhanThatNghiepApiService>()));
+
+  // BHTN Khoa Dao Tao
+  locator.registerLazySingleton<BhtnKhoadaotaoApiService>(
+      () => BhtnKhoadaotaoApiService(locator<ApiClient>().dio));
+  locator.registerLazySingleton<BhtnKhoadaotaoRepository>(() =>
+      BhtnKhoadaotaoRepositoryImpl(
+          bhtnKhoadaotaoApiService: locator<BhtnKhoadaotaoApiService>()));
 
   // Don't register empty list here - let misc_data_init.dart handle it after API call
 }
