@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ttld/models/hoso_xkld/hoso_xkld_model.dart';
+import 'package:ttld/models/trinh_do_hoc_van_model.dart';
+import 'package:ttld/models/ngoai_ngu_model.dart';
+import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
+import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
+import 'package:ttld/core/di/injection.dart';
 
 class XKLDStep4EducationTraining extends StatefulWidget {
   final GlobalKey<FormState> formKey;
@@ -91,33 +96,16 @@ class _XKLDStep4EducationTrainingState
           ),
           const SizedBox(height: 16),
 
-          DropdownButtonFormField<int>(
-            value: _selectedTrinhdohocvan,
-            decoration: InputDecoration(
-              labelText: 'Trình độ học vấn *',
-              prefixIcon: const Icon(FontAwesomeIcons.graduationCap, size: 18),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            items: const [
-              DropdownMenuItem(value: 1, child: Text('12/12')),
-              DropdownMenuItem(value: 2, child: Text('10/12')),
-              DropdownMenuItem(value: 3, child: Text('9/12')),
-              DropdownMenuItem(value: 4, child: Text('Trung cấp')),
-              DropdownMenuItem(value: 5, child: Text('Cao đẳng')),
-              DropdownMenuItem(value: 6, child: Text('Đại học')),
-              DropdownMenuItem(value: 7, child: Text('Sau đại học')),
-            ],
-            validator: (value) {
-              if (value == null) {
-                return 'Vui lòng chọn trình độ học vấn';
-              }
-              return null;
-            },
+          GenericPicker<TrinhDoHocVan>(
+            label: 'Trình độ học vấn *',
+            hintText: 'Chọn trình độ học vấn',
+            items: locator<List<TrinhDoHocVan>>(),
+            initialValue: _selectedTrinhdohocvan,
             onChanged: (value) {
               setState(() {
-                _selectedTrinhdohocvan = value;
+                _selectedTrinhdohocvan = value?.id is int
+                    ? value?.id
+                    : int.tryParse(value?.id?.toString() ?? '');
                 _updateFormData();
               });
             },
@@ -125,16 +113,11 @@ class _XKLDStep4EducationTrainingState
           const SizedBox(height: 16),
 
           // Bậc đào tạo
-          TextFormField(
+          CustomTextField(
             controller: _bacdaotaoController,
-            decoration: InputDecoration(
-              labelText: 'Bậc đào tạo',
-              hintText: 'VD: Kỹ sư, Cử nhân...',
-              prefixIcon: const Icon(FontAwesomeIcons.certificate, size: 18),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
+            labelText: 'Bậc đào tạo',
+            hintText: 'VD: Kỹ sư, Cử nhân...',
+            prefixIcon: const Icon(FontAwesomeIcons.certificate, size: 18),
             onChanged: (_) => _updateFormData(),
           ),
           const SizedBox(height: 24),
@@ -148,23 +131,13 @@ class _XKLDStep4EducationTrainingState
           ),
           const SizedBox(height: 16),
 
-          TextFormField(
+          CustomTextField(
             controller: _chuyenmonController,
-            decoration: InputDecoration(
-              labelText: 'Chuyên môn hiện tại *',
-              hintText: 'VD: Kỹ thuật điện, Cơ khí...',
-              prefixIcon: const Icon(FontAwesomeIcons.briefcase, size: 18),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
+            labelText: 'Chuyên môn hiện tại *',
+            hintText: 'VD: Kỹ thuật điện, Cơ khí...',
+            prefixIcon: const Icon(FontAwesomeIcons.briefcase, size: 18),
             maxLines: 2,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Vui lòng nhập chuyên môn';
-              }
-              return null;
-            },
+            validator: 'not_empty',
             onChanged: (_) => _updateFormData(),
           ),
           const SizedBox(height: 24),
@@ -178,49 +151,27 @@ class _XKLDStep4EducationTrainingState
           ),
           const SizedBox(height: 16),
 
-          DropdownButtonFormField<int>(
-            value: _selectedNgoaingudaotao,
-            decoration: InputDecoration(
-              labelText: 'Ngoại ngữ đã được đào tạo *',
-              prefixIcon: const Icon(FontAwesomeIcons.language, size: 18),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            items: const [
-              DropdownMenuItem(value: 1, child: Text('Tiếng Anh')),
-              DropdownMenuItem(value: 2, child: Text('Tiếng Nhật')),
-              DropdownMenuItem(value: 3, child: Text('Tiếng Hàn')),
-              DropdownMenuItem(value: 4, child: Text('Tiếng Trung')),
-              DropdownMenuItem(value: 5, child: Text('Tiếng Đức')),
-              DropdownMenuItem(value: 6, child: Text('Không')),
-              DropdownMenuItem(value: 7, child: Text('Khác')),
-            ],
-            validator: (value) {
-              if (value == null) {
-                return 'Vui lòng chọn ngoại ngữ';
-              }
-              return null;
-            },
+          GenericPicker<NgoaiNgu>(
+            label: 'Ngoại ngữ đã được đào tạo *',
+            hintText: 'Chọn ngoại ngữ',
+            items: locator<List<NgoaiNgu>>(),
+            initialValue: _selectedNgoaingudaotao,
             onChanged: (value) {
               setState(() {
-                _selectedNgoaingudaotao = value;
+                _selectedNgoaingudaotao = value?.id is int
+                    ? value?.id
+                    : int.tryParse(value?.id?.toString() ?? '');
                 _updateFormData();
               });
             },
           ),
           const SizedBox(height: 16),
 
-          TextFormField(
+          CustomTextField(
             controller: _nndaduocdaotaoController,
-            decoration: InputDecoration(
-              labelText: 'Trình độ ngoại ngữ',
-              hintText: 'VD: N3, TOPIK 3, IELTS 6.0...',
-              prefixIcon: const Icon(FontAwesomeIcons.award, size: 18),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
+            labelText: 'Trình độ ngoại ngữ',
+            hintText: 'VD: N3, TOPIK 3, IELTS 6.0...',
+            prefixIcon: const Icon(FontAwesomeIcons.award, size: 18),
             onChanged: (_) => _updateFormData(),
           ),
           const SizedBox(height: 24),
@@ -234,16 +185,11 @@ class _XKLDStep4EducationTrainingState
           ),
           const SizedBox(height: 16),
 
-          TextFormField(
+          CustomTextField(
             controller: _dangdoanController,
-            decoration: InputDecoration(
-              labelText: 'Đảng, đoàn thể',
-              hintText: 'VD: Đoàn viên, Đảng viên...',
-              prefixIcon: const Icon(FontAwesomeIcons.flag, size: 18),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
+            labelText: 'Đảng, đoàn thể',
+            hintText: 'VD: Đoàn viên, Đảng viên...',
+            prefixIcon: const Icon(FontAwesomeIcons.flag, size: 18),
             onChanged: (_) => _updateFormData(),
           ),
           const SizedBox(height: 24),

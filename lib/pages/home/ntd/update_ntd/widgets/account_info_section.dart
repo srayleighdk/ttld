@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ttld/widgets/form/modern_text_field.dart';
+import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
 
 class AccountInfoSection extends StatelessWidget {
   final TextEditingController usernameController;
@@ -38,38 +38,37 @@ class AccountInfoSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ModernTextField.email(
+          CustomTextField.email(
             controller: ntdEmailController,
-            readOnly: true,
           ),
           const SizedBox(height: 8),
-          ModernTextField(
-            label: "Username",
+          CustomTextField(
+            labelText: "Username",
             controller: usernameController,
-            hint: 'Username',
+            hintText: 'Username',
             readOnly: true,
           ),
           const SizedBox(height: 8),
-          ModernTextField(
-            label: "Mã số thuế",
+          CustomTextField(
+            labelText: "Mã số thuế",
             controller: mstController,
-            hint: 'Mã số thuế',
+            hintText: 'Mã số thuế',
           ),
           // const SizedBox(height: 8),
           // ModernTextField.password(
           //   controller: passwordController,
           // ),
           const SizedBox(height: 8),
-          ModernTextField(
-            label: "Mã NTD",
+          CustomTextField(
+            labelText: "Mã NTD",
             controller: ntdMadnController,
-            customValidator: (value) {
+            validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter NTD Madn';
               }
               return null;
             },
-            hint: 'Mã NTD',
+            hintText: 'Mã NTD',
           ),
         ],
       ),

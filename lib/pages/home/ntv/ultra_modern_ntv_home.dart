@@ -489,7 +489,7 @@ class _UltraModernNTVHomeState extends State<UltraModernNTVHome> {
         'icon': Icons.flight_takeoff_rounded,
         'title': 'Đăng ký XKLĐ',
         'color': AppColors.warning,
-        'route': '/ntv_home/dang-ky-xuat-khao-lao-dong'
+        'route': '/ntv_home/dang-ky-xkld-list'
       },
       {
         'icon': Icons.handshake_rounded,

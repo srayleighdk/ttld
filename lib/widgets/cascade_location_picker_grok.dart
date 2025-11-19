@@ -17,7 +17,7 @@ import 'package:ttld/models/tinh/tinh.dart';
 import 'package:ttld/models/xa/xa.dart';
 import 'package:ttld/blocs/kcn/kcn_cubit.dart';
 import 'package:ttld/models/kcn/kcn_model.dart';
-import 'package:ttld/widgets/form/modern_text_field.dart';
+import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
 import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
 import 'package:ttld/themes/colors/color_style.dart';
 import 'package:theme_provider/theme_provider.dart';
@@ -92,7 +92,8 @@ class CascadeLocationPickerGrok extends StatefulWidget {
   final bool isNTD;
 
   @override
-  State<CascadeLocationPickerGrok> createState() => _CascadeLocationPickerGrokState();
+  State<CascadeLocationPickerGrok> createState() =>
+      _CascadeLocationPickerGrokState();
 }
 
 class _CascadeLocationPickerGrokState extends State<CascadeLocationPickerGrok> {
@@ -403,8 +404,7 @@ class _ModernCascadeLocationPickerState
           return ModernPicker<Huyen>(
             label: 'Quận/Huyện',
             hint: 'Chọn Quận/Huyện',
-            items:
-                state.huyens,
+            items: state.huyens,
             initialValue: selectedHuyen?.id,
             onChanged: (item) {
               final huyen = item;
@@ -517,13 +517,12 @@ class _ModernCascadeLocationPickerState
 
   Widget _buildAddressDetailField(ThemeData theme, ColorStyles? colorStyles,
       ModernCascadeLocationPickerStyle style) {
-    return ModernTextField.textArea(
-      label: 'Địa chỉ chi tiết',
-      hint: 'Nhập số nhà, tên đường...',
+    return CustomTextField.textArea(
+      labelText: 'Địa chỉ chi tiết',
+      hintText: 'Nhập số nhà, tên đường...',
       controller: widget.addressDetailController,
       minLines: 2,
       maxLines: 3,
-      helperText: 'Địa chỉ sẽ được tự động cập nhật khi bạn chọn địa điểm',
     );
   }
 
@@ -571,8 +570,8 @@ class _ModernCascadeLocationPickerState
 
   void _updateAddressDetail() {
     widget.addressDetailController.text = _buildAddressString(
-        selectedXa?.displayName, 
-        selectedHuyen?.displayName, 
+        selectedXa?.displayName,
+        selectedHuyen?.displayName,
         selectedTinh?.displayName);
   }
 
@@ -653,4 +652,3 @@ class ModernCascadeLocationPickerStyle {
     );
   }
 }
-

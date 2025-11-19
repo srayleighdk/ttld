@@ -58,6 +58,7 @@ import 'package:ttld/models/nguyen_nhan_that_nghiep_model.dart';
 import 'package:ttld/repositories/nguyen_nhan_that_nghiep/nguyen_nhan_that_nghiep_repository.dart';
 import 'package:ttld/core/services/bhtn_khoadaotao_api_service.dart';
 import 'package:ttld/core/services/dky_hoc_nghe_api_service.dart';
+import 'package:ttld/core/services/hoso_xkld_api_service.dart';
 import 'package:ttld/models/bhtn_khoadaotao/bhtn_khoadaotao_model.dart';
 import 'package:ttld/repositories/bhtn_khoadaotao_repository.dart';
 
@@ -215,6 +216,10 @@ Future<void> setupMiscLocator() async {
   // Dang Ky Hoc Nghe
   locator.registerLazySingleton<DkyHocNgheApiService>(
       () => DkyHocNgheApiService(locator<ApiClient>().dio));
+
+  // Hoso XKLD
+  locator.registerLazySingleton<HosoXkldApiService>(
+      () => HosoXkldApiService(locator<ApiClient>().dio));
 
   // Don't register empty list here - let misc_data_init.dart handle it after API call
 }

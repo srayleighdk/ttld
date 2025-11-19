@@ -30,6 +30,7 @@ import 'package:ttld/pages/dang_ky_hoc_nghe/dang_ky_hoc_nghe_list_page.dart';
 import 'package:ttld/pages/dang_ky_tim_viec_lam/dang_ky_tim_viec_lam_page.dart';
 import 'package:ttld/pages/dang_ky_tim_viec_lam/dang_ky_tim_viec_lam_list_page.dart';
 import 'package:ttld/pages/dang_ky_xkld/dang_ky_xkld_form.dart';
+import 'package:ttld/pages/dang_ky_xkld/dang_ky_xkld_list_page.dart';
 import 'package:ttld/pages/home/ntv/dang_ky_tu_van_viec_lam_page.dart';
 import 'package:ttld/pages/home/ntv/sgdvl_registration.dart';
 import 'package:ttld/pages/home/ntv/ultra_modern_ntv_home.dart';
@@ -264,6 +265,10 @@ class AppRouter {
             GoRoute(
               path: '/dang-ky-xuat-khao-lao-dong',
               builder: (context, state) => const DangKyXKLDForm(),
+            ),
+            GoRoute(
+              path: '/dang-ky-xkld-list',
+              builder: (context, state) => const DangKyXkldListPage(),
             ),
             GoRoute(
               path: SGDVLPage.routePath,

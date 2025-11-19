@@ -44,7 +44,8 @@ class _CustomPickDateTimeGrokState extends State<CustomPickDateTimeGrok> {
   @override
   void initState() {
     super.initState();
-    _selectedDate = _parseInitialValue(widget.initialValue) ?? widget.selectedDate;
+    _selectedDate =
+        _parseInitialValue(widget.initialValue) ?? widget.selectedDate;
     _focusNode.addListener(_onFocusChange);
   }
 
@@ -129,15 +130,19 @@ class _CustomPickDateTimeGrokState extends State<CustomPickDateTimeGrok> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorStyles = ThemeProvider.themeOf(context).data.extension<ColorStyles>();
-    final effectiveStyle = widget.style ?? ModernDatePickerStyle.defaultStyle(context);
-    
+    final colorStyles =
+        ThemeProvider.themeOf(context).data.extension<ColorStyles>();
+    final effectiveStyle =
+        widget.style ?? ModernDatePickerStyle.defaultStyle(context);
+
     // Theme-aware colors matching GenericPicker
-    final primaryColor = colorStyles?.primaryAccent ?? theme.colorScheme.primary;
+    final primaryColor =
+        colorStyles?.primaryAccent ?? theme.colorScheme.primary;
     final errorColor = theme.colorScheme.error;
-    final surfaceColor = colorStyles?.surfaceBackground ?? theme.colorScheme.surface;
+    final surfaceColor =
+        colorStyles?.surfaceBackground ?? theme.colorScheme.surface;
     final contentColor = colorStyles?.content ?? theme.colorScheme.onSurface;
-    
+
     Color getBorderColor() {
       if (_errorText != null) return errorColor;
       if (_focusNode.hasFocus) return primaryColor;
@@ -157,9 +162,9 @@ class _CustomPickDateTimeGrokState extends State<CustomPickDateTimeGrok> {
               borderRadius: BorderRadius.circular(8),
               child: Container(
                 decoration: BoxDecoration(
-                  color: effectiveStyle.filled 
-                      ? (effectiveStyle.fillColor?.toColor(context) ?? 
-                         surfaceColor.withOpacity(0.05))
+                  color: effectiveStyle.filled
+                      ? (effectiveStyle.fillColor?.toColor(context) ??
+                          surfaceColor.withOpacity(0.05))
                       : Colors.transparent,
                   border: Border.all(
                     color: getBorderColor(),
@@ -179,36 +184,36 @@ class _CustomPickDateTimeGrokState extends State<CustomPickDateTimeGrok> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          if (widget.labelText != null && widget.labelText!.isNotEmpty)
+                          if (widget.labelText != null &&
+                              widget.labelText!.isNotEmpty)
                             Text(
                               widget.labelText!,
-                              style: effectiveStyle.labelStyle?.toTextStyle(context) ??
-                                     theme.textTheme.bodySmall?.copyWith(
-                                       color: _focusNode.hasFocus ? primaryColor : contentColor.withOpacity(0.7),
-                                     ),
+                              style: effectiveStyle.labelStyle
+                                      ?.toTextStyle(context) ??
+                                  theme.textTheme.bodySmall?.copyWith(
+                                    color: _focusNode.hasFocus
+                                        ? primaryColor
+                                        : contentColor.withOpacity(0.7),
+                                  ),
                             ),
-                          if (widget.labelText != null && widget.labelText!.isNotEmpty)
+                          if (widget.labelText != null &&
+                              widget.labelText!.isNotEmpty)
                             const SizedBox(height: 4),
                           Text(
                             _selectedDate != null
-                                ? DateFormat('dd-MM-yyyy').format(_selectedDate!.toLocal())
+                                ? DateFormat('dd-MM-yyyy')
+                                    .format(_selectedDate!.toLocal())
                                 : widget.hintText ?? 'Select Date',
-                            style: effectiveStyle.textStyle?.toTextStyle(context) ??
-                                   theme.textTheme.bodyLarge?.copyWith(
-                                     color: _selectedDate != null 
-                                         ? contentColor 
-                                         : contentColor.withOpacity(0.5),
-                                   ),
+                            style: effectiveStyle.textStyle
+                                    ?.toTextStyle(context) ??
+                                theme.textTheme.bodyLarge?.copyWith(
+                                  color: _selectedDate != null
+                                      ? contentColor
+                                      : contentColor.withOpacity(0.5),
+                                ),
                           ),
                         ],
                       ),
-                    ),
-                    Icon(
-                      Icons.calendar_today,
-                      color: _errorText != null 
-                          ? errorColor 
-                          : (_focusNode.hasFocus ? primaryColor : contentColor.withOpacity(0.5)),
-                      size: 20,
                     ),
                   ],
                 ),
@@ -229,8 +234,8 @@ class _CustomPickDateTimeGrokState extends State<CustomPickDateTimeGrok> {
               child: Text(
                 widget.helperText!,
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: colorStyles?.content.withOpacity(0.6) ?? 
-                         theme.colorScheme.onSurface.withOpacity(0.6),
+                  color: colorStyles?.content.withOpacity(0.6) ??
+                      theme.colorScheme.onSurface.withOpacity(0.6),
                 ),
               ),
             ),
@@ -262,7 +267,8 @@ class ModernDatePickerStyle {
 
   const ModernDatePickerStyle({
     this.margin = const EdgeInsets.symmetric(vertical: 8),
-    this.contentPadding = const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+    this.contentPadding =
+        const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
     this.filled = true,
     this.fillColor,
     this.textStyle,

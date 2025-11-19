@@ -3,7 +3,6 @@ import 'package:ttld/core/di/injection.dart';
 import 'package:ttld/helppers/map_help.dart';
 import 'package:ttld/models/nganh_nghe_model.dart';
 import 'package:ttld/widgets/field/custom_picker_map.dart';
-import 'package:ttld/widgets/form/modern_text_field.dart';
 import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
 import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
 
@@ -46,31 +45,41 @@ class CompanyInfoSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ModernTextField(
-            label: "Tên nhà tuyển dụng",
+          CustomTextField(
+            labelText: "Tên nhà tuyển dụng",
             controller: ntdTenController,
-            hint: 'Tên nhà tuyển dụng',
+            hintText: 'Tên nhà tuyển dụng',
           ),
           const SizedBox(height: 16),
-          ModernTextField(
-            label: "Tên viết tắt",
+          CustomTextField(
+            labelText: "Tên viết tắt",
             controller: ntdTentatController,
-            hint: 'Tên viết tắt',
+            hintText: 'Tên viết tắt',
           ),
           const SizedBox(height: 16),
-          ModernPickerMap(
-            label: "Loại doanh nghiệp",
-            items: loaiDoanhNgiepOptions,
-            selectedItem: ntdLoai,
-            onChanged: onNtdLoaiChanged,
-          ),
+          // ModernPickerMap(
+          //   label: "Loại doanh nghiệp",
+          //   items: loaiDoanhNgiepOptions,
+          //   selectedItem: ntdLoai,
+          //   onChanged: onNtdLoaiChanged,
+          // ),
+          CustomPickerMap(
+              items: loaiDoanhNgiepOptions,
+              selectedItem: ntdLoai,
+              onChanged: onNtdLoaiChanged),
           const SizedBox(height: 16),
-          ModernPicker<NganhNgheKT>(
+          GenericPicker<NganhNgheKT>(
             initialValue: idNganhKinhTe,
+            label: 'Ngành nghề chính',
             items: locator<List<NganhNgheKT>>(),
             onChanged: onNganhKinhTeChanged,
-            label: 'Ngành nghề chính',
           ),
+          // ModernPicker<NganhNgheKT>(
+          //   initialValue: idNganhKinhTe,
+          //   items: locator<List<NganhNgheKT>>(),
+          //   onChanged: onNganhKinhTeChanged,
+          //   label: 'Ngành nghề chính',
+          // ),
         ],
       ),
     );

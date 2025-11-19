@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ttld/models/hoso_xkld/hoso_xkld_model.dart';
+import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
 
 class XKLDStep3PhysicalHealth extends StatefulWidget {
   final GlobalKey<FormState> formKey;
@@ -91,46 +92,26 @@ class _XKLDStep3PhysicalHealthState extends State<XKLDStep3PhysicalHealth> {
           Row(
             children: [
               Expanded(
-                child: TextFormField(
+                child: CustomTextField(
                   controller: _chieucaoController,
-                  decoration: InputDecoration(
-                    labelText: 'Chiều cao (cm) *',
-                    hintText: 'VD: 170',
-                    prefixIcon: const Icon(FontAwesomeIcons.ruler, size: 18),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
+                  labelText: 'Chiều cao (cm) *',
+                  hintText: 'VD: 170',
+                  prefixIcon: const Icon(FontAwesomeIcons.ruler, size: 18),
                   keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Vui lòng nhập chiều cao';
-                    }
-                    return null;
-                  },
+                  validator: 'not_empty',
                   onChanged: (_) => _updateFormData(),
                 ),
               ),
               const SizedBox(width: 16),
               Expanded(
-                child: TextFormField(
+                child: CustomTextField(
                   controller: _cannangController,
-                  decoration: InputDecoration(
-                    labelText: 'Cân nặng (kg) *',
-                    hintText: 'VD: 65',
-                    prefixIcon:
-                        const Icon(FontAwesomeIcons.weightScale, size: 18),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
+                  labelText: 'Cân nặng (kg) *',
+                  hintText: 'VD: 65',
+                  prefixIcon:
+                      const Icon(FontAwesomeIcons.weightScale, size: 18),
                   keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Vui lòng nhập cân nặng';
-                    }
-                    return null;
-                  },
+                  validator: 'not_empty',
                   onChanged: (_) => _updateFormData(),
                 ),
               ),
@@ -293,13 +274,16 @@ class _XKLDStep3PhysicalHealthState extends State<XKLDStep3PhysicalHealth> {
                   ],
                 ),
                 const SizedBox(height: 12),
-                _buildRequirementItem('Chiều cao tối thiểu: Nam 160cm, Nữ 155cm'),
+                _buildRequirementItem(
+                    'Chiều cao tối thiểu: Nam 160cm, Nữ 155cm'),
                 const SizedBox(height: 8),
                 _buildRequirementItem('Cân nặng phù hợp với chiều cao'),
                 const SizedBox(height: 8),
-                _buildRequirementItem('Sức khỏe tốt, không mắc bệnh truyền nhiễm'),
+                _buildRequirementItem(
+                    'Sức khỏe tốt, không mắc bệnh truyền nhiễm'),
                 const SizedBox(height: 8),
-                _buildRequirementItem('Có hộ chiếu còn hiệu lực tối thiểu 6 tháng'),
+                _buildRequirementItem(
+                    'Có hộ chiếu còn hiệu lực tối thiểu 6 tháng'),
               ],
             ),
           ),

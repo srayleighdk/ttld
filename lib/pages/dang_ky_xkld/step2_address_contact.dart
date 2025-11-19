@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ttld/models/hoso_xkld/hoso_xkld_model.dart';
+import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
 
 class XKLDStep2AddressContact extends StatefulWidget {
   final GlobalKey<FormState> formKey;
@@ -39,8 +40,7 @@ class _XKLDStep2AddressContactState extends State<XKLDStep2AddressContact> {
         TextEditingController(text: widget.formData.dkxkldHokhauthuongtru);
     _diachitamtruController =
         TextEditingController(text: widget.formData.dkxkldDiachitamtru);
-    _thonBuonController =
-        TextEditingController(text: widget.formData.thonBuon);
+    _thonBuonController = TextEditingController(text: widget.formData.thonBuon);
     _dienthoailienheController =
         TextEditingController(text: widget.formData.dienthoailienhe);
 
@@ -97,23 +97,13 @@ class _XKLDStep2AddressContactState extends State<XKLDStep2AddressContact> {
           ),
           const SizedBox(height: 16),
 
-          TextFormField(
+          CustomTextField(
             controller: _nguyenquanController,
-            decoration: InputDecoration(
-              labelText: 'Nguyên quán *',
-              hintText: 'Nhập nguyên quán',
-              prefixIcon: const Icon(FontAwesomeIcons.house, size: 18),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
+            labelText: 'Nguyên quán *',
+            hintText: 'Nhập nguyên quán',
+            prefixIcon: const Icon(FontAwesomeIcons.house, size: 18),
             maxLines: 2,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Vui lòng nhập nguyên quán';
-              }
-              return null;
-            },
+            validator: 'not_empty',
             onChanged: (_) => _updateFormData(),
           ),
           const SizedBox(height: 24),
@@ -127,38 +117,23 @@ class _XKLDStep2AddressContactState extends State<XKLDStep2AddressContact> {
           ),
           const SizedBox(height: 16),
 
-          TextFormField(
+          CustomTextField(
             controller: _hokhauController,
-            decoration: InputDecoration(
-              labelText: 'Địa chỉ hộ khẩu thường trú *',
-              hintText: 'Nhập địa chỉ hộ khẩu',
-              prefixIcon: const Icon(FontAwesomeIcons.home, size: 18),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
+            labelText: 'Địa chỉ hộ khẩu thường trú *',
+            hintText: 'Nhập địa chỉ hộ khẩu',
+            prefixIcon: const Icon(FontAwesomeIcons.home, size: 18),
             maxLines: 2,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Vui lòng nhập địa chỉ hộ khẩu';
-              }
-              return null;
-            },
+            validator: 'not_empty',
             onChanged: (_) => _updateFormData(),
           ),
           const SizedBox(height: 16),
 
           // Thôn/Buôn
-          TextFormField(
+          CustomTextField(
             controller: _thonBuonController,
-            decoration: InputDecoration(
-              labelText: 'Thôn/Buôn/Ấp',
-              hintText: 'Nhập thôn/buôn/ấp',
-              prefixIcon: const Icon(FontAwesomeIcons.streetView, size: 18),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
+            labelText: 'Thôn/Buôn/Ấp',
+            hintText: 'Nhập thôn/buôn/ấp',
+            prefixIcon: const Icon(FontAwesomeIcons.streetView, size: 18),
             onChanged: (_) => _updateFormData(),
           ),
           const SizedBox(height: 16),
@@ -258,16 +233,11 @@ class _XKLDStep2AddressContactState extends State<XKLDStep2AddressContact> {
           ),
           const SizedBox(height: 16),
 
-          TextFormField(
+          CustomTextField(
             controller: _diachitamtruController,
-            decoration: InputDecoration(
-              labelText: 'Địa chỉ tạm trú',
-              hintText: 'Nhập địa chỉ tạm trú (nếu khác hộ khẩu)',
-              prefixIcon: const Icon(FontAwesomeIcons.locationPin, size: 18),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
+            labelText: 'Địa chỉ tạm trú',
+            hintText: 'Nhập địa chỉ tạm trú (nếu khác hộ khẩu)',
+            prefixIcon: const Icon(FontAwesomeIcons.locationPin, size: 18),
             maxLines: 2,
             onChanged: (_) => _updateFormData(),
           ),
@@ -282,16 +252,11 @@ class _XKLDStep2AddressContactState extends State<XKLDStep2AddressContact> {
           ),
           const SizedBox(height: 16),
 
-          TextFormField(
+          CustomTextField(
             controller: _dienthoailienheController,
-            decoration: InputDecoration(
-              labelText: 'Số điện thoại liên hệ khẩn cấp',
-              hintText: 'Nhập số điện thoại người thân',
-              prefixIcon: const Icon(FontAwesomeIcons.phoneVolume, size: 18),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
+            labelText: 'Số điện thoại liên hệ khẩn cấp',
+            hintText: 'Nhập số điện thoại người thân',
+            prefixIcon: const Icon(FontAwesomeIcons.phoneVolume, size: 18),
             keyboardType: TextInputType.phone,
             onChanged: (_) => _updateFormData(),
           ),

@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
+import 'package:ttld/helppers/map_help.dart';
 import 'package:ttld/models/hoso_xkld/hoso_xkld_model.dart';
 import 'package:ttld/models/dan_toc_model.dart';
 import 'package:ttld/models/ton_giao_model.dart';
+import 'package:ttld/models/trinh_do_hoc_van_model.dart';
+import 'package:ttld/models/ngoai_ngu_model.dart';
+import 'package:ttld/widgets/field/custom_picker_map.dart';
 import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
+import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
+import 'package:ttld/widgets/field/custom_pick_datetime_grok.dart';
 import 'package:ttld/core/di/injection.dart';
 
 class XKLDStep1PersonalInfo extends StatefulWidget {
@@ -27,13 +32,13 @@ class _XKLDStep1PersonalInfoState extends State<XKLDStep1PersonalInfo> {
   late TextEditingController _hotenController;
   late TextEditingController _emailController;
   late TextEditingController _dienthoaiController;
-  late TextEditingController _ngaysinhController;
   late TextEditingController _soCmndController;
-  late TextEditingController _ngaycapController;
   late TextEditingController _noicapController;
   late TextEditingController _sohochieuController;
 
   int? _selectedGioitinh;
+  int? _selectedTrinhdohocvan;
+  int? _selectedNgoaingudaotao;
   String? _selectedDantoc;
   String? _selectedTongiao;
   DateTime? _selectedNgaysinh;
@@ -53,22 +58,9 @@ class _XKLDStep1PersonalInfoState extends State<XKLDStep1PersonalInfo> {
     _sohochieuController =
         TextEditingController(text: widget.formData.dkxkldSohochieu);
 
-    _ngaysinhController = TextEditingController(
-      text: widget.formData.dkxkldNgaysinh != null
-          ? DateFormat('dd/MM/yyyy').format(
-              DateTime.parse(widget.formData.dkxkldNgaysinh!),
-            )
-          : '',
-    );
-    _ngaycapController = TextEditingController(
-      text: widget.formData.dkxkldNgaycap != null
-          ? DateFormat('dd/MM/yyyy').format(
-              DateTime.parse(widget.formData.dkxkldNgaycap!),
-            )
-          : '',
-    );
-
     _selectedGioitinh = widget.formData.dkxkldGioitinh;
+    _selectedTrinhdohocvan = widget.formData.dkxklddmTrinhdohocvan;
+    _selectedNgoaingudaotao = widget.formData.dkxklddmNgoaingudaotao;
     _selectedDantoc = widget.formData.dkxkldDantoc;
     _selectedTongiao = widget.formData.dkxkldTongiao;
 
@@ -91,33 +83,12 @@ class _XKLDStep1PersonalInfoState extends State<XKLDStep1PersonalInfo> {
       dkxkldNoicap: _noicapController.text,
       dkxkldSohochieu: _sohochieuController.text,
       dkxkldGioitinh: _selectedGioitinh,
+      dkxklddmTrinhdohocvan: _selectedTrinhdohocvan,
+      dkxklddmNgoaingudaotao: _selectedNgoaingudaotao,
       dkxkldDantoc: _selectedDantoc,
       dkxkldTongiao: _selectedTongiao,
     );
     widget.onDataChanged(updatedData);
-  }
-
-  Future<void> _selectDate(BuildContext context, bool isBirthDate) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: isBirthDate
-          ? (_selectedNgaysinh ?? DateTime(1990))
-          : (_selectedNgaycap ?? DateTime.now()),
-      firstDate: DateTime(1950),
-      lastDate: DateTime.now(),
-    );
-    if (picked != null) {
-      setState(() {
-        if (isBirthDate) {
-          _selectedNgaysinh = picked;
-          _ngaysinhController.text = DateFormat('dd/MM/yyyy').format(picked);
-        } else {
-          _selectedNgaycap = picked;
-          _ngaycapController.text = DateFormat('dd/MM/yyyy').format(picked);
-        }
-        _updateFormData();
-      });
-    }
   }
 
   @override
@@ -146,124 +117,134 @@ class _XKLDStep1PersonalInfoState extends State<XKLDStep1PersonalInfo> {
           const SizedBox(height: 24),
 
           // Họ tên
-          TextFormField(
+          CustomTextField(
             controller: _hotenController,
-            decoration: InputDecoration(
-              labelText: 'Họ và tên *',
-              hintText: 'Nhập họ và tên đầy đủ',
-              prefixIcon: const Icon(FontAwesomeIcons.user, size: 18),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Vui lòng nhập họ và tên';
-              }
-              return null;
-            },
+            labelText: 'Họ và tên *',
+            hintText: 'Nhập họ và tên đầy đủ',
+            prefixIcon: const Icon(FontAwesomeIcons.user, size: 18),
+            validator: 'not_empty',
             onChanged: (_) => _updateFormData(),
           ),
           const SizedBox(height: 16),
 
           // Ngày sinh
-          TextFormField(
-            controller: _ngaysinhController,
-            readOnly: true,
-            decoration: InputDecoration(
-              labelText: 'Ngày sinh *',
-              hintText: 'Chọn ngày sinh',
-              prefixIcon: const Icon(FontAwesomeIcons.calendar, size: 18),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
+          CustomPickDateTimeGrok(
+            labelText: 'Ngày sinh *',
+            hintText: 'Chọn ngày sinh',
+            prefixIcon: const Icon(FontAwesomeIcons.calendar, size: 18),
+            initialValue: widget.formData.dkxkldNgaysinh,
             validator: (value) {
-              if (value == null || value.isEmpty) {
+              if (value == null) {
                 return 'Vui lòng chọn ngày sinh';
               }
               return null;
             },
-            onTap: () => _selectDate(context, true),
+            onChanged: (value) {
+              setState(() {
+                if (value != null) {
+                  _selectedNgaysinh = DateTime.parse(value);
+                } else {
+                  _selectedNgaysinh = null;
+                }
+                _updateFormData();
+              });
+            },
           ),
           const SizedBox(height: 16),
 
           // Giới tính
-          DropdownButtonFormField<int>(
-            value: _selectedGioitinh,
-            decoration: InputDecoration(
-              labelText: 'Giới tính *',
-              prefixIcon: const Icon(FontAwesomeIcons.venusMars, size: 18),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            items: const [
-              DropdownMenuItem(value: 0, child: Text('Nữ')),
-              DropdownMenuItem(value: 1, child: Text('Nam')),
-            ],
+          CustomPickerMap(
+              label: const Text('Giới tính *'),
+              items: gioiTinhOptions,
+              selectedItem: _selectedGioitinh,
+              onChanged: (value) {
+                setState(() {
+                  _selectedGioitinh = value;
+                  _updateFormData();
+                });
+              }),
+          // DropdownButtonFormField<int>(
+          //   value: _selectedGioitinh,
+          //   decoration: InputDecoration(
+          //     labelText: 'Giới tính *',
+          //     prefixIcon: const Icon(FontAwesomeIcons.venusMars, size: 18),
+          //     border: OutlineInputBorder(
+          //       borderRadius: BorderRadius.circular(12),
+          //     ),
+          //   ),
+          //   items: const [
+          //     DropdownMenuItem(value: 0, child: Text('Nữ')),
+          //     DropdownMenuItem(value: 1, child: Text('Nam')),
+          //   ],
+          //   onChanged: (value) {
+          //     setState(() {
+          //       _selectedGioitinh = value;
+          //       _updateFormData();
+          //     });
+          //   },
+          //   validator: (value) {
+          //     if (value == null) {
+          //       return 'Vui lòng chọn giới tính';
+          //     }
+          //     return null;
+          //   },
+          // ),
+          const SizedBox(height: 16),
+
+          // Trình độ học vấn
+          GenericPicker<TrinhDoHocVan>(
+            label: 'Trình độ học vấn',
+            hintText: 'Chọn trình độ học vấn',
+            items: locator<List<TrinhDoHocVan>>(),
+            initialValue: _selectedTrinhdohocvan,
             onChanged: (value) {
               setState(() {
-                _selectedGioitinh = value;
+                _selectedTrinhdohocvan = value?.id is int
+                    ? value?.id
+                    : int.tryParse(value?.id?.toString() ?? '');
                 _updateFormData();
               });
             },
-            validator: (value) {
-              if (value == null) {
-                return 'Vui lòng chọn giới tính';
-              }
-              return null;
+          ),
+          const SizedBox(height: 16),
+
+          // Ngoại ngữ
+          GenericPicker<NgoaiNgu>(
+            label: 'Ngoại ngữ',
+            hintText: 'Chọn ngoại ngữ',
+            items: locator<List<NgoaiNgu>>(),
+            initialValue: _selectedNgoaingudaotao,
+            onChanged: (value) {
+              setState(() {
+                _selectedNgoaingudaotao = value?.id is int
+                    ? value?.id
+                    : int.tryParse(value?.id?.toString() ?? '');
+                _updateFormData();
+              });
             },
           ),
           const SizedBox(height: 16),
 
           // Email
-          TextFormField(
+          CustomTextField(
             controller: _emailController,
-            decoration: InputDecoration(
-              labelText: 'Email *',
-              hintText: 'Nhập địa chỉ email',
-              prefixIcon: const Icon(FontAwesomeIcons.envelope, size: 18),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
+            labelText: 'Email *',
+            hintText: 'Nhập địa chỉ email',
+            prefixIcon: const Icon(FontAwesomeIcons.envelope, size: 18),
             keyboardType: TextInputType.emailAddress,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Vui lòng nhập email';
-              }
-              if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                  .hasMatch(value)) {
-                return 'Email không hợp lệ';
-              }
-              return null;
-            },
+            validator: 'email',
             onChanged: (_) => _updateFormData(),
           ),
           const SizedBox(height: 16),
 
           // Số điện thoại
-          TextFormField(
+          CustomTextField(
             controller: _dienthoaiController,
-            decoration: InputDecoration(
-              labelText: 'Số điện thoại *',
-              hintText: 'Nhập số điện thoại',
-              prefixIcon: const Icon(FontAwesomeIcons.phone, size: 18),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
+            labelText: 'Số điện thoại *',
+            hintText: 'Nhập số điện thoại',
+            prefixIcon: const Icon(FontAwesomeIcons.phone, size: 18),
             keyboardType: TextInputType.phone,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Vui lòng nhập số điện thoại';
-              }
-              if (value.length < 10) {
-                return 'Số điện thoại không hợp lệ';
-              }
-              return null;
-            },
+            validator: 'phone',
             onChanged: (_) => _updateFormData(),
           ),
           const SizedBox(height: 24),
@@ -278,69 +259,52 @@ class _XKLDStep1PersonalInfoState extends State<XKLDStep1PersonalInfo> {
           const SizedBox(height: 16),
 
           // Số CMND/CCCD
-          TextFormField(
+          CustomTextField(
             controller: _soCmndController,
-            decoration: InputDecoration(
-              labelText: 'Số CMND/CCCD *',
-              hintText: 'Nhập số CMND hoặc CCCD',
-              prefixIcon: const Icon(FontAwesomeIcons.idCard, size: 18),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
+            labelText: 'Số CMND/CCCD *',
+            hintText: 'Nhập số CMND hoặc CCCD',
+            prefixIcon: const Icon(FontAwesomeIcons.idCard, size: 18),
             keyboardType: TextInputType.number,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Vui lòng nhập số CMND/CCCD';
-              }
-              return null;
-            },
+            validator: 'not_empty',
             onChanged: (_) => _updateFormData(),
           ),
           const SizedBox(height: 16),
 
           // Ngày cấp
-          TextFormField(
-            controller: _ngaycapController,
-            readOnly: true,
-            decoration: InputDecoration(
-              labelText: 'Ngày cấp',
-              hintText: 'Chọn ngày cấp',
-              prefixIcon: const Icon(FontAwesomeIcons.calendar, size: 18),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            onTap: () => _selectDate(context, false),
+          CustomPickDateTimeGrok(
+            labelText: 'Ngày cấp',
+            hintText: 'Chọn ngày cấp',
+            prefixIcon: const Icon(FontAwesomeIcons.calendar, size: 18),
+            initialValue: widget.formData.dkxkldNgaycap,
+            onChanged: (value) {
+              setState(() {
+                if (value != null) {
+                  _selectedNgaycap = DateTime.parse(value);
+                } else {
+                  _selectedNgaycap = null;
+                }
+                _updateFormData();
+              });
+            },
           ),
           const SizedBox(height: 16),
 
           // Nơi cấp
-          TextFormField(
+          CustomTextField(
             controller: _noicapController,
-            decoration: InputDecoration(
-              labelText: 'Nơi cấp',
-              hintText: 'Nhập nơi cấp CMND/CCCD',
-              prefixIcon: const Icon(FontAwesomeIcons.locationDot, size: 18),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
+            labelText: 'Nơi cấp',
+            hintText: 'Nhập nơi cấp CMND/CCCD',
+            prefixIcon: const Icon(FontAwesomeIcons.locationDot, size: 18),
             onChanged: (_) => _updateFormData(),
           ),
           const SizedBox(height: 16),
 
           // Số hộ chiếu
-          TextFormField(
+          CustomTextField(
             controller: _sohochieuController,
-            decoration: InputDecoration(
-              labelText: 'Số hộ chiếu',
-              hintText: 'Nhập số hộ chiếu (nếu có)',
-              prefixIcon: const Icon(FontAwesomeIcons.passport, size: 18),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
+            labelText: 'Số hộ chiếu',
+            hintText: 'Nhập số hộ chiếu (nếu có)',
+            prefixIcon: const Icon(FontAwesomeIcons.passport, size: 18),
             onChanged: (_) => _updateFormData(),
           ),
           const SizedBox(height: 24),
@@ -360,10 +324,12 @@ class _XKLDStep1PersonalInfoState extends State<XKLDStep1PersonalInfo> {
             hintText: 'Chọn dân tộc',
             items: locator<List<DanToc>>(),
             initialValue: _selectedDantoc != null
-                ? locator<List<DanToc>>().firstWhere(
-                    (item) => item.displayName == _selectedDantoc,
-                    orElse: () => locator<List<DanToc>>().first,
-                  ).id
+                ? locator<List<DanToc>>()
+                    .firstWhere(
+                      (item) => item.displayName == _selectedDantoc,
+                      orElse: () => locator<List<DanToc>>().first,
+                    )
+                    .id
                 : null,
             onChanged: (value) {
               setState(() {
@@ -380,10 +346,12 @@ class _XKLDStep1PersonalInfoState extends State<XKLDStep1PersonalInfo> {
             hintText: 'Chọn tôn giáo',
             items: locator<List<TonGiao>>(),
             initialValue: _selectedTongiao != null
-                ? locator<List<TonGiao>>().firstWhere(
-                    (item) => item.displayName == _selectedTongiao,
-                    orElse: () => locator<List<TonGiao>>().first,
-                  ).id
+                ? locator<List<TonGiao>>()
+                    .firstWhere(
+                      (item) => item.displayName == _selectedTongiao,
+                      orElse: () => locator<List<TonGiao>>().first,
+                    )
+                    .id
                 : null,
             onChanged: (value) {
               setState(() {
@@ -402,9 +370,7 @@ class _XKLDStep1PersonalInfoState extends State<XKLDStep1PersonalInfo> {
     _hotenController.dispose();
     _emailController.dispose();
     _dienthoaiController.dispose();
-    _ngaysinhController.dispose();
     _soCmndController.dispose();
-    _ngaycapController.dispose();
     _noicapController.dispose();
     _sohochieuController.dispose();
     super.dispose();

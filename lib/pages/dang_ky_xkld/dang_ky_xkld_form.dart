@@ -39,6 +39,7 @@ class _DangKyXKLDFormState extends State<DangKyXKLDForm> {
 
   late HosoXKLDModel _formData;
   bool _isSubmitting = false;
+  Function? _onSuccessCallback;
 
   @override
   void initState() {
@@ -49,6 +50,14 @@ class _DangKyXKLDFormState extends State<DangKyXKLDForm> {
           dkxkldUsername: '', // Should be filled with current user
           dkxkldDuyet: false,
         );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Get callback from extra
+    final state = GoRouterState.of(context);
+    _onSuccessCallback = state.extra as Function?;
   }
 
   void _updateFormData(HosoXKLDModel updatedData) {
@@ -76,6 +85,7 @@ class _DangKyXKLDFormState extends State<DangKyXKLDForm> {
       if (mounted) {
         ToastUtils.showSuccessToast(
             context, 'Đăng ký xuất khẩu lao động thành công!');
+        _onSuccessCallback?.call();
         context.pop();
       }
     } catch (e) {
@@ -195,7 +205,8 @@ class _DangKyXKLDFormState extends State<DangKyXKLDForm> {
                                       style: TextStyle(
                                         color: isCurrent
                                             ? theme.colorScheme.onPrimary
-                                            : theme.colorScheme.onSurfaceVariant,
+                                            : theme
+                                                .colorScheme.onSurfaceVariant,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),

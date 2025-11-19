@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ttld/models/hoso_xkld/hoso_xkld_model.dart';
+import 'package:ttld/models/quocgia/quocgia_model.dart';
+import 'package:ttld/models/doituong_chinhsach/doituong.dart';
+import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
+import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
+import 'package:ttld/core/di/injection.dart';
 
 class XKLDStep5JobPreferences extends StatefulWidget {
   final GlobalKey<FormState> formKey;
@@ -98,35 +103,16 @@ class _XKLDStep5JobPreferencesState extends State<XKLDStep5JobPreferences> {
           ),
           const SizedBox(height: 16),
 
-          DropdownButtonFormField<int>(
-            value: _selectedQuocgia,
-            decoration: InputDecoration(
-              labelText: 'Quốc gia *',
-              prefixIcon: const Icon(FontAwesomeIcons.earthAsia, size: 18),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            items: const [
-              DropdownMenuItem(value: 1, child: Text('Nhật Bản')),
-              DropdownMenuItem(value: 2, child: Text('Hàn Quốc')),
-              DropdownMenuItem(value: 3, child: Text('Đài Loan')),
-              DropdownMenuItem(value: 4, child: Text('Đức')),
-              DropdownMenuItem(value: 5, child: Text('Úc')),
-              DropdownMenuItem(value: 6, child: Text('Canada')),
-              DropdownMenuItem(value: 7, child: Text('Singapore')),
-              DropdownMenuItem(value: 8, child: Text('Malaysia')),
-              DropdownMenuItem(value: 9, child: Text('Khác')),
-            ],
-            validator: (value) {
-              if (value == null) {
-                return 'Vui lòng chọn quốc gia';
-              }
-              return null;
-            },
+          GenericPicker<QuocGia>(
+            label: 'Quốc gia *',
+            hintText: 'Chọn quốc gia',
+            items: locator<List<QuocGia>>(),
+            initialValue: _selectedQuocgia,
             onChanged: (value) {
               setState(() {
-                _selectedQuocgia = value;
+                _selectedQuocgia = value?.id is int
+                    ? value?.id
+                    : int.tryParse(value?.id?.toString() ?? '');
                 _updateFormData();
               });
             },
@@ -142,36 +128,21 @@ class _XKLDStep5JobPreferencesState extends State<XKLDStep5JobPreferences> {
           ),
           const SizedBox(height: 16),
 
-          TextFormField(
+          CustomTextField(
             controller: _nganhnghemongmuonController,
-            decoration: InputDecoration(
-              labelText: 'Ngành nghề mong muốn *',
-              hintText: 'VD: Xây dựng, Chế biến thực phẩm...',
-              prefixIcon: const Icon(FontAwesomeIcons.industry, size: 18),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Vui lòng nhập ngành nghề mong muốn';
-              }
-              return null;
-            },
+            labelText: 'Ngành nghề mong muốn *',
+            hintText: 'VD: Xây dựng, Chế biến thực phẩm...',
+            prefixIcon: const Icon(FontAwesomeIcons.industry, size: 18),
+            validator: 'not_empty',
             onChanged: (_) => _updateFormData(),
           ),
           const SizedBox(height: 16),
 
-          TextFormField(
+          CustomTextField(
             controller: _viecdanglamController,
-            decoration: InputDecoration(
-              labelText: 'Công việc hiện tại',
-              hintText: 'Nhập công việc đang làm',
-              prefixIcon: const Icon(FontAwesomeIcons.briefcase, size: 18),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
+            labelText: 'Công việc hiện tại',
+            hintText: 'Nhập công việc đang làm',
+            prefixIcon: const Icon(FontAwesomeIcons.briefcase, size: 18),
             onChanged: (_) => _updateFormData(),
           ),
           const SizedBox(height: 24),
@@ -243,32 +214,16 @@ class _XKLDStep5JobPreferencesState extends State<XKLDStep5JobPreferences> {
           ),
           const SizedBox(height: 16),
 
-          DropdownButtonFormField<int>(
-            value: _selectedDoituongchinhsach,
-            decoration: InputDecoration(
-              labelText: 'Đối tượng chính sách *',
-              prefixIcon: const Icon(FontAwesomeIcons.userShield, size: 18),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            items: const [
-              DropdownMenuItem(value: 1, child: Text('Người nghèo')),
-              DropdownMenuItem(value: 2, child: Text('Hộ cận nghèo')),
-              DropdownMenuItem(value: 3, child: Text('Dân tộc thiểu số')),
-              DropdownMenuItem(value: 4, child: Text('Người khuyết tật')),
-              DropdownMenuItem(value: 5, child: Text('Gia đình chính sách')),
-              DropdownMenuItem(value: 6, child: Text('Không thuộc đối tượng')),
-            ],
-            validator: (value) {
-              if (value == null) {
-                return 'Vui lòng chọn đối tượng chính sách';
-              }
-              return null;
-            },
+          GenericPicker<DoiTuong>(
+            label: 'Đối tượng chính sách *',
+            hintText: 'Chọn đối tượng chính sách',
+            items: locator<List<DoiTuong>>(),
+            initialValue: _selectedDoituongchinhsach,
             onChanged: (value) {
               setState(() {
-                _selectedDoituongchinhsach = value;
+                _selectedDoituongchinhsach = value?.id is int
+                    ? value?.id
+                    : int.tryParse(value?.id?.toString() ?? '');
                 _updateFormData();
               });
             },
@@ -284,16 +239,11 @@ class _XKLDStep5JobPreferencesState extends State<XKLDStep5JobPreferences> {
           ),
           const SizedBox(height: 16),
 
-          TextFormField(
+          CustomTextField(
             controller: _ghichuController,
-            decoration: InputDecoration(
-              labelText: 'Ghi chú thêm',
-              hintText: 'Thông tin thêm về nguyện vọng của bạn',
-              prefixIcon: const Icon(FontAwesomeIcons.noteSticky, size: 18),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
+            labelText: 'Ghi chú thêm',
+            hintText: 'Thông tin thêm về nguyện vọng của bạn',
+            prefixIcon: const Icon(FontAwesomeIcons.noteSticky, size: 18),
             maxLines: 4,
             onChanged: (_) => _updateFormData(),
           ),
