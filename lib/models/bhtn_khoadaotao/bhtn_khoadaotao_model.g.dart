@@ -10,6 +10,7 @@ _$BhtnKhoadaotaoImpl _$$BhtnKhoadaotaoImplFromJson(Map<String, dynamic> json) =>
     _$BhtnKhoadaotaoImpl(
       idKhoadaotao: (json['IdKhoadaotao'] as num?)?.toInt(),
       idcosodaotao: (json['Idcosodaotao'] as num?)?.toInt(),
+      idNgheDaoTao: (json['IdNgheDaoTao'] as num?)?.toInt(),
       name: json['Name'] as String?,
       idBhtn: json['IDBhtn'] as String?,
       hocphi: (json['Hocphi'] as num?)?.toDouble(),
@@ -21,6 +22,10 @@ _$BhtnKhoadaotaoImpl _$$BhtnKhoadaotaoImplFromJson(Map<String, dynamic> json) =>
           ? null
           : DateTime.parse(json['Updated'] as String),
       isDeleted: json['IsDeleted'] as bool?,
+      ngheDaoTao: json['ngheDaoTao'] == null
+          ? null
+          : NganhNgheDaoTaoInfo.fromJson(
+              json['ngheDaoTao'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$BhtnKhoadaotaoImplToJson(
@@ -28,6 +33,7 @@ Map<String, dynamic> _$$BhtnKhoadaotaoImplToJson(
     <String, dynamic>{
       'IdKhoadaotao': instance.idKhoadaotao,
       'Idcosodaotao': instance.idcosodaotao,
+      'IdNgheDaoTao': instance.idNgheDaoTao,
       'Name': instance.name,
       'IDBhtn': instance.idBhtn,
       'Hocphi': instance.hocphi,
@@ -37,4 +43,21 @@ Map<String, dynamic> _$$BhtnKhoadaotaoImplToJson(
       'PortalID': instance.portalId,
       'Updated': instance.updated?.toIso8601String(),
       'IsDeleted': instance.isDeleted,
+      'ngheDaoTao': instance.ngheDaoTao,
+    };
+
+_$NganhNgheDaoTaoInfoImpl _$$NganhNgheDaoTaoInfoImplFromJson(
+        Map<String, dynamic> json) =>
+    _$NganhNgheDaoTaoInfoImpl(
+      id: (json['id'] as num?)?.toInt(),
+      nnTen: json['nn_ten'] as String?,
+      bachoc: json['IdBachoc'] as String?,
+    );
+
+Map<String, dynamic> _$$NganhNgheDaoTaoInfoImplToJson(
+        _$NganhNgheDaoTaoInfoImpl instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'nn_ten': instance.nnTen,
+      'IdBachoc': instance.bachoc,
     };

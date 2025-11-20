@@ -108,9 +108,39 @@ class _DangKyXKLDFormState extends State<DangKyXKLDForm> {
         final shouldLoadDraft = await _showDraftDialog();
         print('👤 User chose to load draft: $shouldLoadDraft');
         if (shouldLoadDraft == true) {
-          setState(() {
-            _formData = draft;
-          });
+          // Merge draft with fresh prefill data to ensure critical fields are up-to-date
+          try {
+            print('🔄 Fetching fresh data to merge with draft...');
+            final freshData = await _apiService.getPrefillData();
+            if (freshData != null) {
+              // Merge: use draft for user-entered fields, fresh data for profile fields
+              setState(() {
+                _formData = draft.copyWith(
+                  // Override with fresh data from tblHoSoUngVien
+                  dkxkldHoten: freshData.dkxkldHoten,
+                  dkxkldNgaysinh: freshData.dkxkldNgaysinh,
+                  dkxkldEmail: freshData.dkxkldEmail,
+                  dkxkldDienthoai: freshData.dkxkldDienthoai,
+                  dkxkldSoCmnd: freshData.dkxkldSoCmnd,
+                  dkxkldNgaycap: freshData.dkxkldNgaycap,
+                  dkxkldNoicap: freshData.dkxkldNoicap,
+                  dkxkldGioitinh: freshData.dkxkldGioitinh,
+                  dkxkldDantoc: freshData.dkxkldDantoc,
+                );
+              });
+              print('✅ Merged draft with fresh data');
+            } else {
+              // If can't fetch fresh data, just use draft
+              setState(() {
+                _formData = draft;
+              });
+            }
+          } catch (e) {
+            print('⚠️ Error fetching fresh data, using draft only: $e');
+            setState(() {
+              _formData = draft;
+            });
+          }
           if (mounted) {
             ToastUtils.showSuccessToast(context, 'Đã tải bản nháp');
           }

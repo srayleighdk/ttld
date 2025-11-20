@@ -844,7 +844,10 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
           );
           
           // DEBUG: Log marriage status value before sending
-          print('🔍 Flutter sending uvHonnhanId: $_uvHonnhanId (type: ${_uvHonnhanId.runtimeType})');
+          // Send as string "true" or "false" for NestJS ValidationPipe to parse correctly
+          final marriageStatusValue = (_uvHonnhanId ?? false).toString();
+          print('🔍 Flutter _uvHonnhanId variable: $_uvHonnhanId (type: ${_uvHonnhanId.runtimeType})');
+          print('🔍 Flutter marriageStatusValue to send: $marriageStatusValue (type: ${marriageStatusValue.runtimeType})');
           
           FormData formData = FormData.fromMap({
             'id': originalNtv.id,
@@ -907,7 +910,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
             'ngayduyet': _ngayduyet,
             'uvTinhtrangtantatId': _uvTinhtrangtantatId ?? 0,
             'idDanToc': _idDanToc ?? 0,
-            'uvHonnhanId': (_uvHonnhanId ?? false) ? 1 : 0,
+            'uvHonnhanId': marriageStatusValue,
             'uvnvVitrimongmuonid': _uvnvVitrimongmuonId ?? 0,
             'uvDoituongchinhsachId': _uvDoiTuongChingSachId ?? 0,
             'uvnvHinhthuccongtyId': _uvnvHinhthuccongtyId ?? 0,
@@ -930,6 +933,15 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
                 contentType: MediaType('image', 'png'),
               ),
           });
+          
+          // DEBUG: Log what's in the FormData
+          print('🔍 FormData fields:');
+          formData.fields.forEach((field) {
+            if (field.key == 'uvHonnhanId') {
+              print('🔍   ${field.key}: ${field.value} (type: ${field.value.runtimeType})');
+            }
+          });
+          
           if (!mounted) return;
           locator<NTVBloc>().add(UpdateTblHoSoUngVien(updatedNtv.id, formData));
         } else {

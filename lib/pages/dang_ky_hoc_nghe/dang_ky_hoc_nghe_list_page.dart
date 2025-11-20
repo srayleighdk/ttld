@@ -1,5 +1,5 @@
-import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:ttld/core/di/injection.dart';
@@ -13,9 +13,6 @@ import 'package:ttld/models/bhtn_khoadaotao/bhtn_khoadaotao_model.dart';
 import 'package:ttld/models/dky_hoc_nghe/dky_hoc_nghe_model.dart';
 import 'package:ttld/models/nganh_nghe_daotao.dart';
 import 'package:ttld/widgets/common/custom_app_bar.dart';
-import 'package:ttld/core/design_system/widgets/app_button.dart';
-import 'package:ttld/core/design_system/widgets/app_card.dart';
-import 'package:ttld/core/design_system/app_spacing.dart';
 
 class DangKyHocNgheListPage extends StatefulWidget {
   const DangKyHocNgheListPage({super.key});
@@ -210,526 +207,618 @@ class _DangKyHocNgheListPageState extends State<DangKyHocNgheListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    
     if (_isLoading) {
       return Scaffold(
-        appBar: CustomAppBar(title: 'DANH SÁCH ĐĂNG KÝ HỌC NGHỀ'),
+        appBar: const CustomAppBar(
+          title: 'Đăng ký học nghề',
+          useGradient: true,
+        ),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
 
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: theme.colorScheme.surface,
       appBar: CustomAppBar(
-        title: 'DANH SÁCH ĐĂNG KÝ HỌC NGHỀ',
+        title: 'Đăng ký học nghề',
+        useGradient: true,
         actions: [
-          Flexible(
-            child: AppButton.primary(
-              text: 'Đăng ký',
-              size: AppButtonSize.small,
-              leadingIcon: const Icon(Icons.add, size: 18),
-              onPressed: _navigateToRegister,
-              isFullWidth: false,
-            ),
+          IconButton(
+            icon: const Icon(FontAwesomeIcons.plus, size: 18),
+            onPressed: _navigateToRegister,
+            tooltip: 'Đăng ký mới',
           ),
-          const SizedBox(width: 8),
-          Flexible(
-            child: AppButton.outline(
-              text: 'Trở về',
-              size: AppButtonSize.small,
-              leadingIcon: const Icon(Icons.home, size: 18),
-              onPressed: () => context.pop(),
-              isFullWidth: false,
-            ),
-          ),
-          const SizedBox(width: 16),
         ],
       ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          // Use responsive layout: stack on small screens, row on large screens
-          if (constraints.maxWidth < 1200) {
-            // Stack layout for smaller screens
-            return SingleChildScrollView(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              theme.colorScheme.primary.withAlpha(25),
+              theme.colorScheme.surface,
+            ],
+          ),
+        ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            if (constraints.maxWidth < 900) {
+              return _buildMobileLayout(theme);
+            } else {
+              return _buildDesktopLayout(theme);
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMobileLayout(ThemeData theme) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _buildRegistrationsList(theme),
+          const SizedBox(height: 16),
+          _buildNganhNgheCard(theme),
+          const SizedBox(height: 16),
+          _buildKhoaDaoTaoCard(theme),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDesktopLayout(ThemeData theme) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          flex: 2,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: _buildRegistrationsList(theme),
+          ),
+        ),
+        SizedBox(
+          width: 320,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(0, 16, 16, 16),
+            child: Column(
+              children: [
+                _buildNganhNgheCard(theme),
+                const SizedBox(height: 16),
+                _buildKhoaDaoTaoCard(theme),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNganhNgheCard(ThemeData theme) {
+    return Container(
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: theme.colorScheme.shadow.withAlpha(13),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  theme.colorScheme.primary,
+                  theme.colorScheme.primary.withAlpha(204),
+                ],
+              ),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  FontAwesomeIcons.graduationCap,
+                  color: theme.colorScheme.onPrimary,
+                  size: 20,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    'Ngành nghề đào tạo',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onPrimary,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            constraints: const BoxConstraints(maxHeight: 400),
+            child: _nganhNgheList.isEmpty
+                ? Padding(
+                    padding: const EdgeInsets.all(32),
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            FontAwesomeIcons.folderOpen,
+                            size: 48,
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'Không có dữ liệu',
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                : ListView.separated(
+                    shrinkWrap: true,
+                    itemCount: _nganhNgheList.length,
+                    separatorBuilder: (_, __) => Divider(
+                      height: 1,
+                      color: theme.colorScheme.outlineVariant,
+                    ),
+                    itemBuilder: (context, index) {
+                      final item = _nganhNgheList[index];
+                      return ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        title: Text(
+                          item.nnTen,
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                        trailing: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.primaryContainer,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            item.bachoc,
+                            style: theme.textTheme.labelSmall?.copyWith(
+                              color: theme.colorScheme.onPrimaryContainer,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildKhoaDaoTaoCard(ThemeData theme) {
+    return Container(
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: theme.colorScheme.shadow.withAlpha(13),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  theme.colorScheme.secondary,
+                  theme.colorScheme.secondary.withAlpha(204),
+                ],
+              ),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  FontAwesomeIcons.chalkboardTeacher,
+                  color: theme.colorScheme.onSecondary,
+                  size: 20,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    'Khóa đào tạo',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onSecondary,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            constraints: const BoxConstraints(maxHeight: 400),
+            child: _khoaDaoTaoList.isEmpty
+                ? Padding(
+                    padding: const EdgeInsets.all(32),
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            FontAwesomeIcons.folderOpen,
+                            size: 48,
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'Không có dữ liệu',
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                : ListView.separated(
+                    shrinkWrap: true,
+                    itemCount: _khoaDaoTaoList.length,
+                    separatorBuilder: (_, __) => Divider(
+                      height: 1,
+                      color: theme.colorScheme.outlineVariant,
+                    ),
+                    itemBuilder: (context, index) {
+                      final item = _khoaDaoTaoList[index];
+                      return ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        leading: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.secondaryContainer,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Icon(
+                            FontAwesomeIcons.school,
+                            size: 16,
+                            color: theme.colorScheme.onSecondaryContainer,
+                          ),
+                        ),
+                        title: Text(
+                          item.name ?? 'N/A',
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                        subtitle: Text(
+                          item.ngheDaoTao?.nnTen ?? 'Trung tâm đào tạo',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRegistrationsList(ThemeData theme) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surface,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.shadow.withAlpha(13),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Icon(
+                FontAwesomeIcons.clipboardList,
+                color: theme.colorScheme.primary,
+                size: 24,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Danh sách đăng ký',
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      '${_registrations.length} đăng ký',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
+        if (_registrations.isEmpty)
+          Container(
+            padding: const EdgeInsets.all(48),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surface,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: theme.colorScheme.shadow.withAlpha(13),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Center(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Main content first
-                  Container(
-                    margin: const EdgeInsets.all(16),
-                    child: _buildMainContent(isScrollable: true),
+                  Icon(
+                    FontAwesomeIcons.folderOpen,
+                    size: 64,
+                    color: theme.colorScheme.onSurfaceVariant,
                   ),
-                  // Sidebars below
-                  Row(
+                  const SizedBox(height: 16),
+                  Text(
+                    'Chưa có đăng ký nào',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Nhấn nút "+" để tạo đăng ký mới',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )
+        else
+          ..._registrations.map((registration) => _buildRegistrationCard(registration, theme)),
+      ],
+    );
+  }
+
+  Widget _buildRegistrationCard(DkyHocNghe registration, ThemeData theme) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: theme.colorScheme.shadow.withAlpha(13),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        theme.colorScheme.primary,
+                        theme.colorScheme.primary.withAlpha(204),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(
+                    FontAwesomeIcons.graduationCap,
+                    color: theme.colorScheme.onPrimary,
+                    size: 20,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: Container(
-                          margin: const EdgeInsets.only(
-                              left: 16, right: 8, bottom: 16),
-                          child: _buildNganhNgheList(isScrollable: true),
+                      Text(
+                        registration.tenNghedaotao ?? 'N/A',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Expanded(
-                        child: Container(
-                          margin: const EdgeInsets.only(
-                              left: 8, right: 16, bottom: 16),
-                          child: _buildKhoaDaoTaoList(isScrollable: true),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Icon(
+                            FontAwesomeIcons.calendar,
+                            size: 12,
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            _formatDate(registration.ngaydangky),
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: registration.duyetdangky
+                        ? Colors.green.withAlpha(51)
+                        : Colors.orange.withAlpha(51),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        registration.duyetdangky
+                            ? FontAwesomeIcons.circleCheck
+                            : FontAwesomeIcons.clock,
+                        size: 12,
+                        color: registration.duyetdangky ? Colors.green : Colors.orange,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        _getApprovalText(registration),
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: registration.duyetdangky ? Colors.green : Colors.orange,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ],
                   ),
-                ],
-              ),
-            );
-          } else {
-            // Row layout for larger screens
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Left sidebar - Training Occupations
-                Flexible(
-                  flex: 1,
-                  child: Container(
-                    constraints: const BoxConstraints(maxWidth: 300),
-                    margin: const EdgeInsets.all(16),
-                    child: _buildNganhNgheList(),
-                  ),
-                ),
-                // Main content - Table
-                Expanded(
-                  flex: 3,
-                  child: Container(
-                    margin:
-                        const EdgeInsets.only(top: 16, right: 16, bottom: 16),
-                    child: _buildMainContent(),
-                  ),
-                ),
-                // Right sidebar - Training Courses
-                Flexible(
-                  flex: 1,
-                  child: Container(
-                    constraints: const BoxConstraints(maxWidth: 300),
-                    margin: const EdgeInsets.all(16),
-                    child: _buildKhoaDaoTaoList(),
-                  ),
                 ),
               ],
-            );
-          }
-        },
-      ),
-    );
-  }
-
-  Widget _buildNganhNgheList({bool isScrollable = false}) {
-    return AppCard.elevated(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: isScrollable ? MainAxisSize.min : MainAxisSize.max,
-        children: [
-          Text(
-            'DANH SÁCH NGÀNH NGHỀ ĐÀO TẠO',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red[700],
-                ),
+            ),
           ),
-          const SizedBox(height: AppSpacing.lg),
-          isScrollable
-              ? SizedBox(
-                  height: 300,
-                  child: _nganhNgheList.isEmpty
-                      ? const Center(child: Text('Không có dữ liệu'))
-                      : ListView.separated(
-                          itemCount: _nganhNgheList.length,
-                          separatorBuilder: (_, __) => const Divider(height: 1),
-                          itemBuilder: (context, index) {
-                            final item = _nganhNgheList[index];
-                            return ListTile(
-                              dense: true,
-                              title: Text(
-                                item.nnTen,
-                                style: const TextStyle(fontSize: 14),
-                              ),
-                              trailing: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[300],
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Text(
-                                  item.bachoc,
-                                  style: const TextStyle(fontSize: 12),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                )
-              : Expanded(
-                  child: _nganhNgheList.isEmpty
-                      ? const Center(child: Text('Không có dữ liệu'))
-                      : ListView.separated(
-                          itemCount: _nganhNgheList.length,
-                          separatorBuilder: (_, __) => const Divider(height: 1),
-                          itemBuilder: (context, index) {
-                            final item = _nganhNgheList[index];
-                            return ListTile(
-                              dense: true,
-                              title: Text(
-                                item.nnTen,
-                                style: const TextStyle(fontSize: 14),
-                              ),
-                              trailing: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[300],
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Text(
-                                  item.bachoc,
-                                  style: const TextStyle(fontSize: 12),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildKhoaDaoTaoList({bool isScrollable = false}) {
-    return AppCard.elevated(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: isScrollable ? MainAxisSize.min : MainAxisSize.max,
-        children: [
-          Text(
-            'DANH SÁCH KHÓA ĐÀO TẠO',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red[700],
-                ),
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          isScrollable
-              ? SizedBox(
-                  height: 300,
-                  child: _khoaDaoTaoList.isEmpty
-                      ? const Center(child: Text('Không có dữ liệu'))
-                      : ListView.separated(
-                          itemCount: _khoaDaoTaoList.length,
-                          separatorBuilder: (_, __) => const Divider(height: 1),
-                          itemBuilder: (context, index) {
-                            final item = _khoaDaoTaoList[index];
-                            return ListTile(
-                              dense: true,
-                              title: Text(
-                                item.name ?? 'N/A',
-                                style: const TextStyle(fontSize: 14),
-                              ),
-                              trailing: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[300],
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: const Text(
-                                  'Trung tâm',
-                                  style: TextStyle(fontSize: 12),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                )
-              : Expanded(
-                  child: _khoaDaoTaoList.isEmpty
-                      ? const Center(child: Text('Không có dữ liệu'))
-                      : ListView.separated(
-                          itemCount: _khoaDaoTaoList.length,
-                          separatorBuilder: (_, __) => const Divider(height: 1),
-                          itemBuilder: (context, index) {
-                            final item = _khoaDaoTaoList[index];
-                            return ListTile(
-                              dense: true,
-                              title: Text(
-                                item.name ?? 'N/A',
-                                style: const TextStyle(fontSize: 14),
-                              ),
-                              trailing: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[300],
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: const Text(
-                                  'Trung tâm',
-                                  style: TextStyle(fontSize: 12),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMainContent({bool isScrollable = false}) {
-    return AppCard.elevated(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: isScrollable ? MainAxisSize.min : MainAxisSize.max,
-        children: [
-          // Breadcrumb
+          Divider(height: 1, color: theme.colorScheme.outlineVariant),
           Padding(
-            padding: const EdgeInsets.only(bottom: 16),
-            child: Row(
+            padding: const EdgeInsets.all(16),
+            child: Column(
               children: [
-                Text(
-                  'HOME',
-                  style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                _buildInfoRow(
+                  theme,
+                  FontAwesomeIcons.school,
+                  'Cơ sở đào tạo',
+                  registration.tenCosodaotao ?? 'N/A',
+                ),
+                const SizedBox(height: 12),
+                _buildInfoRow(
+                  theme,
+                  FontAwesomeIcons.certificate,
+                  'Trình độ',
+                  registration.trinhDoDaoTao ?? 'N/A',
+                ),
+                const SizedBox(height: 12),
+                _buildInfoRow(
+                  theme,
+                  FontAwesomeIcons.circleInfo,
+                  'Trạng thái',
+                  _getStatusText(registration),
+                ),
+              ],
+            ),
+          ),
+          Divider(height: 1, color: theme.colorScheme.outlineVariant),
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton.icon(
+                  onPressed: () => _viewDetails(registration),
+                  icon: const Icon(FontAwesomeIcons.eye, size: 14),
+                  label: const Text('Chi tiết'),
+                  style: TextButton.styleFrom(
+                    foregroundColor: theme.colorScheme.primary,
+                  ),
                 ),
                 const SizedBox(width: 8),
-                Icon(Icons.chevron_right, size: 16, color: Colors.grey[600]),
-                const SizedBox(width: 8),
-                Text(
-                  'DANH SÁCH ĐĂNG KÝ HỌC NGHỀ',
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+                TextButton.icon(
+                  onPressed: () => _deleteRegistration(registration.id),
+                  icon: const Icon(FontAwesomeIcons.trash, size: 14),
+                  label: const Text('Xóa'),
+                  style: TextButton.styleFrom(
+                    foregroundColor: theme.colorScheme.error,
                   ),
                 ),
               ],
             ),
           ),
-          // Table
-          isScrollable
-              ? SizedBox(
-                  height: 400,
-                  child: _registrations.isEmpty
-                      ? const Center(child: Text('Không có dữ liệu đăng ký'))
-                      : SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: PaginatedDataTable2(
-                            header: const Text('Danh sách đăng ký học nghề'),
-                            rowsPerPage: _rowsPerPage,
-                            availableRowsPerPage: const [10, 20, 50],
-                            onRowsPerPageChanged: (value) {
-                              setState(() {
-                                _currentPage = 1;
-                              });
-                              _loadRegistrations();
-                            },
-                            onPageChanged: (page) {
-                              setState(() {
-                                _currentPage = (page ~/ _rowsPerPage) + 1;
-                              });
-                              _loadRegistrations();
-                            },
-                            columnSpacing: 12,
-                            horizontalMargin: 12,
-                            minWidth: 800,
-                            columns: const [
-                              DataColumn2(
-                                label: Text('Ngày'),
-                                size: ColumnSize.S,
-                              ),
-                              DataColumn2(
-                                label: Text('Ngành nghề đăng ký'),
-                                size: ColumnSize.L,
-                              ),
-                              DataColumn2(
-                                label: Text('Cơ sở đào tạo'),
-                                size: ColumnSize.L,
-                              ),
-                              DataColumn2(
-                                label: Text('Trình độ đào tạo'),
-                                size: ColumnSize.M,
-                              ),
-                              DataColumn2(
-                                label: Text('Duyệt đăng ký'),
-                                size: ColumnSize.M,
-                              ),
-                              DataColumn2(
-                                label: Text('Trạng thái'),
-                                size: ColumnSize.M,
-                              ),
-                              DataColumn2(
-                                label: Text('Thao tác'),
-                                size: ColumnSize.M,
-                              ),
-                            ],
-                            source: _RegistrationDataSource(
-                              _registrations,
-                              onViewDetails: _viewDetails,
-                              onDelete: _deleteRegistration,
-                              formatDate: _formatDate,
-                              getStatusText: _getStatusText,
-                              getApprovalText: _getApprovalText,
-                            ),
-                          ),
-                        ),
-                )
-              : Expanded(
-                  child: _registrations.isEmpty
-                      ? const Center(child: Text('Không có dữ liệu đăng ký'))
-                      : SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: PaginatedDataTable2(
-                            header: const Text('Danh sách đăng ký học nghề'),
-                            rowsPerPage: _rowsPerPage,
-                            availableRowsPerPage: const [10, 20, 50],
-                            onRowsPerPageChanged: (value) {
-                              setState(() {
-                                _currentPage = 1;
-                              });
-                              _loadRegistrations();
-                            },
-                            onPageChanged: (page) {
-                              setState(() {
-                                _currentPage = (page ~/ _rowsPerPage) + 1;
-                              });
-                              _loadRegistrations();
-                            },
-                            columnSpacing: 12,
-                            horizontalMargin: 12,
-                            minWidth: 800,
-                            columns: const [
-                              DataColumn2(
-                                label: Text('Ngày'),
-                                size: ColumnSize.S,
-                              ),
-                              DataColumn2(
-                                label: Text('Ngành nghề đăng ký'),
-                                size: ColumnSize.L,
-                              ),
-                              DataColumn2(
-                                label: Text('Cơ sở đào tạo'),
-                                size: ColumnSize.L,
-                              ),
-                              DataColumn2(
-                                label: Text('Trình độ đào tạo'),
-                                size: ColumnSize.M,
-                              ),
-                              DataColumn2(
-                                label: Text('Duyệt đăng ký'),
-                                size: ColumnSize.M,
-                              ),
-                              DataColumn2(
-                                label: Text('Trạng thái'),
-                                size: ColumnSize.M,
-                              ),
-                              DataColumn2(
-                                label: Text('Thao tác'),
-                                size: ColumnSize.M,
-                              ),
-                            ],
-                            source: _RegistrationDataSource(
-                              _registrations,
-                              onViewDetails: _viewDetails,
-                              onDelete: _deleteRegistration,
-                              formatDate: _formatDate,
-                              getStatusText: _getStatusText,
-                              getApprovalText: _getApprovalText,
-                            ),
-                          ),
-                        ),
-                ),
         ],
       ),
     );
   }
-}
 
-class _RegistrationDataSource extends DataTableSource {
-  final List<DkyHocNghe> registrations;
-  final Function(DkyHocNghe) onViewDetails;
-  final Function(String) onDelete;
-  final String Function(DateTime?) formatDate;
-  final String Function(DkyHocNghe) getStatusText;
-  final String Function(DkyHocNghe) getApprovalText;
-
-  _RegistrationDataSource(
-    this.registrations, {
-    required this.onViewDetails,
-    required this.onDelete,
-    required this.formatDate,
-    required this.getStatusText,
-    required this.getApprovalText,
-  });
-
-  @override
-  DataRow getRow(int index) {
-    if (index >= registrations.length) {
-      return DataRow2(cells: []);
-    }
-    final registration = registrations[index];
-
-    return DataRow2(
-      cells: [
-        DataCell(Text(formatDate(registration.ngaydangky))),
-        DataCell(Text(registration.tenNghedaotao ?? 'N/A')),
-        DataCell(Text(registration.tenCosodaotao ?? 'N/A')),
-        DataCell(Text(registration.trinhDoDaoTao ?? 'N/A')),
-        DataCell(
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: registration.duyetdangky
-                  ? Colors.green[100]
-                  : Colors.orange[100],
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Text(
-              getApprovalText(registration),
-              style: TextStyle(
-                color: registration.duyetdangky
-                    ? Colors.green[800]
-                    : Colors.orange[800],
-                fontSize: 12,
-              ),
-            ),
+  Widget _buildInfoRow(ThemeData theme, IconData icon, String label, String value) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.primaryContainer.withAlpha(128),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(
+            icon,
+            size: 14,
+            color: theme.colorScheme.onPrimaryContainer,
           ),
         ),
-        DataCell(Text(getStatusText(registration))),
-        DataCell(
-          Row(
-            mainAxisSize: MainAxisSize.min,
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              AppButton.primary(
-                text: 'Chi tiết',
-                size: AppButtonSize.small,
-                onPressed: () => onViewDetails(registration),
-                isFullWidth: false,
-              ),
-              const SizedBox(width: 8),
-              TextButton(
-                onPressed: () => onDelete(registration.id),
-                style: TextButton.styleFrom(
-                  foregroundColor: Colors.red,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              Text(
+                label,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
                 ),
-                child: const Text('Xóa'),
+              ),
+              Text(
+                value,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ],
           ),
@@ -737,13 +826,4 @@ class _RegistrationDataSource extends DataTableSource {
       ],
     );
   }
-
-  @override
-  bool get isRowCountApproximate => false;
-
-  @override
-  int get rowCount => registrations.length;
-
-  @override
-  int get selectedRowCount => 0;
 }

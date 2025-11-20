@@ -50,6 +50,20 @@ class _CustomPickDateTimeGrokState extends State<CustomPickDateTimeGrok> {
   }
 
   @override
+  void didUpdateWidget(CustomPickDateTimeGrok oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Update selected date when initialValue changes (e.g., from autofill)
+    if (widget.initialValue != oldWidget.initialValue) {
+      final newDate = _parseInitialValue(widget.initialValue) ?? widget.selectedDate;
+      if (newDate != _selectedDate) {
+        setState(() {
+          _selectedDate = newDate;
+        });
+      }
+    }
+  }
+
+  @override
   void dispose() {
     _focusNode.removeListener(_onFocusChange);
     _focusNode.dispose();

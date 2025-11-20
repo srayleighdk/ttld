@@ -10,6 +10,7 @@ class BhtnKhoadaotao with _$BhtnKhoadaotao {
   const factory BhtnKhoadaotao({
     @JsonKey(name: 'IdKhoadaotao') int? idKhoadaotao,
     @JsonKey(name: 'Idcosodaotao') int? idcosodaotao,
+    @JsonKey(name: 'IdNgheDaoTao') int? idNgheDaoTao,
     @JsonKey(name: 'Name') String? name,
     @JsonKey(name: 'IDBhtn') String? idBhtn,
     @JsonKey(name: 'Hocphi') double? hocphi,
@@ -19,8 +20,21 @@ class BhtnKhoadaotao with _$BhtnKhoadaotao {
     @JsonKey(name: 'PortalID') int? portalId,
     @JsonKey(name: 'Updated') DateTime? updated,
     @JsonKey(name: 'IsDeleted') bool? isDeleted,
+    @JsonKey(name: 'ngheDaoTao') NganhNgheDaoTaoInfo? ngheDaoTao,
   }) = _BhtnKhoadaotao;
 
   factory BhtnKhoadaotao.fromJson(Map<String, dynamic> json) =>
       _$BhtnKhoadaotaoFromJson(json);
+}
+
+@freezed
+class NganhNgheDaoTaoInfo with _$NganhNgheDaoTaoInfo {
+  const factory NganhNgheDaoTaoInfo({
+    @JsonKey(name: 'id') int? id,
+    @JsonKey(name: 'nn_ten') String? nnTen,
+    @JsonKey(name: 'IdBachoc') String? bachoc,
+  }) = _NganhNgheDaoTaoInfo;
+
+  factory NganhNgheDaoTaoInfo.fromJson(Map<String, dynamic> json) =>
+      _$NganhNgheDaoTaoInfoFromJson(json);
 }

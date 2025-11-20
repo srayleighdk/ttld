@@ -10,10 +10,11 @@ class XKLDApiService {
   /// Get prefill data from candidate profile
   Future<HosoXKLDModel?> getPrefillData() async {
     try {
-      print('📡 Calling API: /nghiep-vu/hoso-xkld/prefill');
-      final response = await _apiClient.get('/nghiep-vu/hoso-xkld/prefill');
+      print('📡 Calling API: /nghiep-vu/hoso-uv/xkld-prefill');
+      final response = await _apiClient.get('/nghiep-vu/hoso-uv/xkld-prefill');
       print('📥 Response status: ${response.statusCode}');
       print('📥 Response data: ${response.data}');
+      print('📥 dkxkldDantoc value: ${response.data['data']?['dkxkldDantoc']}');
       
       if (response.data['success'] == true && response.data['data'] != null) {
         print('✅ Parsing prefill data...');

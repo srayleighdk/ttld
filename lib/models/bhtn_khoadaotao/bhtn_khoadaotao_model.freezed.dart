@@ -24,6 +24,8 @@ mixin _$BhtnKhoadaotao {
   int? get idKhoadaotao => throw _privateConstructorUsedError;
   @JsonKey(name: 'Idcosodaotao')
   int? get idcosodaotao => throw _privateConstructorUsedError;
+  @JsonKey(name: 'IdNgheDaoTao')
+  int? get idNgheDaoTao => throw _privateConstructorUsedError;
   @JsonKey(name: 'Name')
   String? get name => throw _privateConstructorUsedError;
   @JsonKey(name: 'IDBhtn')
@@ -42,6 +44,8 @@ mixin _$BhtnKhoadaotao {
   DateTime? get updated => throw _privateConstructorUsedError;
   @JsonKey(name: 'IsDeleted')
   bool? get isDeleted => throw _privateConstructorUsedError;
+  @JsonKey(name: 'ngheDaoTao')
+  NganhNgheDaoTaoInfo? get ngheDaoTao => throw _privateConstructorUsedError;
 
   /// Serializes this BhtnKhoadaotao to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -62,6 +66,7 @@ abstract class $BhtnKhoadaotaoCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'IdKhoadaotao') int? idKhoadaotao,
       @JsonKey(name: 'Idcosodaotao') int? idcosodaotao,
+      @JsonKey(name: 'IdNgheDaoTao') int? idNgheDaoTao,
       @JsonKey(name: 'Name') String? name,
       @JsonKey(name: 'IDBhtn') String? idBhtn,
       @JsonKey(name: 'Hocphi') double? hocphi,
@@ -70,7 +75,10 @@ abstract class $BhtnKhoadaotaoCopyWith<$Res> {
       @JsonKey(name: 'Status') bool? status,
       @JsonKey(name: 'PortalID') int? portalId,
       @JsonKey(name: 'Updated') DateTime? updated,
-      @JsonKey(name: 'IsDeleted') bool? isDeleted});
+      @JsonKey(name: 'IsDeleted') bool? isDeleted,
+      @JsonKey(name: 'ngheDaoTao') NganhNgheDaoTaoInfo? ngheDaoTao});
+
+  $NganhNgheDaoTaoInfoCopyWith<$Res>? get ngheDaoTao;
 }
 
 /// @nodoc
@@ -90,6 +98,7 @@ class _$BhtnKhoadaotaoCopyWithImpl<$Res, $Val extends BhtnKhoadaotao>
   $Res call({
     Object? idKhoadaotao = freezed,
     Object? idcosodaotao = freezed,
+    Object? idNgheDaoTao = freezed,
     Object? name = freezed,
     Object? idBhtn = freezed,
     Object? hocphi = freezed,
@@ -99,6 +108,7 @@ class _$BhtnKhoadaotaoCopyWithImpl<$Res, $Val extends BhtnKhoadaotao>
     Object? portalId = freezed,
     Object? updated = freezed,
     Object? isDeleted = freezed,
+    Object? ngheDaoTao = freezed,
   }) {
     return _then(_value.copyWith(
       idKhoadaotao: freezed == idKhoadaotao
@@ -108,6 +118,10 @@ class _$BhtnKhoadaotaoCopyWithImpl<$Res, $Val extends BhtnKhoadaotao>
       idcosodaotao: freezed == idcosodaotao
           ? _value.idcosodaotao
           : idcosodaotao // ignore: cast_nullable_to_non_nullable
+              as int?,
+      idNgheDaoTao: freezed == idNgheDaoTao
+          ? _value.idNgheDaoTao
+          : idNgheDaoTao // ignore: cast_nullable_to_non_nullable
               as int?,
       name: freezed == name
           ? _value.name
@@ -145,7 +159,25 @@ class _$BhtnKhoadaotaoCopyWithImpl<$Res, $Val extends BhtnKhoadaotao>
           ? _value.isDeleted
           : isDeleted // ignore: cast_nullable_to_non_nullable
               as bool?,
+      ngheDaoTao: freezed == ngheDaoTao
+          ? _value.ngheDaoTao
+          : ngheDaoTao // ignore: cast_nullable_to_non_nullable
+              as NganhNgheDaoTaoInfo?,
     ) as $Val);
+  }
+
+  /// Create a copy of BhtnKhoadaotao
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $NganhNgheDaoTaoInfoCopyWith<$Res>? get ngheDaoTao {
+    if (_value.ngheDaoTao == null) {
+      return null;
+    }
+
+    return $NganhNgheDaoTaoInfoCopyWith<$Res>(_value.ngheDaoTao!, (value) {
+      return _then(_value.copyWith(ngheDaoTao: value) as $Val);
+    });
   }
 }
 
@@ -160,6 +192,7 @@ abstract class _$$BhtnKhoadaotaoImplCopyWith<$Res>
   $Res call(
       {@JsonKey(name: 'IdKhoadaotao') int? idKhoadaotao,
       @JsonKey(name: 'Idcosodaotao') int? idcosodaotao,
+      @JsonKey(name: 'IdNgheDaoTao') int? idNgheDaoTao,
       @JsonKey(name: 'Name') String? name,
       @JsonKey(name: 'IDBhtn') String? idBhtn,
       @JsonKey(name: 'Hocphi') double? hocphi,
@@ -168,7 +201,11 @@ abstract class _$$BhtnKhoadaotaoImplCopyWith<$Res>
       @JsonKey(name: 'Status') bool? status,
       @JsonKey(name: 'PortalID') int? portalId,
       @JsonKey(name: 'Updated') DateTime? updated,
-      @JsonKey(name: 'IsDeleted') bool? isDeleted});
+      @JsonKey(name: 'IsDeleted') bool? isDeleted,
+      @JsonKey(name: 'ngheDaoTao') NganhNgheDaoTaoInfo? ngheDaoTao});
+
+  @override
+  $NganhNgheDaoTaoInfoCopyWith<$Res>? get ngheDaoTao;
 }
 
 /// @nodoc
@@ -186,6 +223,7 @@ class __$$BhtnKhoadaotaoImplCopyWithImpl<$Res>
   $Res call({
     Object? idKhoadaotao = freezed,
     Object? idcosodaotao = freezed,
+    Object? idNgheDaoTao = freezed,
     Object? name = freezed,
     Object? idBhtn = freezed,
     Object? hocphi = freezed,
@@ -195,6 +233,7 @@ class __$$BhtnKhoadaotaoImplCopyWithImpl<$Res>
     Object? portalId = freezed,
     Object? updated = freezed,
     Object? isDeleted = freezed,
+    Object? ngheDaoTao = freezed,
   }) {
     return _then(_$BhtnKhoadaotaoImpl(
       idKhoadaotao: freezed == idKhoadaotao
@@ -204,6 +243,10 @@ class __$$BhtnKhoadaotaoImplCopyWithImpl<$Res>
       idcosodaotao: freezed == idcosodaotao
           ? _value.idcosodaotao
           : idcosodaotao // ignore: cast_nullable_to_non_nullable
+              as int?,
+      idNgheDaoTao: freezed == idNgheDaoTao
+          ? _value.idNgheDaoTao
+          : idNgheDaoTao // ignore: cast_nullable_to_non_nullable
               as int?,
       name: freezed == name
           ? _value.name
@@ -241,6 +284,10 @@ class __$$BhtnKhoadaotaoImplCopyWithImpl<$Res>
           ? _value.isDeleted
           : isDeleted // ignore: cast_nullable_to_non_nullable
               as bool?,
+      ngheDaoTao: freezed == ngheDaoTao
+          ? _value.ngheDaoTao
+          : ngheDaoTao // ignore: cast_nullable_to_non_nullable
+              as NganhNgheDaoTaoInfo?,
     ));
   }
 }
@@ -251,6 +298,7 @@ class _$BhtnKhoadaotaoImpl extends _BhtnKhoadaotao {
   const _$BhtnKhoadaotaoImpl(
       {@JsonKey(name: 'IdKhoadaotao') this.idKhoadaotao,
       @JsonKey(name: 'Idcosodaotao') this.idcosodaotao,
+      @JsonKey(name: 'IdNgheDaoTao') this.idNgheDaoTao,
       @JsonKey(name: 'Name') this.name,
       @JsonKey(name: 'IDBhtn') this.idBhtn,
       @JsonKey(name: 'Hocphi') this.hocphi,
@@ -259,7 +307,8 @@ class _$BhtnKhoadaotaoImpl extends _BhtnKhoadaotao {
       @JsonKey(name: 'Status') this.status,
       @JsonKey(name: 'PortalID') this.portalId,
       @JsonKey(name: 'Updated') this.updated,
-      @JsonKey(name: 'IsDeleted') this.isDeleted})
+      @JsonKey(name: 'IsDeleted') this.isDeleted,
+      @JsonKey(name: 'ngheDaoTao') this.ngheDaoTao})
       : super._();
 
   factory _$BhtnKhoadaotaoImpl.fromJson(Map<String, dynamic> json) =>
@@ -271,6 +320,9 @@ class _$BhtnKhoadaotaoImpl extends _BhtnKhoadaotao {
   @override
   @JsonKey(name: 'Idcosodaotao')
   final int? idcosodaotao;
+  @override
+  @JsonKey(name: 'IdNgheDaoTao')
+  final int? idNgheDaoTao;
   @override
   @JsonKey(name: 'Name')
   final String? name;
@@ -298,10 +350,13 @@ class _$BhtnKhoadaotaoImpl extends _BhtnKhoadaotao {
   @override
   @JsonKey(name: 'IsDeleted')
   final bool? isDeleted;
+  @override
+  @JsonKey(name: 'ngheDaoTao')
+  final NganhNgheDaoTaoInfo? ngheDaoTao;
 
   @override
   String toString() {
-    return 'BhtnKhoadaotao(idKhoadaotao: $idKhoadaotao, idcosodaotao: $idcosodaotao, name: $name, idBhtn: $idBhtn, hocphi: $hocphi, sothangdaotao: $sothangdaotao, displayOrder: $displayOrder, status: $status, portalId: $portalId, updated: $updated, isDeleted: $isDeleted)';
+    return 'BhtnKhoadaotao(idKhoadaotao: $idKhoadaotao, idcosodaotao: $idcosodaotao, idNgheDaoTao: $idNgheDaoTao, name: $name, idBhtn: $idBhtn, hocphi: $hocphi, sothangdaotao: $sothangdaotao, displayOrder: $displayOrder, status: $status, portalId: $portalId, updated: $updated, isDeleted: $isDeleted, ngheDaoTao: $ngheDaoTao)';
   }
 
   @override
@@ -313,6 +368,8 @@ class _$BhtnKhoadaotaoImpl extends _BhtnKhoadaotao {
                 other.idKhoadaotao == idKhoadaotao) &&
             (identical(other.idcosodaotao, idcosodaotao) ||
                 other.idcosodaotao == idcosodaotao) &&
+            (identical(other.idNgheDaoTao, idNgheDaoTao) ||
+                other.idNgheDaoTao == idNgheDaoTao) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.idBhtn, idBhtn) || other.idBhtn == idBhtn) &&
             (identical(other.hocphi, hocphi) || other.hocphi == hocphi) &&
@@ -325,7 +382,9 @@ class _$BhtnKhoadaotaoImpl extends _BhtnKhoadaotao {
                 other.portalId == portalId) &&
             (identical(other.updated, updated) || other.updated == updated) &&
             (identical(other.isDeleted, isDeleted) ||
-                other.isDeleted == isDeleted));
+                other.isDeleted == isDeleted) &&
+            (identical(other.ngheDaoTao, ngheDaoTao) ||
+                other.ngheDaoTao == ngheDaoTao));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -334,6 +393,7 @@ class _$BhtnKhoadaotaoImpl extends _BhtnKhoadaotao {
       runtimeType,
       idKhoadaotao,
       idcosodaotao,
+      idNgheDaoTao,
       name,
       idBhtn,
       hocphi,
@@ -342,7 +402,8 @@ class _$BhtnKhoadaotaoImpl extends _BhtnKhoadaotao {
       status,
       portalId,
       updated,
-      isDeleted);
+      isDeleted,
+      ngheDaoTao);
 
   /// Create a copy of BhtnKhoadaotao
   /// with the given fields replaced by the non-null parameter values.
@@ -365,6 +426,7 @@ abstract class _BhtnKhoadaotao extends BhtnKhoadaotao {
   const factory _BhtnKhoadaotao(
           {@JsonKey(name: 'IdKhoadaotao') final int? idKhoadaotao,
           @JsonKey(name: 'Idcosodaotao') final int? idcosodaotao,
+          @JsonKey(name: 'IdNgheDaoTao') final int? idNgheDaoTao,
           @JsonKey(name: 'Name') final String? name,
           @JsonKey(name: 'IDBhtn') final String? idBhtn,
           @JsonKey(name: 'Hocphi') final double? hocphi,
@@ -373,7 +435,8 @@ abstract class _BhtnKhoadaotao extends BhtnKhoadaotao {
           @JsonKey(name: 'Status') final bool? status,
           @JsonKey(name: 'PortalID') final int? portalId,
           @JsonKey(name: 'Updated') final DateTime? updated,
-          @JsonKey(name: 'IsDeleted') final bool? isDeleted}) =
+          @JsonKey(name: 'IsDeleted') final bool? isDeleted,
+          @JsonKey(name: 'ngheDaoTao') final NganhNgheDaoTaoInfo? ngheDaoTao}) =
       _$BhtnKhoadaotaoImpl;
   const _BhtnKhoadaotao._() : super._();
 
@@ -386,6 +449,9 @@ abstract class _BhtnKhoadaotao extends BhtnKhoadaotao {
   @override
   @JsonKey(name: 'Idcosodaotao')
   int? get idcosodaotao;
+  @override
+  @JsonKey(name: 'IdNgheDaoTao')
+  int? get idNgheDaoTao;
   @override
   @JsonKey(name: 'Name')
   String? get name;
@@ -413,11 +479,218 @@ abstract class _BhtnKhoadaotao extends BhtnKhoadaotao {
   @override
   @JsonKey(name: 'IsDeleted')
   bool? get isDeleted;
+  @override
+  @JsonKey(name: 'ngheDaoTao')
+  NganhNgheDaoTaoInfo? get ngheDaoTao;
 
   /// Create a copy of BhtnKhoadaotao
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$BhtnKhoadaotaoImplCopyWith<_$BhtnKhoadaotaoImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+NganhNgheDaoTaoInfo _$NganhNgheDaoTaoInfoFromJson(Map<String, dynamic> json) {
+  return _NganhNgheDaoTaoInfo.fromJson(json);
+}
+
+/// @nodoc
+mixin _$NganhNgheDaoTaoInfo {
+  @JsonKey(name: 'id')
+  int? get id => throw _privateConstructorUsedError;
+  @JsonKey(name: 'nn_ten')
+  String? get nnTen => throw _privateConstructorUsedError;
+  @JsonKey(name: 'IdBachoc')
+  String? get bachoc => throw _privateConstructorUsedError;
+
+  /// Serializes this NganhNgheDaoTaoInfo to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of NganhNgheDaoTaoInfo
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $NganhNgheDaoTaoInfoCopyWith<NganhNgheDaoTaoInfo> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $NganhNgheDaoTaoInfoCopyWith<$Res> {
+  factory $NganhNgheDaoTaoInfoCopyWith(
+          NganhNgheDaoTaoInfo value, $Res Function(NganhNgheDaoTaoInfo) then) =
+      _$NganhNgheDaoTaoInfoCopyWithImpl<$Res, NganhNgheDaoTaoInfo>;
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'id') int? id,
+      @JsonKey(name: 'nn_ten') String? nnTen,
+      @JsonKey(name: 'IdBachoc') String? bachoc});
+}
+
+/// @nodoc
+class _$NganhNgheDaoTaoInfoCopyWithImpl<$Res, $Val extends NganhNgheDaoTaoInfo>
+    implements $NganhNgheDaoTaoInfoCopyWith<$Res> {
+  _$NganhNgheDaoTaoInfoCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of NganhNgheDaoTaoInfo
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = freezed,
+    Object? nnTen = freezed,
+    Object? bachoc = freezed,
+  }) {
+    return _then(_value.copyWith(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
+      nnTen: freezed == nnTen
+          ? _value.nnTen
+          : nnTen // ignore: cast_nullable_to_non_nullable
+              as String?,
+      bachoc: freezed == bachoc
+          ? _value.bachoc
+          : bachoc // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$NganhNgheDaoTaoInfoImplCopyWith<$Res>
+    implements $NganhNgheDaoTaoInfoCopyWith<$Res> {
+  factory _$$NganhNgheDaoTaoInfoImplCopyWith(_$NganhNgheDaoTaoInfoImpl value,
+          $Res Function(_$NganhNgheDaoTaoInfoImpl) then) =
+      __$$NganhNgheDaoTaoInfoImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'id') int? id,
+      @JsonKey(name: 'nn_ten') String? nnTen,
+      @JsonKey(name: 'IdBachoc') String? bachoc});
+}
+
+/// @nodoc
+class __$$NganhNgheDaoTaoInfoImplCopyWithImpl<$Res>
+    extends _$NganhNgheDaoTaoInfoCopyWithImpl<$Res, _$NganhNgheDaoTaoInfoImpl>
+    implements _$$NganhNgheDaoTaoInfoImplCopyWith<$Res> {
+  __$$NganhNgheDaoTaoInfoImplCopyWithImpl(_$NganhNgheDaoTaoInfoImpl _value,
+      $Res Function(_$NganhNgheDaoTaoInfoImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of NganhNgheDaoTaoInfo
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? id = freezed,
+    Object? nnTen = freezed,
+    Object? bachoc = freezed,
+  }) {
+    return _then(_$NganhNgheDaoTaoInfoImpl(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
+      nnTen: freezed == nnTen
+          ? _value.nnTen
+          : nnTen // ignore: cast_nullable_to_non_nullable
+              as String?,
+      bachoc: freezed == bachoc
+          ? _value.bachoc
+          : bachoc // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$NganhNgheDaoTaoInfoImpl implements _NganhNgheDaoTaoInfo {
+  const _$NganhNgheDaoTaoInfoImpl(
+      {@JsonKey(name: 'id') this.id,
+      @JsonKey(name: 'nn_ten') this.nnTen,
+      @JsonKey(name: 'IdBachoc') this.bachoc});
+
+  factory _$NganhNgheDaoTaoInfoImpl.fromJson(Map<String, dynamic> json) =>
+      _$$NganhNgheDaoTaoInfoImplFromJson(json);
+
+  @override
+  @JsonKey(name: 'id')
+  final int? id;
+  @override
+  @JsonKey(name: 'nn_ten')
+  final String? nnTen;
+  @override
+  @JsonKey(name: 'IdBachoc')
+  final String? bachoc;
+
+  @override
+  String toString() {
+    return 'NganhNgheDaoTaoInfo(id: $id, nnTen: $nnTen, bachoc: $bachoc)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$NganhNgheDaoTaoInfoImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.nnTen, nnTen) || other.nnTen == nnTen) &&
+            (identical(other.bachoc, bachoc) || other.bachoc == bachoc));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, id, nnTen, bachoc);
+
+  /// Create a copy of NganhNgheDaoTaoInfo
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$NganhNgheDaoTaoInfoImplCopyWith<_$NganhNgheDaoTaoInfoImpl> get copyWith =>
+      __$$NganhNgheDaoTaoInfoImplCopyWithImpl<_$NganhNgheDaoTaoInfoImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$NganhNgheDaoTaoInfoImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _NganhNgheDaoTaoInfo implements NganhNgheDaoTaoInfo {
+  const factory _NganhNgheDaoTaoInfo(
+          {@JsonKey(name: 'id') final int? id,
+          @JsonKey(name: 'nn_ten') final String? nnTen,
+          @JsonKey(name: 'IdBachoc') final String? bachoc}) =
+      _$NganhNgheDaoTaoInfoImpl;
+
+  factory _NganhNgheDaoTaoInfo.fromJson(Map<String, dynamic> json) =
+      _$NganhNgheDaoTaoInfoImpl.fromJson;
+
+  @override
+  @JsonKey(name: 'id')
+  int? get id;
+  @override
+  @JsonKey(name: 'nn_ten')
+  String? get nnTen;
+  @override
+  @JsonKey(name: 'IdBachoc')
+  String? get bachoc;
+
+  /// Create a copy of NganhNgheDaoTaoInfo
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$NganhNgheDaoTaoInfoImplCopyWith<_$NganhNgheDaoTaoInfoImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

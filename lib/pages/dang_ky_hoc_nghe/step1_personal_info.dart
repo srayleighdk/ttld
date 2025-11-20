@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:ttld/helppers/map_help.dart';
 import 'package:ttld/models/hoso_dtn/hoso_dtn_model.dart';
 import 'package:ttld/models/dan_toc_model.dart';
 import 'package:ttld/models/ton_giao_model.dart';
+import 'package:ttld/widgets/field/custom_picker_map.dart';
 import 'package:ttld/widgets/reuseable_widgets/generic_picker_grok.dart';
 import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
 import 'package:ttld/core/di/injection.dart';
@@ -149,29 +151,17 @@ class _VTStep1PersonalInfoState extends State<VTStep1PersonalInfo> {
           const SizedBox(height: 16),
 
           // Giới tính
-          DropdownButtonFormField<int>(
-            value: _selectedGioitinh,
-            decoration: const InputDecoration(
-              labelText: 'Giới tính *',
-              border: OutlineInputBorder(),
-            ),
-            items: const [
-              DropdownMenuItem(value: 0, child: Text('Nữ')),
-              DropdownMenuItem(value: 1, child: Text('Nam')),
-            ],
-            onChanged: (value) {
-              setState(() {
-                _selectedGioitinh = value;
-                _updateFormData();
-              });
-            },
-            validator: (value) {
-              if (value == null) {
-                return 'Vui lòng chọn giới tính';
-              }
-              return null;
-            },
-          ),
+
+          CustomPickerMap(
+              label: const Text('Giới tính *'),
+              items: gioiTinhOptions,
+              selectedItem: _selectedGioitinh,
+              onChanged: (value) {
+                setState(() {
+                  _selectedGioitinh = value;
+                  _updateFormData();
+                });
+              }),
           const SizedBox(height: 16),
 
           // Email
