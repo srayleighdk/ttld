@@ -47,6 +47,20 @@ class _XKLDStep1PersonalInfoState extends State<XKLDStep1PersonalInfo> {
   @override
   void initState() {
     super.initState();
+    _initControllers();
+    _initSelectionData();
+  }
+
+  @override
+  void didUpdateWidget(XKLDStep1PersonalInfo oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.formData != oldWidget.formData) {
+      _updateControllers();
+      _updateSelectionData();
+    }
+  }
+
+  void _initControllers() {
     _hotenController = TextEditingController(text: widget.formData.dkxkldHoten);
     _emailController = TextEditingController(text: widget.formData.dkxkldEmail);
     _dienthoaiController =
@@ -57,7 +71,30 @@ class _XKLDStep1PersonalInfoState extends State<XKLDStep1PersonalInfo> {
         TextEditingController(text: widget.formData.dkxkldNoicap);
     _sohochieuController =
         TextEditingController(text: widget.formData.dkxkldSohochieu);
+  }
 
+  void _updateControllers() {
+    if (_hotenController.text != widget.formData.dkxkldHoten) {
+      _hotenController.text = widget.formData.dkxkldHoten ?? '';
+    }
+    if (_emailController.text != widget.formData.dkxkldEmail) {
+      _emailController.text = widget.formData.dkxkldEmail ?? '';
+    }
+    if (_dienthoaiController.text != widget.formData.dkxkldDienthoai) {
+      _dienthoaiController.text = widget.formData.dkxkldDienthoai ?? '';
+    }
+    if (_soCmndController.text != widget.formData.dkxkldSoCmnd) {
+      _soCmndController.text = widget.formData.dkxkldSoCmnd ?? '';
+    }
+    if (_noicapController.text != widget.formData.dkxkldNoicap) {
+      _noicapController.text = widget.formData.dkxkldNoicap ?? '';
+    }
+    if (_sohochieuController.text != widget.formData.dkxkldSohochieu) {
+      _sohochieuController.text = widget.formData.dkxkldSohochieu ?? '';
+    }
+  }
+
+  void _initSelectionData() {
     _selectedGioitinh = widget.formData.dkxkldGioitinh;
     _selectedTrinhdohocvan = widget.formData.dkxklddmTrinhdohocvan;
     _selectedNgoaingudaotao = widget.formData.dkxklddmNgoaingudaotao;
@@ -70,6 +107,27 @@ class _XKLDStep1PersonalInfoState extends State<XKLDStep1PersonalInfo> {
     if (widget.formData.dkxkldNgaycap != null) {
       _selectedNgaycap = DateTime.parse(widget.formData.dkxkldNgaycap!);
     }
+  }
+
+  void _updateSelectionData() {
+    setState(() {
+      _selectedGioitinh = widget.formData.dkxkldGioitinh;
+      _selectedTrinhdohocvan = widget.formData.dkxklddmTrinhdohocvan;
+      _selectedNgoaingudaotao = widget.formData.dkxklddmNgoaingudaotao;
+      _selectedDantoc = widget.formData.dkxkldDantoc;
+      _selectedTongiao = widget.formData.dkxkldTongiao;
+
+      if (widget.formData.dkxkldNgaysinh != null) {
+        _selectedNgaysinh = DateTime.parse(widget.formData.dkxkldNgaysinh!);
+      } else {
+        _selectedNgaysinh = null;
+      }
+      if (widget.formData.dkxkldNgaycap != null) {
+        _selectedNgaycap = DateTime.parse(widget.formData.dkxkldNgaycap!);
+      } else {
+        _selectedNgaycap = null;
+      }
+    });
   }
 
   void _updateFormData() {

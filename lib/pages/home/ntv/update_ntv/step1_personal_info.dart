@@ -204,7 +204,8 @@ class _Step1PersonalInfoState extends State<Step1PersonalInfo> {
               const SizedBox(width: 12),
               Expanded(
                 child: CustomPickDateTimeGrok(
-                  hintText: 'Ngày sinh(*)',
+                  labelText: 'Ngày sinh (*)',
+                  hintText: 'Chọn ngày sinh',
                   initialValue: widget.uvngaysinhController,
                   validator: (DateTime? value) {
                     if (value == null) {
@@ -228,6 +229,8 @@ class _Step1PersonalInfoState extends State<Step1PersonalInfo> {
                   items: gioiTinhOptions,
                   selectedItem: widget.uvGioitinh,
                   onChanged: widget.onGioitinhChanged,
+                  validator: (value) =>
+                      value == null ? 'Giới tính không được để trống' : null,
                 ),
               ),
               const SizedBox(width: 12),
@@ -237,6 +240,8 @@ class _Step1PersonalInfoState extends State<Step1PersonalInfo> {
                   items: hoNhanOptions,
                   selectedItem: widget.uvHonnhanId,
                   onChanged: widget.onHonnhanChanged,
+                  validator: (value) =>
+                      value == null ? 'Hôn nhân không được để trống' : null,
                 ),
               ),
             ],

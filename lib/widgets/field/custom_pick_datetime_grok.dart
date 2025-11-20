@@ -151,95 +151,80 @@ class _CustomPickDateTimeGrokState extends State<CustomPickDateTimeGrok> {
 
     return Padding(
       padding: effectiveStyle.margin,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Focus(
-            focusNode: _focusNode,
-            child: InkWell(
-              onTap: widget.enabled ? () => _selectYear(context) : null,
+      child: InkWell(
+        onTap: widget.enabled ? () {
+          _focusNode.requestFocus();
+          _selectYear(context);
+        } : null,
+        borderRadius: BorderRadius.circular(8),
+        child: InputDecorator(
+          isFocused: _focusNode.hasFocus,
+          isEmpty: _selectedDate == null,
+          decoration: InputDecoration(
+            labelText: (widget.labelText?.isNotEmpty ?? false)
+                ? widget.labelText
+                : null,
+            alignLabelWithHint: true,
+            hintText: widget.hintText,
+            errorText: _errorText,
+            helperText: widget.helperText,
+            prefixIcon: widget.prefixIcon,
+            filled: effectiveStyle.filled,
+            fillColor: effectiveStyle.fillColor?.toColor(context) ??
+                surfaceColor.withOpacity(0.05),
+            contentPadding: effectiveStyle.contentPadding,
+            
+            // Modern styling matching CustomTextField
+            labelStyle: effectiveStyle.labelStyle?.toTextStyle(context) ??
+                theme.textTheme.bodyMedium?.copyWith(
+                  color: _focusNode.hasFocus
+                      ? primaryColor
+                      : contentColor.withOpacity(0.7),
+                ),
+            hintStyle: effectiveStyle.hintStyle?.toTextStyle(context) ??
+                theme.textTheme.bodyMedium?.copyWith(
+                  color: contentColor.withOpacity(0.5),
+                ),
+            floatingLabelStyle: theme.textTheme.bodySmall?.copyWith(
+              color: _errorText != null ? errorColor : primaryColor,
+            ),
+            
+            // Consistent border styling with 8px radius
+            border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: effectiveStyle.filled
-                      ? (effectiveStyle.fillColor?.toColor(context) ??
-                          surfaceColor.withOpacity(0.05))
-                      : Colors.transparent,
-                  border: Border.all(
-                    color: getBorderColor(),
-                    width: _focusNode.hasFocus ? 2.0 : 1.0,
-                  ),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                padding: effectiveStyle.contentPadding,
-                child: Row(
-                  children: [
-                    if (widget.prefixIcon != null) ...[
-                      widget.prefixIcon!,
-                      const SizedBox(width: 12),
-                    ],
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          if (widget.labelText != null &&
-                              widget.labelText!.isNotEmpty)
-                            Text(
-                              widget.labelText!,
-                              style: effectiveStyle.labelStyle
-                                      ?.toTextStyle(context) ??
-                                  theme.textTheme.bodySmall?.copyWith(
-                                    color: _focusNode.hasFocus
-                                        ? primaryColor
-                                        : contentColor.withOpacity(0.7),
-                                  ),
-                            ),
-                          if (widget.labelText != null &&
-                              widget.labelText!.isNotEmpty)
-                            const SizedBox(height: 4),
-                          Text(
-                            _selectedDate != null
-                                ? DateFormat('dd-MM-yyyy')
-                                    .format(_selectedDate!.toLocal())
-                                : widget.hintText ?? 'Select Date',
-                            style: effectiveStyle.textStyle
-                                    ?.toTextStyle(context) ??
-                                theme.textTheme.bodyLarge?.copyWith(
-                                  color: _selectedDate != null
-                                      ? contentColor
-                                      : contentColor.withOpacity(0.5),
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              borderSide: BorderSide(color: contentColor.withOpacity(0.3)),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: getBorderColor()),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: getBorderColor(), width: 2),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: errorColor),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: errorColor, width: 2),
+            ),
+            disabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: contentColor.withOpacity(0.1)),
             ),
           ),
-          if (_errorText != null)
-            Padding(
-              padding: const EdgeInsets.only(top: 4, left: 12),
-              child: Text(
-                _errorText!,
-                style: theme.textTheme.bodySmall?.copyWith(color: errorColor),
-              ),
-            ),
-          if (widget.helperText != null && _errorText == null)
-            Padding(
-              padding: const EdgeInsets.only(top: 4, left: 12),
-              child: Text(
-                widget.helperText!,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: colorStyles?.content.withOpacity(0.6) ??
-                      theme.colorScheme.onSurface.withOpacity(0.6),
+          child: Text(
+            _selectedDate != null
+                ? DateFormat('dd-MM-yyyy').format(_selectedDate!.toLocal())
+                : '',
+            style: effectiveStyle.textStyle?.toTextStyle(context) ??
+                theme.textTheme.bodyLarge?.copyWith(
+                  color: contentColor,
                 ),
-              ),
-            ),
-        ],
+          ),
+        ),
       ),
     );
   }

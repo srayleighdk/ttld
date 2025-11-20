@@ -331,6 +331,7 @@ class CustomPickerMap<K> extends StatelessWidget {
   final Color? backgroundColor;
   final String Function(String?)? displayItemBuilder;
   final Widget? label;
+  final String? Function(K?)? validator;
 
   const CustomPickerMap({
     super.key,
@@ -341,6 +342,7 @@ class CustomPickerMap<K> extends StatelessWidget {
     this.backgroundColor,
     this.displayItemBuilder,
     this.label,
+    this.validator,
   });
 
   @override
@@ -355,6 +357,7 @@ class CustomPickerMap<K> extends StatelessWidget {
       onChanged: onChanged,
       displayItemBuilder: displayItemBuilder,
       prefixIcon: label is! Text ? label : null,
+      validator: validator,
     );
   }
 }

@@ -175,34 +175,7 @@ class _XKLDStep5JobPreferencesState extends State<XKLDStep5JobPreferences> {
           ),
           const SizedBox(height: 8),
 
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.secondaryContainer.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: theme.colorScheme.secondary.withOpacity(0.3),
-              ),
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  FontAwesomeIcons.circleInfo,
-                  color: theme.colorScheme.secondary,
-                  size: 20,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    'Chi phí đi XKLĐ dao động từ 50-150 triệu VNĐ tùy quốc gia. Nếu chưa có khả năng tài chính, bạn có thể vay vốn hoặc tìm chương trình hỗ trợ.',
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurface,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          const SizedBox(height: 24),
           const SizedBox(height: 24),
 
           // Đối tượng chính sách
@@ -316,45 +289,6 @@ class _XKLDStep5JobPreferencesState extends State<XKLDStep5JobPreferences> {
           const SizedBox(height: 24),
 
           // Summary card
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primaryContainer.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: theme.colorScheme.primary.withOpacity(0.3),
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Icon(
-                      FontAwesomeIcons.circleCheck,
-                      color: theme.colorScheme.primary,
-                      size: 20,
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      'Hoàn tất đăng ký',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.primary,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  'Bạn đã hoàn thành tất cả các bước. Nhấn "Hoàn thành" để gửi hồ sơ đăng ký xuất khẩu lao động của bạn. Chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất.',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onSurface,
-                  ),
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );

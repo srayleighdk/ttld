@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ttld/models/hoso_xkld/hoso_xkld_model.dart';
 import 'package:ttld/widgets/reuseable_widgets/custom_text_field.dart';
+import 'package:ttld/widgets/cascade_location_picker_grok.dart';
 
 class XKLDStep2AddressContact extends StatefulWidget {
   final GlobalKey<FormState> formKey;
@@ -26,6 +27,7 @@ class _XKLDStep2AddressContactState extends State<XKLDStep2AddressContact> {
   late TextEditingController _diachitamtruController;
   late TextEditingController _thonBuonController;
   late TextEditingController _dienthoailienheController;
+  late TextEditingController _dummyAddressController;
 
   String? _selectedTinh;
   String? _selectedHuyen;
@@ -34,6 +36,20 @@ class _XKLDStep2AddressContactState extends State<XKLDStep2AddressContact> {
   @override
   void initState() {
     super.initState();
+    _initControllers();
+    _initLocationData();
+  }
+
+  @override
+  void didUpdateWidget(XKLDStep2AddressContact oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.formData != oldWidget.formData) {
+      _updateControllers();
+      _updateLocationData();
+    }
+  }
+
+  void _initControllers() {
     _nguyenquanController =
         TextEditingController(text: widget.formData.dkxkldNguyenquan);
     _hokhauController =
@@ -43,10 +59,39 @@ class _XKLDStep2AddressContactState extends State<XKLDStep2AddressContact> {
     _thonBuonController = TextEditingController(text: widget.formData.thonBuon);
     _dienthoailienheController =
         TextEditingController(text: widget.formData.dienthoailienhe);
+    _dummyAddressController = TextEditingController();
+  }
 
+  void _updateControllers() {
+    if (_nguyenquanController.text != widget.formData.dkxkldNguyenquan) {
+      _nguyenquanController.text = widget.formData.dkxkldNguyenquan ?? '';
+    }
+    if (_hokhauController.text != widget.formData.dkxkldHokhauthuongtru) {
+      _hokhauController.text = widget.formData.dkxkldHokhauthuongtru ?? '';
+    }
+    if (_diachitamtruController.text != widget.formData.dkxkldDiachitamtru) {
+      _diachitamtruController.text = widget.formData.dkxkldDiachitamtru ?? '';
+    }
+    if (_thonBuonController.text != widget.formData.thonBuon) {
+      _thonBuonController.text = widget.formData.thonBuon ?? '';
+    }
+    if (_dienthoailienheController.text != widget.formData.dienthoailienhe) {
+      _dienthoailienheController.text = widget.formData.dienthoailienhe ?? '';
+    }
+  }
+
+  void _initLocationData() {
     _selectedTinh = widget.formData.tinh;
     _selectedHuyen = widget.formData.huyenThiThanhPho;
     _selectedXa = widget.formData.xaPhuong;
+  }
+
+  void _updateLocationData() {
+    setState(() {
+      _selectedTinh = widget.formData.tinh;
+      _selectedHuyen = widget.formData.huyenThiThanhPho;
+      _selectedXa = widget.formData.xaPhuong;
+    });
   }
 
   void _updateFormData() {
@@ -138,88 +183,40 @@ class _XKLDStep2AddressContactState extends State<XKLDStep2AddressContact> {
           ),
           const SizedBox(height: 16),
 
-          // Tỉnh/Thành phố
-          DropdownButtonFormField<String>(
-            value: _selectedTinh,
-            decoration: InputDecoration(
-              labelText: 'Tỉnh/Thành phố *',
-              prefixIcon: const Icon(FontAwesomeIcons.city, size: 18),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            items: const [
-              DropdownMenuItem(value: '01', child: Text('Hà Nội')),
-              DropdownMenuItem(value: '79', child: Text('TP. Hồ Chí Minh')),
-              DropdownMenuItem(value: '48', child: Text('Đà Nẵng')),
-              DropdownMenuItem(value: '92', child: Text('Cần Thơ')),
-              DropdownMenuItem(value: '31', child: Text('Hải Phòng')),
-              // Add more provinces as needed
-            ],
+          // Tỉnh/Thành phố - Quận/Huyện - Xã/Phường
+          ModernCascadeLocationPicker(
+            addressDetailController: _dummyAddressController,
+            showAddressDetail: false,
+            isNTD: false,
+            initialTinh: widget.formData.tinh,
+            initialHuyen: widget.formData.huyenThiThanhPho,
+            initialXa: widget.formData.xaPhuong,
+            onTinhChanged: (tinh) {
+              setState(() {
+                _selectedTinh = tinh?.id;
+                _selectedHuyen = null;
+                _selectedXa = null;
+                _updateFormData();
+              });
+            },
+            onHuyenChanged: (huyen) {
+              setState(() {
+                _selectedHuyen = huyen?.id;
+                _selectedXa = null;
+                _updateFormData();
+              });
+            },
+            onXaChanged: (xa) {
+              setState(() {
+                _selectedXa = xa?.id;
+                _updateFormData();
+              });
+            },
             validator: (value) {
-              if (value == null) {
-                return 'Vui lòng chọn tỉnh/thành phố';
+              if (_selectedTinh == null) {
+                return 'Vui lòng chọn Tỉnh/Thành phố';
               }
               return null;
-            },
-            onChanged: (value) {
-              setState(() {
-                _selectedTinh = value;
-                _selectedHuyen = null; // Reset district when province changes
-                _selectedXa = null; // Reset ward when province changes
-                _updateFormData();
-              });
-            },
-          ),
-          const SizedBox(height: 16),
-
-          // Huyện/Quận
-          DropdownButtonFormField<String>(
-            value: _selectedHuyen,
-            decoration: InputDecoration(
-              labelText: 'Quận/Huyện',
-              prefixIcon: const Icon(FontAwesomeIcons.mapLocation, size: 18),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            items: const [
-              DropdownMenuItem(value: '001', child: Text('Quận Ba Đình')),
-              DropdownMenuItem(value: '002', child: Text('Quận Hoàn Kiếm')),
-              DropdownMenuItem(value: '003', child: Text('Quận Tây Hồ')),
-              // Add more districts as needed
-            ],
-            onChanged: (value) {
-              setState(() {
-                _selectedHuyen = value;
-                _selectedXa = null; // Reset ward when district changes
-                _updateFormData();
-              });
-            },
-          ),
-          const SizedBox(height: 16),
-
-          // Xã/Phường
-          DropdownButtonFormField<String>(
-            value: _selectedXa,
-            decoration: InputDecoration(
-              labelText: 'Xã/Phường',
-              prefixIcon: const Icon(FontAwesomeIcons.locationDot, size: 18),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            items: const [
-              DropdownMenuItem(value: '00001', child: Text('Phường Phúc Xá')),
-              DropdownMenuItem(value: '00002', child: Text('Phường Trúc Bạch')),
-              DropdownMenuItem(value: '00003', child: Text('Phường Vĩnh Phúc')),
-              // Add more wards as needed
-            ],
-            onChanged: (value) {
-              setState(() {
-                _selectedXa = value;
-                _updateFormData();
-              });
             },
           ),
           const SizedBox(height: 24),
@@ -263,34 +260,7 @@ class _XKLDStep2AddressContactState extends State<XKLDStep2AddressContact> {
           const SizedBox(height: 24),
 
           // Info card
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primaryContainer.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: theme.colorScheme.primary.withOpacity(0.3),
-              ),
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  FontAwesomeIcons.circleInfo,
-                  color: theme.colorScheme.primary,
-                  size: 20,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    'Vui lòng cung cấp thông tin chính xác về địa chỉ để liên hệ khi cần thiết',
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurface,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          const SizedBox(height: 24),
         ],
       ),
     );
@@ -303,6 +273,7 @@ class _XKLDStep2AddressContactState extends State<XKLDStep2AddressContact> {
     _diachitamtruController.dispose();
     _thonBuonController.dispose();
     _dienthoailienheController.dispose();
+    _dummyAddressController.dispose();
     super.dispose();
   }
 }

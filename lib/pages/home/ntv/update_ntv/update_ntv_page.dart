@@ -193,6 +193,7 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
       // Personal Information
       _uvGioitinh = ntv.uvGioitinh;
       _uvHonnhanId = ntv.uvHonnhanId;
+      print('🔍 InitState: Loaded uvHonnhanId from database: $_uvHonnhanId (type: ${_uvHonnhanId.runtimeType})');
       _uvngaysinhController = ntv.uvNgaysinh;
       _uvchieucaoController.text = ntv.uvChieucao ?? '';
       _uvcannangController.text = ntv.uvCannang ?? '';
@@ -565,7 +566,11 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
               setState(() => _uvngaysinhController = value),
           onNgaycapChanged: (value) => setState(() => _uvNgaycap = value),
           onGioitinhChanged: (value) => setState(() => _uvGioitinh = value),
-          onHonnhanChanged: (value) => setState(() => _uvHonnhanId = value),
+          onHonnhanChanged: (value) {
+            print('🔍 onHonnhanChanged called with value: $value (type: ${value.runtimeType})');
+            setState(() => _uvHonnhanId = value);
+            print('🔍 After setState: _uvHonnhanId = $_uvHonnhanId');
+          },
           onNguonThuThapChanged: (value) => setState(() {
             _idNguonThuThap = value?.id;
             nguonThuThap = value;
@@ -615,11 +620,15 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
           trinhDoNgoaiNguController: _trinhDoNgoaiNguController,
           trinhDoTinHocController: _trinhDoTinHocControllerStep2,
           onTrinhDoHocVanChanged: (value) => setState(() {
-            _trinhDoHocVanId = value?.id is int ? value?.id : int.tryParse(value?.id?.toString() ?? '');
+            _trinhDoHocVanId = value?.id is int
+                ? value?.id
+                : int.tryParse(value?.id?.toString() ?? '');
             trinhDoHocVan = value;
           }),
           onNganhNgheChanged: (value) => setState(() {
-            _nganhNgheId = value?.id is int ? value?.id : int.tryParse(value?.id?.toString() ?? '');
+            _nganhNgheId = value?.id is int
+                ? value?.id
+                : int.tryParse(value?.id?.toString() ?? '');
             nganhNghe = value;
           }),
           onTrinhDoDaoTaoChanged: (value) => setState(() {
@@ -641,18 +650,26 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
           hinhThucCtyMMId: _uvnvHinhthuccongtyId,
           onViTriMMChanged: (value) => setState(() {
             chucDanh = value;
-            _uvnvVitrimongmuonId = value?.id is int ? value?.id : int.tryParse(value?.id?.toString() ?? '');
+            _uvnvVitrimongmuonId = value?.id is int
+                ? value?.id
+                : int.tryParse(value?.id?.toString() ?? '');
           }),
           onMucLuongChanged: (value) => setState(() {
-            _idMucluong = value?.id is int ? value?.id : int.tryParse(value?.id?.toString() ?? '');
+            _idMucluong = value?.id is int
+                ? value?.id
+                : int.tryParse(value?.id?.toString() ?? '');
             mucLuong = value;
           }),
           onThoiGianLamViecChanged: (value) => setState(() {
-            _uvnvThoigianId = value?.id is int ? value?.id : int.tryParse(value?.id?.toString() ?? '');
+            _uvnvThoigianId = value?.id is int
+                ? value?.id
+                : int.tryParse(value?.id?.toString() ?? '');
             thoigianlamviec = value;
           }),
           onHinhThucCtyMMChanged: (value) => setState(() {
-            _uvnvHinhthuccongtyId = value?.id is int ? value?.id : int.tryParse(value?.id?.toString() ?? '');
+            _uvnvHinhthuccongtyId = value?.id is int
+                ? value?.id
+                : int.tryParse(value?.id?.toString() ?? '');
             hinhthucdoanhnghiep = value;
           }),
         );
@@ -825,6 +842,10 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
             fileCv: _selectedFile?.path ?? originalNtv.fileCv,
             avatarUrl: _selectedImage?.path ?? originalNtv.avatarUrl,
           );
+          
+          // DEBUG: Log marriage status value before sending
+          print('🔍 Flutter sending uvHonnhanId: $_uvHonnhanId (type: ${_uvHonnhanId.runtimeType})');
+          
           FormData formData = FormData.fromMap({
             'id': originalNtv.id,
             'uvUsername': _usernameController.text,
@@ -878,14 +899,15 @@ class _UpdateNTVPageState extends State<UpdateNTVPage> {
             'idxaMoi': _idXaMoi,
             'idtv': _idTv,
             // Note: Using idBacHoc (capital H) to match entity property name, not DTO's idBachoc
-            'idBacHoc': _trinhDoDaoTaoId?.toString() ?? _idBacHocController.text,
+            'idBacHoc':
+                _trinhDoDaoTaoId?.toString() ?? _idBacHocController.text,
             'idMucluong': _idMucluong,
             'mahoGd': _mahoGd,
             'displayOrder': _displayOrder,
             'ngayduyet': _ngayduyet,
             'uvTinhtrangtantatId': _uvTinhtrangtantatId ?? 0,
             'idDanToc': _idDanToc ?? 0,
-            'uvHonnhanId': _uvHonnhanId,
+            'uvHonnhanId': (_uvHonnhanId ?? false) ? 1 : 0,
             'uvnvVitrimongmuonid': _uvnvVitrimongmuonId ?? 0,
             'uvDoituongchinhsachId': _uvDoiTuongChingSachId ?? 0,
             'uvnvHinhthuccongtyId': _uvnvHinhthuccongtyId ?? 0,

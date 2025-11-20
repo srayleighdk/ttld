@@ -195,45 +195,6 @@ class _XKLDStep4EducationTrainingState
           const SizedBox(height: 24),
 
           // Info card
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primaryContainer.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: theme.colorScheme.primary.withOpacity(0.3),
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Icon(
-                      FontAwesomeIcons.lightbulb,
-                      color: theme.colorScheme.primary,
-                      size: 20,
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      'Lưu ý quan trọng',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.primary,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  'Trình độ ngoại ngữ tốt sẽ tăng cơ hội được tuyển dụng. Nhiều quốc gia yêu cầu trình độ ngoại ngữ tối thiểu (VD: Nhật Bản yêu cầu N4, Hàn Quốc yêu cầu TOPIK 2).',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.onSurface,
-                  ),
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );

@@ -219,14 +219,11 @@ class _DangKyXKLDFormState extends State<DangKyXKLDForm> {
             _formData = prefillData.copyWith(
               dkxkldNgay: DateTime.now().toIso8601String(),
               dkxkldDuyet: false,
-              tinh: null, // Clear to avoid dropdown mismatch
-              huyenThiThanhPho: null,
-              xaPhuong: null,
             );
           });
           ToastUtils.showSuccessToast(
             context,
-            'Đã điền tự động thông tin từ hồ sơ. Vui lòng chọn lại địa chỉ.',
+            'Đã điền tự động thông tin từ hồ sơ.',
           );
         }
       } else {

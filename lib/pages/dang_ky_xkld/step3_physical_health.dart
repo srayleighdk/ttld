@@ -147,34 +147,7 @@ class _XKLDStep3PhysicalHealthState extends State<XKLDStep3PhysicalHealth> {
           ),
           const SizedBox(height: 8),
 
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.secondaryContainer.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: theme.colorScheme.secondary.withOpacity(0.3),
-              ),
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  FontAwesomeIcons.heartPulse,
-                  color: theme.colorScheme.secondary,
-                  size: 20,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    'Bạn cần có giấy khám sức khỏe hợp lệ từ cơ quan y tế có thẩm quyền',
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurface,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          const SizedBox(height: 24),
           const SizedBox(height: 24),
 
           // Giấy tờ & Tình trạng
@@ -244,49 +217,6 @@ class _XKLDStep3PhysicalHealthState extends State<XKLDStep3PhysicalHealth> {
           const SizedBox(height: 24),
 
           // Requirements card
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.tertiaryContainer.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: theme.colorScheme.tertiary.withOpacity(0.3),
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Icon(
-                      FontAwesomeIcons.listCheck,
-                      color: theme.colorScheme.tertiary,
-                      size: 20,
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      'Điều kiện cần thiết',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.tertiary,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                _buildRequirementItem(
-                    'Chiều cao tối thiểu: Nam 160cm, Nữ 155cm'),
-                const SizedBox(height: 8),
-                _buildRequirementItem('Cân nặng phù hợp với chiều cao'),
-                const SizedBox(height: 8),
-                _buildRequirementItem(
-                    'Sức khỏe tốt, không mắc bệnh truyền nhiễm'),
-                const SizedBox(height: 8),
-                _buildRequirementItem(
-                    'Có hộ chiếu còn hiệu lực tối thiểu 6 tháng'),
-              ],
-            ),
-          ),
         ],
       ),
     );
